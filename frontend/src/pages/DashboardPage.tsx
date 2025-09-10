@@ -87,9 +87,9 @@ export function DashboardPage() {
 
   const quickActions = [
     { icon: Plus, label: 'New Roundtable', path: '/roundtables/new', color: 'bg-blue-600' },
-    { icon: Users, label: 'Add Participants', path: '/participants/add', color: 'bg-green-600' },
-    { icon: Calendar, label: 'Schedule Sessions', path: '/sessions/schedule', color: 'bg-purple-600' },
-    { icon: MessageSquare, label: 'Review Questions', path: '/questions', color: 'bg-orange-600' }
+    { icon: Users, label: 'Manage Participants', path: '/participants', color: 'bg-green-600' },
+    { icon: MessageSquare, label: 'Review Questions', path: '/questions', color: 'bg-orange-600' },
+    { icon: FileText, label: 'Review Feedback', path: '/feedback', color: 'bg-purple-600' }
   ]
 
   if (loading) {
@@ -111,8 +111,10 @@ export function DashboardPage() {
               <div className="ml-10 flex items-baseline space-x-4">
                 <a href="/dashboard" className="text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
                 <a href="/roundtables" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Roundtables</a>
-                <a href="/clients" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Clients</a>
+                <a href="/participants" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Participants</a>
                 <a href="/sessions" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Sessions</a>
+                <a href="/questions" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Questions</a>
+                <a href="/feedback" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Feedback</a>
               </div>
             </div>
             <div className="flex items-center">
