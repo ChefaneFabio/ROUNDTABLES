@@ -1,26 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useSearchParams } from 'react-router-dom'
 import { Vote, CheckCircle, AlertTriangle, User, Building } from 'lucide-react'
-import { votingApi } from '../services/votingApi'
-import { Topic } from '../types'
-
-interface VotingData {
-  roundtable: {
-    id: string
-    name: string
-    client: { name: string; company: string }
-  }
-  participant: {
-    name: string
-    email: string
-    hasVoted: boolean
-  }
-  topics: Array<Topic & { isSelected: boolean }>
-  votingInstructions: {
-    maxSelections: number
-    message: string
-  }
-}
+import { votingApi, VotingData } from '../services/votingApi'
 
 export function VotingPage() {
   const { roundtableId } = useParams<{ roundtableId: string }>()
