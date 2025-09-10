@@ -12,6 +12,7 @@ import participantRoutes from './controllers/participantController'
 import notificationRoutes from './controllers/notificationController'
 import topicRoutes from './controllers/topicController'
 import questionRoutes from './controllers/questionController'
+import dashboardRoutes from './controllers/dashboardController'
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler'
@@ -52,6 +53,7 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/health',
       documentation: '/api',
+      dashboard: '/api/dashboard',
       clients: '/api/clients',
       roundtables: '/api/roundtables',
       sessions: '/api/sessions',
@@ -77,7 +79,10 @@ app.get('/api', (req, res) => {
   res.json({
     title: 'API Documentation',
     endpoints: [
+      { method: 'GET', path: '/api/dashboard/stats', description: 'Get dashboard statistics' },
       { method: 'GET', path: '/api/clients', description: 'List clients' },
+      { method: 'POST', path: '/api/clients', description: 'Create client' },
+      { method: 'GET', path: '/api/roundtables', description: 'List roundtables' },
       { method: 'POST', path: '/api/roundtables', description: 'Create roundtable' },
       { method: 'GET', path: '/api/topics/vote/:id', description: 'Get voting page' },
       { method: 'POST', path: '/api/topics/vote/:id', description: 'Submit votes' }
@@ -86,6 +91,7 @@ app.get('/api', (req, res) => {
 })
 
 // API Routes
+app.use('/api/dashboard', dashboardRoutes)
 app.use('/api/clients', clientRoutes)
 app.use('/api/roundtables', roundtableRoutes)
 app.use('/api/sessions', sessionRoutes)
