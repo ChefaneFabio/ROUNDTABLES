@@ -128,3 +128,4 @@ tmp/
 
 # Other project files to ignore
 html-parser/
+.vercel
