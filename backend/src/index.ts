@@ -33,9 +33,46 @@ app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: true }))
 app.use(requestLogger)
 
+// Welcome route
+app.get('/', (req, res) => {
+  res.json({
+    name: 'Maka Roundtables API',
+    version: '1.0.0',
+    status: 'operational',
+    endpoints: {
+      health: '/health',
+      documentation: '/api',
+      clients: '/api/clients',
+      roundtables: '/api/roundtables',
+      sessions: '/api/sessions',
+      participants: '/api/participants',
+      topics: '/api/topics',
+      voting: '/api/topics/vote/:roundtableId'
+    },
+    message: 'Welcome to Maka Roundtables Backend API'
+  })
+})
+
 // Health check
 app.get('/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() })
+  res.json({ 
+    status: 'OK', 
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  })
+})
+
+// API documentation
+app.get('/api', (req, res) => {
+  res.json({
+    title: 'API Documentation',
+    endpoints: [
+      { method: 'GET', path: '/api/clients', description: 'List clients' },
+      { method: 'POST', path: '/api/roundtables', description: 'Create roundtable' },
+      { method: 'GET', path: '/api/topics/vote/:id', description: 'Get voting page' },
+      { method: 'POST', path: '/api/topics/vote/:id', description: 'Submit votes' }
+    ]
+  })
 })
 
 // API Routes
