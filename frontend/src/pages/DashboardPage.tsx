@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import {
   Users,
   Calendar,
-  TrendingUp,
   Clock,
   CheckCircle,
   AlertCircle,

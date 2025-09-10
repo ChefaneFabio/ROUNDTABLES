@@ -10,8 +10,7 @@ import {
   MoreVertical,
   Edit,
   Trash2,
-  Eye,
-  ChevronDown
+  Eye
 } from 'lucide-react'
 import axios from 'axios'
 
