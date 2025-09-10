@@ -254,11 +254,7 @@ export class SchedulingService {
           }
         },
         topic: { select: { title: true } },
-        trainer: { select: { name: true, email: true } },
-        participants: {
-          where: { status: 'ACTIVE' },
-          select: { name: true, email: true }
-        }
+        trainer: { select: { name: true, email: true } }
       },
       orderBy: { scheduledAt: 'asc' }
     })
