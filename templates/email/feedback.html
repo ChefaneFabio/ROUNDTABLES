@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Roundtable Session Feedback</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+    <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <img src="https://makaitalia.com/logo.png" alt="Maka Logo" style="height: 40px; margin-bottom: 10px;">
+        <h2 style="color: #1e40af; margin: 0;">Roundtable Session Feedback</h2>
+    </div>
+
+    <div style="background-color: white; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb;">
+        <p>Hi {{participantName}},</p>
+
+        <p>How are you doing?</p>
+
+        <p>I am passing along some feedback from <strong>{{trainerName}}</strong> regarding your recent roundtable discussion on <strong>{{topicTitle}}</strong>.</p>
+
+        <div style="background-color: #f0f9ff; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #0ea5e9;">
+            <h3 style="color: #0ea5e9; margin-top: 0; margin-bottom: 15px;">{{trainerName}}'s Feedback:</h3>
+            <div style="font-style: italic; line-height: 1.8;">
+                {{feedbackContent}}
+            </div>
+        </div>
+
+        <div style="background-color: #f0fdf4; padding: 15px; border-radius: 6px; margin: 20px 0; border-left: 4px solid #22c55e;">
+            <p style="margin: 0; color: #15803d;">
+                <strong>🎉 Well done on your effort!</strong><br>
+                Keep up the excellent work in developing your communication skills.
+            </p>
+        </div>
+
+        <p>See you in the next conversation.</p>
+
+        <div style="background-color: #f9fafb; padding: 15px; border-radius: 6px; margin: 20px 0;">
+            <strong>📅 Next Session:</strong><br>
+            {{#nextSession}}
+            Date: <strong>{{nextSessionDate}}</strong><br>
+            Topic: <strong>{{nextSessionTopic}}</strong><br>
+            {{/nextSession}}
+            {{^nextSession}}
+            <em>Details for the next session will be shared soon.</em>
+            {{/nextSession}}
+        </div>
+
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e5e7eb;">
+            <p style="margin: 0;">
+                Jean<br>
+                <strong>Training Coordinator</strong><br>
+                📧 <a href="mailto:training@makaitalia.com">training@makaitalia.com</a><br>
+                📞 +39 02 45546061
+            </p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <div style="background-color: #1e40af; color: white; padding: 15px; border-radius: 6px;">
+            <h4 style="margin: 0 0 10px 0;">Maka - Global Content Management</h4>
+            <p style="margin: 0; font-size: 14px;">Language Solutions | Communications Training</p>
+            <p style="margin: 5px 0 0 0; font-size: 12px; opacity: 0.8;">
+                Empowering People & Organizations to Succeed Globally for over 20 Years
+            </p>
+        </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 15px; font-size: 12px; color: #6b7280;">
+        <p>This feedback was automatically generated and sent through our Roundtable Management System.</p>
+    </div>
+</body>
+</html>

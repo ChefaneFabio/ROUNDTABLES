@@ -1,0 +1,282 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Client {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  company     String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  roundtables Roundtable[]
+
+  @@map("clients")
+}
+
+model Roundtable {
+  id          String            @id @default(cuid())
+  name        String
+  description String?
+  status      RoundtableStatus  @default(SETUP)
+  startDate   DateTime?
+  endDate     DateTime?
+  maxParticipants Int           @default(6)
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  clientId    String
+  client      Client            @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  participants    Participant[]
+  sessions        Session[]
+  topics          Topic[]
+  topicVotes      TopicVote[]
+
+  @@map("roundtables")
+}
+
+model Participant {
+  id          String              @id @default(cuid())
+  email       String
+  name        String
+  company     String?
+  languageLevel LanguageLevel     @default(B1)
+  status      ParticipantStatus   @default(INVITED)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  roundtableId String
+  roundtable   Roundtable         @relation(fields: [roundtableId], references: [id], onDelete: Cascade)
+
+  topicVotes   TopicVote[]
+  feedback     Feedback[]
+
+  @@unique([email, roundtableId])
+  @@map("participants")
+}
+
+model Topic {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  isSelected  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  roundtableId String
+  roundtable   Roundtable @relation(fields: [roundtableId], references: [id], onDelete: Cascade)
+
+  votes       TopicVote[]
+  sessions    Session[]
+
+  @@map("topics")
+}
+
+model TopicVote {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+
+  participantId String
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  topicId      String
+  topic        Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  roundtableId String
+  roundtable   Roundtable @relation(fields: [roundtableId], references: [id], onDelete: Cascade)
+
+  @@unique([participantId, topicId])
+  @@map("topic_votes")
+}
+
+model Trainer {
+  id        String   @id @default(cuid())
+  name      String
+  email     String   @unique
+  expertise String[]
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  sessions  Session[]
+  feedback  Feedback[]
+
+  @@map("trainers")
+}
+
+model Session {
+  id           String        @id @default(cuid())
+  sessionNumber Int          // 1-10 per ogni roundtable
+  scheduledAt  DateTime
+  status       SessionStatus @default(SCHEDULED)
+  meetingLink  String?
+  notes        String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  roundtableId String
+  roundtable   Roundtable @relation(fields: [roundtableId], references: [id], onDelete: Cascade)
+
+  topicId      String?
+  topic        Topic?     @relation(fields: [topicId], references: [id])
+
+  trainerId    String?
+  trainer      Trainer?   @relation(fields: [trainerId], references: [id])
+
+  questions    Question[]
+  feedback     Feedback[]
+  notifications Notification[]
+
+  @@unique([roundtableId, sessionNumber])
+  @@map("sessions")
+}
+
+model Question {
+  id          String          @id @default(cuid())
+  question    String
+  status      QuestionStatus  @default(PENDING)
+  reviewNotes String?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  sessionId   String
+  session     Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@map("questions")
+}
+
+model Feedback {
+  id          String         @id @default(cuid())
+  content     String
+  status      FeedbackStatus @default(PENDING)
+  reviewNotes String?
+  sentAt      DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  sessionId     String
+  session       Session     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  participantId String
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  trainerId     String
+  trainer       Trainer     @relation(fields: [trainerId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, participantId])
+  @@map("feedback")
+}
+
+model Notification {
+  id          String            @id @default(cuid())
+  type        NotificationType
+  recipient   String            // email
+  subject     String
+  content     String
+  status      NotificationStatus @default(PENDING)
+  scheduledAt DateTime
+  sentAt      DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  sessionId   String?
+  session     Session?          @relation(fields: [sessionId], references: [id])
+
+  @@map("notifications")
+}
+
+// Enums
+enum Role {
+  ADMIN
+  COORDINATOR
+  TRAINER
+}
+
+enum RoundtableStatus {
+  SETUP
+  TOPIC_VOTING
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum ParticipantStatus {
+  INVITED
+  CONFIRMED
+  LEVEL_TEST_REQUIRED
+  LEVEL_TEST_FAILED
+  ACTIVE
+  DROPPED_OUT
+}
+
+enum LanguageLevel {
+  A1
+  A2
+  B1
+  B2
+  C1
+  C2
+}
+
+enum SessionStatus {
+  SCHEDULED
+  REMINDER_SENT
+  QUESTIONS_REQUESTED
+  QUESTIONS_READY
+  IN_PROGRESS
+  COMPLETED
+  FEEDBACK_PENDING
+  FEEDBACK_SENT
+  CANCELLED
+}
+
+enum QuestionStatus {
+  PENDING
+  APPROVED
+  NEEDS_REVISION
+  REJECTED
+}
+
+enum FeedbackStatus {
+  PENDING
+  APPROVED
+  NEEDS_REVISION
+  SENT
+  REJECTED
+}
+
+enum NotificationType {
+  TRAINER_REMINDER
+  QUESTIONS_REQUEST
+  FEEDBACK_REQUEST
+  PARTICIPANT_EMAIL
+  VOTING_INVITE
+  SESSION_REMINDER
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  CANCELLED
+}
