@@ -13,6 +13,9 @@ import notificationRoutes from './controllers/notificationController'
 import topicRoutes from './controllers/topicController'
 import questionRoutes from './controllers/questionController'
 import dashboardRoutes from './controllers/dashboardController'
+import trainerRoutes from './controllers/trainerController'
+import feedbackRoutes from './controllers/feedbackController'
+import emailTemplateRoutes from './controllers/emailTemplateController'
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler'
@@ -59,7 +62,10 @@ app.get('/', (req, res) => {
       sessions: '/api/sessions',
       participants: '/api/participants',
       topics: '/api/topics',
-      voting: '/api/topics/vote/:roundtableId'
+      voting: '/api/topics/vote/:roundtableId',
+      trainers: '/api/trainers',
+      feedback: '/api/feedback',
+      emailTemplates: '/api/email-templates'
     },
     message: 'Welcome to Maka Roundtables Backend API'
   })
@@ -85,7 +91,13 @@ app.get('/api', (req, res) => {
       { method: 'GET', path: '/api/roundtables', description: 'List roundtables' },
       { method: 'POST', path: '/api/roundtables', description: 'Create roundtable' },
       { method: 'GET', path: '/api/topics/vote/:id', description: 'Get voting page' },
-      { method: 'POST', path: '/api/topics/vote/:id', description: 'Submit votes' }
+      { method: 'POST', path: '/api/topics/vote/:id', description: 'Submit votes' },
+      { method: 'GET', path: '/api/trainers', description: 'List trainers' },
+      { method: 'POST', path: '/api/trainers', description: 'Create trainer' },
+      { method: 'GET', path: '/api/feedback', description: 'List feedback' },
+      { method: 'POST', path: '/api/feedback', description: 'Submit feedback' },
+      { method: 'GET', path: '/api/email-templates', description: 'List email templates' },
+      { method: 'POST', path: '/api/email-templates', description: 'Create email template' }
     ]
   })
 })
@@ -99,6 +111,9 @@ app.use('/api/participants', participantRoutes)
 app.use('/api/notifications', notificationRoutes)
 app.use('/api/topics', topicRoutes)
 app.use('/api/questions', questionRoutes)
+app.use('/api/trainers', trainerRoutes)
+app.use('/api/feedback', feedbackRoutes)
+app.use('/api/email-templates', emailTemplateRoutes)
 
 // Error handling
 app.use(errorHandler)

@@ -8,6 +8,7 @@ import {
   AlertCircle,
   Plus,
   ArrowRight,
+  FileText,
   Building,
   MessageSquare,
   Activity,

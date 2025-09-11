@@ -171,7 +171,7 @@ export function FeedbackPage() {
         f.id === feedbackId 
           ? { 
               ...f, 
-              status: action === 'approve' ? 'REVIEWED' : 'REJECTED' as const,
+              status: (action === 'approve' ? 'REVIEWED' : 'REJECTED') as 'REVIEWED' | 'REJECTED',
               reviewNotes: notes,
               reviewedAt: new Date().toISOString()
             }

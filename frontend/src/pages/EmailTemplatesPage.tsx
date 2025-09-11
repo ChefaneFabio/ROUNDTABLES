@@ -653,7 +653,7 @@ export function EmailTemplatesPage() {
                         required
                         value={newTemplate.type}
                         onChange={(e) => {
-                          const type = e.target.value as keyof typeof templateTypes
+                          const type = e.target.value as keyof typeof defaultTemplates
                           const defaultTemplate = defaultTemplates[type]
                           if (defaultTemplate && !editingTemplate) {
                             setNewTemplate({
