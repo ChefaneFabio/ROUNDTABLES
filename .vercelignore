@@ -1,0 +1,21 @@
+# Ignore backend (deploy separately)
+backend/
+
+# Ignore documentation
+*.md
+
+# Ignore git
+.git/
+.gitignore
+
+# Ignore node_modules (will be installed fresh)
+node_modules/
+
+# Ignore environment files
+.env
+.env.local
+.env.*.local
+
+# Ignore build artifacts from root
+dist/
+build/
