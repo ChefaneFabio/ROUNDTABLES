@@ -21,10 +21,28 @@ services:
         value: smtp.gmail.com
       - key: SMTP_PORT
         value: 587
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
       - key: FROM_EMAIL
         value: noreply@makaitalia.com
       - key: COORDINATOR_EMAILS
         value: training@makaitalia.com,alessia@makaitalia.com
+      - key: FRONTEND_URL
+        sync: false
+      - key: MS_FORMS_VOTING_URL
+        sync: false
+      - key: MS_FORMS_WEBHOOK_SECRET
+        generateValue: true
+      - key: TEAMS_WEBHOOK_URL
+        sync: false
+      - key: LEVEL_TEST_COST
+        value: 50
+      - key: TRAINER_SESSION_COST
+        value: 100
+      - key: OVERHEAD_PER_PARTICIPANT
+        value: 20
 
 databases:
   - name: roundtables-db
