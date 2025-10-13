@@ -5,19 +5,15 @@ import {
   Calendar,
   Clock,
   CheckCircle,
-  AlertCircle,
   Plus,
   ArrowRight,
   FileText,
   Building,
   MessageSquare,
   Activity,
-  BarChart3,
-  LogOut,
-  User
+  BarChart3
 } from 'lucide-react'
 import axios from 'axios'
-import { useAuth } from '../contexts/AuthContext'
 
 interface DashboardStats {
   totalRoundtables: number
@@ -40,7 +36,6 @@ interface RecentRoundtable {
 
 export function DashboardPage() {
   const navigate = useNavigate()
-  const { user, logout } = useAuth()
   const [stats, setStats] = useState<DashboardStats>({
     totalRoundtables: 0,
     activeRoundtables: 0,
@@ -51,11 +46,6 @@ export function DashboardPage() {
   })
   const [recentRoundtables, setRecentRoundtables] = useState<RecentRoundtable[]>([])
   const [loading, setLoading] = useState(true)
-
-  const handleLogout = () => {
-    logout()
-    navigate('/login')
-  }
 
   useEffect(() => {
     fetchDashboardData()
