@@ -31,6 +31,52 @@ export function LoginPage() {
     }
   }
 
+  // Show learner info page
+  const [showLearnerInfo, setShowLearnerInfo] = useState(false)
+
+  if (showLearnerInfo) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+        <div className="max-w-md w-full">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="text-center mb-6">
+              <div className="w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full flex items-center justify-center">
+                <svg className="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Learner!</h2>
+              <p className="text-gray-600">Access your roundtable materials via email</p>
+            </div>
+
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+              <h3 className="font-semibold text-blue-900 mb-2">📧 How to Access</h3>
+              <ul className="text-sm text-blue-800 space-y-2">
+                <li>• Check your email for voting invitations</li>
+                <li>• Click the secure link to vote on topics</li>
+                <li>• Receive session questions via email</li>
+                <li>• Get feedback after each session</li>
+              </ul>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4 mb-6">
+              <p className="text-sm text-gray-600">
+                <strong>Note:</strong> Learners don't need to login. All materials and voting links are sent directly to your email address.
+              </p>
+            </div>
+
+            <button
+              onClick={() => setShowLearnerInfo(false)}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition"
+            >
+              Back to Login
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
   // If no role selected, show role selection
   if (!selectedRole) {
     return (
@@ -42,7 +88,7 @@ export function LoginPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Admin/Coordinator Card */}
+            {/* Coordinator/Admin Card */}
             <button
               onClick={() => setSelectedRole('COORDINATOR')}
               className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-200 hover:scale-105 text-center group"
@@ -53,7 +99,8 @@ export function LoginPage() {
                 </svg>
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">Coordinator</h3>
-              <p className="text-sm text-gray-600">Manage roundtables, approve content, monitor progress</p>
+              <p className="text-sm text-gray-600 mb-1">Manage roundtables, approve content, monitor progress</p>
+              <p className="text-xs text-gray-500 italic">(Includes Administrator access)</p>
             </button>
 
             {/* Trainer Card */}
@@ -70,19 +117,19 @@ export function LoginPage() {
               <p className="text-sm text-gray-600">Submit questions, provide feedback, conduct sessions</p>
             </button>
 
-            {/* Admin Card */}
+            {/* Learner Card */}
             <button
-              onClick={() => setSelectedRole('ADMIN')}
+              onClick={() => setShowLearnerInfo(true)}
               className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-200 hover:scale-105 text-center group"
             >
-              <div className="w-20 h-20 mx-auto mb-4 bg-purple-100 rounded-full flex items-center justify-center group-hover:bg-purple-200 transition">
-                <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+              <div className="w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full flex items-center justify-center group-hover:bg-orange-200 transition">
+                <svg className="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Administrator</h3>
-              <p className="text-sm text-gray-600">Full system access, user management, reports</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Learner</h3>
+              <p className="text-sm text-gray-600">Participate in roundtables, vote on topics, receive materials</p>
             </button>
           </div>
 
