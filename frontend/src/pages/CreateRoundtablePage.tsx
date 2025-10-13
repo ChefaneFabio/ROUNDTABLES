@@ -201,18 +201,17 @@ export function CreateRoundtablePage() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Maximum Participants
                 </label>
-                <select
+                <input
+                  type="number"
+                  min="1"
+                  max="20"
                   value={formData.maxParticipants}
-                  onChange={(e) => setFormData({...formData, maxParticipants: parseInt(e.target.value)})}
+                  onChange={(e) => setFormData({...formData, maxParticipants: parseInt(e.target.value) || 1})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value={3}>3 participants</option>
-                  <option value={4}>4 participants</option>
-                  <option value={5}>5 participants</option>
-                  <option value={6}>6 participants</option>
-                </select>
+                  placeholder="Enter number of participants"
+                />
                 <p className="text-xs text-gray-500 mt-1">
-                  Maximum 6 participants per roundtable for optimal discussion quality
+                  Between 1 and 20 participants. Optimal discussion quality with 4-8 participants.
                 </p>
               </div>
             </div>
