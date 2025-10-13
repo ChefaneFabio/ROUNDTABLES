@@ -10,12 +10,11 @@ import {
   Play,
   Send,
   FileText,
-  Filter,
   Search,
   Building,
   MoreVertical
 } from 'lucide-react'
-import { sessionsApi, roundtablesApi } from '../services/api'
+import { sessionsApi } from '../services/api'
 
 interface Session {
   id: string

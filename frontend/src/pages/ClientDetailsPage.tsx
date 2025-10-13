@@ -16,7 +16,6 @@ import {
   FileText,
   CheckCircle
 } from 'lucide-react'
-import { clientsApi, roundtablesApi } from '../services/api'
 
 interface ClientDetails {
   id: string

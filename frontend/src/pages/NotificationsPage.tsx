@@ -12,7 +12,6 @@ import {
   MessageSquare,
   Trash2,
   MailOpen,
-  Filter,
   Search
 } from 'lucide-react'
 
@@ -357,7 +356,7 @@ export function NotificationsPage() {
                           className="text-gray-400 hover:text-gray-600"
                           title="Mark as unread"
                         >
-                          <MarkAsUnread className="h-4 w-4" />
+                          <MailOpen className="h-4 w-4" />
                         </button>
                       ) : (
                         <button

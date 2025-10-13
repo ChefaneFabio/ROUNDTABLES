@@ -11,11 +11,12 @@ echo "================================="
 
 # Check if option is provided
 if [ $# -eq 0 ]; then
-    echo "Usage: ./deploy.sh [vercel|railway|docker|local]"
+    echo "Usage: ./deploy.sh [vercel|railway|render|docker|local]"
     echo ""
     echo "Options:"
     echo "  vercel   - Deploy frontend to Vercel"
     echo "  railway  - Deploy backend to Railway"
+    echo "  render   - Deploy backend to Render.com"
     echo "  docker   - Build and run with Docker Compose"
     echo "  local    - Run locally for development"
     exit 1
@@ -54,6 +55,33 @@ case $OPTION in
         echo "Deploying to Railway..."
         railway up
         echo "✅ Backend deployed to Railway!"
+        ;;
+        
+    "render")
+        echo "🎨 Deploying Backend to Render.com..."
+        cd backend
+        
+        echo "🔧 Render deployment options:"
+        echo "1. One-click Blueprint deploy (recommended):"
+        echo "   → Go to render.com"
+        echo "   → Click 'New' → 'Blueprint'"
+        echo "   → Enter repo: https://github.com/ChefaneFabio/ROUNDTABLES"
+        echo "   → Select branch: main"
+        echo "   → Click 'Connect'"
+        echo ""
+        echo "2. Manual web service:"
+        echo "   → Go to render.com"
+        echo "   → Click 'New' → 'Web Service'"
+        echo "   → Connect GitHub repo"
+        echo "   → Root directory: backend"
+        echo ""
+        echo "📋 Required environment variables:"
+        echo "   SMTP_USER=your-email@gmail.com"
+        echo "   SMTP_PASSWORD=your-app-password"
+        echo "   FRONTEND_URL=https://your-vercel-app.vercel.app"
+        echo ""
+        echo "📖 See RENDER-DEPLOY.md for detailed instructions"
+        echo "✅ Render configuration ready!"
         ;;
         
     "docker")

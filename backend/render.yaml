@@ -5,6 +5,7 @@ services:
     plan: starter
     buildCommand: npm install && npm run build && npx prisma generate
     startCommand: npm start
+    healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
@@ -16,6 +17,14 @@ services:
         generateValue: true
       - key: PORT
         value: 10000
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: 587
+      - key: FROM_EMAIL
+        value: noreply@makaitalia.com
+      - key: COORDINATOR_EMAILS
+        value: training@makaitalia.com,alessia@makaitalia.com
 
 databases:
   - name: roundtables-db

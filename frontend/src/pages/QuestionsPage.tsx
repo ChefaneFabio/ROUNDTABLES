@@ -11,7 +11,6 @@ import {
   User,
   Building,
   AlertCircle,
-  Filter,
   Search
 } from 'lucide-react'
 import { questionsApi } from '../services/api'

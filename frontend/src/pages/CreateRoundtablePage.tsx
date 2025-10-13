@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { ArrowLeft, Plus, Trash2, Calendar, Users, Building } from 'lucide-react'
+import { ArrowLeft, Calendar, Building } from 'lucide-react'
 import { roundtablesApi, clientsApi } from '../services/api'
 
 interface Client {

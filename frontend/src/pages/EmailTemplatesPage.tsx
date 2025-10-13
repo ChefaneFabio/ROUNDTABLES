@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import {
   Mail,
   Plus,
@@ -122,7 +121,6 @@ Jean`,
 }
 
 export function EmailTemplatesPage() {
-  const navigate = useNavigate()
   const [templates, setTemplates] = useState<EmailTemplate[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')

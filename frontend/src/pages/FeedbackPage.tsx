@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   MessageSquare,
-  FileText,
   Send,
   Edit,
   CheckCircle,
@@ -12,14 +11,11 @@ import {
   Calendar,
   Building,
   AlertCircle,
-  Plus,
   Search,
-  Filter,
   MoreVertical,
   Eye,
   Mail,
-  Star,
-  TrendingUp
+  Star
 } from 'lucide-react'
 
 interface Feedback {

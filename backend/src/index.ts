@@ -5,6 +5,8 @@ import dotenv from 'dotenv'
 import { PrismaClient } from '@prisma/client'
 
 // Import routes
+import authRoutes from './controllers/authController'
+import auditLogRoutes from './controllers/auditLogController'
 import clientRoutes from './controllers/clientController'
 import roundtableRoutes from './controllers/roundtableController'
 import sessionRoutes from './controllers/sessionController'
@@ -16,10 +18,12 @@ import dashboardRoutes from './controllers/dashboardController'
 import trainerRoutes from './controllers/trainerController'
 import feedbackRoutes from './controllers/feedbackController'
 import emailTemplateRoutes from './controllers/emailTemplateController'
+import microsoftFormsRoutes from './controllers/microsoftFormsController'
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler'
 import { requestLogger } from './middleware/requestLogger'
+import { apiLimiter } from './middleware/rateLimiter'
 
 // Import scheduled jobs
 import './jobs/scheduler'
@@ -30,22 +34,59 @@ const app = express()
 const prisma = new PrismaClient()
 const PORT = process.env.PORT || 5000
 
+// Allowed frontend origins (NO WILDCARDS for security)
+const allowedOrigins = [
+  'https://roundtables-frontend-final.vercel.app',
+  'http://localhost:3000',
+  'http://localhost:5173'
+]
+
+// Add specific preview deployments if needed
+if (process.env.VERCEL_PREVIEW_ORIGIN) {
+  allowedOrigins.push(process.env.VERCEL_PREVIEW_ORIGIN)
+}
+
 // Middleware
-app.use(helmet())
-app.use(cors({
-  origin: [
-    'https://roundtables-frontend-final.vercel.app',
-    'https://roundtables-frontend-final-*.vercel.app',
-    'http://localhost:3000',
-    'http://localhost:5173'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", 'data:', 'https:'],
+    },
+  },
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true
+  }
 }))
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, curl, Postman)
+    if (!origin) return callback(null, true)
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true)
+    } else {
+      console.warn(`Blocked request from unauthorized origin: ${origin}`)
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 86400 // Cache preflight requests for 24 hours
+}))
+
 app.use(express.json({ limit: '10mb' }))
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true, limit: '10mb' }))
 app.use(requestLogger)
+
+// Apply rate limiting to all API routes
+app.use('/api/', apiLimiter)
 
 // Welcome route
 app.get('/', (req, res) => {
@@ -56,6 +97,7 @@ app.get('/', (req, res) => {
     endpoints: {
       health: '/health',
       documentation: '/api',
+      auth: '/api/auth',
       dashboard: '/api/dashboard',
       clients: '/api/clients',
       roundtables: '/api/roundtables',
@@ -63,6 +105,7 @@ app.get('/', (req, res) => {
       participants: '/api/participants',
       topics: '/api/topics',
       voting: '/api/topics/vote/:roundtableId',
+      formsVoting: '/api/forms/vote/:token',
       trainers: '/api/trainers',
       feedback: '/api/feedback',
       emailTemplates: '/api/email-templates'
@@ -103,6 +146,9 @@ app.get('/api', (req, res) => {
 })
 
 // API Routes
+app.use('/api/auth', authRoutes) // Authentication routes (public + protected)
+app.use('/api/audit-logs', auditLogRoutes) // Audit logs (admin only)
+app.use('/api/forms', microsoftFormsRoutes) // Microsoft Forms integration (token-based)
 app.use('/api/dashboard', dashboardRoutes)
 app.use('/api/clients', clientRoutes)
 app.use('/api/roundtables', roundtableRoutes)

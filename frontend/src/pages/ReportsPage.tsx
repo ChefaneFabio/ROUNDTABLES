@@ -1,20 +1,13 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
 import {
   BarChart3,
   TrendingUp,
   Users,
-  Calendar,
-  CheckCircle,
-  Clock,
   Star,
   Download,
-  Filter,
   RefreshCw,
   Target,
-  Award,
-  MessageSquare,
-  Mail
+  Award
 } from 'lucide-react'
 
 interface ReportData {
@@ -56,7 +49,6 @@ interface ReportData {
 }
 
 export function ReportsPage() {
-  const navigate = useNavigate()
   const [reportData, setReportData] = useState<ReportData | null>(null)
   const [loading, setLoading] = useState(true)
   const [dateRange, setDateRange] = useState('last-3-months')
@@ -354,7 +346,7 @@ export function ReportsPage() {
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Trainer Performance Analysis</h3>
                 <div className="space-y-4">
-                  {reportData.trainerPerformance.map((trainer, index) => (
+                  {reportData.trainerPerformance.map((trainer) => (
                     <div key={trainer.name} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg">
                       <div className="flex items-center">
                         <div className="bg-purple-100 p-2 rounded-lg mr-4">

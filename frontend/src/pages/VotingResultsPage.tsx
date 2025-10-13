@@ -2,12 +2,9 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
   ArrowLeft,
-  BarChart3,
   Users,
   CheckCircle,
-  TrendingUp,
   Star,
-  Award,
   Target,
   MessageSquare
 } from 'lucide-react'

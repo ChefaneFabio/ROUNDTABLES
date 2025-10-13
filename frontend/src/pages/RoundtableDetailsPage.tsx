@@ -5,19 +5,16 @@ import {
   Calendar,
   Users,
   Building,
-  Clock,
   CheckCircle,
   Play,
   MessageSquare,
   BarChart3,
   Edit,
-  Trash2,
   Plus,
   Vote,
-  FileText,
-  Settings
+  FileText
 } from 'lucide-react'
-import { roundtablesApi, participantsApi, sessionsApi } from '../services/api'
+import { roundtablesApi } from '../services/api'
 
 interface Roundtable {
   id: string
