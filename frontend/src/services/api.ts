@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // Base API configuration
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://roundtables.onrender.com/api',
+  baseURL: import.meta.env.VITE_API_URL || 'https://roundtables-backend.onrender.com/api',
   timeout: 15000, // Increased timeout for Render free tier
   headers: {
     'Content-Type': 'application/json'
