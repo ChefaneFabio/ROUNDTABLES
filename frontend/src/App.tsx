@@ -1,4 +1,7 @@
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import { ProtectedRoute } from './components/ProtectedRoute'
+import { LoginPage } from './pages/LoginPage'
 import { HomePage } from './pages/HomePage'
 import { VotingPage } from './pages/VotingPage'
 import { DashboardPage } from './pages/DashboardPage'
@@ -21,34 +24,42 @@ import { NotificationsPage } from './pages/NotificationsPage'
 
 function App() {
   return (
-    <div className="App">
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/roundtables" element={<RoundtablesPage />} />
-        <Route path="/clients" element={<ClientsPage />} />
-        <Route path="/vote/:roundtableId" element={<VotingPage />} />
-        
-        {/* Complete Management Pages */}
-        <Route path="/roundtables/new" element={<CreateRoundtablePage />} />
-        <Route path="/roundtables/:id" element={<RoundtableDetailsPage />} />
-        <Route path="/clients/new" element={<CreateClientPage />} />
-        <Route path="/clients/:id" element={<ClientDetailsPage />} />
-        <Route path="/sessions" element={<SessionsPage />} />
-        <Route path="/sessions/:id" element={<SessionDetailsPage />} />
-        <Route path="/questions" element={<QuestionsPage />} />
-        <Route path="/participants" element={<ParticipantsPage />} />
-        <Route path="/email-templates" element={<EmailTemplatesPage />} />
-        <Route path="/feedback" element={<FeedbackPage />} />
-        <Route path="/trainers" element={<TrainersPage />} />
-        <Route path="/reports" element={<ReportsPage />} />
-        <Route path="/roundtables/:roundtableId/voting" element={<VotingResultsPage />} />
-        <Route path="/notifications" element={<NotificationsPage />} />
-        
-        {/* 404 fallback */}
-        <Route path="*" element={<div className="p-8 text-center">Page not found</div>} />
-      </Routes>
-    </div>
+    <AuthProvider>
+      <div className="App">
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/vote/:roundtableId" element={<VotingPage />} />
+
+          {/* Redirect root to dashboard if authenticated, otherwise to login */}
+          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+          {/* Protected routes */}
+          <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+          <Route path="/roundtables" element={<ProtectedRoute><RoundtablesPage /></ProtectedRoute>} />
+          <Route path="/clients" element={<ProtectedRoute><ClientsPage /></ProtectedRoute>} />
+
+          {/* Complete Management Pages */}
+          <Route path="/roundtables/new" element={<ProtectedRoute><CreateRoundtablePage /></ProtectedRoute>} />
+          <Route path="/roundtables/:id" element={<ProtectedRoute><RoundtableDetailsPage /></ProtectedRoute>} />
+          <Route path="/clients/new" element={<ProtectedRoute><CreateClientPage /></ProtectedRoute>} />
+          <Route path="/clients/:id" element={<ProtectedRoute><ClientDetailsPage /></ProtectedRoute>} />
+          <Route path="/sessions" element={<ProtectedRoute><SessionsPage /></ProtectedRoute>} />
+          <Route path="/sessions/:id" element={<ProtectedRoute><SessionDetailsPage /></ProtectedRoute>} />
+          <Route path="/questions" element={<ProtectedRoute><QuestionsPage /></ProtectedRoute>} />
+          <Route path="/participants" element={<ProtectedRoute><ParticipantsPage /></ProtectedRoute>} />
+          <Route path="/email-templates" element={<ProtectedRoute><EmailTemplatesPage /></ProtectedRoute>} />
+          <Route path="/feedback" element={<ProtectedRoute><FeedbackPage /></ProtectedRoute>} />
+          <Route path="/trainers" element={<ProtectedRoute><TrainersPage /></ProtectedRoute>} />
+          <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
+          <Route path="/roundtables/:roundtableId/voting" element={<ProtectedRoute><VotingResultsPage /></ProtectedRoute>} />
+          <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+
+          {/* 404 fallback */}
+          <Route path="*" element={<div className="p-8 text-center">Page not found</div>} />
+        </Routes>
+      </div>
+    </AuthProvider>
   )
 }
 
