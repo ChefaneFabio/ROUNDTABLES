@@ -385,11 +385,72 @@ router.patch('/:id/status', async (req: Request, res: Response) => {
   }
 })
 
+// Check for trainer conflicts
+router.post('/check-trainer-conflict', async (req: Request, res: Response) => {
+  try {
+    const { trainerId, sessionId, scheduledAt } = req.body
+
+    if (!trainerId || !scheduledAt) {
+      return res.status(400).json({
+        success: false,
+        error: 'Trainer ID and scheduled date are required'
+      })
+    }
+
+    const sessionDate = new Date(scheduledAt)
+    const sessionStart = sessionDate
+    const sessionEnd = new Date(sessionDate.getTime() + 90 * 60000) // Assume 90 min sessions
+
+    // Find all sessions for this trainer
+    const trainerSessions = await prisma.session.findMany({
+      where: {
+        trainerId,
+        id: { not: sessionId }, // Exclude current session if updating
+        scheduledAt: {
+          gte: new Date(sessionDate.getTime() - 90 * 60000), // 90 min before
+          lte: new Date(sessionDate.getTime() + 90 * 60000)  // 90 min after
+        }
+      },
+      include: {
+        roundtable: {
+          select: {
+            name: true,
+            client: { select: { name: true } }
+          }
+        },
+        topic: { select: { title: true } }
+      },
+      orderBy: { scheduledAt: 'asc' }
+    })
+
+    const hasConflict = trainerSessions.length > 0
+
+    res.json({
+      success: true,
+      data: {
+        hasConflict,
+        conflicts: trainerSessions.map(s => ({
+          sessionId: s.id,
+          sessionNumber: s.sessionNumber,
+          roundtable: s.roundtable.name,
+          client: s.roundtable.client.name,
+          topic: s.topic?.title,
+          scheduledAt: s.scheduledAt,
+          timeDiff: Math.abs(sessionDate.getTime() - new Date(s.scheduledAt).getTime()) / 60000 // minutes
+        }))
+      }
+    })
+  } catch (error) {
+    console.error('Error checking trainer conflict:', error)
+    res.status(500).json({ success: false, error: 'Internal server error' })
+  }
+})
+
 // Assign trainer to session
 router.patch('/:id/assign-trainer', async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const { trainerId } = req.body
+    const { trainerId, skipConflictCheck } = req.body
 
     // Verify trainer exists
     if (trainerId) {
@@ -399,6 +460,45 @@ router.patch('/:id/assign-trainer', async (req: Request, res: Response) => {
 
       if (!trainer) {
         return res.status(400).json({ success: false, error: 'Trainer not found' })
+      }
+
+      // Check for conflicts unless explicitly skipped
+      if (!skipConflictCheck) {
+        const session = await prisma.session.findUnique({
+          where: { id }
+        })
+
+        if (session) {
+          const sessionDate = new Date(session.scheduledAt)
+
+          // Find conflicting sessions
+          const conflictingSessions = await prisma.session.findMany({
+            where: {
+              trainerId,
+              id: { not: id },
+              scheduledAt: {
+                gte: new Date(sessionDate.getTime() - 90 * 60000), // 90 min before
+                lte: new Date(sessionDate.getTime() + 90 * 60000)  // 90 min after
+              }
+            },
+            include: {
+              roundtable: { select: { name: true } }
+            }
+          })
+
+          if (conflictingSessions.length > 0) {
+            return res.status(409).json({
+              success: false,
+              error: 'Trainer has conflicting sessions at this time',
+              conflicts: conflictingSessions.map(s => ({
+                sessionId: s.id,
+                sessionNumber: s.sessionNumber,
+                roundtable: s.roundtable.name,
+                scheduledAt: s.scheduledAt
+              }))
+            })
+          }
+        }
       }
     }
 

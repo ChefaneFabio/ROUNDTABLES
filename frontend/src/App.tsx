@@ -22,6 +22,7 @@ import { VotingResultsPage } from './pages/VotingResultsPage'
 import { NotificationsPage } from './pages/NotificationsPage'
 import { CalendarViewPage } from './pages/CalendarViewPage'
 import { TrainerProfilePage } from './pages/TrainerProfilePage'
+import { SessionsCalendarPage } from './pages/SessionsCalendarPage'
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="/clients/new" element={<ProtectedRoute><CreateClientPage /></ProtectedRoute>} />
           <Route path="/clients/:id" element={<ProtectedRoute><ClientDetailsPage /></ProtectedRoute>} />
           <Route path="/sessions" element={<ProtectedRoute><SessionsPage /></ProtectedRoute>} />
+          <Route path="/sessions/calendar" element={<ProtectedRoute><SessionsCalendarPage /></ProtectedRoute>} />
           <Route path="/sessions/:id" element={<ProtectedRoute><SessionDetailsPage /></ProtectedRoute>} />
           <Route path="/calendar" element={<ProtectedRoute><CalendarViewPage /></ProtectedRoute>} />
           <Route path="/questions" element={<ProtectedRoute><QuestionsPage /></ProtectedRoute>} />
