@@ -61,6 +61,7 @@ router.use(authenticate)
 router.get('/', authorize('ADMIN', 'COORDINATOR'), async (req, res) => {
   try {
     // Sanitize inputs
+    const search = req.query.search
     const searchTerm = search ? sanitizeText(String(search)) : ''
 
     // Business logic...
