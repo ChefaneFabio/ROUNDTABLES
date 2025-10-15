@@ -27,6 +27,22 @@ export function LoginPage() {
       if (userData) {
         const user = JSON.parse(userData)
 
+        // Validate that selected role matches actual user role
+        // COORDINATOR tab accepts both ADMIN and COORDINATOR roles
+        // TRAINER tab only accepts TRAINER role
+        const isRoleValid =
+          (selectedRole === 'COORDINATOR' && (user.role === 'COORDINATOR' || user.role === 'ADMIN')) ||
+          (selectedRole === 'TRAINER' && user.role === 'TRAINER')
+
+        if (!isRoleValid) {
+          // Role mismatch - logout and show error
+          localStorage.removeItem('auth_token')
+          localStorage.removeItem('auth_user')
+          setError(`Login Failed: These credentials are for a ${user.role.toLowerCase()}, not a ${selectedRole?.toLowerCase() || 'selected role'}.`)
+          setIsLoading(false)
+          return
+        }
+
         // Redirect based on role
         if (user.role === 'TRAINER') {
           navigate('/trainer/profile')
