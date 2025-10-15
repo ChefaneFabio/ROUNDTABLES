@@ -20,7 +20,9 @@
       "Bash(npm run db:seed:*)",
       "Bash(npm run create:trainer-user:*)",
       "Bash(tsx scripts/test-trainer-notification.ts:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(npx prisma:*)"
     ],
     "deny": [],
     "ask": []
