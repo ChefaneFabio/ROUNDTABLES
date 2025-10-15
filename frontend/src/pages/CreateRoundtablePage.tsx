@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { ArrowLeft, Calendar, Building } from 'lucide-react'
+import { ArrowLeft, Calendar, Building, Plus, Trash2 } from 'lucide-react'
 import { roundtablesApi, clientsApi } from '../services/api'
 
 interface Client {
@@ -35,10 +35,6 @@ export function CreateRoundtablePage() {
     { title: '', description: '' },
     { title: '', description: '' },
     { title: '', description: '' },
-    { title: '', description: '' },
-    { title: '', description: '' },
-    { title: '', description: '' },
-    { title: '', description: '' },
     { title: '', description: '' }
   ])
 
@@ -63,6 +59,17 @@ export function CreateRoundtablePage() {
     setTopics(newTopics)
   }
 
+  const addTopic = () => {
+    setTopics([...topics, { title: '', description: '' }])
+  }
+
+  const removeTopic = (index: number) => {
+    if (topics.length > 6) {
+      const newTopics = topics.filter((_, i) => i !== index)
+      setTopics(newTopics)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -73,9 +80,9 @@ export function CreateRoundtablePage() {
     }
     
     // Validate topics
-    const validTopics = topics.filter(t => t.title.trim() && t.description.trim())
-    if (validTopics.length < 10) {
-      alert('Please provide exactly 10 topics with titles and descriptions')
+    const validTopics = topics.filter(t => t.title.trim())
+    if (validTopics.length < 6) {
+      alert('Please provide at least 6 topics')
       return
     }
 
@@ -135,7 +142,7 @@ export function CreateRoundtablePage() {
             Back to Roundtables
           </button>
           <h1 className="text-3xl font-bold text-gray-900">Create New Roundtable</h1>
-          <p className="text-gray-600 mt-2">Set up a new roundtable program with 10 topics for participant voting</p>
+          <p className="text-gray-600 mt-2">Set up a new roundtable program with topics for participant voting</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-8">
@@ -232,41 +239,49 @@ export function CreateRoundtablePage() {
 
           {/* Topics Configuration */}
           <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-2">Discussion Topics</h2>
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-xl font-semibold text-gray-900">Discussion Topics</h2>
+              <span className="text-sm text-gray-600">{topics.length} topics</span>
+            </div>
             <p className="text-gray-600 mb-6">
-              Define exactly 10 topics that participants will vote on. They will select 8 topics for the sessions.
+              Define topics that participants will vote on. Minimum 6 topics required.
             </p>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {topics.map((topic, index) => (
                 <div key={index} className="border border-gray-200 rounded-lg p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-sm font-medium text-gray-900">Topic {index + 1}</h3>
-                  </div>
-                  
-                  <div className="space-y-3">
-                    <div>
-                      <input
-                        type="text"
-                        placeholder="Topic title (e.g., The Art of Negotiation)"
-                        value={topic.title}
-                        onChange={(e) => updateTopic(index, 'title', e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
-                    <div>
-                      <textarea
-                        placeholder="Topic description and context for the discussion..."
-                        value={topic.description}
-                        onChange={(e) => updateTopic(index, 'description', e.target.value)}
-                        rows={2}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-sm font-medium text-gray-500 w-8">#{index + 1}</span>
+                    <input
+                      type="text"
+                      placeholder="Topic title (e.g., The Art of Negotiation)"
+                      value={topic.title}
+                      onChange={(e) => updateTopic(index, 'title', e.target.value)}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    {topics.length > 6 && (
+                      <button
+                        type="button"
+                        onClick={() => removeTopic(index)}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-md"
+                        title="Remove topic"
+                      >
+                        <Trash2 className="h-5 w-5" />
+                      </button>
+                    )}
                   </div>
                 </div>
               ))}
             </div>
+
+            <button
+              type="button"
+              onClick={addTopic}
+              className="mt-4 w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-500 hover:text-blue-600 flex items-center justify-center"
+            >
+              <Plus className="h-5 w-5 mr-2" />
+              Add Topic
+            </button>
 
             <div className="mt-4 p-4 bg-blue-50 rounded-lg">
               <div className="flex items-center">
@@ -274,7 +289,7 @@ export function CreateRoundtablePage() {
                 <div>
                   <h4 className="text-sm font-medium text-blue-900">Session Structure</h4>
                   <p className="text-sm text-blue-700">
-                    Session 1: Topic presentation and voting • Sessions 2-9: Selected topic discussions • Session 10: Roundtable conclusion
+                    Participants will vote to select 8 topics for the sessions (from {topics.length} topics)
                   </p>
                 </div>
               </div>

@@ -14,13 +14,13 @@ const createRoundtableSchema = Joi.object({
   description: Joi.string().optional().max(500),
   clientId: Joi.string().required(),
   startDate: Joi.date().optional(),
-  maxParticipants: Joi.number().integer().min(1).max(12).default(6),
+  maxParticipants: Joi.number().integer().min(1).max(20).default(6),
   topics: Joi.array().items(
     Joi.object({
       title: Joi.string().required().min(2).max(100),
-      description: Joi.string().required().min(10).max(500)
+      description: Joi.string().optional().allow('').max(500)
     })
-  ).min(10).max(10).required()
+  ).min(6).max(20).required()
 })
 
 const updateStatusSchema = Joi.object({
