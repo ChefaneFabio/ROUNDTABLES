@@ -171,14 +171,16 @@ model Trainer {
 }
 
 model Session {
-  id           String        @id @default(cuid())
-  sessionNumber Int          // 1-10 per ogni roundtable
-  scheduledAt  DateTime
-  status       SessionStatus @default(SCHEDULED)
-  meetingLink  String?
-  notes        String?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id              String              @id @default(cuid())
+  sessionNumber   Int                 // 1-10 per ogni roundtable
+  scheduledAt     DateTime
+  status          SessionStatus       @default(SCHEDULED)
+  questionsStatus QuestionsStatus     @default(NOT_REQUESTED)
+  feedbacksStatus FeedbacksStatus     @default(NOT_REQUESTED)
+  meetingLink     String?
+  notes           String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
 
   roundtableId String
   roundtable   Roundtable @relation(fields: [roundtableId], references: [id], onDelete: Cascade)
@@ -327,18 +329,33 @@ enum LanguageLevel {
   C2
 }
 
+// Session overall status
 enum SessionStatus {
   SCHEDULED
-  REMINDER_SENT
-  QUESTIONS_REQUESTED
-  QUESTIONS_READY
   IN_PROGRESS
   COMPLETED
-  FEEDBACK_PENDING
-  FEEDBACK_SENT
   CANCELLED
 }
 
+// Questions workflow status (separate column)
+enum QuestionsStatus {
+  NOT_REQUESTED
+  REQUESTED_FROM_COORDINATOR    // Automatico 1 settimana prima
+  SAVED_BY_TRAINER              // Trainer saved (not submitted yet)
+  PENDING_APPROVAL              // Trainer submitted, waiting coordinator
+  SENT_TO_PARTICIPANTS          // Manuale: Coordinator sent via email
+}
+
+// Feedbacks workflow status (separate column)
+enum FeedbacksStatus {
+  NOT_REQUESTED
+  REQUESTED_FROM_COORDINATOR    // Automatico dopo fine sessione
+  SAVED_BY_TRAINER              // Trainer saved (not submitted yet)
+  PENDING_APPROVAL              // Trainer submitted, waiting coordinator
+  SENT_TO_PARTICIPANTS          // Manuale: Coordinator sent via email
+}
+
+// Individual question status (for coordinator review)
 enum QuestionStatus {
   PENDING
   APPROVED
@@ -346,6 +363,7 @@ enum QuestionStatus {
   REJECTED
 }
 
+// Individual feedback status (for coordinator review)
 enum FeedbackStatus {
   PENDING
   APPROVED
