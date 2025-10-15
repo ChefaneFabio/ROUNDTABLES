@@ -14,8 +14,7 @@ import {
   Search,
   MoreVertical,
   Eye,
-  Mail,
-  Star
+  Mail
 } from 'lucide-react'
 
 interface Feedback {
@@ -51,7 +50,6 @@ interface Feedback {
     name: string
     email: string
   }
-  rating?: number
 }
 
 export function FeedbackPage() {
@@ -97,8 +95,7 @@ export function FeedbackPage() {
             id: '1',
             name: 'Stefania Bianchi',
             email: 'stefania.bianchi@fastweb.it'
-          },
-          rating: 4
+          }
         },
         {
           id: '2',
@@ -124,8 +121,7 @@ export function FeedbackPage() {
             id: '2',
             name: 'Giovanni Rossi',
             email: 'giovanni.rossi@unicredit.it'
-          },
-          rating: 5
+          }
         },
         {
           id: '3',
@@ -149,8 +145,7 @@ export function FeedbackPage() {
             id: '3',
             name: 'Maria Ferrari',
             email: 'maria.ferrari@intesasanpaolo.com'
-          },
-          rating: 5
+          }
         }
       ]
       setFeedbacks(mockFeedbacks)
@@ -439,12 +434,11 @@ export function FeedbackPage() {
 
           <div className="bg-white p-6 rounded-lg shadow">
             <div className="flex items-center">
-              <Star className="h-8 w-8 text-purple-600" />
+              <CheckCircle className="h-8 w-8 text-blue-600" />
               <div className="ml-4">
-                <p className="text-sm text-gray-600">Avg Rating</p>
+                <p className="text-sm text-gray-600">Reviewed</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {(feedbacks.filter(f => f.rating).reduce((sum, f) => sum + (f.rating || 0), 0) / 
-                    feedbacks.filter(f => f.rating).length || 0).toFixed(1)}
+                  {feedbacks.filter(f => f.status === 'REVIEWED').length}
                 </p>
               </div>
             </div>
@@ -531,12 +525,6 @@ export function FeedbackPage() {
                           <span className={`ml-3 text-sm font-medium ${urgency.color}`}>
                             {urgency.label}
                           </span>
-                          {feedback.rating && (
-                            <div className="ml-3 flex items-center">
-                              <Star className="h-4 w-4 text-yellow-500 mr-1" />
-                              <span className="text-sm text-gray-600">{feedback.rating}/5</span>
-                            </div>
-                          )}
                         </div>
                         
                         <div className="mb-3">

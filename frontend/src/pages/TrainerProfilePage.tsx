@@ -14,6 +14,7 @@ import {
   LogOut
 } from 'lucide-react'
 import axios from 'axios'
+import { useAuth } from '../contexts/AuthContext'
 
 interface TrainerProfile {
   id: string
@@ -79,6 +80,7 @@ interface TrainerSession {
 
 export function TrainerProfilePage() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [activeTab, setActiveTab] = useState<'dashboard' | 'sessions' | 'calendar' | 'profile'>('dashboard')
   const [profile, setProfile] = useState<TrainerProfile | null>(null)
   const [sessions, setSessions] = useState<TrainerSession[]>([])
@@ -101,8 +103,14 @@ export function TrainerProfilePage() {
       setLoading(true)
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
-      // TODO: Get email from auth context
-      const trainerEmail = 'jean@trainer.com'
+      // Get email from logged-in user
+      const trainerEmail = user?.email
+
+      if (!trainerEmail) {
+        console.error('No user email found')
+        setLoading(false)
+        return
+      }
 
       // Fetch trainer profile
       const profileRes = await axios.get(`${apiUrl}/trainers/me?email=${trainerEmail}`)
@@ -126,7 +134,12 @@ export function TrainerProfilePage() {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
-      const trainerEmail = 'jean@trainer.com'
+      const trainerEmail = user?.email
+
+      if (!trainerEmail) {
+        alert('User email not found')
+        return
+      }
 
       await axios.post(
         `${apiUrl}/trainers/me/sessions/${selectedSession.id}/questions?email=${trainerEmail}`,
@@ -159,7 +172,12 @@ export function TrainerProfilePage() {
 
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
-      const trainerEmail = 'jean@trainer.com'
+      const trainerEmail = user?.email
+
+      if (!trainerEmail) {
+        alert('User email not found')
+        return
+      }
 
       await axios.post(
         `${apiUrl}/trainers/me/sessions/${selectedSession.id}/feedback?email=${trainerEmail}`,

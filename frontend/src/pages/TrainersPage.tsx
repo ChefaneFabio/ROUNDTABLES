@@ -92,81 +92,39 @@ export function TrainersPage() {
   const fetchTrainers = async () => {
     try {
       setLoading(true)
-      // Simulate API call - in real implementation this would fetch from backend
-      const mockTrainers: Trainer[] = [
-        {
-          id: '1',
-          name: 'Marco Rossi',
-          email: 'marco.rossi@trainer.com',
-          phone: '+39 345 678 9012',
-          specialties: ['Leadership', 'Communication', 'Team Building'],
-          status: 'ACTIVE',
-          rating: 4.8,
-          totalSessions: 45,
-          completedSessions: 42,
-          upcomingSessions: 3,
-          languages: ['English', 'Italian'],
-          hourlyRate: 85,
-          notes: 'Excellent facilitator with strong background in corporate training',
-          createdAt: '2023-06-15',
-          lastActiveAt: '2024-01-20',
-          availability: {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
+      const response = await fetch(`${apiUrl}/trainers`)
+      const data = await response.json()
+
+      if (data.success && data.data) {
+        // Map backend data to frontend structure
+        const mappedTrainers: Trainer[] = data.data.map((t: any) => ({
+          id: t.id,
+          name: t.name,
+          email: t.email,
+          phone: t.phone,
+          specialties: t.specialties || [],
+          status: t.status,
+          rating: t.rating || 0,
+          totalSessions: t.sessionsCount || 0,
+          completedSessions: t.sessionsCount || 0, // TODO: Track separately
+          upcomingSessions: 0, // TODO: Fetch from sessions
+          languages: t.languages || ['English', 'Italian'],
+          hourlyRate: t.hourlyRate,
+          notes: t.bio || '',
+          createdAt: t.joinedDate || new Date().toISOString(),
+          lastActiveAt: t.lastActive,
+          availability: t.availability || {
             monday: true,
             tuesday: true,
             wednesday: true,
-            thursday: false,
-            friday: true
-          }
-        },
-        {
-          id: '2',
-          name: 'Anna Verdi',
-          email: 'anna.verdi@trainer.com',
-          phone: '+39 334 567 8901',
-          specialties: ['Negotiation', 'Conflict Resolution', 'Decision Making'],
-          status: 'ACTIVE',
-          rating: 4.9,
-          totalSessions: 38,
-          completedSessions: 35,
-          upcomingSessions: 2,
-          languages: ['English', 'Italian', 'Spanish'],
-          hourlyRate: 90,
-          notes: 'Specialist in high-stakes negotiations and mediation',
-          createdAt: '2023-08-20',
-          lastActiveAt: '2024-01-19',
-          availability: {
-            monday: true,
-            tuesday: true,
-            wednesday: false,
             thursday: true,
             friday: true
           }
-        },
-        {
-          id: '3',
-          name: 'Luca Neri',
-          email: 'luca.neri@trainer.com',
-          specialties: ['Innovation', 'Presentation Skills', 'Time Management'],
-          status: 'UNAVAILABLE',
-          rating: 4.6,
-          totalSessions: 28,
-          completedSessions: 28,
-          upcomingSessions: 0,
-          languages: ['English', 'Italian'],
-          hourlyRate: 80,
-          notes: 'Currently on sabbatical, returning March 2024',
-          createdAt: '2023-09-10',
-          lastActiveAt: '2024-01-15',
-          availability: {
-            monday: false,
-            tuesday: false,
-            wednesday: false,
-            thursday: false,
-            friday: false
-          }
-        }
-      ]
-      setTrainers(mockTrainers)
+        }))
+        setTrainers(mappedTrainers)
+      }
     } catch (error) {
       console.error('Error fetching trainers:', error)
     } finally {
@@ -176,46 +134,62 @@ export function TrainersPage() {
 
   const handleAddTrainer = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!newTrainer.name || !newTrainer.email) {
       alert('Please fill in all required fields')
       return
     }
 
     try {
-      const trainer: Trainer = {
-        id: Date.now().toString(),
-        ...newTrainer,
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
+      // Prepare trainer data for backend
+      const trainerData = {
+        name: newTrainer.name,
+        email: newTrainer.email,
+        phone: newTrainer.phone,
         specialties: newTrainer.specialties,
-        languages: newTrainer.languages,
+        bio: newTrainer.notes,
         hourlyRate: newTrainer.hourlyRate ? parseFloat(newTrainer.hourlyRate) : undefined,
-        status: 'ACTIVE',
-        rating: 0,
-        totalSessions: 0,
-        completedSessions: 0,
-        upcomingSessions: 0,
-        createdAt: new Date().toISOString()
+        availability: newTrainer.availability,
+        languages: newTrainer.languages
       }
 
-      setTrainers([...trainers, trainer])
-      setShowAddModal(false)
-      setNewTrainer({
-        name: '',
-        email: '',
-        phone: '',
-        specialties: [],
-        languages: [],
-        hourlyRate: '',
-        notes: '',
-        availability: {
-          monday: true,
-          tuesday: true,
-          wednesday: true,
-          thursday: true,
-          friday: true
-        }
+      const response = await fetch(`${apiUrl}/trainers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(trainerData)
       })
-      alert('Trainer added successfully!')
+
+      const data = await response.json()
+
+      if (data.success) {
+        // Refresh the list
+        await fetchTrainers()
+
+        setShowAddModal(false)
+        setNewTrainer({
+          name: '',
+          email: '',
+          phone: '',
+          specialties: [],
+          languages: [],
+          hourlyRate: '',
+          notes: '',
+          availability: {
+            monday: true,
+            tuesday: true,
+            wednesday: true,
+            thursday: true,
+            friday: true
+          }
+        })
+        alert('Trainer added successfully! They can now log in to the platform.')
+      } else {
+        alert(data.message || 'Error adding trainer')
+      }
     } catch (error) {
       console.error('Error adding trainer:', error)
       alert('Error adding trainer. Please try again.')
@@ -223,17 +197,58 @@ export function TrainersPage() {
   }
 
   const handleStatusChange = async (trainerId: string, newStatus: string) => {
-    const updated = trainers.map(t => 
-      t.id === trainerId ? { ...t, status: newStatus as any } : t
-    )
-    setTrainers(updated)
-    alert(`Trainer status updated to ${newStatus}`)
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
+      const response = await fetch(`${apiUrl}/trainers/${trainerId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ status: newStatus })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        // Update local state
+        const updated = trainers.map(t =>
+          t.id === trainerId ? { ...t, status: newStatus as any } : t
+        )
+        setTrainers(updated)
+        alert(`Trainer status updated to ${newStatus}`)
+      } else {
+        alert(data.message || 'Error updating trainer status')
+      }
+    } catch (error) {
+      console.error('Error updating trainer status:', error)
+      alert('Error updating trainer status. Please try again.')
+    }
   }
 
   const handleDelete = async (trainerId: string) => {
-    if (confirm('Are you sure you want to remove this trainer?')) {
-      setTrainers(trainers.filter(t => t.id !== trainerId))
-      alert('Trainer removed successfully')
+    if (!confirm('Are you sure you want to remove this trainer?')) {
+      return
+    }
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
+      const response = await fetch(`${apiUrl}/trainers/${trainerId}`, {
+        method: 'DELETE'
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        setTrainers(trainers.filter(t => t.id !== trainerId))
+        alert('Trainer removed successfully')
+      } else {
+        alert(data.message || 'Error removing trainer')
+      }
+    } catch (error) {
+      console.error('Error deleting trainer:', error)
+      alert('Error deleting trainer. Please try again.')
     }
   }
 

@@ -98,99 +98,74 @@ export function SessionDetailsPage() {
   const fetchSessionDetails = async () => {
     try {
       setLoading(true)
-      // Simulate API call - in real implementation this would fetch from backend
-      const mockSession: SessionDetails = {
-        id: id!,
-        sessionNumber: 3,
-        scheduledAt: '2024-01-22T14:00:00Z',
-        duration: 60,
-        status: 'SCHEDULED',
-        topic: {
-          id: '1',
-          title: 'The Art of Negotiation',
-          description: 'Understanding negotiation strategies, building trust, and achieving win-win outcomes in professional settings.'
-        },
-        roundtable: {
-          id: '1',
-          name: 'Leadership Training Q1',
-          client: {
-            company: 'Fastweb'
-          }
-        },
-        trainer: {
-          id: '1',
-          name: 'Marco Rossi',
-          email: 'marco.rossi@trainer.com',
-          phone: '+39 345 678 9012'
-        },
-        participants: [
-          {
-            id: '1',
-            name: 'Anna Bianchi',
-            email: 'anna.bianchi@fastweb.it',
-            attendanceStatus: 'PENDING'
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+
+      const response = await fetch(`${apiUrl}/sessions/${id}`)
+      const data = await response.json()
+
+      if (data.success && data.data) {
+        const sessionData = data.data
+
+        // Map backend data to frontend structure
+        const mappedSession: SessionDetails = {
+          id: sessionData.id,
+          sessionNumber: sessionData.sessionNumber,
+          scheduledAt: sessionData.scheduledAt,
+          duration: sessionData.duration || 60,
+          status: sessionData.status,
+          topic: sessionData.topic || {
+            id: '',
+            title: 'Topic TBD',
+            description: 'Topic not yet assigned'
           },
-          {
-            id: '2',
-            name: 'Giuseppe Verde',
-            email: 'giuseppe.verde@fastweb.it',
-            attendanceStatus: 'PENDING'
+          roundtable: {
+            id: sessionData.roundtable.id,
+            name: sessionData.roundtable.name,
+            client: {
+              company: sessionData.roundtable.client?.company || sessionData.roundtable.client?.name || 'Client'
+            }
           },
-          {
-            id: '3',
-            name: 'Maria Rossi',
-            email: 'maria.rossi@fastweb.it',
-            attendanceStatus: 'PENDING'
+          trainer: sessionData.trainer ? {
+            id: sessionData.trainer.id,
+            name: sessionData.trainer.name,
+            email: sessionData.trainer.email,
+            phone: sessionData.trainer.phone
+          } : {
+            id: '',
+            name: 'Not Assigned',
+            email: '',
+            phone: ''
           },
-          {
-            id: '4',
-            name: 'Luca Neri',
-            email: 'luca.neri@fastweb.it',
-            attendanceStatus: 'PENDING'
-          }
-        ],
-        questions: [
-          {
-            id: '1',
-            content: 'What do you think makes someone a good negotiator?',
-            status: 'APPROVED',
-            submittedAt: '2024-01-15T10:00:00Z'
-          },
-          {
-            id: '2',
-            content: 'Research shows that 90% of successful negotiators focus on understanding the other party\'s needs. Why do you think this approach works well?',
-            status: 'APPROVED',
-            submittedAt: '2024-01-15T10:00:00Z'
-          },
-          {
-            id: '3',
-            content: 'How important is trust when you are negotiating?',
-            status: 'APPROVED',
-            submittedAt: '2024-01-15T10:00:00Z'
-          }
-        ],
-        materials: [
-          {
-            id: '1',
-            name: 'Negotiation Strategies Guide.pdf',
-            type: 'DOCUMENT',
-            url: '/materials/negotiation-guide.pdf',
-            uploadedAt: '2024-01-20T09:00:00Z'
-          },
-          {
-            id: '2',
-            name: 'Harvard Negotiation Techniques',
-            type: 'LINK',
-            url: 'https://harvard.edu/negotiation',
-            uploadedAt: '2024-01-20T09:30:00Z'
-          }
-        ],
-        feedback: [],
-        notes: 'Focus on practical examples from participants\' work experience. Encourage role-playing exercises.',
-        meetingLink: 'https://teams.microsoft.com/l/meetup-join/19%3ameeting'
+          participants: (sessionData.roundtable.participants || []).map((p: any) => ({
+            id: p.id,
+            name: p.name,
+            email: p.email,
+            attendanceStatus: 'PENDING' // TODO: Track actual attendance
+          })),
+          questions: (sessionData.questions || []).map((q: any) => ({
+            id: q.id,
+            content: q.question,
+            status: q.status,
+            submittedAt: q.createdAt
+          })),
+          materials: [], // TODO: Add materials support
+          feedback: (sessionData.feedback || []).map((f: any) => ({
+            id: f.id,
+            participantId: f.participantId,
+            content: f.content,
+            status: f.status,
+            submittedAt: f.createdAt
+          })),
+          notes: sessionData.notes || '',
+          recordingUrl: sessionData.recordingUrl,
+          meetingLink: sessionData.meetingLink
+        }
+
+        setSession(mappedSession)
+        setNotes(mappedSession.notes)
+      } else {
+        console.error('Error: No session data returned')
       }
-      setSession(mockSession)
-      setNotes(mockSession.notes)
     } catch (error) {
       console.error('Error fetching session details:', error)
     } finally {
@@ -509,6 +484,7 @@ export function SessionDetailsPage() {
                 { id: 'overview', label: 'Overview', icon: FileText },
                 { id: 'attendance', label: 'Attendance', icon: Users },
                 { id: 'questions', label: 'Questions', icon: MessageSquare },
+                { id: 'feedback', label: 'Feedback', icon: FileText },
                 { id: 'materials', label: 'Materials', icon: FileText }
               ].map((tab) => (
                 <button
@@ -683,6 +659,61 @@ export function SessionDetailsPage() {
                     </button>
                   </div>
                 </div>
+              </div>
+            )}
+
+            {activeTab === 'feedback' && (
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold text-gray-900">Session Feedback</h3>
+                  <button
+                    onClick={() => navigate('/feedback')}
+                    className="text-blue-600 hover:text-blue-800 text-sm"
+                  >
+                    Manage All Feedback →
+                  </button>
+                </div>
+
+                {session.feedback && session.feedback.length > 0 ? (
+                  <div className="space-y-4">
+                    {session.feedback.map((fb) => {
+                      const participant = session.participants.find(p => p.id === fb.participantId)
+                      return (
+                        <div key={fb.id} className="p-4 border border-gray-200 rounded-lg">
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <h4 className="font-medium text-gray-900">
+                                {participant?.name || 'Unknown Participant'}
+                              </h4>
+                              <p className="text-sm text-gray-600">{participant?.email}</p>
+                            </div>
+                            <span className={`px-2 py-1 text-xs rounded-full ${
+                              fb.status === 'SUBMITTED' ? 'bg-yellow-100 text-yellow-800' :
+                              fb.status === 'REVIEWED' ? 'bg-green-100 text-green-800' :
+                              'bg-blue-100 text-blue-800'
+                            }`}>
+                              {fb.status}
+                            </span>
+                          </div>
+                          <p className="text-gray-700 whitespace-pre-wrap">{fb.content}</p>
+                          <p className="text-sm text-gray-500 mt-2">
+                            Submitted: {new Date(fb.submittedAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">No feedback yet</h3>
+                    <p className="text-gray-600">
+                      {session.status === 'COMPLETED'
+                        ? 'Feedback will be added after the session is completed'
+                        : 'Session must be completed before feedback can be submitted'}
+                    </p>
+                  </div>
+                )}
               </div>
             )}
 
