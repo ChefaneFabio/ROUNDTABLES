@@ -24,7 +24,8 @@
       "Bash(npx prisma migrate dev:*)",
       "Bash(npx prisma:*)",
       "Bash(curl -s \"https://roundtables.onrender.com/api/trainers/me?email=jean@trainer.com\")",
-      "Bash(curl -s \"http://localhost:5000/api/trainers/me?email=jean@trainer.com\")"
+      "Bash(curl -s \"http://localhost:5000/api/trainers/me?email=jean@trainer.com\")",
+      "Bash(curl -s -X POST \"https://roundtables.onrender.com/api/trainers\" -H \"Content-Type: application/json\" -d '{\n    \"\"\"\"name\"\"\"\": \"\"\"\"JEAN\"\"\"\",\n    \"\"\"\"email\"\"\"\": \"\"\"\"jean@trainer.com\"\"\"\",\n    \"\"\"\"expertise\"\"\"\": [\"\"\"\"Leadership\"\"\"\", \"\"\"\"Team Management\"\"\"\", \"\"\"\"Communication\"\"\"\", \"\"\"\"Innovation\"\"\"\"],\n    \"\"\"\"isActive\"\"\"\": true\n  }')"
     ],
     "deny": [],
     "ask": []
