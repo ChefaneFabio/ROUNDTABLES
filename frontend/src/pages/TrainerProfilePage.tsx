@@ -51,6 +51,8 @@ interface TrainerSession {
   sessionNumber: number
   scheduledAt: Date
   status: string
+  questionsStatus: string
+  feedbacksStatus: string
   roundtable: {
     id: string
     name: string
@@ -221,6 +223,36 @@ export function TrainerProfilePage() {
     if (session.feedback.length > 0 && session.feedback[0].status === 'PENDING') return 'Feedback Pending Approval'
     if (session.feedback.length > 0) return 'Completed'
     return 'Scheduled'
+  }
+
+  const getQuestionsStatusColor = (status: string) => {
+    switch (status) {
+      case 'NOT_REQUESTED': return 'bg-gray-100 text-gray-600'
+      case 'REQUESTED_FROM_COORDINATOR': return 'bg-orange-100 text-orange-800'
+      case 'SAVED_BY_TRAINER': return 'bg-yellow-100 text-yellow-800'
+      case 'PENDING_APPROVAL': return 'bg-blue-100 text-blue-800'
+      case 'SENT_TO_PARTICIPANTS': return 'bg-green-100 text-green-800'
+      default: return 'bg-gray-100 text-gray-600'
+    }
+  }
+
+  const getFeedbacksStatusColor = (status: string) => {
+    switch (status) {
+      case 'NOT_REQUESTED': return 'bg-gray-100 text-gray-600'
+      case 'REQUESTED_FROM_COORDINATOR': return 'bg-orange-100 text-orange-800'
+      case 'SAVED_BY_TRAINER': return 'bg-yellow-100 text-yellow-800'
+      case 'PENDING_APPROVAL': return 'bg-blue-100 text-blue-800'
+      case 'SENT_TO_PARTICIPANTS': return 'bg-green-100 text-green-800'
+      default: return 'bg-gray-100 text-gray-600'
+    }
+  }
+
+  const formatStatusLabel = (status: string) => {
+    return status
+      .replace(/_/g, ' ')
+      .split(' ')
+      .map(word => word.charAt(0) + word.slice(1).toLowerCase())
+      .join(' ')
   }
 
   if (loading) {
@@ -512,6 +544,22 @@ export function TrainerProfilePage() {
                             <span>
                               {session.roundtable.participants.length} participants
                             </span>
+                          </div>
+
+                          {/* 3-Column Status Display */}
+                          <div className="flex items-center gap-3 mt-2">
+                            <div className="flex items-center">
+                              <MessageSquare className="h-4 w-4 mr-1 text-gray-400" />
+                              <span className={`px-2 py-1 text-xs rounded ${getQuestionsStatusColor(session.questionsStatus)}`}>
+                                Q: {formatStatusLabel(session.questionsStatus)}
+                              </span>
+                            </div>
+                            <div className="flex items-center">
+                              <FileText className="h-4 w-4 mr-1 text-gray-400" />
+                              <span className={`px-2 py-1 text-xs rounded ${getFeedbacksStatusColor(session.feedbacksStatus)}`}>
+                                F: {formatStatusLabel(session.feedbacksStatus)}
+                              </span>
+                            </div>
                           </div>
                         </div>
                         <div className="flex items-center gap-2">

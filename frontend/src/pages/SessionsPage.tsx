@@ -21,6 +21,8 @@ interface Session {
   sessionNumber: number
   scheduledAt: string
   status: string
+  questionsStatus: string
+  feedbacksStatus: string
   topic: {
     title: string
   }
@@ -84,6 +86,36 @@ export function SessionsPage() {
       case 'CANCELLED': return AlertCircle
       default: return Clock
     }
+  }
+
+  const getQuestionsStatusColor = (status: string) => {
+    switch (status) {
+      case 'NOT_REQUESTED': return 'bg-gray-100 text-gray-600'
+      case 'REQUESTED_FROM_COORDINATOR': return 'bg-orange-100 text-orange-800'
+      case 'SAVED_BY_TRAINER': return 'bg-yellow-100 text-yellow-800'
+      case 'PENDING_APPROVAL': return 'bg-blue-100 text-blue-800'
+      case 'SENT_TO_PARTICIPANTS': return 'bg-green-100 text-green-800'
+      default: return 'bg-gray-100 text-gray-600'
+    }
+  }
+
+  const getFeedbacksStatusColor = (status: string) => {
+    switch (status) {
+      case 'NOT_REQUESTED': return 'bg-gray-100 text-gray-600'
+      case 'REQUESTED_FROM_COORDINATOR': return 'bg-orange-100 text-orange-800'
+      case 'SAVED_BY_TRAINER': return 'bg-yellow-100 text-yellow-800'
+      case 'PENDING_APPROVAL': return 'bg-blue-100 text-blue-800'
+      case 'SENT_TO_PARTICIPANTS': return 'bg-green-100 text-green-800'
+      default: return 'bg-gray-100 text-gray-600'
+    }
+  }
+
+  const formatStatusLabel = (status: string) => {
+    return status
+      .replace(/_/g, ' ')
+      .split(' ')
+      .map(word => word.charAt(0) + word.slice(1).toLowerCase())
+      .join(' ')
   }
 
   const getNextAction = (session: Session) => {
@@ -299,8 +331,24 @@ export function SessionsPage() {
                                 Session {session.sessionNumber}: {session.topic.title}
                               </h3>
                               <span className={`ml-3 px-2 py-1 text-xs rounded-full ${getStatusColor(session.status)}`}>
-                                {session.status.replace('_', ' ')}
+                                {formatStatusLabel(session.status)}
                               </span>
+                            </div>
+
+                            {/* 3-Column Status Display */}
+                            <div className="mt-2 flex items-center space-x-3">
+                              <div className="flex items-center">
+                                <MessageSquare className="h-4 w-4 mr-1 text-gray-400" />
+                                <span className={`px-2 py-1 text-xs rounded ${getQuestionsStatusColor(session.questionsStatus)}`}>
+                                  Q: {formatStatusLabel(session.questionsStatus)}
+                                </span>
+                              </div>
+                              <div className="flex items-center">
+                                <FileText className="h-4 w-4 mr-1 text-gray-400" />
+                                <span className={`px-2 py-1 text-xs rounded ${getFeedbacksStatusColor(session.feedbacksStatus)}`}>
+                                  F: {formatStatusLabel(session.feedbacksStatus)}
+                                </span>
+                              </div>
                             </div>
                             
                             <div className="mt-2 flex items-center text-sm text-gray-600 space-x-4">
