@@ -1,4 +1,4 @@
-import { PrismaClient, ParticipantStatus, RoundtableStatus, SessionStatus } from '@prisma/client'
+import { PrismaClient, ParticipantStatus, RoundtableStatus } from '@prisma/client'
 import { addDays, addWeeks } from 'date-fns'
 
 const prisma = new PrismaClient()
@@ -210,7 +210,9 @@ async function main() {
     data: {
       sessionNumber: 1,
       scheduledAt: addDays(now, -7),
-      status: SessionStatus.FEEDBACK_SENT,
+      status: 'COMPLETED',
+      questionsStatus: 'SENT_TO_PARTICIPANTS',
+      feedbacksStatus: 'SENT_TO_PARTICIPANTS',
       roundtableId: roundtable.id,
       topicId: topics[0].id, // Introduction
       trainerId: trainer.id,
@@ -263,7 +265,9 @@ async function main() {
     data: {
       sessionNumber: 2,
       scheduledAt: addDays(now, -3),
-      status: SessionStatus.FEEDBACK_PENDING,
+      status: 'COMPLETED',
+      questionsStatus: 'SENT_TO_PARTICIPANTS',
+      feedbacksStatus: 'REQUESTED_FROM_COORDINATOR',
       roundtableId: roundtable.id,
       topicId: topics[1].id, // Effective Communication
       trainerId: trainer.id,
@@ -302,7 +306,9 @@ async function main() {
     data: {
       sessionNumber: 3,
       scheduledAt: addDays(now, 7),
-      status: SessionStatus.REMINDER_SENT,
+      status: 'SCHEDULED',
+      questionsStatus: 'REQUESTED_FROM_COORDINATOR',
+      feedbacksStatus: 'NOT_REQUESTED',
       roundtableId: roundtable.id,
       topicId: topics[2].id, // Motivating the Team
       trainerId: trainer.id,
@@ -316,7 +322,9 @@ async function main() {
     data: {
       sessionNumber: 4,
       scheduledAt: addDays(now, 14),
-      status: SessionStatus.QUESTIONS_REQUESTED,
+      status: 'SCHEDULED',
+      questionsStatus: 'PENDING_APPROVAL',
+      feedbacksStatus: 'NOT_REQUESTED',
       roundtableId: roundtable.id,
       topicId: topics[3].id, // Innovation Mindset
       trainerId: trainer.id,
@@ -365,7 +373,9 @@ async function main() {
       data: {
         sessionNumber: fs.number,
         scheduledAt: addDays(now, fs.days),
-        status: SessionStatus.SCHEDULED,
+        status: 'SCHEDULED',
+        questionsStatus: 'NOT_REQUESTED',
+        feedbacksStatus: 'NOT_REQUESTED',
         roundtableId: roundtable.id,
         topicId: fs.topic.id,
         trainerId: trainer.id,
