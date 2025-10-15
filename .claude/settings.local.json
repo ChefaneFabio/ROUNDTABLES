@@ -18,7 +18,9 @@
       "Bash(curl -s https://roundtables.onrender.com/api/clients)",
       "Read(//mnt/c/Users/chefa/Downloads/**)",
       "Bash(npm run db:seed:*)",
-      "Bash(npm run create:trainer-user:*)"
+      "Bash(npm run create:trainer-user:*)",
+      "Bash(tsx scripts/test-trainer-notification.ts:*)",
+      "Bash(npx tsx:*)"
     ],
     "deny": [],
     "ask": []

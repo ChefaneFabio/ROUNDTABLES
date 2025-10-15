@@ -380,7 +380,7 @@ export class SchedulingService {
       if (trainers.length === 0) break
 
       const trainer = trainers[trainerIndex % trainers.length]
-      
+
       await prisma.session.update({
         where: { id: session.id },
         data: { trainerId: trainer.id }
@@ -389,8 +389,18 @@ export class SchedulingService {
       assignments.push({
         sessionNumber: session.sessionNumber,
         topic: session.topic?.title,
-        trainer: trainer.name
+        trainer: trainer.name,
+        sessionId: session.id
       })
+
+      // Send notification to trainer about the assignment
+      try {
+        await this.notificationService.sendTrainerAssignmentNotification(session.id)
+        console.log(`✅ Assignment notification sent to ${trainer.name} for session ${session.sessionNumber}`)
+      } catch (error) {
+        console.error(`Error sending assignment notification to ${trainer.name}:`, error)
+        // Continue with other assignments even if notification fails
+      }
 
       trainerIndex++
     }

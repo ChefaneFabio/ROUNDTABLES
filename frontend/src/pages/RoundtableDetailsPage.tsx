@@ -42,6 +42,12 @@ export function RoundtableDetailsPage() {
   const [roundtable, setRoundtable] = useState<Roundtable | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('overview')
+  const [showScheduleModal, setShowScheduleModal] = useState(false)
+  const [scheduleData, setScheduleData] = useState({
+    startDate: '',
+    sessionFrequency: 'weekly' as 'weekly' | 'bi-weekly',
+    sessionDuration: 60
+  })
 
   useEffect(() => {
     if (id) {
@@ -78,7 +84,7 @@ export function RoundtableDetailsPage() {
 
   const handleFinalizeVoting = async () => {
     if (!id) return
-    
+
     try {
       await roundtablesApi.finalizeTopicVoting(id)
       fetchRoundtable() // Refresh data
@@ -86,6 +92,35 @@ export function RoundtableDetailsPage() {
     } catch (error) {
       console.error('Error finalizing voting:', error)
       alert('Error finalizing voting. Please try again.')
+    }
+  }
+
+  const handleScheduleSessions = async () => {
+    if (!id || !scheduleData.startDate) {
+      alert('Please select a start date')
+      return
+    }
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+      const response = await fetch(`${apiUrl}/roundtables/${id}/schedule-sessions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(scheduleData)
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        alert(`Successfully scheduled ${data.data.sessions?.length || 10} sessions!`)
+        setShowScheduleModal(false)
+        fetchRoundtable() // Refresh data
+      } else {
+        throw new Error(data.error || 'Failed to schedule sessions')
+      }
+    } catch (error: any) {
+      console.error('Error scheduling sessions:', error)
+      alert(error.message || 'Error scheduling sessions. Please try again.')
     }
   }
 
@@ -371,17 +406,74 @@ export function RoundtableDetailsPage() {
               <div>
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Sessions</h3>
-                  <button className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 flex items-center">
+                  <button
+                    onClick={() => setShowScheduleModal(true)}
+                    className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 flex items-center"
+                  >
                     <Calendar className="h-4 w-4 mr-2" />
                     Schedule Sessions
                   </button>
                 </div>
-                
-                <div className="text-center py-12 text-gray-500">
-                  <Calendar className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                  <p>No sessions scheduled yet</p>
-                  <p className="text-sm">Sessions will be scheduled after topic voting is complete</p>
-                </div>
+
+                {roundtable.sessions && roundtable.sessions.length > 0 ? (
+                  <div className="space-y-3">
+                    {roundtable.sessions.map((session: any) => {
+                      // Check if session has a proper scheduled date (not the placeholder date)
+                      const isScheduled = session.scheduledAt && new Date(session.scheduledAt) > new Date('2020-01-01')
+
+                      return (
+                        <div
+                          key={session.id}
+                          className={`border rounded-lg p-4 ${
+                            isScheduled
+                              ? 'border-gray-200 hover:bg-gray-50 cursor-pointer'
+                              : 'border-gray-300 bg-gray-50'
+                          }`}
+                          onClick={() => isScheduled && navigate(`/sessions/${session.id}`)}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex-1">
+                              <h4 className="font-semibold text-gray-900">
+                                Session {session.sessionNumber}/10
+                              </h4>
+                              <p className="text-sm text-gray-600 mt-1">
+                                {session.topic?.title || 'Topic TBD'}
+                              </p>
+                              {isScheduled ? (
+                                <p className="text-sm text-gray-500 mt-1">
+                                  {new Date(session.scheduledAt).toLocaleDateString()} at{' '}
+                                  {new Date(session.scheduledAt).toLocaleTimeString([], {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </p>
+                              ) : (
+                                <p className="text-sm text-orange-600 mt-1 flex items-center">
+                                  <Calendar className="h-3 w-3 mr-1" />
+                                  Not scheduled yet - Click "Schedule Sessions" above
+                                </p>
+                              )}
+                              {session.trainer && (
+                                <p className="text-sm text-gray-600 mt-1">
+                                  Trainer: {session.trainer.name}
+                                </p>
+                              )}
+                            </div>
+                            <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(session.status)}`}>
+                              {session.status.replace('_', ' ')}
+                            </span>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-gray-500">
+                    <Calendar className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                    <p>No sessions created yet</p>
+                    <p className="text-sm">Sessions will be created when the roundtable is set up</p>
+                  </div>
+                )}
               </div>
             )}
 
@@ -417,6 +509,109 @@ export function RoundtableDetailsPage() {
           </div>
         </div>
       </div>
+
+      {/* Schedule Sessions Modal */}
+      {showScheduleModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">
+                Schedule Sessions
+              </h3>
+              <p className="text-sm text-gray-600 mt-1">
+                Create a calendar for all 10 roundtable sessions
+              </p>
+            </div>
+
+            <div className="p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Start Date *
+                </label>
+                <input
+                  type="date"
+                  value={scheduleData.startDate}
+                  onChange={(e) =>
+                    setScheduleData({ ...scheduleData, startDate: e.target.value })
+                  }
+                  min={new Date().toISOString().split('T')[0]}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Date for the first session (Session 1)
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Session Frequency
+                </label>
+                <select
+                  value={scheduleData.sessionFrequency}
+                  onChange={(e) =>
+                    setScheduleData({
+                      ...scheduleData,
+                      sessionFrequency: e.target.value as 'weekly' | 'bi-weekly'
+                    })
+                  }
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                >
+                  <option value="weekly">Weekly (every 7 days)</option>
+                  <option value="bi-weekly">Bi-weekly (every 14 days)</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Session Duration (minutes)
+                </label>
+                <input
+                  type="number"
+                  value={scheduleData.sessionDuration}
+                  onChange={(e) =>
+                    setScheduleData({
+                      ...scheduleData,
+                      sessionDuration: parseInt(e.target.value) || 60
+                    })
+                  }
+                  min="30"
+                  max="180"
+                  step="15"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                />
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+                <p className="font-medium mb-1">What happens next:</p>
+                <ul className="list-disc list-inside space-y-1 text-xs">
+                  <li>10 sessions will be created automatically</li>
+                  <li>Session 1: Introduction (no topic)</li>
+                  <li>Sessions 2-9: Assigned to selected topics</li>
+                  <li>Session 10: Wrap-up and conclusion</li>
+                  <li>Trainers can be assigned to sessions later</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-gray-200 flex justify-end gap-3">
+              <button
+                onClick={() => setShowScheduleModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleScheduleSessions}
+                disabled={!scheduleData.startDate}
+                className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+              >
+                <Calendar className="h-4 w-4 mr-2" />
+                Schedule 10 Sessions
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -299,6 +299,91 @@ The Maka Team
     }
   }
 
+  async sendTrainerAssignmentNotification(sessionId: string) {
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: {
+        roundtable: {
+          include: {
+            client: true,
+            participants: { where: { status: 'ACTIVE' } }
+          }
+        },
+        topic: true,
+        trainer: true
+      }
+    })
+
+    if (!session?.trainer) return
+
+    try {
+      const notification = {
+        type: 'TRAINER_ASSIGNMENT' as const,
+        recipient: session.trainer.email,
+        subject: `New Session Assignment - ${session.roundtable.name}`,
+        content: this.generateTrainerAssignmentEmail({
+          trainerName: session.trainer.name,
+          sessionNumber: session.sessionNumber,
+          roundtableName: session.roundtable.name,
+          clientName: session.roundtable.client.name,
+          scheduledAt: session.scheduledAt,
+          topic: session.topic?.title,
+          participantCount: session.roundtable.participants.length
+        })
+      }
+
+      return this.createAndSendNotification(notification)
+    } catch (error) {
+      console.error('Error sending trainer assignment notification:', error)
+      throw error
+    }
+  }
+
+  private generateTrainerAssignmentEmail(data: {
+    trainerName: string
+    sessionNumber: number
+    roundtableName: string
+    clientName: string
+    scheduledAt: Date
+    topic?: string
+    participantCount: number
+  }) {
+    const questionDeadline = addDays(data.scheduledAt, -7)
+    const feedbackDeadline = addDays(data.scheduledAt, 1)
+
+    return `
+Dear ${data.trainerName},
+
+You have been assigned to a new session!
+
+SESSION DETAILS:
+Session: ${data.sessionNumber}/10
+Roundtable: ${data.roundtableName}
+Client: ${data.clientName}
+Topic: ${data.topic || 'To be determined'}
+Scheduled Date: ${format(data.scheduledAt, 'PPP p')}
+Participants: ${data.participantCount}
+
+IMPORTANT DEADLINES:
+📝 Submit Questions: By ${format(questionDeadline, 'PPP')} (7 days before session)
+💭 Submit Feedback: By ${format(feedbackDeadline, 'PPP')} (1 day after session)
+
+NEXT STEPS:
+1. Login to your trainer portal: ${process.env.FRONTEND_URL || 'https://roundtables.makaitalia.com'}/trainer/profile
+2. Review the session details and context
+3. Prepare 3 questions for the session (at least 1 week before)
+4. Conduct the session on the scheduled date
+5. Submit individual feedback for all participants (within 1 day)
+
+You will receive automated reminders for question submission and feedback.
+
+If you have any questions or need to reschedule, please contact the coordinator.
+
+Best regards,
+The Maka Team
+    `
+  }
+
   async sendVotingInvitations(roundtableId: string) {
     const roundtable = await prisma.roundtable.findUnique({
       where: { id: roundtableId },

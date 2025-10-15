@@ -3,10 +3,12 @@ import { PrismaClient } from '@prisma/client'
 import Joi from 'joi'
 import { validateRequest } from '../middleware/validateRequest'
 import { SchedulingService } from '../services/SchedulingService'
+import { NotificationService } from '../services/NotificationService'
 
 const router = Router()
 const prisma = new PrismaClient()
 const schedulingService = new SchedulingService()
+const notificationService = new NotificationService()
 
 // Validation schemas
 const scheduleRoundtableSchema = Joi.object({
@@ -405,6 +407,17 @@ router.patch('/:id/assign-trainer', async (req: Request, res: Response) => {
       data: { trainerId },
       include: { trainer: { select: { name: true, email: true } } }
     })
+
+    // Send notification to trainer about the new assignment
+    if (trainerId) {
+      try {
+        await notificationService.sendTrainerAssignmentNotification(id)
+        console.log(`✅ Assignment notification sent to trainer for session ${id}`)
+      } catch (error) {
+        console.error('Error sending trainer assignment notification:', error)
+        // Don't fail the request if notification fails
+      }
+    }
 
     res.json({ success: true, data: session })
   } catch (error) {
