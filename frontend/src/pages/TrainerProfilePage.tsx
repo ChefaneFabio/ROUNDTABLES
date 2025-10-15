@@ -13,7 +13,7 @@ import {
   Send,
   LogOut
 } from 'lucide-react'
-import axios from 'axios'
+import { trainersApi } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
 
 interface TrainerProfile {
@@ -101,7 +101,6 @@ export function TrainerProfilePage() {
   const fetchTrainerData = async () => {
     try {
       setLoading(true)
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
       // Get email from logged-in user
       const trainerEmail = user?.email
@@ -113,12 +112,12 @@ export function TrainerProfilePage() {
       }
 
       // Fetch trainer profile
-      const profileRes = await axios.get(`${apiUrl}/trainers/me?email=${trainerEmail}`)
-      setProfile(profileRes.data.data)
+      const profileRes = await trainersApi.getProfile(trainerEmail)
+      setProfile(profileRes.data)
 
       // Fetch sessions
-      const sessionsRes = await axios.get(`${apiUrl}/trainers/me/sessions?email=${trainerEmail}`)
-      setSessions(sessionsRes.data.data)
+      const sessionsRes = await trainersApi.getSessions(trainerEmail)
+      setSessions(sessionsRes.data)
     } catch (error) {
       console.error('Error fetching trainer data:', error)
     } finally {
@@ -133,7 +132,6 @@ export function TrainerProfilePage() {
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
       const trainerEmail = user?.email
 
       if (!trainerEmail) {
@@ -141,11 +139,10 @@ export function TrainerProfilePage() {
         return
       }
 
-      await axios.post(
-        `${apiUrl}/trainers/me/sessions/${selectedSession.id}/questions?email=${trainerEmail}`,
-        {
-          questions: questions.map((q) => ({ question: q }))
-        }
+      await trainersApi.submitQuestions(
+        selectedSession.id,
+        trainerEmail,
+        questions.map((q) => ({ question: q }))
       )
 
       alert('Questions submitted successfully! Awaiting coordinator approval.')
@@ -153,7 +150,7 @@ export function TrainerProfilePage() {
       setQuestions(['', '', ''])
       fetchTrainerData() // Refresh data
     } catch (error: any) {
-      alert(error.response?.data?.message || 'Failed to submit questions')
+      alert(error.message || 'Failed to submit questions')
     }
   }
 
@@ -171,7 +168,6 @@ export function TrainerProfilePage() {
     }
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
       const trainerEmail = user?.email
 
       if (!trainerEmail) {
@@ -179,17 +175,14 @@ export function TrainerProfilePage() {
         return
       }
 
-      await axios.post(
-        `${apiUrl}/trainers/me/sessions/${selectedSession.id}/feedback?email=${trainerEmail}`,
-        { feedbacks: feedbackArray }
-      )
+      await trainersApi.submitFeedback(selectedSession.id, trainerEmail, feedbackArray)
 
       alert('Feedback submitted successfully! Awaiting coordinator approval.')
       setShowFeedbackForm(false)
       setFeedbacks({})
       fetchTrainerData() // Refresh data
     } catch (error: any) {
-      alert(error.response?.data?.message || 'Failed to submit feedback')
+      alert(error.message || 'Failed to submit feedback')
     }
   }
 

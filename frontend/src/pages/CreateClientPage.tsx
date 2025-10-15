@@ -23,17 +23,17 @@ export function CreateClientPage() {
 
     try {
       setLoading(true)
-      
+
       const response = await clientsApi.create(formData)
-      
-      if (response?.id) {
-        navigate(`/clients/${response.id}`)
+
+      if (response?.data?.id) {
+        navigate(`/clients/${response.data.id}`)
       } else {
         navigate('/clients')
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating client:', error)
-      alert('Error creating client. Please try again.')
+      alert(error.message || 'Error creating client. Please try again.')
     } finally {
       setLoading(false)
     }

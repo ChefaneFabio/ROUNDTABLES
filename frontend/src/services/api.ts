@@ -161,6 +161,33 @@ export const participantsApi = {
   }
 }
 
+// Trainers API
+export const trainersApi = {
+  async getProfile(email: string) {
+    const response = await api.get(`/trainers/me?email=${email}`)
+    return response.data
+  },
+
+  async getSessions(email: string) {
+    const response = await api.get(`/trainers/me/sessions?email=${email}`)
+    return response.data
+  },
+
+  async submitQuestions(sessionId: string, email: string, questions: Array<{ question: string }>) {
+    const response = await api.post(`/trainers/me/sessions/${sessionId}/questions?email=${email}`, {
+      questions
+    })
+    return response.data
+  },
+
+  async submitFeedback(sessionId: string, email: string, feedbacks: Array<{ participantId: string, content: string }>) {
+    const response = await api.post(`/trainers/me/sessions/${sessionId}/feedback?email=${email}`, {
+      feedbacks
+    })
+    return response.data
+  }
+}
+
 // Questions API
 export const questionsApi = {
   async getAll(params?: any) {

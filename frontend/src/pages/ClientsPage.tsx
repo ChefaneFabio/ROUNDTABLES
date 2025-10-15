@@ -11,7 +11,7 @@ import {
   Eye,
   BarChart3
 } from 'lucide-react'
-import axios from 'axios'
+import { clientsApi } from '../services/api'
 
 interface Client {
   id: string
@@ -37,11 +37,10 @@ export function ClientsPage() {
   const fetchClients = async () => {
     try {
       setLoading(true)
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
-      const response = await axios.get(`${apiUrl}/clients`)
-      
-      if (response.data?.data) {
-        setClients(response.data.data)
+      const response = await clientsApi.getAll()
+
+      if (response?.data) {
+        setClients(response.data)
       }
     } catch (error) {
       console.error('Error fetching clients:', error)
@@ -59,11 +58,11 @@ export function ClientsPage() {
   const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this client?')) {
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
-        await axios.delete(`${apiUrl}/clients/${id}`)
+        await clientsApi.delete(id)
         fetchClients()
       } catch (error) {
         console.error('Error deleting client:', error)
+        alert('Error deleting client. They may have active roundtables.')
       }
     }
   }
