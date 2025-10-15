@@ -4,10 +4,12 @@ import { AppLayout } from './AppLayout'
 
 interface ProtectedRouteProps {
   children: React.ReactNode
+  allowedRoles?: ('ADMIN' | 'COORDINATOR' | 'TRAINER')[]
+  useLayout?: boolean
 }
 
-export function ProtectedRoute({ children }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading } = useAuth()
+export function ProtectedRoute({ children, allowedRoles, useLayout = true }: ProtectedRouteProps) {
+  const { isAuthenticated, isLoading, user } = useAuth()
 
   if (isLoading) {
     return (
@@ -22,6 +24,25 @@ export function ProtectedRoute({ children }: ProtectedRouteProps) {
 
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
+  }
+
+  // Role-based access control
+  if (allowedRoles && user) {
+    const hasAccess = allowedRoles.includes(user.role as any)
+
+    if (!hasAccess) {
+      // Redirect trainers to their portal, coordinators to dashboard
+      if (user.role === 'TRAINER') {
+        return <Navigate to="/trainer/profile" replace />
+      } else {
+        return <Navigate to="/dashboard" replace />
+      }
+    }
+  }
+
+  // TrainerProfilePage has its own layout, so skip AppLayout
+  if (!useLayout) {
+    return <>{children}</>
   }
 
   return <AppLayout>{children}</AppLayout>
