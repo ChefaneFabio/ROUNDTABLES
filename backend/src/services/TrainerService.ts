@@ -160,7 +160,7 @@ export class TrainerService {
       where: {
         trainerId: id,
         status: {
-          in: ['SCHEDULED', 'IN_PROGRESS', 'QUESTIONS_REQUESTED', 'QUESTIONS_READY']
+          in: ['SCHEDULED', 'IN_PROGRESS']
         }
       }
     })

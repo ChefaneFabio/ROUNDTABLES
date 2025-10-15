@@ -243,7 +243,7 @@ export class SchedulingService {
           lte: toDate
         },
         status: {
-          in: ['SCHEDULED', 'REMINDER_SENT', 'QUESTIONS_READY']
+          in: ['SCHEDULED', 'IN_PROGRESS']
         }
       },
       include: {

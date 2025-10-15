@@ -228,7 +228,6 @@ router.post('/', validateRequest(createParticipantSchema), async (req: Request, 
       data: {
         name,
         email,
-        phone,
         languageLevel,
         company,
         roundtableId,
@@ -259,7 +258,6 @@ router.put('/:id', validateRequest(updateParticipantSchema), async (req: Request
 
     if (req.body.name) updates.name = req.body.name
     if (req.body.email) updates.email = req.body.email
-    if (req.body.phone !== undefined) updates.phone = req.body.phone
     if (req.body.languageLevel) updates.languageLevel = req.body.languageLevel
     if (req.body.company !== undefined) updates.company = req.body.company
     if (req.body.status) updates.status = req.body.status

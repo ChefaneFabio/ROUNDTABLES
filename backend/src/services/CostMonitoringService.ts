@@ -69,8 +69,7 @@ export class CostMonitoringService {
     const levelTestCosts = levelTestsConducted * this.LEVEL_TEST_COST
 
     // Calculate trainer session costs
-    const sessionsCompleted = roundtable.sessions.filter(s => s.status === 'COMPLETED' || s.status === 'FEEDBACK_SENT')
-      .length
+    const sessionsCompleted = roundtable.sessions.filter(s => s.status === 'COMPLETED').length
     const sessionsScheduled = roundtable.sessions.filter(
       s => !['CANCELLED'].includes(s.status)
     ).length

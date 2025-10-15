@@ -219,7 +219,7 @@ export class RoundtableService {
   async getUpcomingSessions(roundtableId?: string) {
     const where: any = {
       scheduledAt: { gte: new Date() },
-      status: { in: ['SCHEDULED', 'REMINDER_SENT', 'QUESTIONS_READY'] }
+      status: { in: ['SCHEDULED', 'IN_PROGRESS'] }
     }
 
     if (roundtableId) {
@@ -249,14 +249,14 @@ export class RoundtableService {
       pendingFeedback
     ] = await Promise.all([
       prisma.roundtable.count(),
-      prisma.roundtable.count({ 
+      prisma.roundtable.count({
         where: { status: { in: ['TOPIC_VOTING', 'SCHEDULED', 'IN_PROGRESS'] } }
       }),
       prisma.participant.count({ where: { status: 'ACTIVE' } }),
-      prisma.session.count({ 
-        where: { 
+      prisma.session.count({
+        where: {
           scheduledAt: { gte: new Date() },
-          status: { in: ['SCHEDULED', 'REMINDER_SENT', 'QUESTIONS_READY'] }
+          status: { in: ['SCHEDULED', 'IN_PROGRESS'] }
         }
       }),
       prisma.feedback.count({ where: { status: 'PENDING' } })

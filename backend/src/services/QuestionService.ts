@@ -62,10 +62,10 @@ export class QuestionService {
         )
       )
 
-      // Update session status to indicate questions submitted
+      // Update session questionsStatus to indicate questions submitted for approval
       await tx.session.update({
         where: { id: sessionId },
-        data: { status: 'QUESTIONS_REQUESTED' }
+        data: { questionsStatus: 'PENDING_APPROVAL' }
       })
 
       // Notify coordinators that questions are ready for review
@@ -132,27 +132,27 @@ export class QuestionService {
     const needsRevisionQuestions = session.questions.filter(q => q.status === 'NEEDS_REVISION').length
     const rejectedQuestions = session.questions.filter(q => q.status === 'REJECTED').length
 
-    let newStatus = session.status
+    let newQuestionsStatus = session.questionsStatus
 
     if (approvedQuestions >= 3) {
-      // Enough questions approved
-      newStatus = 'QUESTIONS_READY'
-      
-      // Can now send pre-session emails automatically
-      // This will be handled by the scheduler job
-      
+      // Enough questions approved - coordinator can now send to participants
+      newQuestionsStatus = 'PENDING_APPROVAL'
+
+      // Coordinator will manually click "Send to Participants" when ready
+      // This will change questionsStatus to SENT_TO_PARTICIPANTS
+
     } else if (needsRevisionQuestions > 0 || rejectedQuestions > 0) {
-      // Some questions need work
-      newStatus = 'QUESTIONS_REQUESTED'
-      
+      // Some questions need work - back to requested
+      newQuestionsStatus = 'REQUESTED_FROM_COORDINATOR'
+
       // Notify trainer about revisions needed
       await this.notifyTrainerOfRevisions(sessionId)
     }
 
-    if (newStatus !== session.status) {
+    if (newQuestionsStatus !== session.questionsStatus) {
       await prisma.session.update({
         where: { id: sessionId },
-        data: { status: newStatus }
+        data: { questionsStatus: newQuestionsStatus }
       })
     }
   }
@@ -247,7 +247,7 @@ export class QuestionService {
         where: { status: 'NEEDS_REVISION' }
       }),
       prisma.session.count({
-        where: { status: 'QUESTIONS_READY' }
+        where: { questionsStatus: 'SENT_TO_PARTICIPANTS' }
       }),
       prisma.question.count()
     ])

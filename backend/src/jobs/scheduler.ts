@@ -54,13 +54,6 @@ cron.schedule('0 9 * * *', async () => {
     for (const session of sessions) {
       try {
         await notificationService.sendTrainerReminder(session.id)
-        
-        // Update session status to track reminder sent
-        await prisma.session.update({
-          where: { id: session.id },
-          data: { status: 'REMINDER_SENT' }
-        })
-        
         console.log(`✅ Trainer reminder sent for session ${session.id}`)
       } catch (error) {
         console.error(`❌ Failed to send trainer reminder for session ${session.id}:`, error)
@@ -85,8 +78,14 @@ cron.schedule('0 10 * * *', async () => {
           gte: oneWeekFromNow,
           lte: addDays(oneWeekFromNow, 1)
         },
-        status: 'REMINDER_SENT',
+        status: 'SCHEDULED',
+        questionsStatus: 'NOT_REQUESTED',
         questions: { none: {} } // No questions yet
+      },
+      include: {
+        trainer: true,
+        roundtable: { include: { client: true } },
+        topic: true
       }
     })
 
@@ -119,10 +118,17 @@ cron.schedule('0 14 * * *', async () => {
           gte: tomorrow,
           lte: addDays(tomorrow, 1)
         },
-        status: 'QUESTIONS_READY',
+        status: 'SCHEDULED',
+        questionsStatus: 'SENT_TO_PARTICIPANTS',
         questions: {
           some: { status: 'APPROVED' }
         }
+      },
+      include: {
+        trainer: true,
+        roundtable: { include: { client: true, participants: true } },
+        topic: true,
+        questions: { where: { status: 'APPROVED' } }
       }
     })
 
@@ -165,13 +171,13 @@ cron.schedule('0 18 * * *', async () => {
     for (const session of sessions) {
       try {
         await notificationService.sendFeedbackRequest(session.id)
-        
-        // Update status to track feedback requested
+
+        // Update feedbacksStatus to track feedback requested
         await prisma.session.update({
           where: { id: session.id },
-          data: { status: 'FEEDBACK_PENDING' }
+          data: { feedbacksStatus: 'REQUESTED_FROM_COORDINATOR' }
         })
-        
+
         console.log(`✅ Feedback request sent for session ${session.id}`)
       } catch (error) {
         console.error(`❌ Failed to send feedback request for session ${session.id}:`, error)
@@ -228,10 +234,10 @@ cron.schedule('0 * * * *', async () => {
   console.log('🔄 Checking session status updates...')
 
   try {
-    // Find sessions with QUESTIONS_REQUESTED status that now have all questions approved
+    // Find sessions with pending approval that now have all questions approved
     const sessionsWithApprovedQuestions = await prisma.session.findMany({
       where: {
-        status: 'QUESTIONS_REQUESTED',
+        questionsStatus: 'PENDING_APPROVAL',
         questions: {
           some: { status: 'APPROVED' }
         }
@@ -248,9 +254,9 @@ cron.schedule('0 * * * *', async () => {
       if (allApproved && hasQuestions) {
         await prisma.session.update({
           where: { id: session.id },
-          data: { status: 'QUESTIONS_READY' }
+          data: { questionsStatus: 'SENT_TO_PARTICIPANTS' }
         })
-        console.log(`✅ Session ${session.id} status updated to QUESTIONS_READY`)
+        console.log(`✅ Session ${session.id} questionsStatus updated to SENT_TO_PARTICIPANTS`)
       }
     }
   } catch (error) {
@@ -307,10 +313,10 @@ cron.schedule('30 * * * *', async () => {
       }
     }
 
-    // Check if all feedback for a session is sent, update session status
+    // Check if all feedback for a session is sent, update feedbacksStatus
     const sessions = await prisma.session.findMany({
       where: {
-        status: 'FEEDBACK_PENDING',
+        feedbacksStatus: { in: ['REQUESTED_FROM_COORDINATOR', 'PENDING_APPROVAL'] },
         feedback: {
           every: { status: 'SENT' }
         }
@@ -320,7 +326,7 @@ cron.schedule('30 * * * *', async () => {
     for (const session of sessions) {
       await prisma.session.update({
         where: { id: session.id },
-        data: { status: 'FEEDBACK_SENT' }
+        data: { feedbacksStatus: 'SENT_TO_PARTICIPANTS' }
       })
       console.log(`✅ Session ${session.id} - all feedback sent`)
     }
@@ -474,13 +480,14 @@ cron.schedule('0 16 * * *', async () => {
           gte: threeDaysFromNow,
           lte: oneWeekFromNow
         },
-        status: { in: ['REMINDER_SENT', 'QUESTIONS_REQUESTED'] },
+        status: 'SCHEDULED',
+        questionsStatus: { in: ['NOT_REQUESTED', 'REQUESTED_FROM_COORDINATOR'] },
         questions: { none: {} },
         trainer: { isNot: null }
       },
       include: {
         trainer: true,
-        roundtable: true,
+        roundtable: { include: { client: true } },
         topic: true
       }
     })
@@ -534,7 +541,8 @@ cron.schedule('0 19 * * *', async () => {
     const sessionsWithoutFeedback = await prisma.session.findMany({
       where: {
         scheduledAt: { lte: twoDaysAgo },
-        status: { in: ['COMPLETED', 'FEEDBACK_PENDING'] },
+        status: 'COMPLETED',
+        feedbacksStatus: { in: ['NOT_REQUESTED', 'REQUESTED_FROM_COORDINATOR'] },
         feedback: { none: {} },
         trainer: { isNot: null }
       },
@@ -542,6 +550,7 @@ cron.schedule('0 19 * * *', async () => {
         trainer: true,
         roundtable: {
           include: {
+            client: true,
             participants: { where: { status: 'ACTIVE' } }
           }
         },
