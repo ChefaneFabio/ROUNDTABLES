@@ -2,8 +2,6 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Calendar,
-  ChevronLeft,
-  ChevronRight,
   Filter,
   Clock,
   User,
@@ -382,7 +380,7 @@ export function SessionsCalendarPage() {
                   <div className="absolute left-2 top-0 bottom-0 w-0.5 bg-gray-200"></div>
 
                   <div className="space-y-4">
-                    {dateSessions.map((session, idx) => {
+                    {dateSessions.map((session) => {
                       const hasConflict = isConflictSession(session.id)
 
                       return (
