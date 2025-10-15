@@ -63,13 +63,13 @@ Workflow dei feedback
 ```
 T-7 giorni (1 settimana prima)
 ├─ AUTOMATICO: questionsStatus → REQUESTED_FROM_COORDINATOR
-├─ AUTOMATICO: Notifica inviata al trainer
+├─ AUTOMATICO: Notifica inviata al trainer (10:00)
 └─ Trainer riceve email reminder
 
 T-6 giorni → T-1 giorno
-├─ AUTOMATICO: Notifiche ripetute ogni lunedì
+├─ AUTOMATICO: Notifiche ripetute OGNI GIORNO (09:00)
 ├─ Trainer salva domande → questionsStatus: SAVED_BY_TRAINER
-└─ ✅ Notifiche si fermano quando salva
+└─ ✅ Notifiche si fermano IMMEDIATAMENTE quando salva
 
 Trainer Submit Questions
 ├─ Trainer clicca "Submit for Approval"
@@ -117,27 +117,29 @@ Frequenza: Una volta
 Quando: 1 settimana prima sessione
 ```
 
-#### **2. Reminder Settimanali (Ogni Lunedì)**
+#### **2. Reminder GIORNALIERI (Ogni Giorno)**
 ```
 Trigger: questionsStatus = REQUESTED_FROM_COORDINATOR
-Frequenza: Ogni lunedì
+Frequenza: OGNI GIORNO (09:00)
 Quando: Fino a quando trainer salva
-Stop: Quando questionsStatus → SAVED_BY_TRAINER
+Stop: Quando questionsStatus → SAVED_BY_TRAINER (o superiore)
 ```
 
 **Esempio:**
 ```
-Lunedì 10 Oct: ⚠️ Reminder (se non salvato)
-Lunedì 17 Oct: ⚠️ Reminder (se non salvato)
-Trainer salva: ✅ Notifiche fermano
+Lunedì T-7:  📧 Richiesta iniziale
+Martedì T-6: ⚠️ Reminder giornaliero (se non salvato)
+Mercoledì T-5: ⚠️ Reminder giornaliero (se non salvato)
+Giovedì T-4: ⚠️ Reminder giornaliero (se non salvato)
+Giovedì sera: Trainer salva domande
+Venerdì T-3: ✅ Nessuna notifica (salvato!)
 ```
 
-#### **3. Notifica Late (Se non salvato)**
-```
-Trigger: questionsStatus = REQUESTED_FROM_COORDINATOR AND 2 giorni prima
-Frequenza: Una volta
-Quando: T-2 giorni se non salvato
-```
+**IMPORTANTE:**
+- Notifiche vengono inviate OGNI GIORNO alle 09:00
+- Si fermano IMMEDIATAMENTE quando trainer clicca "Salva"
+- Ogni sessione ha tracking indipendente
+- Se trainer salva Session 3, continua a ricevere per Session 5 (se richieste)
 
 ---
 
@@ -147,15 +149,31 @@ Quando: T-2 giorni se non salvato
 ```
 Trigger: Automatico quando feedbacksStatus → REQUESTED_FROM_COORDINATOR
 Frequenza: Una volta
-Quando: Subito dopo fine sessione
+Quando: Subito dopo fine sessione (stesso giorno)
 ```
 
-#### **2. Reminder Feedbacks (T+1)**
+#### **2. Reminder GIORNALIERI Feedbacks**
 ```
-Trigger: feedbacksStatus = REQUESTED_FROM_COORDINATOR AND giorno dopo
-Frequenza: Una volta
-Quando: 1 giorno dopo se non salvato
+Trigger: feedbacksStatus = REQUESTED_FROM_COORDINATOR
+Frequenza: OGNI GIORNO (18:00)
+Quando: Dal giorno dopo sessione fino a quando salva
+Stop: Quando feedbacksStatus → SAVED_BY_TRAINER (o superiore)
 ```
+
+**Esempio:**
+```
+Venerdì 17 Oct:  Sessione si svolge
+Venerdì 18:00:  📧 Richiesta feedback
+Sabato 18:00:   ⚠️ Reminder giornaliero (se non salvato)
+Domenica 18:00: ⚠️ Reminder giornaliero (se non salvato)
+Lunedì 10:00:   Trainer salva feedback
+Lunedì 18:00:   ✅ Nessuna notifica (salvato!)
+```
+
+**IMPORTANTE:**
+- Feedback reminders ogni giorno alle 18:00
+- Si fermano quando trainer salva
+- Tracking per-session indipendente
 
 ---
 
@@ -268,7 +286,8 @@ Body: {
 - Salva domande in database
 - questionsStatus → SAVED_BY_TRAINER
 - **NON invia notifica al coordinator**
-- **FERMA le notifiche settimanali**
+- **FERMA le notifiche GIORNALIERE per questa sessione**
+- Trainer può modificare le domande in seguito
 
 ---
 
@@ -318,6 +337,8 @@ Body: {
 - Salva feedback in database
 - feedbacksStatus → SAVED_BY_TRAINER
 - **NON invia notifica al coordinator**
+- **FERMA le notifiche GIORNALIERE per questa sessione**
+- Trainer può modificare i feedback in seguito
 
 ---
 
@@ -352,45 +373,70 @@ POST /api/sessions/:id/feedback/send
 
 ### **Job 1: Request Questions (Daily 10:00)**
 ```javascript
-// 7 giorni prima sessione
-if (session.scheduledAt - 7 days === today) {
+// Runs: Every day at 10:00
+// Purpose: Check if any session is 7 days away and needs questions
+
+sessions.filter(s =>
+  s.questionsStatus === NOT_REQUESTED &&
+  daysUntil(s.scheduledAt) === 7
+).forEach(session => {
   session.questionsStatus = REQUESTED_FROM_COORDINATOR
-  sendNotification(trainer)
-}
+  sendInitialQuestionRequest(session.trainer, session)
+})
 ```
 
-### **Job 2: Weekly Monday Reminders (Every Monday 09:00)**
+### **Job 2: Daily Questions Reminders (Every Day 09:00)**
 ```javascript
-// Ogni lunedì
-if (today === Monday) {
-  sessions.filter(s =>
-    s.questionsStatus === REQUESTED_FROM_COORDINATOR &&
-    s.scheduledAt > today &&
-    s.scheduledAt < today + 7 days
-  ).forEach(session => {
-    sendWeeklyReminder(session.trainer)
-  })
-}
+// Runs: Every day at 09:00
+// Purpose: Send reminder for EVERY session that needs questions
+
+sessions.filter(s =>
+  s.questionsStatus === REQUESTED_FROM_COORDINATOR &&
+  s.scheduledAt > today
+).forEach(session => {
+  sendDailyQuestionReminder(session.trainer, session)
+  // Notification includes: session number, topic, days remaining
+})
+
+// STOPS when questionsStatus changes to SAVED_BY_TRAINER or higher
 ```
 
-### **Job 3: Request Feedback (When session ends)**
+### **Job 3: Request Feedback (Hourly check)**
 ```javascript
-// Quando sessione finisce
-if (session.status === COMPLETED) {
+// Runs: Every hour
+// Purpose: Auto-request feedback when session completes
+
+sessions.filter(s =>
+  s.status === COMPLETED &&
+  s.feedbacksStatus === NOT_REQUESTED &&
+  s.scheduledAt < now
+).forEach(session => {
   session.feedbacksStatus = REQUESTED_FROM_COORDINATOR
-  sendNotification(trainer)
-}
+  sendInitialFeedbackRequest(session.trainer, session)
+})
 ```
 
-### **Job 4: Late Feedback Reminder (Daily 19:00)**
+### **Job 4: Daily Feedback Reminders (Every Day 18:00)**
 ```javascript
-// 2 giorni dopo sessione
-if (session.scheduledAt + 2 days === today) {
-  if (session.feedbacksStatus === REQUESTED_FROM_COORDINATOR) {
-    sendLateReminder(trainer)
-  }
-}
+// Runs: Every day at 18:00
+// Purpose: Send reminder for EVERY session that needs feedback
+
+sessions.filter(s =>
+  s.feedbacksStatus === REQUESTED_FROM_COORDINATOR &&
+  s.status === COMPLETED
+).forEach(session => {
+  sendDailyFeedbackReminder(session.trainer, session)
+  // Notification includes: session number, topic, days since session
+})
+
+// STOPS when feedbacksStatus changes to SAVED_BY_TRAINER or higher
 ```
+
+### **Summary:**
+- **10:00**: Check for sessions 7 days away → Request questions
+- **09:00**: Send reminders for ALL pending questions
+- **Hourly**: Auto-request feedback for completed sessions
+- **18:00**: Send reminders for ALL pending feedbacks
 
 ---
 
@@ -401,10 +447,11 @@ if (session.scheduledAt + 2 days === today) {
 - Ogni stato ha significato preciso
 - Facile capire cosa manca
 
-### **2. Notifiche Precise**
-- Stop automatico quando trainer salva
-- Reminder solo se necessari
-- Nessun spam
+### **2. Notifiche Precise e Giornaliere**
+- **DAILY reminders** finché trainer non salva
+- Stop **IMMEDIATO** quando trainer salva
+- Tracking **per-session** indipendente
+- Nessun spam (ferma subito dopo salvataggio)
 
 ### **3. Flessibilità**
 - Trainer può salvare senza submit
@@ -422,32 +469,37 @@ if (session.scheduledAt + 2 days === today) {
 
 ### **Scenario 1: Trainer Proattivo**
 ```
-T-7: Sistema richiede domande
-T-6: Trainer salva domande
-     → questionsStatus: SAVED_BY_TRAINER
-     → ✅ Notifiche settimanali fermano
-T-5: Trainer rivede e modifica
-T-3: Trainer submit per approvazione
-     → questionsStatus: PENDING_APPROVAL
-T-2: Coordinator approva
-T-1: Coordinator invia ai partecipanti
-     → questionsStatus: SENT_TO_PARTICIPANTS
-T=0: Sessione si svolge
+T-7 (Lunedì):    Sistema richiede domande (10:00)
+T-6 (Martedì):   📧 Reminder giornaliero (09:00)
+T-6 (Martedì):   Trainer salva domande (pomeriggio)
+                 → questionsStatus: SAVED_BY_TRAINER
+                 → ✅ Notifiche giornaliere fermano
+T-5 (Mercoledì): Nessuna notifica (già salvato!)
+T-4 (Giovedì):   Trainer rivede e modifica
+T-3 (Venerdì):   Trainer submit per approvazione
+                 → questionsStatus: PENDING_APPROVAL
+T-2 (Sabato):    Coordinator approva
+T-1 (Domenica):  Coordinator invia ai partecipanti
+                 → questionsStatus: SENT_TO_PARTICIPANTS
+T=0 (Lunedì):    Sessione si svolge
 ```
 
 ### **Scenario 2: Trainer in Ritardo**
 ```
-T-7: Sistema richiede domande
-Lunedì T-6: ⚠️ Reminder settimanale
-Lunedì T-5: ⚠️ Reminder settimanale (ancora nessuna azione)
-Lunedì T-4: ⚠️ Reminder settimanale (ancora nessuna azione)
-T-2: Trainer finalmente salva
-     → questionsStatus: SAVED_BY_TRAINER
-     → ✅ Notifiche fermano
-T-2: Trainer submit subito
-     → questionsStatus: PENDING_APPROVAL
-T-1: Coordinator approva e invia urgente
-T=0: Sessione si svolge
+T-7 (Lunedì):    Sistema richiede domande (10:00)
+T-6 (Martedì):   📧 Reminder giornaliero (09:00) - nessuna azione
+T-5 (Mercoledì): 📧 Reminder giornaliero (09:00) - nessuna azione
+T-4 (Giovedì):   📧 Reminder giornaliero (09:00) - nessuna azione
+T-3 (Venerdì):   📧 Reminder giornaliero (09:00) - nessuna azione
+T-2 (Sabato):    📧 Reminder giornaliero (09:00)
+T-2 (Sabato):    Trainer finalmente salva (sera)
+                 → questionsStatus: SAVED_BY_TRAINER
+                 → ✅ Notifiche fermano
+T-1 (Domenica):  Nessuna notifica (salvato!)
+T-1 (Domenica):  Trainer submit urgente
+                 → questionsStatus: PENDING_APPROVAL
+T-1 (Domenica):  Coordinator approva e invia urgente
+T=0 (Lunedì):    Sessione si svolge
 ```
 
 ### **Scenario 3: Coordinator Blocca**
