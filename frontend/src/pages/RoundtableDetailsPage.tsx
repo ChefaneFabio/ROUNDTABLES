@@ -9,7 +9,6 @@ import {
   Play,
   MessageSquare,
   BarChart3,
-  Edit,
   Plus,
   Vote,
   FileText
@@ -196,22 +195,7 @@ export function RoundtableDetailsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">Maka Roundtables</h1>
-              <div className="ml-10 flex items-baseline space-x-4">
-                <a href="/dashboard" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                <a href="/roundtables" className="text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Roundtables</a>
-                <a href="/clients" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Clients</a>
-                <a href="/sessions" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Sessions</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
+      {/* This page uses AppLayout now, so remove duplicate navigation */}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -245,10 +229,6 @@ export function RoundtableDetailsPage() {
               >
                 <Vote className="h-4 w-4 mr-2" />
                 Voting Page
-              </button>
-              <button className="bg-gray-200 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-300 flex items-center">
-                <Edit className="h-4 w-4 mr-2" />
-                Edit
               </button>
             </div>
           </div>
@@ -388,17 +368,43 @@ export function RoundtableDetailsPage() {
               <div>
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Participants</h3>
-                  <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center">
+                  <button
+                    onClick={() => navigate('/participants')}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center"
+                  >
                     <Plus className="h-4 w-4 mr-2" />
-                    Add Participant
+                    Manage Participants
                   </button>
                 </div>
-                
-                <div className="text-center py-12 text-gray-500">
-                  <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
-                  <p>No participants added yet</p>
-                  <p className="text-sm">Add participants to start the roundtable</p>
-                </div>
+
+                {roundtable.participants && roundtable.participants.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {roundtable.participants.map((participant: any) => (
+                      <div key={participant.id} className="border border-gray-200 rounded-lg p-4">
+                        <h4 className="font-medium text-gray-900">{participant.name}</h4>
+                        <p className="text-sm text-gray-600">{participant.email}</p>
+                        <div className="mt-2 flex items-center space-x-2">
+                          <span className="text-xs bg-gray-100 px-2 py-1 rounded">
+                            {participant.languageLevel}
+                          </span>
+                          <span className={`text-xs px-2 py-1 rounded ${
+                            participant.status === 'ACTIVE'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-gray-100 text-gray-800'
+                          }`}>
+                            {participant.status}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-12 text-gray-500">
+                    <Users className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                    <p>No participants added yet</p>
+                    <p className="text-sm">Click "Manage Participants" to add participants</p>
+                  </div>
+                )}
               </div>
             )}
 

@@ -3,7 +3,7 @@ services:
     name: roundtables-backend
     runtime: node
     plan: starter
-    buildCommand: npm install && npm run build && npx prisma generate
+    buildCommand: npm install && npm run build && npx prisma generate && npm run create:trainer-user
     startCommand: npm start
     healthCheckPath: /health
     envVars:

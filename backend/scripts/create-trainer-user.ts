@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 async function main() {
-  console.log('👤 Creating trainer user for login...')
+  console.log('👤 Creating trainer user and profile for login...')
 
   // Hash password
   const hashedPassword = await bcrypt.hash('Trainer123!', 10)
@@ -23,6 +23,20 @@ async function main() {
   })
 
   console.log('✅ Trainer user created successfully!')
+
+  // Create trainer profile (needed for trainer portal to work)
+  const trainer = await prisma.trainer.upsert({
+    where: { email: 'jean@trainer.com' },
+    update: {},
+    create: {
+      name: 'JEAN',
+      email: 'jean@trainer.com',
+      expertise: ['Leadership', 'Team Management', 'Communication', 'Innovation'],
+      isActive: true
+    }
+  })
+
+  console.log('✅ Trainer profile created successfully!')
   console.log('')
   console.log('🔑 Login Credentials:')
   console.log('   Email: jean@trainer.com')
