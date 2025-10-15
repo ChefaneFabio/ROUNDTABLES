@@ -15,7 +15,10 @@
       "Bash(git commit:*)",
       "Bash(curl -s https://roundtables.onrender.com/health)",
       "Bash(curl -s -X POST https://roundtables.onrender.com/api/auth/login )",
-      "Bash(curl -s https://roundtables.onrender.com/api/clients)"
+      "Bash(curl -s https://roundtables.onrender.com/api/clients)",
+      "Read(//mnt/c/Users/chefa/Downloads/**)",
+      "Bash(npm run db:seed:*)",
+      "Bash(npm run create:trainer-user:*)"
     ],
     "deny": [],
     "ask": []

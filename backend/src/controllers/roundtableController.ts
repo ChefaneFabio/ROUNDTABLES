@@ -46,13 +46,22 @@ router.get('/', async (req: Request, res: Response) => {
         include: {
           client: { select: { name: true, company: true } },
           participants: { select: { id: true, status: true } },
-          sessions: { 
-            select: { 
-              id: true, 
-              sessionNumber: true, 
-              scheduledAt: true, 
+          sessions: {
+            select: {
+              id: true,
+              sessionNumber: true,
+              scheduledAt: true,
               status: true,
-              topic: { select: { title: true } }
+              topic: { select: { id: true, title: true } },
+              trainer: { select: { id: true, name: true, email: true } },
+              questions: {
+                select: { id: true, status: true },
+                where: { status: 'APPROVED' }
+              },
+              feedback: {
+                select: { id: true, status: true },
+                where: { status: { in: ['APPROVED', 'SENT'] } }
+              }
             },
             orderBy: { sessionNumber: 'asc' }
           },
@@ -66,12 +75,37 @@ router.get('/', async (req: Request, res: Response) => {
       prisma.roundtable.count({ where })
     ])
 
-    // Add progress calculation
-    const roundtablesWithProgress = roundtables.map(rt => ({
-      ...rt,
-      progress: roundtableService.calculateProgress(rt.sessions),
-      activeParticipants: rt.participants.filter(p => p.status === 'ACTIVE').length
-    }))
+    // Add progress calculation and workflow status for sessions
+    const roundtablesWithProgress = roundtables.map(rt => {
+      // Calculate workflow status for each session
+      const sessionsWithWorkflow = rt.sessions.map(session => {
+        let workflowStatus = 'scheduled'
+
+        if (session.status === 'REMINDER_SENT' || session.status === 'QUESTIONS_REQUESTED') {
+          workflowStatus = 'questions_requested'
+        } else if (session.status === 'QUESTIONS_READY' && session.questions.length > 0) {
+          workflowStatus = 'questions_sent'
+        } else if (session.status === 'COMPLETED' || session.status === 'FEEDBACK_PENDING') {
+          workflowStatus = 'feedback_requested'
+        } else if (session.status === 'FEEDBACK_SENT' || session.feedback.length > 0) {
+          workflowStatus = 'feedback_sent'
+        }
+
+        return {
+          ...session,
+          workflowStatus,
+          questionsCount: session.questions.length,
+          feedbackCount: session.feedback.length
+        }
+      })
+
+      return {
+        ...rt,
+        sessions: sessionsWithWorkflow,
+        progress: roundtableService.calculateProgress(rt.sessions),
+        activeParticipants: rt.participants.filter(p => p.status === 'ACTIVE').length
+      }
+    })
 
     res.json({
       success: true,

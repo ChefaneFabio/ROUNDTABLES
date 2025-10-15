@@ -2,14 +2,12 @@ import cron from 'node-cron'
 import { PrismaClient } from '@prisma/client'
 import { NotificationService } from '../services/NotificationService'
 import { VotingTokenService } from '../services/VotingTokenService'
-import { CostMonitoringService } from '../services/CostMonitoringService'
 import { TeamsNotificationService } from '../services/TeamsNotificationService'
 import { addDays, addWeeks, subDays, isToday, isTomorrow } from 'date-fns'
 
 const prisma = new PrismaClient()
 const notificationService = new NotificationService()
 const votingTokenService = new VotingTokenService()
-const costMonitoringService = new CostMonitoringService()
 const teamsNotificationService = new TeamsNotificationService()
 
 console.log('🕐 Job scheduler initialized - Maka Roundtables Automation')
@@ -25,7 +23,6 @@ console.log('  - 19:00: Late trainer feedback reminders')
 console.log('  - Every hour: Auto-update session status & send approved feedback')
 console.log('  - Every 15min: Process scheduled notifications')
 console.log('  - Sunday 02:00: Database cleanup')
-console.log('  - Monday 08:00: Weekly cost monitoring report')
 console.log('')
 
 // Check for trainer reminders - every day at 9 AM
@@ -587,94 +584,6 @@ The Maka Team
     }
   } catch (error) {
     console.error('Error sending feedback reminders:', error)
-  }
-})
-
-// Weekly cost monitoring report - every Monday at 8 AM
-cron.schedule('0 8 * * 1', async () => {
-  console.log('💰 Generating weekly cost monitoring report...')
-
-  try {
-    // Generate cost alert message
-    const alertMessage = await costMonitoringService.generateCostAlertMessage()
-
-    if (alertMessage) {
-      console.log('⚠️ Cost alerts detected, sending notifications...')
-
-      // Send to coordinators via email
-      const coordinatorEmails = process.env.COORDINATOR_EMAILS?.split(',') || []
-
-      for (const email of coordinatorEmails) {
-        const notification = {
-          type: 'PARTICIPANT_EMAIL' as const,
-          recipient: email.trim(),
-          subject: '💰 Weekly Roundtable Cost Monitoring Report',
-          content: alertMessage
-        }
-
-        await notificationService['createAndSendNotification'](notification)
-      }
-
-      console.log(`✅ Cost monitoring report sent to ${coordinatorEmails.length} coordinator(s)`)
-    } else {
-      console.log('✅ No cost alerts - all roundtables within budget')
-    }
-
-    // Log overall statistics
-    const stats = await costMonitoringService.getOverallStatistics()
-    console.log(`📊 Overall Statistics:`)
-    console.log(`  - Active Roundtables: ${stats.totalRoundtables}`)
-    console.log(`  - Total Participants: ${stats.totalParticipants}`)
-    console.log(`  - Total Costs: €${stats.totalCosts.toFixed(2)}`)
-    console.log(`  - Avg Cost/Roundtable: €${stats.averageCostPerRoundtable.toFixed(2)}`)
-    console.log(`  - Avg Budget Utilization: ${stats.budgetUtilizationAverage.toFixed(1)}%`)
-  } catch (error) {
-    console.error('Error generating cost monitoring report:', error)
-  }
-})
-
-// Daily cost check for critical overruns - every day at 5 PM
-cron.schedule('0 17 * * *', async () => {
-  console.log('💰 Checking for critical cost overruns...')
-
-  try {
-    // Check for roundtables over 100% budget
-    const overBudget = await costMonitoringService.getOverBudgetRoundtables(100)
-
-    if (overBudget.length > 0) {
-      console.log(`🔴 CRITICAL: ${overBudget.length} roundtable(s) over budget!`)
-
-      let alertMessage = '🔴 CRITICAL COST ALERT\n\n'
-      alertMessage += `${overBudget.length} roundtable(s) have exceeded their budget:\n\n`
-
-      for (const rt of overBudget) {
-        alertMessage += `🔴 ${rt.roundtableName} (${rt.clientName})\n`
-        alertMessage += `  Budget: €${rt.budget?.toFixed(2)}\n`
-        alertMessage += `  Current Costs: €${rt.totalCosts.toFixed(2)}\n`
-        alertMessage += `  Overrun: €${(rt.totalCosts - (rt.budget || 0)).toFixed(2)} (${((rt.budgetUtilization || 0) - 100).toFixed(1)}%)\n\n`
-      }
-
-      alertMessage += `⚡ Immediate action required. Please review costs and adjust accordingly.\n`
-      alertMessage += `Dashboard: ${process.env.FRONTEND_URL}/dashboard/costs`
-
-      // Send urgent notification
-      const coordinatorEmails = process.env.COORDINATOR_EMAILS?.split(',') || []
-
-      for (const email of coordinatorEmails) {
-        const notification = {
-          type: 'PARTICIPANT_EMAIL' as const,
-          recipient: email.trim(),
-          subject: '🔴 URGENT: Roundtable Budget Exceeded',
-          content: alertMessage
-        }
-
-        await notificationService['createAndSendNotification'](notification)
-      }
-
-      console.log(`✅ Critical cost alert sent to coordinators`)
-    }
-  } catch (error) {
-    console.error('Error checking critical cost overruns:', error)
   }
 })
 

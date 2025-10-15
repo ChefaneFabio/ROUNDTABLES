@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   Plus,
@@ -10,9 +10,33 @@ import {
   MoreVertical,
   Edit,
   Trash2,
-  Eye
+  Eye,
+  ChevronDown,
+  ChevronRight,
+  Clock,
+  MessageSquare,
+  FileText
 } from 'lucide-react'
 import axios from 'axios'
+
+interface Session {
+  id: string
+  sessionNumber: number
+  scheduledAt: string
+  status: string
+  workflowStatus: string
+  topic?: {
+    id: string
+    title: string
+  }
+  trainer?: {
+    id: string
+    name: string
+    email: string
+  }
+  questionsCount: number
+  feedbackCount: number
+}
 
 interface Roundtable {
   id: string
@@ -22,14 +46,15 @@ interface Roundtable {
   startDate?: string
   endDate?: string
   maxParticipants: number
-  currentParticipants: number
+  activeParticipants: number
   client: {
     id: string
     name: string
     company: string
   }
-  sessions: any[]
+  sessions: Session[]
   topics: any[]
+  progress: number
 }
 
 export function RoundtablesPage() {
@@ -39,6 +64,7 @@ export function RoundtablesPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [showDropdown, setShowDropdown] = useState<string | null>(null)
+  const [expandedRoundtables, setExpandedRoundtables] = useState<Set<string>>(new Set())
 
   useEffect(() => {
     fetchRoundtables()
@@ -60,6 +86,18 @@ export function RoundtablesPage() {
     }
   }
 
+  const toggleRoundtable = (id: string) => {
+    setExpandedRoundtables(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(id)) {
+        newSet.delete(id)
+      } else {
+        newSet.add(id)
+      }
+      return newSet
+    })
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'SETUP': return 'bg-gray-100 text-gray-800'
@@ -69,6 +107,46 @@ export function RoundtablesPage() {
       case 'COMPLETED': return 'bg-gray-400 text-white'
       default: return 'bg-gray-100 text-gray-800'
     }
+  }
+
+  const getWorkflowColor = (workflowStatus: string) => {
+    switch (workflowStatus) {
+      case 'questions_requested':
+        return 'bg-pink-100 border-pink-300 text-pink-800'
+      case 'questions_sent':
+        return 'bg-blue-100 border-blue-300 text-blue-800'
+      case 'feedback_requested':
+        return 'bg-orange-100 border-orange-300 text-orange-800'
+      case 'feedback_sent':
+        return 'bg-yellow-100 border-yellow-300 text-yellow-800'
+      default:
+        return 'bg-gray-100 border-gray-300 text-gray-800'
+    }
+  }
+
+  const getWorkflowLabel = (workflowStatus: string) => {
+    switch (workflowStatus) {
+      case 'questions_requested':
+        return 'Questions Requested'
+      case 'questions_sent':
+        return 'Questions Sent'
+      case 'feedback_requested':
+        return 'Feedback Requested'
+      case 'feedback_sent':
+        return 'Feedback Sent'
+      default:
+        return 'Scheduled'
+    }
+  }
+
+  const formatTime = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })
+  }
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
   }
 
   const filteredRoundtables = roundtables.filter(rt => {
@@ -199,20 +277,35 @@ export function RoundtablesPage() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredRoundtables.length > 0 ? (
-                filteredRoundtables.map((roundtable) => (
-                  <tr key={roundtable.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div>
-                        <div className="text-sm font-medium text-gray-900">
-                          {roundtable.name}
-                        </div>
-                        {roundtable.description && (
-                          <div className="text-sm text-gray-500">
-                            {roundtable.description.substring(0, 50)}...
+                filteredRoundtables.map((roundtable) => {
+                  const isExpanded = expandedRoundtables.has(roundtable.id)
+                  return (
+                    <React.Fragment key={roundtable.id}>
+                      <tr className="hover:bg-gray-50">
+                        <td className="px-6 py-4">
+                          <div className="flex items-center">
+                            <button
+                              onClick={() => toggleRoundtable(roundtable.id)}
+                              className="mr-2 p-1 hover:bg-gray-200 rounded"
+                            >
+                              {isExpanded ? (
+                                <ChevronDown className="h-4 w-4 text-gray-600" />
+                              ) : (
+                                <ChevronRight className="h-4 w-4 text-gray-600" />
+                              )}
+                            </button>
+                            <div>
+                              <div className="text-sm font-medium text-gray-900">
+                                {roundtable.name}
+                              </div>
+                              {roundtable.description && (
+                                <div className="text-sm text-gray-500">
+                                  {roundtable.description.substring(0, 50)}...
+                                </div>
+                              )}
+                            </div>
                           </div>
-                        )}
-                      </div>
-                    </td>
+                        </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <Building className="h-4 w-4 text-gray-400 mr-2" />
@@ -235,13 +328,16 @@ export function RoundtablesPage() {
                       <div className="flex items-center">
                         <Users className="h-4 w-4 text-gray-400 mr-2" />
                         <span className="text-sm text-gray-900">
-                          {roundtable.currentParticipants || 0} / {roundtable.maxParticipants}
+                          {roundtable.activeParticipants || 0} / {roundtable.maxParticipants}
                         </span>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">
                         {roundtable.sessions?.length || 0} / 10
+                        {isExpanded && roundtable.sessions?.length > 0 && (
+                          <span className="ml-2 text-xs text-gray-500">(click to collapse)</span>
+                        )}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -290,7 +386,72 @@ export function RoundtablesPage() {
                       </div>
                     </td>
                   </tr>
-                ))
+
+                  {/* Sessions Expansion */}
+                  {isExpanded && roundtable.sessions && roundtable.sessions.length > 0 && (
+                    <tr>
+                      <td colSpan={7} className="px-6 py-4 bg-gray-50">
+                        <div className="space-y-2">
+                          <h4 className="text-sm font-semibold text-gray-900 mb-3">
+                            Sessions ({roundtable.sessions.length})
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {roundtable.sessions.map((session) => (
+                              <div
+                                key={session.id}
+                                onClick={() => navigate(`/sessions/${session.id}`)}
+                                className={`p-3 border-2 rounded-lg cursor-pointer hover:shadow-md transition-shadow ${getWorkflowColor(session.workflowStatus)}`}
+                              >
+                                <div className="flex justify-between items-start mb-2">
+                                  <span className="text-xs font-bold">Session {session.sessionNumber}</span>
+                                  <span className="text-xs">{formatDate(session.scheduledAt)}</span>
+                                </div>
+
+                                <h5 className="font-semibold text-sm mb-2 line-clamp-2">
+                                  {session.topic?.title || 'No topic assigned'}
+                                </h5>
+
+                                <div className="space-y-1 text-xs">
+                                  <div className="flex items-center">
+                                    <Clock className="h-3 w-3 mr-1" />
+                                    <span>{formatTime(session.scheduledAt)}</span>
+                                  </div>
+
+                                  {session.trainer && (
+                                    <div className="flex items-center">
+                                      <Users className="h-3 w-3 mr-1" />
+                                      <span className="truncate">{session.trainer.name}</span>
+                                    </div>
+                                  )}
+
+                                  {session.questionsCount > 0 && (
+                                    <div className="flex items-center text-green-600">
+                                      <MessageSquare className="h-3 w-3 mr-1" />
+                                      <span>{session.questionsCount} questions</span>
+                                    </div>
+                                  )}
+
+                                  {session.feedbackCount > 0 && (
+                                    <div className="flex items-center text-blue-600">
+                                      <FileText className="h-3 w-3 mr-1" />
+                                      <span>{session.feedbackCount} feedback</span>
+                                    </div>
+                                  )}
+
+                                  <div className="mt-2 pt-2 border-t border-current border-opacity-20">
+                                    <span className="text-xs font-medium">{getWorkflowLabel(session.workflowStatus)}</span>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              )
+            })
               ) : (
                 <tr>
                   <td colSpan={7} className="px-6 py-12 text-center">

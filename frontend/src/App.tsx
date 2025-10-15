@@ -20,6 +20,8 @@ import { SessionDetailsPage } from './pages/SessionDetailsPage'
 import { ReportsPage } from './pages/ReportsPage'
 import { VotingResultsPage } from './pages/VotingResultsPage'
 import { NotificationsPage } from './pages/NotificationsPage'
+import { CalendarViewPage } from './pages/CalendarViewPage'
+import { TrainerProfilePage } from './pages/TrainerProfilePage'
 
 function App() {
   return (
@@ -45,6 +47,7 @@ function App() {
           <Route path="/clients/:id" element={<ProtectedRoute><ClientDetailsPage /></ProtectedRoute>} />
           <Route path="/sessions" element={<ProtectedRoute><SessionsPage /></ProtectedRoute>} />
           <Route path="/sessions/:id" element={<ProtectedRoute><SessionDetailsPage /></ProtectedRoute>} />
+          <Route path="/calendar" element={<ProtectedRoute><CalendarViewPage /></ProtectedRoute>} />
           <Route path="/questions" element={<ProtectedRoute><QuestionsPage /></ProtectedRoute>} />
           <Route path="/participants" element={<ProtectedRoute><ParticipantsPage /></ProtectedRoute>} />
           <Route path="/email-templates" element={<ProtectedRoute><EmailTemplatesPage /></ProtectedRoute>} />
@@ -53,6 +56,7 @@ function App() {
           <Route path="/reports" element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
           <Route path="/roundtables/:roundtableId/voting" element={<ProtectedRoute><VotingResultsPage /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+          <Route path="/trainer/profile" element={<ProtectedRoute><TrainerProfilePage /></ProtectedRoute>} />
 
           {/* 404 fallback */}
           <Route path="*" element={<div className="p-8 text-center">Page not found</div>} />

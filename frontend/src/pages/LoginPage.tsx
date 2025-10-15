@@ -21,9 +21,21 @@ export function LoginPage() {
 
     try {
       await login(email, password)
-      // Note: Backend will validate the actual role
-      // This selectedRole is just for UX purposes
-      navigate('/dashboard')
+
+      // Get user data from localStorage to check role
+      const userData = localStorage.getItem('auth_user')
+      if (userData) {
+        const user = JSON.parse(userData)
+
+        // Redirect based on role
+        if (user.role === 'TRAINER') {
+          navigate('/trainer/profile')
+        } else {
+          navigate('/dashboard')
+        }
+      } else {
+        navigate('/dashboard')
+      }
     } catch (err: any) {
       setError(err.message || 'Login failed. Please check your credentials.')
     } finally {

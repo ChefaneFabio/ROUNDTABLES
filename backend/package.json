@@ -13,7 +13,9 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
-    "db:seed": "tsx src/test-setup.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "db:seed:trainer": "tsx prisma/seed.ts",
+    "create:trainer-user": "tsx scripts/create-trainer-user.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",

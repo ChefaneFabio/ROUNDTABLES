@@ -115,6 +115,126 @@ router.get('/calendar', async (req: Request, res: Response) => {
   }
 })
 
+// Get calendar view with multiple roundtables
+router.get('/calendar-view', async (req: Request, res: Response) => {
+  try {
+    const { roundtableIds, startDate, endDate, groupBy = 'roundtable' } = req.query
+
+    // Parse roundtable IDs (can be comma-separated string or array)
+    let parsedRoundtableIds: string[] = []
+    if (roundtableIds) {
+      if (typeof roundtableIds === 'string') {
+        parsedRoundtableIds = roundtableIds.split(',').filter(id => id.trim())
+      } else if (Array.isArray(roundtableIds)) {
+        parsedRoundtableIds = roundtableIds as string[]
+      }
+    }
+
+    // Build where clause
+    const where: any = {}
+
+    if (parsedRoundtableIds.length > 0) {
+      where.roundtableId = { in: parsedRoundtableIds }
+    }
+
+    if (startDate || endDate) {
+      where.scheduledAt = {}
+      if (startDate) where.scheduledAt.gte = new Date(String(startDate))
+      if (endDate) where.scheduledAt.lte = new Date(String(endDate))
+    }
+
+    // Fetch sessions with full details
+    const sessions = await prisma.session.findMany({
+      where,
+      include: {
+        roundtable: {
+          select: {
+            id: true,
+            name: true,
+            status: true,
+            client: { select: { name: true, company: true } }
+          }
+        },
+        topic: { select: { id: true, title: true, description: true } },
+        trainer: { select: { id: true, name: true, email: true } },
+        questions: {
+          select: { id: true, status: true },
+          where: { status: 'APPROVED' }
+        },
+        feedback: {
+          select: { id: true, status: true },
+          where: { status: { in: ['APPROVED', 'SENT'] } }
+        }
+      },
+      orderBy: [
+        { roundtableId: 'asc' },
+        { scheduledAt: 'asc' }
+      ]
+    })
+
+    // Calculate workflow status for each session
+    const sessionsWithWorkflow = sessions.map(session => {
+      let workflowStatus = 'scheduled'
+
+      // Determine workflow status based on session status and questions/feedback
+      if (session.status === 'REMINDER_SENT' || session.status === 'QUESTIONS_REQUESTED') {
+        workflowStatus = 'questions_requested'
+      } else if (session.status === 'QUESTIONS_READY' && session.questions.length > 0) {
+        workflowStatus = 'questions_sent'
+      } else if (session.status === 'COMPLETED' || session.status === 'FEEDBACK_PENDING') {
+        workflowStatus = 'feedback_requested'
+      } else if (session.status === 'FEEDBACK_SENT' || session.feedback.length > 0) {
+        workflowStatus = 'feedback_sent'
+      }
+
+      return {
+        ...session,
+        workflowStatus,
+        questionsCount: session.questions.length,
+        feedbackCount: session.feedback.length
+      }
+    })
+
+    // Group sessions by roundtable
+    const groupedByRoundtable = parsedRoundtableIds.length > 0
+      ? parsedRoundtableIds.map(rtId => {
+          const rtSessions = sessionsWithWorkflow.filter(s => s.roundtableId === rtId)
+          return {
+            roundtable: rtSessions[0]?.roundtable || null,
+            sessions: rtSessions
+          }
+        }).filter(group => group.roundtable !== null)
+      : Object.values(
+          sessionsWithWorkflow.reduce((acc, session) => {
+            if (!acc[session.roundtableId]) {
+              acc[session.roundtableId] = {
+                roundtable: session.roundtable,
+                sessions: []
+              }
+            }
+            acc[session.roundtableId].sessions.push(session)
+            return acc
+          }, {} as Record<string, any>)
+        )
+
+    res.json({
+      success: true,
+      data: {
+        groups: groupedByRoundtable,
+        totalSessions: sessions.length,
+        dateRange: {
+          start: startDate || null,
+          end: endDate || null
+        }
+      }
+    })
+
+  } catch (error) {
+    console.error('Error fetching calendar view:', error)
+    res.status(500).json({ success: false, error: 'Internal server error' })
+  }
+})
+
 // Get session by ID
 router.get('/:id', async (req: Request, res: Response) => {
   try {

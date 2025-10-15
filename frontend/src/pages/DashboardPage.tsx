@@ -87,6 +87,7 @@ export function DashboardPage() {
 
   const quickActions = [
     { icon: Plus, label: 'New Roundtable', path: '/roundtables/new', color: 'bg-blue-600' },
+    { icon: Calendar, label: 'Calendar View', path: '/calendar', color: 'bg-indigo-600' },
     { icon: Users, label: 'Manage Participants', path: '/participants', color: 'bg-green-600' },
     { icon: MessageSquare, label: 'Review Questions', path: '/questions', color: 'bg-orange-600' },
     { icon: FileText, label: 'Review Feedback', path: '/feedback', color: 'bg-purple-600' }
@@ -162,7 +163,7 @@ export function DashboardPage() {
         {/* Quick Actions */}
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
             {quickActions.map((action, index) => {
               const Icon = action.icon
               return (
