@@ -22,7 +22,9 @@
       "Bash(tsx scripts/test-trainer-notification.ts:*)",
       "Bash(npx tsx:*)",
       "Bash(npx prisma migrate dev:*)",
-      "Bash(npx prisma:*)"
+      "Bash(npx prisma:*)",
+      "Bash(curl -s \"https://roundtables.onrender.com/api/trainers/me?email=jean@trainer.com\")",
+      "Bash(curl -s \"http://localhost:5000/api/trainers/me?email=jean@trainer.com\")"
     ],
     "deny": [],
     "ask": []
