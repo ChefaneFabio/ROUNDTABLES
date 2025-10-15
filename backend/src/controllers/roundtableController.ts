@@ -52,6 +52,8 @@ router.get('/', async (req: Request, res: Response) => {
               sessionNumber: true,
               scheduledAt: true,
               status: true,
+              questionsStatus: true,
+              feedbacksStatus: true,
               topic: { select: { id: true, title: true } },
               trainer: { select: { id: true, name: true, email: true } },
               questions: {
@@ -77,17 +79,25 @@ router.get('/', async (req: Request, res: Response) => {
 
     // Add progress calculation and workflow status for sessions
     const roundtablesWithProgress = roundtables.map(rt => {
-      // Calculate workflow status for each session
-      const sessionsWithWorkflow = rt.sessions.map(session => {
+      // Calculate workflow status for each session using new 3-column system
+      const sessionsWithWorkflow = rt.sessions.map((session: any) => {
         let workflowStatus = 'scheduled'
 
-        if (session.status === 'REMINDER_SENT' || session.status === 'QUESTIONS_REQUESTED') {
+        // Check questionsStatus first
+        if (session.questionsStatus === 'REQUESTED_FROM_COORDINATOR') {
           workflowStatus = 'questions_requested'
-        } else if (session.status === 'QUESTIONS_READY' && session.questions.length > 0) {
+        } else if (session.questionsStatus === 'PENDING_APPROVAL') {
+          workflowStatus = 'questions_pending_approval'
+        } else if (session.questionsStatus === 'SENT_TO_PARTICIPANTS') {
           workflowStatus = 'questions_sent'
-        } else if (session.status === 'COMPLETED' || session.status === 'FEEDBACK_PENDING') {
+        }
+
+        // Then check feedbacksStatus
+        if (session.feedbacksStatus === 'REQUESTED_FROM_COORDINATOR') {
           workflowStatus = 'feedback_requested'
-        } else if (session.status === 'FEEDBACK_SENT' || session.feedback.length > 0) {
+        } else if (session.feedbacksStatus === 'PENDING_APPROVAL') {
+          workflowStatus = 'feedback_pending_approval'
+        } else if (session.feedbacksStatus === 'SENT_TO_PARTICIPANTS') {
           workflowStatus = 'feedback_sent'
         }
 

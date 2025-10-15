@@ -145,10 +145,19 @@ router.get('/calendar-view', async (req: Request, res: Response) => {
       if (endDate) where.scheduledAt.lte = new Date(String(endDate))
     }
 
-    // Fetch sessions with full details
+    // Fetch sessions with full details including new status columns
     const sessions = await prisma.session.findMany({
       where,
-      include: {
+      select: {
+        id: true,
+        sessionNumber: true,
+        scheduledAt: true,
+        status: true,
+        questionsStatus: true,
+        feedbacksStatus: true,
+        meetingLink: true,
+        notes: true,
+        roundtableId: true,
         roundtable: {
           select: {
             id: true,
@@ -174,18 +183,25 @@ router.get('/calendar-view', async (req: Request, res: Response) => {
       ]
     })
 
-    // Calculate workflow status for each session
-    const sessionsWithWorkflow = sessions.map(session => {
+    // Calculate workflow status for each session using new 3-column system
+    const sessionsWithWorkflow = sessions.map((session: any) => {
       let workflowStatus = 'scheduled'
 
-      // Determine workflow status based on session status and questions/feedback
-      if (session.status === 'REMINDER_SENT' || session.status === 'QUESTIONS_REQUESTED') {
+      // Check questionsStatus first
+      if (session.questionsStatus === 'REQUESTED_FROM_COORDINATOR') {
         workflowStatus = 'questions_requested'
-      } else if (session.status === 'QUESTIONS_READY' && session.questions.length > 0) {
+      } else if (session.questionsStatus === 'PENDING_APPROVAL') {
+        workflowStatus = 'questions_pending_approval'
+      } else if (session.questionsStatus === 'SENT_TO_PARTICIPANTS') {
         workflowStatus = 'questions_sent'
-      } else if (session.status === 'COMPLETED' || session.status === 'FEEDBACK_PENDING') {
+      }
+
+      // Then check feedbacksStatus
+      if (session.feedbacksStatus === 'REQUESTED_FROM_COORDINATOR') {
         workflowStatus = 'feedback_requested'
-      } else if (session.status === 'FEEDBACK_SENT' || session.feedback.length > 0) {
+      } else if (session.feedbacksStatus === 'PENDING_APPROVAL') {
+        workflowStatus = 'feedback_pending_approval'
+      } else if (session.feedbacksStatus === 'SENT_TO_PARTICIPANTS') {
         workflowStatus = 'feedback_sent'
       }
 

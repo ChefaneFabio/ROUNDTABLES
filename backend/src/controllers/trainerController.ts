@@ -61,14 +61,14 @@ router.get('/me', async (req: Request, res: Response) => {
       })
     }
 
-    // Calculate stats
+    // Calculate stats using new 3-column status
     const upcomingSessions = trainer.sessions.filter(s => new Date(s.scheduledAt) > new Date())
-    const completedSessions = trainer.sessions.filter(s => s.status === 'COMPLETED' || s.status === 'FEEDBACK_SENT')
+    const completedSessions = trainer.sessions.filter(s => s.status === 'COMPLETED')
     const questionsPending = trainer.sessions.filter(s =>
-      s.status === 'REMINDER_SENT' && s.questions.length === 0
+      s.questionsStatus === 'REQUESTED_FROM_COORDINATOR' && new Date(s.scheduledAt) > new Date()
     )
     const feedbackPending = trainer.sessions.filter(s =>
-      (s.status === 'COMPLETED' || s.status === 'FEEDBACK_PENDING') && s.feedback.length === 0
+      s.feedbacksStatus === 'REQUESTED_FROM_COORDINATOR' && s.status === 'COMPLETED'
     )
 
     res.json({
@@ -191,6 +191,87 @@ router.get('/me/sessions', async (req: Request, res: Response) => {
   }
 })
 
+// POST /api/trainers/me/sessions/:sessionId/questions/save - Save questions WITHOUT submitting
+router.post('/me/sessions/:sessionId/questions/save', async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.params
+    const { questions } = req.body // Array of { question: string }
+    const trainerEmail = req.query.email as string || 'jean@trainer.com'
+
+    // Validate
+    if (!Array.isArray(questions) || questions.length !== 3) {
+      return res.status(400).json({
+        success: false,
+        message: 'Exactly 3 questions are required'
+      })
+    }
+
+    const trainer = await prisma.trainer.findUnique({
+      where: { email: trainerEmail }
+    })
+
+    if (!trainer) {
+      return res.status(404).json({
+        success: false,
+        message: 'Trainer not found'
+      })
+    }
+
+    // Verify session belongs to trainer
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: { questions: true }
+    })
+
+    if (!session || session.trainerId !== trainer.id) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized for this session'
+      })
+    }
+
+    // Delete existing questions if any (allow re-saving)
+    if (session.questions.length > 0) {
+      await prisma.question.deleteMany({
+        where: { sessionId }
+      })
+    }
+
+    // Create questions
+    const createdQuestions = await Promise.all(
+      questions.map((q: any) =>
+        prisma.question.create({
+          data: {
+            sessionId,
+            question: q.question,
+            status: 'PENDING' // Not yet approved
+          }
+        })
+      )
+    )
+
+    // Update session questionsStatus to SAVED_BY_TRAINER
+    // This STOPS daily notifications for this session
+    await prisma.session.update({
+      where: { id: sessionId },
+      data: { questionsStatus: 'SAVED_BY_TRAINER' }
+    })
+
+    res.status(201).json({
+      success: true,
+      data: createdQuestions,
+      message: 'Questions saved successfully. You can edit them before submitting for approval. Daily reminders have been stopped.'
+    })
+  } catch (error) {
+    console.error('Error saving questions:', error)
+    res.status(500).json({
+      success: false,
+      message: 'Failed to save questions',
+      error: getErrorMessage(error)
+    })
+  }
+})
+
 // POST /api/trainers/me/sessions/:sessionId/questions - Submit questions for a session
 router.post('/me/sessions/:sessionId/questions', async (req: Request, res: Response) => {
   try {
@@ -232,11 +313,10 @@ router.post('/me/sessions/:sessionId/questions', async (req: Request, res: Respo
       })
     }
 
-    // Check if questions already exist
+    // Delete existing questions if any (allow re-submission)
     if (session.questions.length > 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Questions already submitted for this session'
+      await prisma.question.deleteMany({
+        where: { sessionId }
       })
     }
 
@@ -253,11 +333,14 @@ router.post('/me/sessions/:sessionId/questions', async (req: Request, res: Respo
       )
     )
 
-    // Update session status
+    // Update session questionsStatus to PENDING_APPROVAL
+    // This also stops notifications (if not already stopped)
     await prisma.session.update({
       where: { id: sessionId },
-      data: { status: 'QUESTIONS_REQUESTED' }
+      data: { questionsStatus: 'PENDING_APPROVAL' }
     })
+
+    // TODO: Send notification to coordinator
 
     res.status(201).json({
       success: true,
@@ -269,6 +352,93 @@ router.post('/me/sessions/:sessionId/questions', async (req: Request, res: Respo
     res.status(500).json({
       success: false,
       message: 'Failed to submit questions',
+      error: getErrorMessage(error)
+    })
+  }
+})
+
+// POST /api/trainers/me/sessions/:sessionId/feedback/save - Save feedback WITHOUT submitting
+router.post('/me/sessions/:sessionId/feedback/save', async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.params
+    const { feedbacks } = req.body // Array of { participantId, content }
+    const trainerEmail = req.query.email as string || 'jean@trainer.com'
+
+    if (!Array.isArray(feedbacks) || feedbacks.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'At least one feedback is required'
+      })
+    }
+
+    const trainer = await prisma.trainer.findUnique({
+      where: { email: trainerEmail }
+    })
+
+    if (!trainer) {
+      return res.status(404).json({
+        success: false,
+        message: 'Trainer not found'
+      })
+    }
+
+    // Verify session belongs to trainer
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: {
+        roundtable: {
+          include: { participants: { where: { status: 'ACTIVE' } } }
+        },
+        feedback: true
+      }
+    })
+
+    if (!session || session.trainerId !== trainer.id) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized for this session'
+      })
+    }
+
+    // Delete existing feedback if any (allow re-saving)
+    if (session.feedback.length > 0) {
+      await prisma.feedback.deleteMany({
+        where: { sessionId }
+      })
+    }
+
+    // Create feedback for each participant
+    const createdFeedbacks = await Promise.all(
+      feedbacks.map((f: any) =>
+        prisma.feedback.create({
+          data: {
+            sessionId,
+            participantId: f.participantId,
+            trainerId: trainer.id,
+            content: f.content,
+            status: 'PENDING' // Not yet approved
+          }
+        })
+      )
+    )
+
+    // Update session feedbacksStatus to SAVED_BY_TRAINER
+    // This STOPS daily notifications for this session
+    await prisma.session.update({
+      where: { id: sessionId },
+      data: { feedbacksStatus: 'SAVED_BY_TRAINER' }
+    })
+
+    res.status(201).json({
+      success: true,
+      data: createdFeedbacks,
+      message: `Feedback saved for ${createdFeedbacks.length} participant(s). You can edit them before submitting for approval. Daily reminders have been stopped.`
+    })
+  } catch (error) {
+    console.error('Error saving feedback:', error)
+    res.status(500).json({
+      success: false,
+      message: 'Failed to save feedback',
       error: getErrorMessage(error)
     })
   }
@@ -317,11 +487,10 @@ router.post('/me/sessions/:sessionId/feedback', async (req: Request, res: Respon
       })
     }
 
-    // Check if feedback already exists
+    // Delete existing feedback if any (allow re-submission)
     if (session.feedback.length > 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Feedback already submitted for this session'
+      await prisma.feedback.deleteMany({
+        where: { sessionId }
       })
     }
 
@@ -340,11 +509,14 @@ router.post('/me/sessions/:sessionId/feedback', async (req: Request, res: Respon
       )
     )
 
-    // Update session status
+    // Update session feedbacksStatus to PENDING_APPROVAL
+    // This also stops notifications (if not already stopped)
     await prisma.session.update({
       where: { id: sessionId },
-      data: { status: 'FEEDBACK_PENDING' }
+      data: { feedbacksStatus: 'PENDING_APPROVAL' }
     })
+
+    // TODO: Send notification to coordinator
 
     res.status(201).json({
       success: true,
