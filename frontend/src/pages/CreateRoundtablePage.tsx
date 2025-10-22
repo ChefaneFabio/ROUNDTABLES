@@ -116,9 +116,15 @@ export function CreateRoundtablePage() {
       } else {
         navigate('/roundtables')
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error creating roundtable:', error)
-      alert('Error creating roundtable. Please try again.')
+
+      // Show detailed validation errors if available
+      if (error.response?.data?.details) {
+        alert(`Validation Error:\n\n${error.response.data.details}`)
+      } else {
+        alert(error.message || 'Error creating roundtable. Please try again.')
+      }
     } finally {
       setLoading(false)
     }
