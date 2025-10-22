@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
+import makaLogo from '../assets/maka-logo.png'
 
 type UserRole = 'ADMIN' | 'COORDINATOR' | 'TRAINER'
 
@@ -64,10 +65,15 @@ export function LoginPage() {
 
   if (showLearnerInfo) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
         <div className="max-w-md w-full">
           <div className="bg-white rounded-2xl shadow-xl p-8">
             <div className="text-center mb-6">
+              <img
+                src={makaLogo}
+                alt="MAKA Logo"
+                className="w-16 h-16 mx-auto mb-4"
+              />
               <div className="w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full flex items-center justify-center">
                 <svg className="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
@@ -108,11 +114,17 @@ export function LoginPage() {
   // If no role selected, show role selection
   if (!selectedRole) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
         <div className="max-w-2xl w-full">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">Maka Roundtables</h1>
-            <p className="text-gray-600">Select your role to continue</p>
+            <img
+              src={makaLogo}
+              alt="MAKA Logo"
+              className="w-24 h-24 mx-auto mb-6"
+            />
+            <h1 className="text-4xl font-bold text-white mb-2">MAKA Language Translation</h1>
+            <p className="text-2xl font-semibold text-gray-300 mb-4">Roundtables Management</p>
+            <p className="text-gray-400">Select your role to continue</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -162,8 +174,8 @@ export function LoginPage() {
           </div>
 
           <div className="text-center mt-8">
-            <p className="text-sm text-gray-600">
-              © 2025 Maka Italia. All rights reserved.
+            <p className="text-sm text-gray-300">
+              © 2025 MAKA Language Translation. All rights reserved.
             </p>
           </div>
         </div>
@@ -188,7 +200,7 @@ export function LoginPage() {
   const roleInfo = getRoleInfo()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
       <div className="max-w-md w-full">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           {/* Back Button */}
@@ -204,7 +216,13 @@ export function LoginPage() {
 
           {/* Logo/Title */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Maka Roundtables</h1>
+            <img
+              src={makaLogo}
+              alt="MAKA Logo"
+              className="w-20 h-20 mx-auto mb-4"
+            />
+            <h1 className="text-2xl font-bold text-gray-900 mb-1">MAKA Language Translation</h1>
+            <p className="text-sm text-gray-600 mb-4">Roundtables Management</p>
             <div className={`inline-flex items-center px-4 py-2 rounded-full bg-${roleInfo.color}-100 text-${roleInfo.color}-800 text-sm font-medium mb-2`}>
               <span className="mr-2">{roleInfo.icon}</span>
               {roleInfo.name} Login
@@ -275,8 +293,8 @@ export function LoginPage() {
 
         {/* Footer */}
         <div className="text-center mt-6">
-          <p className="text-sm text-gray-600">
-            © 2025 Maka Italia. All rights reserved.
+          <p className="text-sm text-gray-300">
+            © 2025 MAKA Language Translation. All rights reserved.
           </p>
         </div>
       </div>
