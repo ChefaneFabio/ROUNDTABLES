@@ -34,7 +34,10 @@ api.interceptors.response.use(
       window.location.href = '/login'
     }
     if (error.response?.data?.error) {
-      throw new Error(error.response.data.error)
+      // Create a new error with the message but preserve the response data
+      const customError: any = new Error(error.response.data.error)
+      customError.response = error.response
+      throw customError
     }
     if (error.code === 'ECONNABORTED') {
       throw new Error('Request timeout. Please try again.')
