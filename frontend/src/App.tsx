@@ -16,6 +16,7 @@ import { FeedbackPage } from './pages/FeedbackPage'
 import { TrainersPage } from './pages/TrainersPage'
 import { ClientDetailsPage } from './pages/ClientDetailsPage'
 import { SessionDetailsPage } from './pages/SessionDetailsPage'
+import { SessionEditPage } from './pages/SessionEditPage'
 import { ReportsPage } from './pages/ReportsPage'
 import { NotificationsPage } from './pages/NotificationsPage'
 import { CalendarViewPage } from './pages/CalendarViewPage'
@@ -54,6 +55,7 @@ function App() {
           <Route path="/clients/:id" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><ClientDetailsPage /></ProtectedRoute>} />
           <Route path="/sessions" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><SessionsPage /></ProtectedRoute>} />
           <Route path="/sessions/calendar" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><SessionsCalendarPage /></ProtectedRoute>} />
+          <Route path="/sessions/:id/edit" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><SessionEditPage /></ProtectedRoute>} />
           <Route path="/sessions/:id" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><SessionDetailsPage /></ProtectedRoute>} />
           <Route path="/calendar" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><CalendarViewPage /></ProtectedRoute>} />
           <Route path="/questions" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><QuestionsPage /></ProtectedRoute>} />
