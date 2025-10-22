@@ -109,16 +109,6 @@ export const roundtablesApi = {
     return response.data
   },
 
-  async startTopicVoting(id: string) {
-    const response = await api.post(`/roundtables/${id}/start-voting`)
-    return response.data
-  },
-
-  async finalizeTopicVoting(id: string) {
-    const response = await api.post(`/roundtables/${id}/finalize-voting`)
-    return response.data
-  },
-
   async getSettings(id: string) {
     const response = await api.get(`/roundtables/${id}/settings`)
     return response.data

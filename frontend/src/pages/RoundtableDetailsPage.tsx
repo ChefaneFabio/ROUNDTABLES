@@ -10,7 +10,6 @@ import {
   MessageSquare,
   BarChart3,
   Plus,
-  Vote,
   FileText,
   Settings
 } from 'lucide-react'
@@ -119,31 +118,6 @@ export function RoundtableDetailsPage() {
     }
   }
 
-  const handleStartVoting = async () => {
-    if (!id) return
-    
-    try {
-      await roundtablesApi.startTopicVoting(id)
-      fetchRoundtable() // Refresh data
-      alert('Topic voting has been started! Participants can now vote.')
-    } catch (error) {
-      console.error('Error starting voting:', error)
-      alert('Error starting voting. Please try again.')
-    }
-  }
-
-  const handleFinalizeVoting = async () => {
-    if (!id) return
-
-    try {
-      await roundtablesApi.finalizeTopicVoting(id)
-      fetchRoundtable() // Refresh data
-      alert('Topic voting has been finalized! Sessions can now be scheduled.')
-    } catch (error) {
-      console.error('Error finalizing voting:', error)
-      alert('Error finalizing voting. Please try again.')
-    }
-  }
 
   const handleScheduleSessions = async () => {
     if (!id || !scheduleData.startDate) {
@@ -190,28 +164,21 @@ export function RoundtableDetailsPage() {
 
     switch (roundtable.status) {
       case 'SETUP':
-        return {
-          title: 'Start Topic Voting',
-          description: 'Begin the topic voting process for participants',
-          action: handleStartVoting,
-          icon: Vote,
-          color: 'bg-blue-600'
-        }
-      case 'TOPIC_VOTING':
-        return {
-          title: 'Finalize Voting',
-          description: 'Close voting and prepare selected topics',
-          action: handleFinalizeVoting,
-          icon: CheckCircle,
-          color: 'bg-green-600'
-        }
       case 'SCHEDULED':
         return {
-          title: 'Start Sessions',
-          description: 'Begin the first roundtable session',
-          action: () => alert('Session management coming soon'),
-          icon: Play,
+          title: 'Schedule Sessions',
+          description: 'Create session calendar for this roundtable',
+          action: () => setShowScheduleModal(true),
+          icon: Calendar,
           color: 'bg-purple-600'
+        }
+      case 'IN_PROGRESS':
+        return {
+          title: 'Manage Sessions',
+          description: 'View and manage ongoing sessions',
+          action: () => navigate('/sessions'),
+          icon: Play,
+          color: 'bg-green-600'
         }
       default:
         return null
@@ -271,16 +238,6 @@ export function RoundtableDetailsPage() {
                   {roundtable.status.replace('_', ' ')}
                 </span>
               </div>
-            </div>
-            
-            <div className="flex space-x-3">
-              <button
-                onClick={() => navigate(`/vote/${roundtable.id}`)}
-                className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 flex items-center"
-              >
-                <Vote className="h-4 w-4 mr-2" />
-                Voting Page
-              </button>
             </div>
           </div>
         </div>

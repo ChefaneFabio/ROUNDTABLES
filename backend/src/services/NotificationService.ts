@@ -527,4 +527,67 @@ The Maka Team
 
     return pendingNotifications.length
   }
+
+  async sendQuestionsToParticipant(params: {
+    participantEmail: string
+    participantName: string
+    sessionNumber: number
+    topicTitle: string
+    roundtableName: string
+    scheduledAt: Date
+    questions: string[]
+    trainerName: string
+  }) {
+    const {
+      participantEmail,
+      participantName,
+      sessionNumber,
+      topicTitle,
+      roundtableName,
+      scheduledAt,
+      questions,
+      trainerName
+    } = params
+
+    const formattedDate = new Date(scheduledAt).toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+
+    const questionsList = questions
+      .map((q, index) => `${index + 1}. ${q}`)
+      .join('\n')
+
+    const subject = `Discussion Questions for ${roundtableName} - Session ${sessionNumber}`
+    const content = `Dear ${participantName},
+
+Here are the discussion questions for the upcoming session:
+
+Roundtable: ${roundtableName}
+Session: #${sessionNumber} - ${topicTitle}
+Date: ${formattedDate}
+Trainer: ${trainerName}
+
+DISCUSSION QUESTIONS:
+
+${questionsList}
+
+Please review these questions before the session. Your thoughtful input will help make our discussion more engaging and productive.
+
+If you have any questions or concerns, please don't hesitate to reach out.
+
+Best regards,
+Maka Training Team`
+
+    return this.createAndSendNotification({
+      type: 'EMAIL',
+      recipient: participantEmail,
+      subject,
+      content
+    })
+  }
 }

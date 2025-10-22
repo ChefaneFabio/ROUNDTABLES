@@ -2,7 +2,6 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { LoginPage } from './pages/LoginPage'
-import { VotingPage } from './pages/VotingPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { RoundtablesPage } from './pages/RoundtablesPage'
 import { ClientsPage } from './pages/ClientsPage'
@@ -18,7 +17,6 @@ import { TrainersPage } from './pages/TrainersPage'
 import { ClientDetailsPage } from './pages/ClientDetailsPage'
 import { SessionDetailsPage } from './pages/SessionDetailsPage'
 import { ReportsPage } from './pages/ReportsPage'
-import { VotingResultsPage } from './pages/VotingResultsPage'
 import { NotificationsPage } from './pages/NotificationsPage'
 import { CalendarViewPage } from './pages/CalendarViewPage'
 import { TrainerProfilePage } from './pages/TrainerProfilePage'
@@ -42,7 +40,6 @@ function App() {
         <Routes>
           {/* Public routes */}
           <Route path="/login" element={<LoginPage />} />
-          <Route path="/vote/:roundtableId" element={<VotingPage />} />
 
           {/* Redirect root based on user role */}
           <Route path="/" element={<RootRedirect />} />
@@ -65,7 +62,6 @@ function App() {
           <Route path="/feedback" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><FeedbackPage /></ProtectedRoute>} />
           <Route path="/trainers" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><TrainersPage /></ProtectedRoute>} />
           <Route path="/reports" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><ReportsPage /></ProtectedRoute>} />
-          <Route path="/roundtables/:roundtableId/voting" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><VotingResultsPage /></ProtectedRoute>} />
           <Route path="/notifications" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><NotificationsPage /></ProtectedRoute>} />
 
           {/* Trainer Protected Routes */}

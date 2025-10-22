@@ -82,6 +82,8 @@ export function SessionDetailsPage() {
   const [editingNotes, setEditingNotes] = useState(false)
   const [notes, setNotes] = useState('')
   const [newQuestion, setNewQuestion] = useState('')
+  const [questionsText, setQuestionsText] = useState('')
+  const [sendingQuestions, setSendingQuestions] = useState(false)
   const [showAddMaterial, setShowAddMaterial] = useState(false)
   const [newMaterial, setNewMaterial] = useState({
     name: '',
@@ -224,6 +226,56 @@ export function SessionDetailsPage() {
     } catch (error) {
       console.error('Error adding question:', error)
       alert('Error adding question')
+    }
+  }
+
+  const handleSendQuestionsViaEmail = async () => {
+    if (!questionsText.trim()) {
+      alert('Please enter questions to send')
+      return
+    }
+
+    // Parse questions (one per line or separated by numbers)
+    const questions = questionsText
+      .split('\n')
+      .map(q => q.trim())
+      .filter(q => q.length > 0)
+      .map(q => q.replace(/^(\d+[\.\)\:]?\s*)/, '')) // Remove leading numbers like "1. " or "1) "
+      .filter(q => q.length > 0)
+
+    if (questions.length === 0) {
+      alert('No valid questions found')
+      return
+    }
+
+    if (!window.confirm(`Send ${questions.length} question(s) via email to all participants?`)) {
+      return
+    }
+
+    try {
+      setSendingQuestions(true)
+
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+      const response = await fetch(`${apiUrl}/sessions/${id}/send-questions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ questions })
+      })
+
+      const data = await response.json()
+
+      if (data.success) {
+        alert(`Successfully sent ${questions.length} question(s) to ${session?.participants.length || 0} participants!`)
+        setQuestionsText('')
+        fetchSessionDetails() // Refresh to show updated status
+      } else {
+        throw new Error(data.error || 'Failed to send questions')
+      }
+    } catch (error: any) {
+      console.error('Error sending questions:', error)
+      alert(error.message || 'Error sending questions. Please try again.')
+    } finally {
+      setSendingQuestions(false)
     }
   }
 
@@ -613,7 +665,7 @@ export function SessionDetailsPage() {
 
             {activeTab === 'questions' && (
               <div>
-                <div className="flex justify-between items-center mb-4">
+                <div className="flex justify-between items-center mb-6">
                   <h3 className="text-lg font-semibold text-gray-900">Discussion Questions</h3>
                   <button
                     onClick={() => navigate('/questions')}
@@ -622,42 +674,80 @@ export function SessionDetailsPage() {
                     Manage All Questions →
                   </button>
                 </div>
-                
-                <div className="space-y-4 mb-6">
-                  {session.questions.map((question, index) => (
-                    <div key={question.id} className="p-4 border border-gray-200 rounded-lg">
-                      <div className="flex justify-between items-start mb-2">
-                        <h4 className="font-medium text-gray-900">Question {index + 1}</h4>
-                        <span className={`px-2 py-1 text-xs rounded-full ${getQuestionStatusColor(question.status)}`}>
-                          {question.status}
-                        </span>
-                      </div>
-                      <p className="text-gray-700">{question.content}</p>
-                      <p className="text-sm text-gray-500 mt-2">
-                        Submitted: {new Date(question.submittedAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                  ))}
-                </div>
 
-                <div className="border-t pt-4">
-                  <h4 className="font-medium text-gray-900 mb-3">Add New Question</h4>
-                  <div className="flex space-x-3">
-                    <input
-                      type="text"
-                      value={newQuestion}
-                      onChange={(e) => setNewQuestion(e.target.value)}
-                      placeholder="Enter a new discussion question..."
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+                {/* Send Questions Form */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                  <div className="flex items-center mb-4">
+                    <Mail className="h-5 w-5 text-blue-600 mr-2" />
+                    <h4 className="font-medium text-gray-900">Send Questions to Participants</h4>
+                  </div>
+
+                  <p className="text-sm text-gray-600 mb-4">
+                    Paste questions prepared by the trainer (one question per line). Questions will be sent via email to all participants.
+                  </p>
+
+                  <textarea
+                    value={questionsText}
+                    onChange={(e) => setQuestionsText(e.target.value)}
+                    placeholder={"Example:\n1. What are the key challenges you face in team communication?\n2. How do you prioritize tasks when managing multiple projects?\n3. What strategies do you use for conflict resolution?"}
+                    rows={8}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-sm"
+                  />
+
+                  <div className="flex items-center justify-between mt-4">
+                    <p className="text-sm text-gray-600">
+                      {questionsText.split('\n').filter(q => q.trim().length > 0).length} question(s) entered
+                    </p>
                     <button
-                      onClick={handleAddQuestion}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center"
+                      onClick={handleSendQuestionsViaEmail}
+                      disabled={sendingQuestions || !questionsText.trim()}
+                      className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
                     >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add
+                      {sendingQuestions ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Sending...
+                        </>
+                      ) : (
+                        <>
+                          <Mail className="h-4 w-4 mr-2" />
+                          Send via Email
+                        </>
+                      )}
                     </button>
                   </div>
+                </div>
+
+                {/* Existing Questions */}
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-4">
+                    Previously Sent Questions ({session.questions.length})
+                  </h4>
+
+                  {session.questions.length > 0 ? (
+                    <div className="space-y-3">
+                      {session.questions.map((question, index) => (
+                        <div key={question.id} className="p-4 border border-gray-200 rounded-lg bg-gray-50">
+                          <div className="flex justify-between items-start mb-2">
+                            <h5 className="font-medium text-gray-900">Question {index + 1}</h5>
+                            <span className={`px-2 py-1 text-xs rounded-full ${getQuestionStatusColor(question.status)}`}>
+                              {question.status}
+                            </span>
+                          </div>
+                          <p className="text-gray-700">{question.content}</p>
+                          <p className="text-sm text-gray-500 mt-2">
+                            Submitted: {new Date(question.submittedAt).toLocaleDateString()}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-500">
+                      <MessageSquare className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                      <p>No questions sent yet</p>
+                      <p className="text-sm">Use the form above to send questions to participants</p>
+                    </div>
+                  )}
                 </div>
               </div>
             )}

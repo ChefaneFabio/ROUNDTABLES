@@ -542,4 +542,95 @@ router.patch('/:id/assign-trainer', async (req: Request, res: Response) => {
   }
 })
 
+// POST /sessions/:id/send-questions - Send questions to participants via email
+router.post('/:id/send-questions', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { questions } = req.body
+
+    // Validation
+    if (!questions || !Array.isArray(questions) || questions.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Questions array is required and must not be empty'
+      })
+    }
+
+    // Get session with participants
+    const session = await prisma.session.findUnique({
+      where: { id },
+      include: {
+        roundtable: {
+          include: {
+            participants: {
+              where: { status: 'ACTIVE' }
+            }
+          }
+        },
+        topic: { select: { title: true } },
+        trainer: { select: { name: true, email: true } }
+      }
+    })
+
+    if (!session) {
+      return res.status(404).json({
+        success: false,
+        error: 'Session not found'
+      })
+    }
+
+    if (session.roundtable.participants.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'No active participants found for this roundtable'
+      })
+    }
+
+    // Store questions in database
+    const createdQuestions = await Promise.all(
+      questions.map((questionText: string) =>
+        prisma.question.create({
+          data: {
+            question: questionText.trim(),
+            sessionId: id,
+            status: 'APPROVED', // Mark as approved since coordinator is sending directly
+            source: 'MANUAL'
+          }
+        })
+      )
+    )
+
+    // Send email to all active participants
+    const emailPromises = session.roundtable.participants.map((participant: any) =>
+      notificationService.sendQuestionsToParticipant({
+        participantEmail: participant.email,
+        participantName: participant.name,
+        sessionNumber: session.sessionNumber,
+        topicTitle: session.topic?.title || 'TBD',
+        roundtableName: session.roundtable.name,
+        scheduledAt: session.scheduledAt,
+        questions: questions.map((q: string) => q.trim()),
+        trainerName: session.trainer?.name || 'TBD'
+      })
+    )
+
+    await Promise.all(emailPromises)
+
+    console.log(`✅ Sent ${questions.length} questions to ${session.roundtable.participants.length} participants for session ${id}`)
+
+    res.json({
+      success: true,
+      data: {
+        questionsSent: createdQuestions.length,
+        participantsNotified: session.roundtable.participants.length,
+        questions: createdQuestions
+      },
+      message: `Successfully sent ${questions.length} questions to ${session.roundtable.participants.length} participants`
+    })
+  } catch (error) {
+    console.error('Error sending questions:', error)
+    res.status(500).json({ success: false, error: 'Internal server error' })
+  }
+})
+
 export default router
