@@ -82,7 +82,21 @@ export function CreateRoundtablePage() {
     // Validate topics
     const validTopics = topics.filter(t => t.title.trim())
     if (validTopics.length < 6) {
-      alert('Please provide at least 6 topics')
+      alert(`Please provide at least 6 topics (currently have ${validTopics.length} valid topics)`)
+      return
+    }
+
+    // Check if any topic title is too short
+    const tooShortTopics = validTopics.filter(t => t.title.trim().length < 2)
+    if (tooShortTopics.length > 0) {
+      alert('All topic titles must be at least 2 characters long')
+      return
+    }
+
+    // Check if any topic title is too long
+    const tooLongTopics = validTopics.filter(t => t.title.trim().length > 100)
+    if (tooLongTopics.length > 0) {
+      alert('Topic titles must be 100 characters or less')
       return
     }
 
