@@ -81,7 +81,6 @@ export function SessionDetailsPage() {
   const [activeTab, setActiveTab] = useState('overview')
   const [editingNotes, setEditingNotes] = useState(false)
   const [notes, setNotes] = useState('')
-  const [newQuestion, setNewQuestion] = useState('')
   const [questionsText, setQuestionsText] = useState('')
   const [sendingQuestions, setSendingQuestions] = useState(false)
   const [showAddMaterial, setShowAddMaterial] = useState(false)
@@ -203,31 +202,6 @@ export function SessionDetailsPage() {
     }
   }
 
-  const handleAddQuestion = async () => {
-    if (!newQuestion.trim()) return
-
-    try {
-      const question = {
-        id: Date.now().toString(),
-        content: newQuestion,
-        status: 'SUBMITTED' as const,
-        submittedAt: new Date().toISOString()
-      }
-
-      if (session) {
-        setSession({
-          ...session,
-          questions: [...session.questions, question]
-        })
-      }
-
-      setNewQuestion('')
-      alert('Question added successfully!')
-    } catch (error) {
-      console.error('Error adding question:', error)
-      alert('Error adding question')
-    }
-  }
 
   const handleSendQuestionsViaEmail = async () => {
     if (!questionsText.trim()) {
