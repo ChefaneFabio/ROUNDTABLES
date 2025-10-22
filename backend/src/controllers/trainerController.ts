@@ -811,4 +811,331 @@ router.get('/stats/overview', (req: Request, res: Response) => {
   }
 })
 
+// ==================== AI & QUESTION LIBRARY ENDPOINTS ====================
+
+// GET /api/trainers/sessions/:sessionId/ai-suggestions
+router.get('/sessions/:sessionId/ai-suggestions', async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.params
+    const trainerEmail = req.query.email as string
+
+    if (!trainerEmail) {
+      return res.status(400).json({
+        success: false,
+        message: 'Trainer email is required'
+      })
+    }
+
+    // Verify trainer is assigned to this session
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: { trainer: true }
+    })
+
+    if (!session || session.trainer?.email !== trainerEmail) {
+      return res.status(403).json({
+        success: false,
+        message: 'Not authorized to access this session'
+      })
+    }
+
+    // Dynamic import to avoid circular dependencies
+    const { AIQuestionService } = await import('../services/AIQuestionService')
+    const aiService = new AIQuestionService()
+
+    // Check rate limit
+    const rateLimit = await aiService.checkTrainerRateLimit(trainerEmail)
+    if (!rateLimit.allowed) {
+      return res.status(429).json({
+        success: false,
+        message: `Daily AI suggestion limit reached. You have used all ${rateLimit.dailyLimit} requests for today.`,
+        data: rateLimit
+      })
+    }
+
+    // Generate suggestions
+    const suggestions = await aiService.generateQuestionSuggestions(sessionId, {
+      count: 3,
+      useCache: true
+    })
+
+    res.json({
+      success: true,
+      data: {
+        suggestions,
+        rateLimit: {
+          remaining: rateLimit.remainingRequests,
+          dailyLimit: rateLimit.dailyLimit
+        }
+      }
+    })
+  } catch (error) {
+    console.error('Error generating AI suggestions:', error)
+    res.status(500).json({
+      success: false,
+      message: 'Failed to generate AI suggestions',
+      error: getErrorMessage(error)
+    })
+  }
+})
+
+// GET /api/trainers/sessions/:sessionId/question-library
+router.get('/sessions/:sessionId/question-library', async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.params
+    const minRating = req.query.minRating ? parseFloat(req.query.minRating as string) : 3.5
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 20
+
+    // Get session topic
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: { topic: true }
+    })
+
+    if (!session) {
+      return res.status(404).json({
+        success: false,
+        message: 'Session not found'
+      })
+    }
+
+    const { QuestionService } = await import('../services/QuestionService')
+    const questionService = new QuestionService()
+
+    const library = await questionService.getQuestionLibrary({
+      topicId: session.topic?.id,
+      minRating,
+      limit
+    })
+
+    res.json({
+      success: true,
+      data: {
+        questions: library,
+        topic: session.topic,
+        filters: {
+          minRating,
+          limit
+        }
+      }
+    })
+  } catch (error) {
+    console.error('Error fetching question library:', error)
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch question library',
+      error: getErrorMessage(error)
+    })
+  }
+})
+
+// GET /api/trainers/sessions/:sessionId/limits
+router.get('/sessions/:sessionId/limits', async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.params
+
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: {
+        roundtable: {
+          select: {
+            minQuestionsPerSession: true,
+            maxQuestionsPerSession: true,
+            minFeedbackItemsPerParticipant: true,
+            maxFeedbackItemsPerParticipant: true
+          }
+        }
+      }
+    })
+
+    if (!session) {
+      return res.status(404).json({
+        success: false,
+        message: 'Session not found'
+      })
+    }
+
+    res.json({
+      success: true,
+      data: {
+        questions: {
+          min: session.roundtable.minQuestionsPerSession,
+          max: session.roundtable.maxQuestionsPerSession
+        },
+        feedback: {
+          min: session.roundtable.minFeedbackItemsPerParticipant,
+          max: session.roundtable.maxFeedbackItemsPerParticipant
+        }
+      }
+    })
+  } catch (error) {
+    console.error('Error fetching session limits:', error)
+    res.status(500).json({
+      success: false,
+      message: 'Failed to fetch session limits',
+      error: getErrorMessage(error)
+    })
+  }
+})
+
+// POST /api/trainers/sessions/:sessionId/questions - Submit questions with dynamic count
+router.post('/sessions/:sessionId/questions', async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.params
+    const { questions, trainerId } = req.body
+
+    if (!questions || !Array.isArray(questions)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Questions array is required'
+      })
+    }
+
+    if (!trainerId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Trainer ID is required'
+      })
+    }
+
+    const { QuestionService } = await import('../services/QuestionService')
+    const questionService = new QuestionService()
+
+    const result = await questionService.submitQuestionsForSession({
+      questions: questions.map((q: any) => ({
+        question: typeof q === 'string' ? q : q.question,
+        source: typeof q === 'object' ? q.source : 'MANUAL',
+        aiPromptUsed: typeof q === 'object' ? q.aiPromptUsed : undefined
+      })),
+      trainerId,
+      sessionId
+    })
+
+    res.json({
+      success: true,
+      data: result
+    })
+  } catch (error) {
+    console.error('Error submitting questions:', error)
+    res.status(400).json({
+      success: false,
+      message: getErrorMessage(error)
+    })
+  }
+})
+
+// POST /api/trainers/sessions/:sessionId/feedback - Submit multiple feedback items
+router.post('/sessions/:sessionId/feedback', async (req: Request, res: Response) => {
+  try {
+    const { sessionId } = req.params
+    const { feedbackItems, trainerId } = req.body
+
+    if (!feedbackItems || !Array.isArray(feedbackItems)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Feedback items array is required'
+      })
+    }
+
+    if (!trainerId) {
+      return res.status(400).json({
+        success: false,
+        message: 'Trainer ID is required'
+      })
+    }
+
+    // Verify session and get roundtable limits
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: {
+        roundtable: {
+          select: {
+            minFeedbackItemsPerParticipant: true,
+            maxFeedbackItemsPerParticipant: true,
+            participants: { where: { status: 'ACTIVE' } }
+          }
+        }
+      }
+    })
+
+    if (!session) {
+      return res.status(404).json({
+        success: false,
+        message: 'Session not found'
+      })
+    }
+
+    // Group feedback by participant and validate counts
+    const feedbackByParticipant = feedbackItems.reduce((acc: any, item: any) => {
+      if (!acc[item.participantId]) {
+        acc[item.participantId] = []
+      }
+      acc[item.participantId].push(item)
+      return acc
+    }, {})
+
+    const min = session.roundtable.minFeedbackItemsPerParticipant
+    const max = session.roundtable.maxFeedbackItemsPerParticipant
+
+    // Validate each participant has min-max feedback items
+    for (const participantId in feedbackByParticipant) {
+      const count = feedbackByParticipant[participantId].length
+      if (count < min) {
+        return res.status(400).json({
+          success: false,
+          message: `Minimum ${min} feedback item(s) required per participant`
+        })
+      }
+      if (count > max) {
+        return res.status(400).json({
+          success: false,
+          message: `Maximum ${max} feedback items allowed per participant`
+        })
+      }
+    }
+
+    // Delete existing feedback for this session
+    await prisma.feedback.deleteMany({
+      where: { sessionId }
+    })
+
+    // Create new feedback items
+    const createdFeedback = await Promise.all(
+      feedbackItems.map((item: any, index: number) =>
+        prisma.feedback.create({
+          data: {
+            content: item.content,
+            sessionId,
+            participantId: item.participantId,
+            trainerId,
+            feedbackType: item.feedbackType || 'GENERAL',
+            orderIndex: item.orderIndex || index,
+            status: 'PENDING'
+          }
+        })
+      )
+    )
+
+    // Update session status
+    await prisma.session.update({
+      where: { id: sessionId },
+      data: { feedbacksStatus: 'PENDING_APPROVAL' }
+    })
+
+    res.json({
+      success: true,
+      data: {
+        feedbackSubmitted: createdFeedback.length,
+        feedback: createdFeedback
+      }
+    })
+  } catch (error) {
+    console.error('Error submitting feedback:', error)
+    res.status(400).json({
+      success: false,
+      message: getErrorMessage(error)
+    })
+  }
+})
+
 export default router

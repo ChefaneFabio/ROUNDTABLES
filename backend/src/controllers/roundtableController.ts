@@ -301,4 +301,117 @@ router.post('/:id/schedule-sessions', async (req: Request, res: Response) => {
   }
 })
 
+// PATCH /api/roundtables/:id/settings - Update question/feedback limits
+router.patch('/:id/settings', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const {
+      minQuestionsPerSession,
+      maxQuestionsPerSession,
+      minFeedbackItemsPerParticipant,
+      maxFeedbackItemsPerParticipant
+    } = req.body
+
+    // Validation
+    if (minQuestionsPerSession !== undefined && (minQuestionsPerSession < 0 || minQuestionsPerSession > 10)) {
+      return res.status(400).json({
+        success: false,
+        error: 'minQuestionsPerSession must be between 0 and 10'
+      })
+    }
+
+    if (maxQuestionsPerSession !== undefined && (maxQuestionsPerSession < 1 || maxQuestionsPerSession > 10)) {
+      return res.status(400).json({
+        success: false,
+        error: 'maxQuestionsPerSession must be between 1 and 10'
+      })
+    }
+
+    if (minQuestionsPerSession !== undefined && maxQuestionsPerSession !== undefined) {
+      if (minQuestionsPerSession > maxQuestionsPerSession) {
+        return res.status(400).json({
+          success: false,
+          error: 'minQuestionsPerSession cannot be greater than maxQuestionsPerSession'
+        })
+      }
+    }
+
+    if (minFeedbackItemsPerParticipant !== undefined && (minFeedbackItemsPerParticipant < 1 || minFeedbackItemsPerParticipant > 10)) {
+      return res.status(400).json({
+        success: false,
+        error: 'minFeedbackItemsPerParticipant must be between 1 and 10'
+      })
+    }
+
+    if (maxFeedbackItemsPerParticipant !== undefined && (maxFeedbackItemsPerParticipant < 1 || maxFeedbackItemsPerParticipant > 10)) {
+      return res.status(400).json({
+        success: false,
+        error: 'maxFeedbackItemsPerParticipant must be between 1 and 10'
+      })
+    }
+
+    if (minFeedbackItemsPerParticipant !== undefined && maxFeedbackItemsPerParticipant !== undefined) {
+      if (minFeedbackItemsPerParticipant > maxFeedbackItemsPerParticipant) {
+        return res.status(400).json({
+          success: false,
+          error: 'minFeedbackItemsPerParticipant cannot be greater than maxFeedbackItemsPerParticipant'
+        })
+      }
+    }
+
+    const updates: any = {}
+    if (minQuestionsPerSession !== undefined) updates.minQuestionsPerSession = minQuestionsPerSession
+    if (maxQuestionsPerSession !== undefined) updates.maxQuestionsPerSession = maxQuestionsPerSession
+    if (minFeedbackItemsPerParticipant !== undefined) updates.minFeedbackItemsPerParticipant = minFeedbackItemsPerParticipant
+    if (maxFeedbackItemsPerParticipant !== undefined) updates.maxFeedbackItemsPerParticipant = maxFeedbackItemsPerParticipant
+
+    const updatedRoundtable = await prisma.roundtable.update({
+      where: { id },
+      data: updates
+    })
+
+    res.json({
+      success: true,
+      data: updatedRoundtable
+    })
+  } catch (error) {
+    console.error('Error updating roundtable settings:', error)
+    res.status(500).json({ success: false, error: 'Internal server error' })
+  }
+})
+
+// GET /api/roundtables/:id/settings - Get question/feedback limits
+router.get('/:id/settings', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+
+    const roundtable = await prisma.roundtable.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        minQuestionsPerSession: true,
+        maxQuestionsPerSession: true,
+        minFeedbackItemsPerParticipant: true,
+        maxFeedbackItemsPerParticipant: true
+      }
+    })
+
+    if (!roundtable) {
+      return res.status(404).json({
+        success: false,
+        error: 'Roundtable not found'
+      })
+    }
+
+    res.json({
+      success: true,
+      data: roundtable
+    })
+  } catch (error) {
+    console.error('Error fetching roundtable settings:', error)
+    res.status(500).json({ success: false, error: 'Internal server error' })
+  }
+})
+
 export default router

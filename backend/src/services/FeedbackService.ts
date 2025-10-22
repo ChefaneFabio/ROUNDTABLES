@@ -156,18 +156,22 @@ export class FeedbackService {
     if (!participant) throw new Error('Participant not found')
     if (!trainer) throw new Error('Trainer not found')
 
-    // Check if feedback already exists for this session-participant combination
-    const existingFeedback = await prisma.feedback.findUnique({
+    // Check existing feedback count for this session-participant combination
+    const existingFeedbackCount = await prisma.feedback.count({
       where: {
-        sessionId_participantId: {
-          sessionId: data.sessionId,
-          participantId: data.participantId
-        }
+        sessionId: data.sessionId,
+        participantId: data.participantId
       }
     })
 
-    if (existingFeedback) {
-      throw new Error('Feedback already exists for this session and participant')
+    // Get roundtable limits
+    const roundtable = await prisma.roundtable.findUnique({
+      where: { id: session.roundtableId },
+      select: { maxFeedbackItemsPerParticipant: true }
+    })
+
+    if (existingFeedbackCount >= (roundtable?.maxFeedbackItemsPerParticipant || 5)) {
+      throw new Error(`Maximum ${roundtable?.maxFeedbackItemsPerParticipant || 5} feedback items allowed per participant`)
     }
 
     return await prisma.feedback.create({

@@ -69,7 +69,8 @@ model Client {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  roundtables Roundtable[]
+  roundtables    Roundtable[]
+  clientSettings ClientSettings?
 
   @@map("clients")
 }
@@ -83,6 +84,13 @@ model Roundtable {
   endDate     DateTime?
   maxParticipants Int           @default(6)
   formsUrl    String?           // Microsoft Forms URL for this roundtable
+
+  // Dynamic question/feedback limits (per-roundtable customization)
+  minQuestionsPerSession            Int @default(0)
+  maxQuestionsPerSession            Int @default(10)
+  minFeedbackItemsPerParticipant    Int @default(1)
+  maxFeedbackItemsPerParticipant    Int @default(5)
+
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 
@@ -134,6 +142,9 @@ model Topic {
 
   votes       TopicVote[]
   sessions    Session[]
+  questionLibrary Question[] @relation("QuestionLibrary")
+  questionTemplates QuestionTemplate[]
+  aiSuggestions AIQuestionSuggestion[]
 
   @@map("topics")
 }
@@ -204,12 +215,24 @@ model Question {
   question    String
   status      QuestionStatus  @default(PENDING)
   reviewNotes String?
+
+  // Question library & analytics
+  rating      Float?                    // Coordinator rating (1-5 stars)
+  usageCount  Int             @default(0)  // Track reuse across sessions
+  source      QuestionSource  @default(MANUAL)  // How was this question created
+  aiPromptUsed String?                  // Audit trail for AI-generated questions
+
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
 
   sessionId   String
   session     Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 
+  topicId     String?
+  topic       Topic?   @relation("QuestionLibrary", fields: [topicId], references: [id])
+
+  @@index([topicId, rating])
+  @@index([source, usageCount])
   @@map("questions")
 }
 
@@ -219,6 +242,11 @@ model Feedback {
   status      FeedbackStatus @default(PENDING)
   reviewNotes String?
   sentAt      DateTime?
+
+  // Multiple feedback items per participant support
+  feedbackType FeedbackType  @default(GENERAL)
+  orderIndex   Int           @default(0)
+
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
 
@@ -231,7 +259,7 @@ model Feedback {
   trainerId     String
   trainer       Trainer     @relation(fields: [trainerId], references: [id], onDelete: Cascade)
 
-  @@unique([sessionId, participantId])
+  @@index([sessionId, participantId, orderIndex])
   @@map("feedback")
 }
 
@@ -293,6 +321,68 @@ model AuditLog {
   @@index([resource, createdAt])
   @@index([result, createdAt])
   @@map("audit_logs")
+}
+
+// Question Templates - Reusable question templates by topic
+model QuestionTemplate {
+  id          String   @id @default(cuid())
+  title       String   // Template name (e.g., "Icebreaker Questions")
+  question    String   // Template question with placeholders
+  description String?  // When to use this template
+  tags        String[] // Search tags
+  usageCount  Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  topicId     String?
+  topic       Topic?   @relation(fields: [topicId], references: [id])
+
+  @@index([topicId, usageCount])
+  @@map("question_templates")
+}
+
+// AI Question Suggestions - Cache AI-generated suggestions
+model AIQuestionSuggestion {
+  id          String   @id @default(cuid())
+  question    String
+  rationale   String?  // Why this question is good
+  prompt      String   @db.Text // Prompt used to generate
+  sessionId   String?  // Associated session (if specific)
+  expiresAt   DateTime // Cache expiry (24h)
+  usedByTrainer Boolean @default(false)
+  createdAt   DateTime @default(now())
+
+  topicId     String?
+  topic       Topic?   @relation(fields: [topicId], references: [id])
+
+  @@index([topicId, expiresAt])
+  @@index([sessionId])
+  @@map("ai_question_suggestions")
+}
+
+// Client Settings - Default question/feedback limits per client
+model ClientSettings {
+  id          String   @id @default(cuid())
+
+  // Default limits inherited by all roundtables for this client
+  defaultMinQuestionsPerSession         Int @default(0)
+  defaultMaxQuestionsPerSession         Int @default(10)
+  defaultMinFeedbackItemsPerParticipant Int @default(1)
+  defaultMaxFeedbackItemsPerParticipant Int @default(5)
+
+  // AI features access
+  enableAISuggestions      Boolean @default(true)
+  enableQuestionLibrary    Boolean @default(true)
+  aiRequestsPerTrainerPerDay Int   @default(5)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  clientId    String   @unique
+  client      Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("client_settings")
 }
 
 // Enums
@@ -405,4 +495,20 @@ enum EmailTemplateCategory {
   TRAINER
   CLIENT
   SYSTEM
+}
+
+// Question source tracking
+enum QuestionSource {
+  MANUAL          // Trainer wrote from scratch
+  AI_GENERATED    // Generated by AI
+  TEMPLATE        // From question template
+  LIBRARY         // Reused from question library
+}
+
+// Feedback categorization
+enum FeedbackType {
+  STRENGTHS       // What the participant did well
+  IMPROVEMENTS    // Areas where participant can improve
+  RECOMMENDATIONS // Specific actions or resources
+  GENERAL         // Unstructured feedback (legacy)
 }

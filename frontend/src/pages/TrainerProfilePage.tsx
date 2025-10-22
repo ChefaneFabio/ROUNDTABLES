@@ -11,10 +11,16 @@ import {
   ChevronDown,
   ChevronUp,
   Send,
-  LogOut
+  LogOut,
+  Plus,
+  X,
+  Sparkles,
+  BookOpen
 } from 'lucide-react'
 import { trainersApi } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
+import { QuestionSuggestionsPanel } from '../components/trainer/QuestionSuggestionsPanel'
+import { QuestionsLibraryPanel } from '../components/trainer/QuestionsLibraryPanel'
 
 interface TrainerProfile {
   id: string
@@ -93,8 +99,16 @@ export function TrainerProfilePage() {
   const [showQuestionsForm, setShowQuestionsForm] = useState(false)
   const [showFeedbackForm, setShowFeedbackForm] = useState(false)
   const [selectedSession, setSelectedSession] = useState<TrainerSession | null>(null)
-  const [questions, setQuestions] = useState(['', '', ''])
-  const [feedbacks, setFeedbacks] = useState<Record<string, string>>({})
+  const [questions, setQuestions] = useState<string[]>([])
+  const [feedbacks, setFeedbacks] = useState<Record<string, Array<{type: string, content: string}>>>({})
+
+  // Question and feedback limits (TODO: fetch from roundtable settings API)
+  const questionLimits = { min: 0, max: 10 }
+  const feedbackLimits = { min: 1, max: 5 }
+
+  // Panel states
+  const [showAISuggestions, setShowAISuggestions] = useState(false)
+  const [showQuestionLibrary, setShowQuestionLibrary] = useState(false)
 
   useEffect(() => {
     fetchTrainerData()
@@ -128,8 +142,25 @@ export function TrainerProfilePage() {
   }
 
   const handleSubmitQuestions = async () => {
-    if (!selectedSession || questions.some(q => !q.trim())) {
-      alert('Please fill in all 3 questions')
+    if (!selectedSession) {
+      alert('No session selected')
+      return
+    }
+
+    // Validate all questions are filled
+    if (questions.some(q => !q.trim())) {
+      alert('Please fill in all questions before submitting')
+      return
+    }
+
+    // Validate question count against limits
+    if (questions.length < questionLimits.min) {
+      alert(`Minimum ${questionLimits.min} question(s) required for this roundtable`)
+      return
+    }
+
+    if (questions.length > questionLimits.max) {
+      alert(`Maximum ${questionLimits.max} questions allowed for this roundtable`)
       return
     }
 
@@ -149,24 +180,79 @@ export function TrainerProfilePage() {
 
       alert('Questions submitted successfully! Awaiting coordinator approval.')
       setShowQuestionsForm(false)
-      setQuestions(['', '', ''])
+      setQuestions([])
       fetchTrainerData() // Refresh data
     } catch (error: any) {
       alert(error.message || 'Failed to submit questions')
     }
   }
 
+  const handleAddQuestion = () => {
+    if (questions.length < questionLimits.max) {
+      setQuestions([...questions, ''])
+    }
+  }
+
+  const handleRemoveQuestion = (index: number) => {
+    setQuestions(questions.filter((_, i) => i !== index))
+  }
+
+  const handleQuestionChange = (index: number, value: string) => {
+    const newQuestions = [...questions]
+    newQuestions[index] = value
+    setQuestions(newQuestions)
+  }
+
+  const handleUseAISuggestion = (question: string, _source: 'AI_GENERATED' | 'TEMPLATE') => {
+    if (questions.length < questionLimits.max) {
+      setQuestions([...questions, question])
+    } else {
+      alert(`Maximum ${questionLimits.max} questions allowed`)
+    }
+  }
+
+  const handleUseLibraryQuestion = (question: string, _source: 'LIBRARY') => {
+    if (questions.length < questionLimits.max) {
+      setQuestions([...questions, question])
+    } else {
+      alert(`Maximum ${questionLimits.max} questions allowed`)
+    }
+  }
+
   const handleSubmitFeedback = async () => {
     if (!selectedSession) return
 
-    const feedbackArray = selectedSession.roundtable.participants.map(p => ({
-      participantId: p.id,
-      content: feedbacks[p.id] || ''
-    }))
+    // Build flat array of feedback items
+    const feedbackArray: any[] = []
+    selectedSession.roundtable.participants.forEach(p => {
+      const participantFeedbacks = feedbacks[p.id] || []
+      participantFeedbacks.forEach((item, index) => {
+        feedbackArray.push({
+          participantId: p.id,
+          content: item.content,
+          feedbackType: item.type,
+          orderIndex: index
+        })
+      })
+    })
 
-    if (feedbackArray.some(f => !f.content.trim())) {
-      alert('Please provide feedback for all participants')
-      return
+    // Validate each participant has min feedback items
+    for (const participant of selectedSession.roundtable.participants) {
+      const count = (feedbacks[participant.id] || []).length
+      if (count < feedbackLimits.min) {
+        alert(`Please provide at least ${feedbackLimits.min} feedback item(s) for ${participant.name}`)
+        return
+      }
+      if (count > feedbackLimits.max) {
+        alert(`Maximum ${feedbackLimits.max} feedback items allowed per participant`)
+        return
+      }
+      // Check all items have content
+      const items = feedbacks[participant.id] || []
+      if (items.some(item => !item.content.trim())) {
+        alert(`Please fill in all feedback items for ${participant.name}`)
+        return
+      }
     }
 
     try {
@@ -186,6 +272,34 @@ export function TrainerProfilePage() {
     } catch (error: any) {
       alert(error.message || 'Failed to submit feedback')
     }
+  }
+
+  const handleAddFeedbackItem = (participantId: string) => {
+    const current = feedbacks[participantId] || []
+    if (current.length < feedbackLimits.max) {
+      setFeedbacks({
+        ...feedbacks,
+        [participantId]: [...current, { type: 'GENERAL', content: '' }]
+      })
+    }
+  }
+
+  const handleRemoveFeedbackItem = (participantId: string, index: number) => {
+    const current = feedbacks[participantId] || []
+    setFeedbacks({
+      ...feedbacks,
+      [participantId]: current.filter((_, i) => i !== index)
+    })
+  }
+
+  const handleFeedbackChange = (participantId: string, index: number, field: 'type' | 'content', value: string) => {
+    const current = feedbacks[participantId] || []
+    const updated = [...current]
+    updated[index] = { ...updated[index], [field]: value }
+    setFeedbacks({
+      ...feedbacks,
+      [participantId]: updated
+    })
   }
 
   const formatDate = (date: Date) => {
@@ -693,7 +807,7 @@ export function TrainerProfilePage() {
       {/* Questions Form Modal */}
       {showQuestionsForm && selectedSession && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900">
                 Submit Questions - Session {selectedSession.sessionNumber}
@@ -701,27 +815,84 @@ export function TrainerProfilePage() {
               <p className="text-sm text-gray-600 mt-1">
                 {selectedSession.topic?.title} • {selectedSession.roundtable.name}
               </p>
+              <div className="mt-2 text-sm text-gray-600">
+                Questions: {questions.length} / {questionLimits.max}
+                {questionLimits.min > 0 && ` (minimum: ${questionLimits.min})`}
+              </div>
             </div>
 
             <div className="p-6 space-y-4">
-              {[0, 1, 2].map(idx => (
-                <div key={idx}>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Question {idx + 1} *
-                  </label>
-                  <textarea
-                    value={questions[idx]}
-                    onChange={(e) => {
-                      const newQuestions = [...questions]
-                      newQuestions[idx] = e.target.value
-                      setQuestions(newQuestions)
-                    }}
-                    rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder={`Enter question ${idx + 1}...`}
-                  />
+              {/* AI Suggestions and Library Buttons */}
+              <div className="flex gap-3 pb-4 border-b border-gray-200">
+                <button
+                  onClick={() => setShowAISuggestions(true)}
+                  className="flex-1 px-4 py-3 bg-purple-50 border-2 border-purple-200 rounded-lg hover:bg-purple-100 text-purple-700 font-medium flex items-center justify-center"
+                >
+                  <Sparkles className="h-5 w-5 mr-2" />
+                  AI Suggestions
+                </button>
+                <button
+                  onClick={() => setShowQuestionLibrary(true)}
+                  className="flex-1 px-4 py-3 bg-blue-50 border-2 border-blue-200 rounded-lg hover:bg-blue-100 text-blue-700 font-medium flex items-center justify-center"
+                >
+                  <BookOpen className="h-5 w-5 mr-2" />
+                  Question Library
+                </button>
+              </div>
+
+              {/* Dynamic Questions List */}
+              {questions.length === 0 ? (
+                <div className="text-center py-8 bg-gray-50 rounded-lg border-2 border-dashed border-gray-300">
+                  <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                  <p className="text-gray-600 mb-4">
+                    No questions yet. Click "Add Question" or use AI/Library to get started.
+                  </p>
+                  <button
+                    onClick={handleAddQuestion}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 inline-flex items-center"
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Question
+                  </button>
                 </div>
-              ))}
+              ) : (
+                questions.map((question, idx) => (
+                  <div key={idx} className="border border-gray-200 rounded-lg p-4">
+                    <div className="flex items-start justify-between mb-2">
+                      <label className="block text-sm font-medium text-gray-700">
+                        Question {idx + 1} *
+                      </label>
+                      {questions.length > questionLimits.min && (
+                        <button
+                          onClick={() => handleRemoveQuestion(idx)}
+                          className="text-red-600 hover:text-red-700 p-1"
+                          title="Remove question"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      )}
+                    </div>
+                    <textarea
+                      value={question}
+                      onChange={(e) => handleQuestionChange(idx, e.target.value)}
+                      rows={3}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder={`Enter question ${idx + 1}...`}
+                    />
+                  </div>
+                ))
+              )}
+
+              {/* Add Question Button */}
+              {questions.length > 0 && questions.length < questionLimits.max && (
+                <button
+                  onClick={handleAddQuestion}
+                  className="w-full px-4 py-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 text-gray-600 hover:text-blue-600 font-medium flex items-center justify-center"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Add Another Question ({questions.length}/{questionLimits.max})
+                </button>
+              )}
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
                 <strong>Note:</strong> Questions will be sent to the coordinator for approval before being shared with participants.
@@ -732,7 +903,7 @@ export function TrainerProfilePage() {
               <button
                 onClick={() => {
                   setShowQuestionsForm(false)
-                  setQuestions(['', '', ''])
+                  setQuestions([])
                 }}
                 className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
               >
@@ -740,20 +911,42 @@ export function TrainerProfilePage() {
               </button>
               <button
                 onClick={handleSubmitQuestions}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center"
+                disabled={questions.length < questionLimits.min || questions.length > questionLimits.max}
+                className={`px-4 py-2 rounded-md flex items-center ${
+                  questions.length >= questionLimits.min && questions.length <= questionLimits.max
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                }`}
               >
                 <Send className="h-4 w-4 mr-2" />
-                Submit Questions
+                Submit {questions.length} Question{questions.length !== 1 ? 's' : ''}
               </button>
             </div>
           </div>
         </div>
       )}
 
+      {/* AI Suggestions Panel */}
+      <QuestionSuggestionsPanel
+        sessionId={selectedSession?.id || ''}
+        trainerEmail={user?.email || ''}
+        isOpen={showAISuggestions}
+        onClose={() => setShowAISuggestions(false)}
+        onUseQuestion={handleUseAISuggestion}
+      />
+
+      {/* Question Library Panel */}
+      <QuestionsLibraryPanel
+        sessionId={selectedSession?.id || ''}
+        isOpen={showQuestionLibrary}
+        onClose={() => setShowQuestionLibrary(false)}
+        onUseQuestion={handleUseLibraryQuestion}
+      />
+
       {/* Feedback Form Modal */}
       {showFeedbackForm && selectedSession && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-3xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
             <div className="p-6 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900">
                 Submit Feedback - Session {selectedSession.sessionNumber}
@@ -761,27 +954,100 @@ export function TrainerProfilePage() {
               <p className="text-sm text-gray-600 mt-1">
                 {selectedSession.topic?.title} • {selectedSession.roundtable.name}
               </p>
+              <div className="mt-2 text-sm text-gray-600">
+                Feedback items per participant: {feedbackLimits.min}-{feedbackLimits.max}
+              </div>
             </div>
 
             <div className="p-6 space-y-6">
-              {selectedSession.roundtable.participants.map((participant: any) => (
-                <div key={participant.id} className="border border-gray-200 rounded-lg p-4">
-                  <h4 className="font-medium text-gray-900 mb-2">{participant.name}</h4>
-                  <p className="text-sm text-gray-600 mb-3">
-                    {participant.email} • Level: {participant.languageLevel}
-                  </p>
-                  <textarea
-                    value={feedbacks[participant.id] || ''}
-                    onChange={(e) => setFeedbacks({ ...feedbacks, [participant.id]: e.target.value })}
-                    rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Provide detailed feedback for this participant..."
-                  />
-                </div>
-              ))}
+              {selectedSession.roundtable.participants.map((participant: any) => {
+                const participantFeedbacks = feedbacks[participant.id] || []
+
+                return (
+                  <div key={participant.id} className="border-2 border-gray-200 rounded-lg p-5 bg-gray-50">
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h4 className="font-semibold text-gray-900 text-lg">{participant.name}</h4>
+                        <p className="text-sm text-gray-600 mt-1">
+                          {participant.email} • Level: {participant.languageLevel}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleAddFeedbackItem(participant.id)}
+                        disabled={participantFeedbacks.length >= feedbackLimits.max}
+                        className={`px-3 py-2 rounded-md text-sm font-medium flex items-center ${
+                          participantFeedbacks.length < feedbackLimits.max
+                            ? 'bg-green-600 text-white hover:bg-green-700'
+                            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                        }`}
+                      >
+                        <Plus className="h-4 w-4 mr-1" />
+                        Add Item
+                      </button>
+                    </div>
+
+                    {/* Feedback Items */}
+                    {participantFeedbacks.length === 0 ? (
+                      <div className="text-center py-6 bg-white rounded border-2 border-dashed border-gray-300">
+                        <p className="text-gray-600">
+                          No feedback items yet. Click "Add Item" to start.
+                        </p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {participantFeedbacks.map((item, idx) => (
+                          <div key={idx} className="bg-white border border-gray-200 rounded-lg p-4">
+                            <div className="flex items-start justify-between mb-3">
+                              <div className="flex-1 grid grid-cols-2 gap-3">
+                                <div>
+                                  <label className="block text-xs font-medium text-gray-700 mb-1">
+                                    Feedback Type
+                                  </label>
+                                  <select
+                                    value={item.type}
+                                    onChange={(e) => handleFeedbackChange(participant.id, idx, 'type', e.target.value)}
+                                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  >
+                                    <option value="GENERAL">General</option>
+                                    <option value="STRENGTHS">Strengths</option>
+                                    <option value="IMPROVEMENTS">Areas to Improve</option>
+                                    <option value="RECOMMENDATIONS">Recommendations</option>
+                                  </select>
+                                </div>
+                                <div className="flex items-end">
+                                  <span className="text-xs text-gray-500">
+                                    Item {idx + 1} of {participantFeedbacks.length}
+                                  </span>
+                                </div>
+                              </div>
+                              {participantFeedbacks.length > feedbackLimits.min && (
+                                <button
+                                  onClick={() => handleRemoveFeedbackItem(participant.id, idx)}
+                                  className="ml-3 text-red-600 hover:text-red-700 p-1"
+                                  title="Remove feedback item"
+                                >
+                                  <X className="h-4 w-4" />
+                                </button>
+                              )}
+                            </div>
+                            <textarea
+                              value={item.content}
+                              onChange={(e) => handleFeedbackChange(participant.id, idx, 'content', e.target.value)}
+                              rows={4}
+                              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                              placeholder={`Enter ${item.type.toLowerCase()} feedback...`}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
 
               <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 text-sm text-orange-800">
                 <strong>Note:</strong> Feedback will be sent to the coordinator for approval before being shared with participants.
+                Each participant requires {feedbackLimits.min}-{feedbackLimits.max} feedback items.
               </div>
             </div>
 

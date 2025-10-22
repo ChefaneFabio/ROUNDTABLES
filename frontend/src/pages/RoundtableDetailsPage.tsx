@@ -11,7 +11,8 @@ import {
   BarChart3,
   Plus,
   Vote,
-  FileText
+  FileText,
+  Settings
 } from 'lucide-react'
 import { roundtablesApi } from '../services/api'
 
@@ -47,10 +48,18 @@ export function RoundtableDetailsPage() {
     sessionFrequency: 'weekly' as 'weekly' | 'bi-weekly',
     sessionDuration: 60
   })
+  const [settings, setSettings] = useState({
+    minQuestionsPerSession: 0,
+    maxQuestionsPerSession: 10,
+    minFeedbackItemsPerParticipant: 1,
+    maxFeedbackItemsPerParticipant: 5
+  })
+  const [savingSettings, setSavingSettings] = useState(false)
 
   useEffect(() => {
     if (id) {
       fetchRoundtable()
+      fetchSettings()
     }
   }, [id])
 
@@ -65,6 +74,48 @@ export function RoundtableDetailsPage() {
       console.error('Error fetching roundtable:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const fetchSettings = async () => {
+    try {
+      const response = await roundtablesApi.getSettings(id!)
+      if (response?.data) {
+        setSettings({
+          minQuestionsPerSession: response.data.minQuestionsPerSession,
+          maxQuestionsPerSession: response.data.maxQuestionsPerSession,
+          minFeedbackItemsPerParticipant: response.data.minFeedbackItemsPerParticipant,
+          maxFeedbackItemsPerParticipant: response.data.maxFeedbackItemsPerParticipant
+        })
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error)
+    }
+  }
+
+  const handleUpdateSettings = async () => {
+    if (!id) return
+
+    // Validation
+    if (settings.minQuestionsPerSession > settings.maxQuestionsPerSession) {
+      alert('Minimum questions cannot be greater than maximum questions')
+      return
+    }
+
+    if (settings.minFeedbackItemsPerParticipant > settings.maxFeedbackItemsPerParticipant) {
+      alert('Minimum feedback items cannot be greater than maximum feedback items')
+      return
+    }
+
+    try {
+      setSavingSettings(true)
+      await roundtablesApi.updateSettings(id, settings)
+      alert('Settings updated successfully!')
+    } catch (error: any) {
+      console.error('Error updating settings:', error)
+      alert(error.message || 'Error updating settings. Please try again.')
+    } finally {
+      setSavingSettings(false)
     }
   }
 
@@ -316,7 +367,8 @@ export function RoundtableDetailsPage() {
                 { id: 'overview', label: 'Overview', icon: FileText },
                 { id: 'participants', label: 'Participants', icon: Users },
                 { id: 'sessions', label: 'Sessions', icon: Calendar },
-                { id: 'topics', label: 'Topics', icon: MessageSquare }
+                { id: 'topics', label: 'Topics', icon: MessageSquare },
+                { id: 'settings', label: 'Settings', icon: Settings }
               ].map((tab) => (
                 <button
                   key={tab.id}
@@ -486,7 +538,7 @@ export function RoundtableDetailsPage() {
             {activeTab === 'topics' && (
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Discussion Topics</h3>
-                
+
                 {roundtable.topics && roundtable.topics.length > 0 ? (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {roundtable.topics.map((topic, index) => (
@@ -510,6 +562,150 @@ export function RoundtableDetailsPage() {
                     <p>No topics defined yet</p>
                   </div>
                 )}
+              </div>
+            )}
+
+            {activeTab === 'settings' && (
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Roundtable Settings</h3>
+                <p className="text-sm text-gray-600 mb-6">
+                  Configure question and feedback limits for this roundtable. These settings will apply to all sessions.
+                </p>
+
+                <div className="max-w-2xl space-y-6">
+                  {/* Questions Settings */}
+                  <div className="border border-gray-200 rounded-lg p-6">
+                    <h4 className="text-base font-semibold text-gray-900 mb-4 flex items-center">
+                      <MessageSquare className="h-5 w-5 mr-2 text-blue-600" />
+                      Question Limits
+                    </h4>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Minimum Questions per Session
+                        </label>
+                        <input
+                          type="number"
+                          min="0"
+                          max="10"
+                          value={settings.minQuestionsPerSession}
+                          onChange={(e) => setSettings({
+                            ...settings,
+                            minQuestionsPerSession: parseInt(e.target.value) || 0
+                          })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Minimum: 0 (optional), Maximum: 10
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Maximum Questions per Session
+                        </label>
+                        <input
+                          type="number"
+                          min="1"
+                          max="10"
+                          value={settings.maxQuestionsPerSession}
+                          onChange={(e) => setSettings({
+                            ...settings,
+                            maxQuestionsPerSession: parseInt(e.target.value) || 10
+                          })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Minimum: 1, Maximum: 10
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                      <p className="text-xs text-blue-800">
+                        💡 Trainers can submit between {settings.minQuestionsPerSession} and {settings.maxQuestionsPerSession} questions per session
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Feedback Settings */}
+                  <div className="border border-gray-200 rounded-lg p-6">
+                    <h4 className="text-base font-semibold text-gray-900 mb-4 flex items-center">
+                      <FileText className="h-5 w-5 mr-2 text-purple-600" />
+                      Feedback Limits
+                    </h4>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Minimum Feedback Items per Participant
+                        </label>
+                        <input
+                          type="number"
+                          min="1"
+                          max="10"
+                          value={settings.minFeedbackItemsPerParticipant}
+                          onChange={(e) => setSettings({
+                            ...settings,
+                            minFeedbackItemsPerParticipant: parseInt(e.target.value) || 1
+                          })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Minimum: 1, Maximum: 10
+                        </p>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Maximum Feedback Items per Participant
+                        </label>
+                        <input
+                          type="number"
+                          min="1"
+                          max="10"
+                          value={settings.maxFeedbackItemsPerParticipant}
+                          onChange={(e) => setSettings({
+                            ...settings,
+                            maxFeedbackItemsPerParticipant: parseInt(e.target.value) || 5
+                          })}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Minimum: 1, Maximum: 10
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 p-3 bg-purple-50 border border-purple-200 rounded-md">
+                      <p className="text-xs text-purple-800">
+                        💡 Trainers can provide between {settings.minFeedbackItemsPerParticipant} and {settings.maxFeedbackItemsPerParticipant} feedback items for each participant
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Save Button */}
+                  <div className="flex justify-end">
+                    <button
+                      onClick={handleUpdateSettings}
+                      disabled={savingSettings}
+                      className="bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center font-medium"
+                    >
+                      {savingSettings ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Save Settings
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>

@@ -18,6 +18,7 @@
     "create:trainer-user": "tsx scripts/create-trainer-user.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.67.0",
     "@prisma/client": "^5.22.0",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",

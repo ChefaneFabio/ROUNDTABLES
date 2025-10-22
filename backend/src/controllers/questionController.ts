@@ -11,8 +11,12 @@ const questionService = new QuestionService()
 // Validation schemas
 const submitQuestionsSchema = Joi.object({
   questions: Joi.array().items(
-    Joi.string().min(10).max(500).required()
-  ).length(3).required(),
+    Joi.object({
+      question: Joi.string().min(10).max(500).required(),
+      source: Joi.string().valid('MANUAL', 'AI_GENERATED', 'TEMPLATE', 'LIBRARY').optional(),
+      aiPromptUsed: Joi.string().optional()
+    })
+  ).min(0).max(10).required(), // Dynamic: 0-10 questions (validated against roundtable limits in service)
   trainerId: Joi.string().required(),
   sessionId: Joi.string().required()
 })

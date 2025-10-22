@@ -1,10 +1,16 @@
-import { PrismaClient, QuestionStatus } from '@prisma/client'
+import { PrismaClient, QuestionStatus, QuestionSource } from '@prisma/client'
 import { NotificationService } from './NotificationService'
 
 const prisma = new PrismaClient()
 
+export interface QuestionItem {
+  question: string
+  source?: QuestionSource
+  aiPromptUsed?: string
+}
+
 export interface QuestionSubmission {
-  questions: string[]
+  questions: QuestionItem[]
   trainerId: string
   sessionId: string
 }
@@ -13,6 +19,14 @@ export interface QuestionReview {
   questionId: string
   status: QuestionStatus
   reviewNotes?: string
+  rating?: number // 1-5 stars
+}
+
+export interface QuestionLibraryFilters {
+  topicId?: string
+  minRating?: number
+  source?: QuestionSource
+  limit?: number
 }
 
 export class QuestionService {
@@ -21,18 +35,24 @@ export class QuestionService {
   async submitQuestionsForSession(submission: QuestionSubmission) {
     const { questions, trainerId, sessionId } = submission
 
-    if (questions.length !== 3) {
-      throw new Error('Exactly 3 questions are required per session')
-    }
-
     return prisma.$transaction(async (tx) => {
       // Verify session exists and trainer is assigned
       const session = await tx.session.findUnique({
         where: { id: sessionId },
         include: {
           trainer: true,
-          roundtable: { include: { client: true } },
-          topic: true
+          roundtable: {
+            include: {
+              client: true
+            },
+            select: {
+              name: true,
+              minQuestionsPerSession: true,
+              maxQuestionsPerSession: true,
+              client: true
+            }
+          },
+          topic: { select: { id: true, title: true } }
         }
       })
 
@@ -44,19 +64,34 @@ export class QuestionService {
         throw new Error('You are not assigned to this session')
       }
 
+      // Dynamic validation based on roundtable settings
+      const min = session.roundtable.minQuestionsPerSession
+      const max = session.roundtable.maxQuestionsPerSession
+
+      if (questions.length < min) {
+        throw new Error(`Minimum ${min} question(s) required for this roundtable`)
+      }
+
+      if (questions.length > max) {
+        throw new Error(`Maximum ${max} questions allowed for this roundtable`)
+      }
+
       // Delete existing questions for this session (if any)
       await tx.question.deleteMany({
         where: { sessionId }
       })
 
-      // Create new questions
+      // Create new questions with source tracking
       const createdQuestions = await Promise.all(
-        questions.map((questionText, index) =>
+        questions.map((questionItem: QuestionItem) =>
           tx.question.create({
             data: {
-              question: questionText.trim(),
+              question: questionItem.question.trim(),
               sessionId,
-              status: 'PENDING'
+              topicId: session.topic?.id,
+              status: 'PENDING',
+              source: questionItem.source || 'MANUAL',
+              aiPromptUsed: questionItem.aiPromptUsed || null
             }
           })
         )
@@ -75,7 +110,11 @@ export class QuestionService {
         sessionId,
         questionsSubmitted: createdQuestions.length,
         submittedAt: new Date(),
-        questions: createdQuestions
+        questions: createdQuestions,
+        limits: {
+          min: session.roundtable.minQuestionsPerSession,
+          max: session.roundtable.maxQuestionsPerSession
+        }
       }
     })
   }
@@ -85,11 +124,21 @@ export class QuestionService {
 
     for (const review of reviews) {
       try {
+        // Get the question first to check source
+        const question = await prisma.question.findUnique({
+          where: { id: review.questionId }
+        })
+
         const updatedQuestion = await prisma.question.update({
           where: { id: review.questionId },
           data: {
             status: review.status,
             reviewNotes: review.reviewNotes,
+            rating: review.rating,
+            // Increment usage count if approved and from library
+            usageCount: question && review.status === 'APPROVED' && question.source === 'LIBRARY'
+              ? { increment: 1 }
+              : undefined,
             updatedAt: new Date()
           },
           include: {
@@ -111,7 +160,7 @@ export class QuestionService {
 
     // Check if all questions for each session are reviewed
     const sessionIds = [...new Set(results.map(q => q.sessionId))]
-    
+
     for (const sessionId of sessionIds) {
       await this.checkAndUpdateSessionStatus(sessionId)
     }
@@ -122,7 +171,12 @@ export class QuestionService {
   private async checkAndUpdateSessionStatus(sessionId: string) {
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
-      include: { questions: true }
+      include: {
+        questions: true,
+        roundtable: {
+          select: { minQuestionsPerSession: true }
+        }
+      }
     })
 
     if (!session) return
@@ -132,15 +186,12 @@ export class QuestionService {
     const needsRevisionQuestions = session.questions.filter(q => q.status === 'NEEDS_REVISION').length
     const rejectedQuestions = session.questions.filter(q => q.status === 'REJECTED').length
 
+    const minRequired = session.roundtable.minQuestionsPerSession
     let newQuestionsStatus = session.questionsStatus
 
-    if (approvedQuestions >= 3) {
-      // Enough questions approved - coordinator can now send to participants
-      newQuestionsStatus = 'PENDING_APPROVAL'
-
-      // Coordinator will manually click "Send to Participants" when ready
-      // This will change questionsStatus to SENT_TO_PARTICIPANTS
-
+    if (approvedQuestions >= minRequired && approvedQuestions === totalQuestions) {
+      // All questions approved - ready to send to participants
+      newQuestionsStatus = 'SENT_TO_PARTICIPANTS'
     } else if (needsRevisionQuestions > 0 || rejectedQuestions > 0) {
       // Some questions need work - back to requested
       newQuestionsStatus = 'REQUESTED_FROM_COORDINATOR'
@@ -405,5 +456,140 @@ The Maka Team
         status: 'PENDING'
       }
     })
+  }
+
+  /**
+   * Get question library - highly rated questions filtered by topic
+   */
+  async getQuestionLibrary(filters: QuestionLibraryFilters = {}) {
+    const {
+      topicId,
+      minRating = 3.5,
+      source,
+      limit = 20
+    } = filters
+
+    const where: any = {
+      status: 'APPROVED',
+      rating: { gte: minRating }
+    }
+
+    if (topicId) {
+      where.topicId = topicId
+    }
+
+    if (source) {
+      where.source = source
+    }
+
+    const questions = await prisma.question.findMany({
+      where,
+      include: {
+        topic: { select: { title: true } },
+        session: {
+          select: {
+            sessionNumber: true,
+            roundtable: { select: { name: true } }
+          }
+        }
+      },
+      orderBy: [
+        { rating: 'desc' },
+        { usageCount: 'desc' },
+        { createdAt: 'desc' }
+      ],
+      take: limit
+    })
+
+    return questions.map(q => ({
+      id: q.id,
+      question: q.question,
+      rating: q.rating,
+      usageCount: q.usageCount,
+      source: q.source,
+      topic: q.topic,
+      sessionInfo: q.session
+        ? `Session ${q.session.sessionNumber} - ${q.session.roundtable.name}`
+        : 'Unknown session'
+    }))
+  }
+
+  /**
+   * Rate a question (coordinator feature)
+   */
+  async rateQuestion(questionId: string, rating: number) {
+    if (rating < 1 || rating > 5) {
+      throw new Error('Rating must be between 1 and 5')
+    }
+
+    const updated = await prisma.question.update({
+      where: { id: questionId },
+      data: { rating }
+    })
+
+    return updated
+  }
+
+  /**
+   * Get question statistics by source (manual vs AI vs template)
+   */
+  async getQuestionSourceStatistics() {
+    const stats = await prisma.question.groupBy({
+      by: ['source'],
+      _count: { id: true },
+      _avg: { rating: true }
+    })
+
+    return stats.map(s => ({
+      source: s.source,
+      count: s._count.id,
+      averageRating: s._avg.rating || 0
+    }))
+  }
+
+  /**
+   * Get top rated questions across all topics
+   */
+  async getTopRatedQuestions(limit: number = 10) {
+    return await prisma.question.findMany({
+      where: {
+        status: 'APPROVED',
+        rating: { gte: 4.0 }
+      },
+      include: {
+        topic: { select: { title: true } },
+        session: {
+          select: {
+            trainer: { select: { name: true } }
+          }
+        }
+      },
+      orderBy: [
+        { rating: 'desc' },
+        { usageCount: 'desc' }
+      ],
+      take: limit
+    })
+  }
+
+  /**
+   * Get validation limits for a roundtable
+   */
+  async getRoundtableLimits(roundtableId: string) {
+    const roundtable = await prisma.roundtable.findUnique({
+      where: { id: roundtableId },
+      select: {
+        minQuestionsPerSession: true,
+        maxQuestionsPerSession: true,
+        minFeedbackItemsPerParticipant: true,
+        maxFeedbackItemsPerParticipant: true
+      }
+    })
+
+    if (!roundtable) {
+      throw new Error('Roundtable not found')
+    }
+
+    return roundtable
   }
 }
