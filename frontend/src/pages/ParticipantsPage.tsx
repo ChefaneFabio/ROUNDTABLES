@@ -50,6 +50,9 @@ export function ParticipantsPage() {
   const [roundtableFilter, setRoundtableFilter] = useState('all')
   const [showDropdown, setShowDropdown] = useState<string | null>(null)
   const [showAddModal, setShowAddModal] = useState(false)
+  const [showImportModal, setShowImportModal] = useState(false)
+  const [csvFile, setCsvFile] = useState<File | null>(null)
+  const [importing, setImporting] = useState(false)
   const [newParticipant, setNewParticipant] = useState({
     name: '',
     email: '',
@@ -143,6 +146,128 @@ export function ParticipantsPage() {
     }
   }
 
+  const handleCSVImport = async () => {
+    if (!csvFile) {
+      alert('Please select a CSV file to import')
+      return
+    }
+
+    setImporting(true)
+    const reader = new FileReader()
+
+    reader.onload = async (e) => {
+      try {
+        const text = e.target?.result as string
+        const lines = text.split('\n').filter(line => line.trim())
+
+        if (lines.length < 2) {
+          alert('CSV file is empty or has no data rows')
+          setImporting(false)
+          return
+        }
+
+        // Parse CSV header
+        const headers = lines[0].split(',').map(h => h.trim().toLowerCase())
+
+        // Verify required columns
+        const requiredColumns = ['name', 'email', 'roundtableid']
+        const missingColumns = requiredColumns.filter(col => !headers.includes(col))
+
+        if (missingColumns.length > 0) {
+          alert(`Missing required columns: ${missingColumns.join(', ')}\n\nRequired columns: name, email, roundtableId\nOptional: phone, englishLevel, company`)
+          setImporting(false)
+          return
+        }
+
+        // Parse data rows
+        let successCount = 0
+        let errorCount = 0
+        const errors: string[] = []
+
+        for (let i = 1; i < lines.length; i++) {
+          const values = lines[i].split(',').map(v => v.trim())
+
+          if (values.length < headers.length) {
+            continue // Skip incomplete rows
+          }
+
+          const participant: any = {}
+          headers.forEach((header, index) => {
+            participant[header] = values[index]
+          })
+
+          try {
+            await participantsApi.create({
+              name: participant.name,
+              email: participant.email,
+              phone: participant.phone || '',
+              englishLevel: participant.englishlevel || participant.level || 'B1',
+              company: participant.company || '',
+              roundtableId: participant.roundtableid,
+              status: 'ACTIVE'
+            })
+            successCount++
+          } catch (error: any) {
+            errorCount++
+            errors.push(`Row ${i + 1}: ${participant.name || participant.email} - ${error.message}`)
+          }
+        }
+
+        // Show results
+        const message = `Import completed!\n\nSuccessfully imported: ${successCount}\nFailed: ${errorCount}${errors.length > 0 ? '\n\nErrors:\n' + errors.slice(0, 5).join('\n') : ''}`
+        alert(message)
+
+        // Refresh participants list
+        fetchParticipants()
+        setShowImportModal(false)
+        setCsvFile(null)
+      } catch (error) {
+        console.error('Error parsing CSV:', error)
+        alert('Error parsing CSV file. Please check the format.')
+      } finally {
+        setImporting(false)
+      }
+    }
+
+    reader.readAsText(csvFile)
+  }
+
+  const handleExportCSV = () => {
+    if (participants.length === 0) {
+      alert('No participants to export')
+      return
+    }
+
+    // Create CSV content
+    const headers = ['Name', 'Email', 'Phone', 'English Level', 'Company', 'Roundtable', 'Status', 'Voting Completed']
+    const csvContent = [
+      headers.join(','),
+      ...participants.map(p => [
+        p.name,
+        p.email,
+        p.phone || '',
+        p.englishLevel,
+        p.company,
+        p.roundtable.name,
+        p.status,
+        p.votingCompleted ? 'Yes' : 'No'
+      ].join(','))
+    ].join('\n')
+
+    // Create download link
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    const url = URL.createObjectURL(blob)
+
+    link.setAttribute('href', url)
+    link.setAttribute('download', `participants_${new Date().toISOString().split('T')[0]}.csv`)
+    link.style.visibility = 'hidden'
+
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'ACTIVE': return 'bg-green-100 text-green-800'
@@ -221,11 +346,17 @@ export function ParticipantsPage() {
             <p className="text-gray-600 mt-2">Manage participants across all roundtables</p>
           </div>
           <div className="flex space-x-3">
-            <button className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 flex items-center">
+            <button
+              onClick={() => setShowImportModal(true)}
+              className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 flex items-center"
+            >
               <Upload className="h-4 w-4 mr-2" />
               Import CSV
             </button>
-            <button className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 flex items-center">
+            <button
+              onClick={handleExportCSV}
+              className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 flex items-center"
+            >
               <Download className="h-4 w-4 mr-2" />
               Export
             </button>
@@ -644,6 +775,92 @@ export function ParticipantsPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* CSV Import Modal */}
+      {showImportModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full mx-4">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-medium text-gray-900">Import Participants from CSV</h3>
+            </div>
+
+            <div className="px-6 py-4">
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Select CSV File
+                </label>
+                <input
+                  type="file"
+                  accept=".csv"
+                  onChange={(e) => setCsvFile(e.target.files?.[0] || null)}
+                  className="block w-full text-sm text-gray-500
+                    file:mr-4 file:py-2 file:px-4
+                    file:rounded-md file:border-0
+                    file:text-sm file:font-semibold
+                    file:bg-blue-50 file:text-blue-700
+                    hover:file:bg-blue-100
+                    cursor-pointer"
+                />
+                {csvFile && (
+                  <p className="mt-2 text-sm text-green-600">
+                    Selected: {csvFile.name}
+                  </p>
+                )}
+              </div>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <h4 className="text-sm font-medium text-blue-900 mb-2">CSV Format Requirements:</h4>
+                <div className="text-sm text-blue-800 space-y-1">
+                  <p><strong>Required columns:</strong> name, email, roundtableId</p>
+                  <p><strong>Optional columns:</strong> phone, englishLevel, company</p>
+                  <p className="mt-2"><strong>Example CSV:</strong></p>
+                  <pre className="bg-white p-2 rounded text-xs mt-1 overflow-x-auto">
+name,email,roundtableId,phone,englishLevel,company{'\n'}
+John Doe,john@example.com,abc123,+39123456789,B1,Acme Corp{'\n'}
+Jane Smith,jane@example.com,abc123,,B2,Tech Inc
+                  </pre>
+                </div>
+              </div>
+
+              <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                <div className="flex">
+                  <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2 flex-shrink-0" />
+                  <div className="text-sm text-yellow-800">
+                    <p className="font-medium">Important Notes:</p>
+                    <ul className="list-disc ml-4 mt-1 space-y-1">
+                      <li>Duplicate emails will be skipped</li>
+                      <li>Invalid roundtableId will cause row to fail</li>
+                      <li>englishLevel defaults to B1 if not provided</li>
+                      <li>All participants will be set to ACTIVE status</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-3 mt-6">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowImportModal(false)
+                    setCsvFile(null)
+                  }}
+                  className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleCSVImport}
+                  disabled={!csvFile || importing}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  {importing ? 'Importing...' : 'Import CSV'}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
