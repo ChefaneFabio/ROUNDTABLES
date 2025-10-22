@@ -12,9 +12,11 @@ import {
   FileText,
   Search,
   Building,
-  MoreVertical
+  MoreVertical,
+  Edit
 } from 'lucide-react'
 import { sessionsApi } from '../services/api'
+import { useAuth } from '../contexts/AuthContext'
 
 interface Session {
   id: string
@@ -44,11 +46,15 @@ interface Session {
 
 export function SessionsPage() {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [sessions, setSessions] = useState<Session[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState('all')
   const [showDropdown, setShowDropdown] = useState<string | null>(null)
+
+  // Check if user is coordinator or admin
+  const isCoordinator = user?.role === 'COORDINATOR' || user?.role === 'ADMIN'
 
   useEffect(() => {
     fetchSessions()
@@ -407,7 +413,7 @@ export function SessionsPage() {
                             <MoreVertical className="h-5 w-5" />
                           </button>
                           {showDropdown === session.id && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 border border-gray-200">
                               <button
                                 onClick={() => navigate(`/sessions/${session.id}`)}
                                 className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
@@ -415,9 +421,18 @@ export function SessionsPage() {
                                 <FileText className="h-4 w-4 mr-2" />
                                 View Details
                               </button>
+                              {isCoordinator && (
+                                <button
+                                  onClick={() => navigate(`/sessions/${session.id}/edit`)}
+                                  className="flex items-center px-4 py-2 text-sm text-blue-700 hover:bg-blue-50 w-full border-t border-gray-100"
+                                >
+                                  <Edit className="h-4 w-4 mr-2" />
+                                  Edit Session
+                                </button>
+                              )}
                               <button
                                 onClick={() => navigate(`/roundtables/${session.roundtable.id}`)}
-                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full"
+                                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full border-t border-gray-100"
                               >
                                 <Building className="h-4 w-4 mr-2" />
                                 View Roundtable
