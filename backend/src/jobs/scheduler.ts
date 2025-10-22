@@ -25,22 +25,28 @@ console.log('  - Every 15min: Process scheduled notifications')
 console.log('  - Sunday 02:00: Database cleanup')
 console.log('')
 
-// Check for trainer reminders - every day at 9 AM
-cron.schedule('0 9 * * *', async () => {
-  console.log('🔔 Checking for trainer reminders...')
-  
+// Check for trainer reminders - every MONDAY at 9 AM
+// Sends alerts for sessions in the next 7 days where questions are not yet saved
+cron.schedule('0 9 * * 1', async () => {  // Changed: Only Monday (day 1)
+  console.log('🔔 [MONDAY] Checking for trainer reminders for upcoming sessions...')
+
   try {
-    // Find sessions that need trainer reminders (1 week before)
-    const oneWeekFromNow = addWeeks(new Date(), 1)
-    
+    // Find sessions in the next 7 days
+    const today = new Date()
+    const nextWeek = addWeeks(today, 1)
+
     const sessions = await prisma.session.findMany({
       where: {
         scheduledAt: {
-          gte: oneWeekFromNow,
-          lte: addDays(oneWeekFromNow, 1) // Within the next day
+          gte: today,
+          lte: nextWeek
         },
         status: 'SCHEDULED',
-        trainer: { isNot: null }
+        trainer: { isNot: null },
+        // Only send if questions are not yet saved/pending/sent
+        questionsStatus: {
+          in: ['NOT_REQUESTED', 'REQUESTED_FROM_COORDINATOR']
+        }
       },
       include: {
         trainer: true,
@@ -49,12 +55,12 @@ cron.schedule('0 9 * * *', async () => {
       }
     })
 
-    console.log(`Found ${sessions.length} sessions needing trainer reminders`)
+    console.log(`Found ${sessions.length} sessions needing trainer reminders (questions not saved yet)`)
 
     for (const session of sessions) {
       try {
         await notificationService.sendTrainerReminder(session.id)
-        console.log(`✅ Trainer reminder sent for session ${session.id}`)
+        console.log(`✅ Trainer reminder sent for session ${session.id} (${session.topic?.title})`)
       } catch (error) {
         console.error(`❌ Failed to send trainer reminder for session ${session.id}:`, error)
       }

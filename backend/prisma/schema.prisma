@@ -421,10 +421,16 @@ enum LanguageLevel {
 
 // Session overall status
 enum SessionStatus {
-  SCHEDULED
-  IN_PROGRESS
-  COMPLETED
-  CANCELLED
+  SCHEDULED           // Initial state when session is created
+  REMINDER_SENT       // Trainer reminder sent (1 week before)
+  QUESTIONS_REQUESTED // Questions requested from trainer
+  QUESTIONS_READY     // Questions approved and ready
+  IN_PROGRESS        // Session is currently happening
+  COMPLETED          // Session finished
+  FEEDBACK_PENDING   // Waiting for feedback from trainer
+  FEEDBACK_SENT      // Feedback sent to participants
+  CERTIFICATE_SENT   // Certificates sent to participants
+  CANCELLED          // Session cancelled
 }
 
 // Questions workflow status (separate column)

@@ -183,6 +183,13 @@ export const trainersApi = {
     return response.data
   },
 
+  async saveQuestions(sessionId: string, email: string, questions: Array<{ question: string }>) {
+    const response = await api.post(`/trainers/me/sessions/${sessionId}/questions/save?email=${email}`, {
+      questions
+    })
+    return response.data
+  },
+
   async submitFeedback(sessionId: string, email: string, feedbacks: Array<{ participantId: string, content: string }>) {
     const response = await api.post(`/trainers/me/sessions/${sessionId}/feedback?email=${email}`, {
       feedbacks

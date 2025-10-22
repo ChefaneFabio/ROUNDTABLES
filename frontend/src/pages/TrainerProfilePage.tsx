@@ -141,6 +141,52 @@ export function TrainerProfilePage() {
     }
   }
 
+  const handleSaveQuestions = async () => {
+    if (!selectedSession) {
+      alert('No session selected')
+      return
+    }
+
+    // Validate all questions are filled
+    if (questions.some(q => !q.trim())) {
+      alert('Please fill in all questions before saving')
+      return
+    }
+
+    // Validate question count against limits
+    if (questions.length < questionLimits.min) {
+      alert(`Minimum ${questionLimits.min} question(s) required for this roundtable`)
+      return
+    }
+
+    if (questions.length > questionLimits.max) {
+      alert(`Maximum ${questionLimits.max} questions allowed for this roundtable`)
+      return
+    }
+
+    try {
+      const trainerEmail = user?.email
+
+      if (!trainerEmail) {
+        alert('User email not found')
+        return
+      }
+
+      await trainersApi.saveQuestions(
+        selectedSession.id,
+        trainerEmail,
+        questions.map((q) => ({ question: q }))
+      )
+
+      alert('Questions saved successfully! Weekly reminders have been stopped. You can edit and submit for approval later.')
+      setShowQuestionsForm(false)
+      setQuestions([])
+      fetchTrainerData() // Refresh data
+    } catch (error: any) {
+      alert(error.message || 'Failed to save questions')
+    }
+  }
+
   const handleSubmitQuestions = async () => {
     if (!selectedSession) {
       alert('No session selected')
@@ -899,7 +945,7 @@ export function TrainerProfilePage() {
               </div>
             </div>
 
-            <div className="p-6 border-t border-gray-200 flex justify-end gap-3">
+            <div className="p-6 border-t border-gray-200 flex justify-between items-center gap-3">
               <button
                 onClick={() => {
                   setShowQuestionsForm(false)
@@ -909,18 +955,34 @@ export function TrainerProfilePage() {
               >
                 Cancel
               </button>
-              <button
-                onClick={handleSubmitQuestions}
-                disabled={questions.length < questionLimits.min || questions.length > questionLimits.max}
-                className={`px-4 py-2 rounded-md flex items-center ${
-                  questions.length >= questionLimits.min && questions.length <= questionLimits.max
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-              >
-                <Send className="h-4 w-4 mr-2" />
-                Submit {questions.length} Question{questions.length !== 1 ? 's' : ''}
-              </button>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={handleSaveQuestions}
+                  disabled={questions.length < questionLimits.min || questions.length > questionLimits.max}
+                  className={`px-4 py-2 rounded-md flex items-center ${
+                    questions.length >= questionLimits.min && questions.length <= questionLimits.max
+                      ? 'bg-yellow-500 text-white hover:bg-yellow-600'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                  title="Save questions and stop weekly reminders. You can edit later."
+                >
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Save Questions (Stop Reminders)
+                </button>
+                <button
+                  onClick={handleSubmitQuestions}
+                  disabled={questions.length < questionLimits.min || questions.length > questionLimits.max}
+                  className={`px-4 py-2 rounded-md flex items-center ${
+                    questions.length >= questionLimits.min && questions.length <= questionLimits.max
+                      ? 'bg-blue-600 text-white hover:bg-blue-700'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  <Send className="h-4 w-4 mr-2" />
+                  Submit for Approval
+                </button>
+              </div>
             </div>
           </div>
         </div>
