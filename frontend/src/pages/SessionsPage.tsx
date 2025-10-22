@@ -163,18 +163,20 @@ export function SessionsPage() {
   }
 
   const handleAction = (session: Session, actionType: string) => {
+    const topicTitle = session.topic?.title || 'TBD'
+
     switch (actionType) {
       case 'request_questions':
-        alert(`Questions request sent to trainer for ${session.topic.title}`)
+        alert(`Questions request sent to trainer for ${topicTitle}`)
         break
       case 'send_questions':
-        alert(`Questions sent to participants for ${session.topic.title}`)
+        alert(`Questions sent to participants for ${topicTitle}`)
         break
       case 'start_session':
         alert(`Session ${session.sessionNumber} started`)
         break
       case 'request_feedback':
-        alert(`Feedback request sent to trainer for ${session.topic.title}`)
+        alert(`Feedback request sent to trainer for ${topicTitle}`)
         break
       default:
         break
@@ -182,13 +184,13 @@ export function SessionsPage() {
   }
 
   const filteredSessions = sessions.filter(session => {
-    const matchesSearch = 
-      session.topic.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch =
+      (session.topic?.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
       session.roundtable.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       session.roundtable.client.company.toLowerCase().includes(searchTerm.toLowerCase())
-    
+
     const matchesStatus = statusFilter === 'all' || session.status === statusFilter
-    
+
     return matchesSearch && matchesStatus
   })
 
@@ -328,7 +330,7 @@ export function SessionsPage() {
                           <div className="flex-1">
                             <div className="flex items-center">
                               <h3 className="text-lg font-semibold text-gray-900">
-                                Session {session.sessionNumber}: {session.topic.title}
+                                Session {session.sessionNumber}: {session.topic?.title || 'TBD'}
                               </h3>
                               <span className={`ml-3 px-2 py-1 text-xs rounded-full ${getStatusColor(session.status)}`}>
                                 {formatStatusLabel(session.status)}
