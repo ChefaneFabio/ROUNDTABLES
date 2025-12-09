@@ -83,6 +83,7 @@ model Roundtable {
   startDate   DateTime?
   endDate     DateTime?
   maxParticipants Int           @default(6)
+  numberOfSessions Int          @default(10)  // Customizable number of sessions
   formsUrl    String?           // Microsoft Forms URL for this roundtable
 
   // Dynamic question/feedback limits (per-roundtable customization)
@@ -183,7 +184,7 @@ model Trainer {
 
 model Session {
   id              String              @id @default(cuid())
-  sessionNumber   Int                 // 1-10 per ogni roundtable
+  sessionNumber   Int                 // Session number (1 to numberOfSessions)
   scheduledAt     DateTime
   status          SessionStatus       @default(SCHEDULED)
   questionsStatus QuestionsStatus     @default(NOT_REQUESTED)

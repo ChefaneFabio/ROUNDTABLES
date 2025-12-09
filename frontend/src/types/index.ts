@@ -18,6 +18,7 @@ export interface Roundtable {
   startDate?: Date
   endDate?: Date
   maxParticipants: number
+  numberOfSessions: number
   createdAt: Date
   updatedAt: Date
   clientId: string
@@ -212,9 +213,19 @@ export interface CreateRoundtableRequest {
   clientId: string
   startDate?: string
   maxParticipants?: number
+  numberOfSessions?: number
   topics: {
     title: string
     description: string
+  }[]
+  sessions?: {
+    sessionNumber: number
+    scheduledAt: string
+    topicId?: string
+    customTopicTitle?: string
+    trainerId?: string
+    notes?: string
+    meetingLink?: string
   }[]
 }
 

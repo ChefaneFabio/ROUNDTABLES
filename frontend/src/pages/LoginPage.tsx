@@ -65,9 +65,9 @@ export function LoginPage() {
 
   if (showLearnerInfo) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-maka-navy via-maka-darkNavy to-maka-navy flex items-center justify-center p-4">
         <div className="max-w-md w-full">
-          <div className="bg-white rounded-2xl shadow-xl p-8">
+          <div className="bg-white rounded-2xl shadow-2xl p-8">
             <div className="text-center mb-6">
               <img
                 src={makaLogo}
@@ -79,13 +79,13 @@ export function LoginPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Welcome Learner!</h2>
-              <p className="text-gray-600">Access your roundtable materials via email</p>
+              <h2 className="text-2xl font-bold text-maka-navy mb-2">Welcome Learner!</h2>
+              <p className="text-maka-gray-600">Access your roundtable materials via email</p>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <h3 className="font-semibold text-blue-900 mb-2">📧 How to Access</h3>
-              <ul className="text-sm text-blue-800 space-y-2">
+            <div className="bg-primary-50 border border-primary-200 rounded-lg p-4 mb-6">
+              <h3 className="font-semibold text-maka-tealDark mb-2">📧 How to Access</h3>
+              <ul className="text-sm text-maka-gray-700 space-y-2">
                 <li>• Check your email for voting invitations</li>
                 <li>• Click the secure link to vote on topics</li>
                 <li>• Receive session questions via email</li>
@@ -93,15 +93,15 @@ export function LoginPage() {
               </ul>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-4 mb-6">
-              <p className="text-sm text-gray-600">
+            <div className="bg-maka-gray-50 rounded-lg p-4 mb-6">
+              <p className="text-sm text-maka-gray-600">
                 <strong>Note:</strong> Learners don't need to login. All materials and voting links are sent directly to your email address.
               </p>
             </div>
 
             <button
               onClick={() => setShowLearnerInfo(false)}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition"
+              className="w-full bg-maka-teal hover:bg-maka-tealDark text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200"
             >
               Back to Login
             </button>
@@ -114,7 +114,7 @@ export function LoginPage() {
   // If no role selected, show role selection
   if (!selectedRole) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-maka-navy via-maka-darkNavy to-maka-navy flex items-center justify-center p-4">
         <div className="max-w-2xl w-full">
           <div className="text-center mb-8">
             <img
@@ -123,44 +123,44 @@ export function LoginPage() {
               className="w-24 h-24 mx-auto mb-6"
             />
             <h1 className="text-4xl font-bold text-white mb-2">MAKA Language Translation</h1>
-            <p className="text-2xl font-semibold text-gray-300 mb-4">Roundtables Management</p>
-            <p className="text-gray-400">Select your role to continue</p>
+            <p className="text-2xl font-semibold text-maka-gray-200 mb-4">Roundtables Management</p>
+            <p className="text-maka-gray-300">Select your role to continue</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Coordinator/Admin Card */}
             <button
               onClick={() => setSelectedRole('COORDINATOR')}
-              className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-200 hover:scale-105 text-center group"
+              className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-200 hover:scale-105 text-center group border-2 border-transparent hover:border-maka-teal"
             >
-              <div className="w-20 h-20 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-blue-200 transition">
-                <svg className="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-20 h-20 mx-auto mb-4 bg-primary-100 rounded-full flex items-center justify-center group-hover:bg-primary-200 transition">
+                <svg className="w-10 h-10 text-maka-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Coordinator</h3>
-              <p className="text-sm text-gray-600 mb-1">Manage roundtables, approve content, monitor progress</p>
-              <p className="text-xs text-gray-500 italic">(Includes Administrator access)</p>
+              <h3 className="text-xl font-bold text-maka-navy mb-2">Coordinator</h3>
+              <p className="text-sm text-maka-gray-600 mb-1">Manage roundtables, approve content, monitor progress</p>
+              <p className="text-xs text-maka-gray-500 italic">(Includes Administrator access)</p>
             </button>
 
             {/* Trainer Card */}
             <button
               onClick={() => setSelectedRole('TRAINER')}
-              className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-200 hover:scale-105 text-center group"
+              className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-200 hover:scale-105 text-center group border-2 border-transparent hover:border-maka-cyan"
             >
-              <div className="w-20 h-20 mx-auto mb-4 bg-green-100 rounded-full flex items-center justify-center group-hover:bg-green-200 transition">
-                <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-20 h-20 mx-auto mb-4 bg-cyan-100 rounded-full flex items-center justify-center group-hover:bg-cyan-200 transition">
+                <svg className="w-10 h-10 text-maka-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Trainer</h3>
-              <p className="text-sm text-gray-600">Submit questions, provide feedback, conduct sessions</p>
+              <h3 className="text-xl font-bold text-maka-navy mb-2">Trainer</h3>
+              <p className="text-sm text-maka-gray-600">Submit questions, provide feedback, conduct sessions</p>
             </button>
 
             {/* Learner Card */}
             <button
               onClick={() => setShowLearnerInfo(true)}
-              className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-200 hover:scale-105 text-center group"
+              className="bg-white rounded-2xl shadow-xl p-8 hover:shadow-2xl transition-all duration-200 hover:scale-105 text-center group border-2 border-transparent hover:border-orange-400"
             >
               <div className="w-20 h-20 mx-auto mb-4 bg-orange-100 rounded-full flex items-center justify-center group-hover:bg-orange-200 transition">
                 <svg className="w-10 h-10 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -168,13 +168,13 @@ export function LoginPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Learner</h3>
-              <p className="text-sm text-gray-600">Participate in roundtables, vote on topics, receive materials</p>
+              <h3 className="text-xl font-bold text-maka-navy mb-2">Learner</h3>
+              <p className="text-sm text-maka-gray-600">Participate in roundtables, vote on topics, receive materials</p>
             </button>
           </div>
 
           <div className="text-center mt-8">
-            <p className="text-sm text-gray-300">
+            <p className="text-sm text-maka-gray-300">
               © 2025 MAKA Language Translation. All rights reserved.
             </p>
           </div>
@@ -200,13 +200,13 @@ export function LoginPage() {
   const roleInfo = getRoleInfo()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-maka-navy via-maka-darkNavy to-maka-navy flex items-center justify-center p-4">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-8">
           {/* Back Button */}
           <button
             onClick={() => setSelectedRole(null)}
-            className="mb-4 text-gray-600 hover:text-gray-900 flex items-center text-sm"
+            className="mb-4 text-maka-gray-600 hover:text-maka-teal flex items-center text-sm transition-colors"
           >
             <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -221,13 +221,17 @@ export function LoginPage() {
               alt="MAKA Logo"
               className="w-20 h-20 mx-auto mb-4"
             />
-            <h1 className="text-2xl font-bold text-gray-900 mb-1">MAKA Language Translation</h1>
-            <p className="text-sm text-gray-600 mb-4">Roundtables Management</p>
-            <div className={`inline-flex items-center px-4 py-2 rounded-full bg-${roleInfo.color}-100 text-${roleInfo.color}-800 text-sm font-medium mb-2`}>
+            <h1 className="text-2xl font-bold text-maka-navy mb-1">MAKA Language Translation</h1>
+            <p className="text-sm text-maka-gray-600 mb-4">Roundtables Management</p>
+            <div className={`inline-flex items-center px-4 py-2 rounded-full ${
+              selectedRole === 'COORDINATOR' ? 'bg-primary-100 text-maka-teal' :
+              selectedRole === 'TRAINER' ? 'bg-cyan-100 text-maka-cyan' :
+              'bg-maka-gray-100 text-maka-gray-800'
+            } text-sm font-medium mb-2`}>
               <span className="mr-2">{roleInfo.icon}</span>
               {roleInfo.name} Login
             </div>
-            <p className="text-gray-600 text-sm">Enter your credentials</p>
+            <p className="text-maka-gray-600 text-sm">Enter your credentials</p>
           </div>
 
           {/* Error Message */}
@@ -240,7 +244,7 @@ export function LoginPage() {
           {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-maka-gray-700 mb-2">
                 Email Address
               </label>
               <input
@@ -249,14 +253,14 @@ export function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                className="w-full px-4 py-3 border border-maka-gray-300 rounded-lg focus:ring-2 focus:ring-maka-teal focus:border-transparent transition"
                 placeholder="admin@makaitalia.com"
                 disabled={isLoading}
               />
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-maka-gray-700 mb-2">
                 Password
               </label>
               <input
@@ -265,7 +269,7 @@ export function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                className="w-full px-4 py-3 border border-maka-gray-300 rounded-lg focus:ring-2 focus:ring-maka-teal focus:border-transparent transition"
                 placeholder="Enter your password"
                 disabled={isLoading}
               />
@@ -274,7 +278,7 @@ export function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-maka-teal hover:bg-maka-tealDark text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-[1.02]"
             >
               {isLoading ? 'Signing in...' : 'Sign In'}
             </button>
@@ -282,10 +286,10 @@ export function LoginPage() {
 
           {/* Help Text */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-sm text-maka-gray-600">
               Default admin credentials:
             </p>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-maka-gray-500 mt-1">
               admin@makaitalia.com / Admin123!
             </p>
           </div>
@@ -293,7 +297,7 @@ export function LoginPage() {
 
         {/* Footer */}
         <div className="text-center mt-6">
-          <p className="text-sm text-gray-300">
+          <p className="text-sm text-maka-gray-300">
             © 2025 MAKA Language Translation. All rights reserved.
           </p>
         </div>

@@ -23,6 +23,7 @@ interface Roundtable {
   startDate?: string
   endDate?: string
   maxParticipants: number
+  numberOfSessions: number
   currentParticipants: number
   client: {
     id: string
@@ -44,8 +45,9 @@ export function RoundtableDetailsPage() {
   const [showScheduleModal, setShowScheduleModal] = useState(false)
   const [scheduleData, setScheduleData] = useState({
     startDate: '',
-    sessionFrequency: 'weekly' as 'weekly' | 'bi-weekly',
-    sessionDuration: 60
+    daysBetweenSessions: 7, // Custom days between sessions
+    sessionDuration: 60,
+    numberOfSessions: 10 // Allow changing number of sessions
   })
   const [settings, setSettings] = useState({
     minQuestionsPerSession: 0,
@@ -168,7 +170,14 @@ export function RoundtableDetailsPage() {
         return {
           title: 'Schedule Sessions',
           description: 'Create session calendar for this roundtable',
-          action: () => setShowScheduleModal(true),
+          action: () => {
+            // Initialize with current roundtable settings
+            setScheduleData(prev => ({
+              ...prev,
+              numberOfSessions: roundtable?.numberOfSessions || 10
+            }))
+            setShowScheduleModal(true)
+          },
           icon: Calendar,
           color: 'bg-purple-600'
         }
@@ -262,7 +271,7 @@ export function RoundtableDetailsPage() {
               <div className="ml-4">
                 <p className="text-sm text-gray-600">Sessions</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {roundtable.sessions?.length || 0} / 10
+                  {roundtable.sessions?.length || 0} / {roundtable.numberOfSessions || 10}
                 </p>
               </div>
             </div>
@@ -422,7 +431,14 @@ export function RoundtableDetailsPage() {
                 <div className="flex justify-between items-center mb-4">
                   <h3 className="text-lg font-semibold text-gray-900">Sessions</h3>
                   <button
-                    onClick={() => setShowScheduleModal(true)}
+                    onClick={() => {
+                      // Initialize with current roundtable settings
+                      setScheduleData(prev => ({
+                        ...prev,
+                        numberOfSessions: roundtable?.numberOfSessions || 10
+                      }))
+                      setShowScheduleModal(true)
+                    }}
                     className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 flex items-center"
                   >
                     <Calendar className="h-4 w-4 mr-2" />
@@ -449,7 +465,7 @@ export function RoundtableDetailsPage() {
                           <div className="flex items-center justify-between">
                             <div className="flex-1">
                               <h4 className="font-semibold text-gray-900">
-                                Session {session.sessionNumber}/10
+                                Session {session.sessionNumber}/{roundtable.numberOfSessions || 10}
                               </h4>
                               <p className="text-sm text-gray-600 mt-1">
                                 {session.topic?.title || 'Topic TBD'}
@@ -678,7 +694,7 @@ export function RoundtableDetailsPage() {
                 Schedule Sessions
               </h3>
               <p className="text-sm text-gray-600 mt-1">
-                Create a calendar for all 10 roundtable sessions
+                Create a calendar for {scheduleData.numberOfSessions} roundtable sessions
               </p>
             </div>
 
@@ -701,23 +717,50 @@ export function RoundtableDetailsPage() {
                 </p>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Session Frequency
-                </label>
-                <select
-                  value={scheduleData.sessionFrequency}
-                  onChange={(e) =>
-                    setScheduleData({
-                      ...scheduleData,
-                      sessionFrequency: e.target.value as 'weekly' | 'bi-weekly'
-                    })
-                  }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-                >
-                  <option value="weekly">Weekly (every 7 days)</option>
-                  <option value="bi-weekly">Bi-weekly (every 14 days)</option>
-                </select>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Number of Sessions *
+                  </label>
+                  <input
+                    type="number"
+                    value={scheduleData.numberOfSessions}
+                    onChange={(e) =>
+                      setScheduleData({
+                        ...scheduleData,
+                        numberOfSessions: parseInt(e.target.value) || 1
+                      })
+                    }
+                    min="1"
+                    max="50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Total sessions for this roundtable
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Days Between Sessions *
+                  </label>
+                  <input
+                    type="number"
+                    value={scheduleData.daysBetweenSessions}
+                    onChange={(e) =>
+                      setScheduleData({
+                        ...scheduleData,
+                        daysBetweenSessions: parseInt(e.target.value) || 7
+                      })
+                    }
+                    min="1"
+                    max="90"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    7 = weekly, 14 = bi-weekly
+                  </p>
+                </div>
               </div>
 
               <div>
@@ -743,10 +786,9 @@ export function RoundtableDetailsPage() {
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
                 <p className="font-medium mb-1">What happens next:</p>
                 <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li>10 sessions will be created automatically</li>
-                  <li>Session 1: Introduction (no topic)</li>
-                  <li>Sessions 2-9: Assigned to selected topics</li>
-                  <li>Session 10: Wrap-up and conclusion</li>
+                  <li>{scheduleData.numberOfSessions} sessions will be created automatically</li>
+                  <li>Sessions will be scheduled every {scheduleData.daysBetweenSessions} days</li>
+                  <li>Topics will be assigned to sessions based on voting results</li>
                   <li>Trainers can be assigned to sessions later</li>
                 </ul>
               </div>
@@ -761,11 +803,11 @@ export function RoundtableDetailsPage() {
               </button>
               <button
                 onClick={handleScheduleSessions}
-                disabled={!scheduleData.startDate}
+                disabled={!scheduleData.startDate || scheduleData.numberOfSessions < 1}
                 className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
               >
                 <Calendar className="h-4 w-4 mr-2" />
-                Schedule 10 Sessions
+                Schedule {scheduleData.numberOfSessions} Sessions
               </button>
             </div>
           </div>

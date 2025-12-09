@@ -15,12 +15,24 @@ const createRoundtableSchema = Joi.object({
   clientId: Joi.string().required(),
   startDate: Joi.date().optional(),
   maxParticipants: Joi.number().integer().min(1).max(20).default(6),
+  numberOfSessions: Joi.number().integer().min(1).optional(),
   topics: Joi.array().items(
     Joi.object({
       title: Joi.string().required().min(2).max(100),
       description: Joi.string().optional().allow('').max(500)
     })
-  ).min(6).max(20).required()
+  ).min(6).max(20).required(),
+  sessions: Joi.array().items(
+    Joi.object({
+      sessionNumber: Joi.number().integer().min(1).required(),
+      scheduledAt: Joi.date().required(),
+      topicId: Joi.string().optional().allow(null),
+      customTopicTitle: Joi.string().optional().allow('').max(100),
+      trainerId: Joi.string().optional().allow(null),
+      notes: Joi.string().optional().allow(''),
+      meetingLink: Joi.string().uri().optional().allow('')
+    })
+  ).optional()
 })
 
 const updateStatusSchema = Joi.object({
@@ -200,7 +212,7 @@ router.get('/:id', async (req: Request, res: Response) => {
 // Create new roundtable
 router.post('/', validateRequest(createRoundtableSchema), async (req: Request, res: Response) => {
   try {
-    const { name, description, clientId, startDate, maxParticipants, topics } = req.body
+    const { name, description, clientId, startDate, maxParticipants, numberOfSessions, topics, sessions } = req.body
 
     // Verify client exists
     const client = await prisma.client.findUnique({
@@ -211,13 +223,36 @@ router.post('/', validateRequest(createRoundtableSchema), async (req: Request, r
       return res.status(400).json({ success: false, error: 'Client not found' })
     }
 
+    // Additional validation: if sessions provided, verify trainers and topics exist
+    if (sessions && sessions.length > 0) {
+      const trainerIds = sessions.filter((s: any) => s.trainerId).map((s: any) => s.trainerId)
+      const topicIds = sessions.filter((s: any) => s.topicId).map((s: any) => s.topicId)
+
+      if (trainerIds.length > 0) {
+        const trainers = await prisma.trainer.findMany({
+          where: { id: { in: trainerIds } }
+        })
+        if (trainers.length !== trainerIds.length) {
+          return res.status(400).json({ success: false, error: 'One or more trainers not found' })
+        }
+      }
+
+      // Note: topicIds validation will happen after topics are created
+      // For now, we'll allow topicId to be passed only if it's a text match with topic titles
+    }
+
     const roundtable = await roundtableService.createRoundtable({
       name,
       description,
       clientId,
       startDate: startDate ? new Date(startDate) : undefined,
       maxParticipants: maxParticipants || 6,
-      topics
+      numberOfSessions,
+      topics,
+      sessions: sessions ? sessions.map((s: any) => ({
+        ...s,
+        scheduledAt: new Date(s.scheduledAt)
+      })) : undefined
     })
 
     res.status(201).json({ success: true, data: roundtable })
@@ -282,16 +317,30 @@ router.post('/:id/finalize-voting', async (req: Request, res: Response) => {
 router.post('/:id/schedule-sessions', async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const { startDate, sessionDuration = 60, sessionFrequency = 'weekly' } = req.body
+    const {
+      startDate,
+      sessionDuration = 60,
+      sessionFrequency = 'weekly',
+      daysBetweenSessions,
+      numberOfSessions
+    } = req.body
 
     if (!startDate) {
       return res.status(400).json({ success: false, error: 'Start date is required' })
     }
 
+    // Calculate daysBetweenSessions from sessionFrequency if not provided
+    let finalDaysBetween = daysBetweenSessions
+    if (!finalDaysBetween) {
+      finalDaysBetween = sessionFrequency === 'bi-weekly' ? 14 : 7
+    }
+
     const result = await roundtableService.scheduleAllSessions(id, {
       startDate: new Date(startDate),
       sessionDuration,
-      sessionFrequency
+      sessionFrequency,
+      daysBetweenSessions: finalDaysBetween,
+      numberOfSessions
     })
 
     res.json({ success: true, data: result })

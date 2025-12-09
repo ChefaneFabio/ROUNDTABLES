@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ArrowLeft, Calendar, Building, Plus, Trash2 } from 'lucide-react'
 import { roundtablesApi, clientsApi } from '../services/api'
+import { SessionFormFields } from '../components/SessionFormFields'
+import axios from 'axios'
 
 interface Client {
   id: string
@@ -14,21 +16,41 @@ interface Topic {
   description: string
 }
 
+interface Trainer {
+  id: string
+  name: string
+  email: string
+  expertise: string[]
+  isActive: boolean
+}
+
+interface SessionData {
+  sessionNumber: number
+  scheduledAt: string
+  topicId?: string
+  customTopicTitle?: string
+  trainerId?: string
+  notes?: string
+  meetingLink?: string
+}
+
 export function CreateRoundtablePage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const preselectedClientId = searchParams.get('clientId')
-  
+
   const [clients, setClients] = useState<Client[]>([])
+  const [trainers, setTrainers] = useState<Trainer[]>([])
   const [loading, setLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     clientId: preselectedClientId || '',
     startDate: '',
-    maxParticipants: 6
+    maxParticipants: 6,
+    numberOfSessions: 10
   })
-  
+
   const [topics, setTopics] = useState<Topic[]>([
     { title: '', description: '' },
     { title: '', description: '' },
@@ -38,8 +60,12 @@ export function CreateRoundtablePage() {
     { title: '', description: '' }
   ])
 
+  const [sessions, setSessions] = useState<SessionData[]>([])
+  const [sessionsConfigured, setSessionsConfigured] = useState(false)
+
   useEffect(() => {
     fetchClients()
+    fetchTrainers()
   }, [])
 
   const fetchClients = async () => {
@@ -51,6 +77,63 @@ export function CreateRoundtablePage() {
     } catch (error) {
       console.error('Error fetching clients:', error)
     }
+  }
+
+  const fetchTrainers = async () => {
+    try {
+      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000'
+      const response = await axios.get(`${API_URL}/api/trainers?isActive=true`)
+      if (response.data?.data) {
+        setTrainers(response.data.data)
+      }
+    } catch (error) {
+      console.error('Error fetching trainers:', error)
+    }
+  }
+
+  const generateSessionFields = () => {
+    const numSessions = formData.numberOfSessions
+    const newSessions: SessionData[] = Array.from({ length: numSessions }, (_, i) => ({
+      sessionNumber: i + 1,
+      scheduledAt: '',
+      topicId: '',
+      customTopicTitle: '',
+      trainerId: '',
+      notes: '',
+      meetingLink: ''
+    }))
+    setSessions(newSessions)
+    setSessionsConfigured(true)
+  }
+
+  const updateSession = (index: number, field: keyof SessionData, value: string) => {
+    const newSessions = [...sessions]
+    newSessions[index] = { ...newSessions[index], [field]: value }
+    setSessions(newSessions)
+  }
+
+  const removeSession = (index: number) => {
+    if (sessions.length > 1) {
+      const newSessions = sessions.filter((_, i) => i !== index)
+      // Renumber sessions
+      const renumbered = newSessions.map((s, i) => ({ ...s, sessionNumber: i + 1 }))
+      setSessions(renumbered)
+      setFormData({ ...formData, numberOfSessions: renumbered.length })
+    }
+  }
+
+  const addSession = () => {
+    const newSession: SessionData = {
+      sessionNumber: sessions.length + 1,
+      scheduledAt: '',
+      topicId: '',
+      customTopicTitle: '',
+      trainerId: '',
+      notes: '',
+      meetingLink: ''
+    }
+    setSessions([...sessions, newSession])
+    setFormData({ ...formData, numberOfSessions: sessions.length + 1 })
   }
 
   const updateTopic = (index: number, field: keyof Topic, value: string) => {
@@ -72,13 +155,13 @@ export function CreateRoundtablePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     // Validate form
     if (!formData.name || !formData.clientId) {
       alert('Please fill in all required fields')
       return
     }
-    
+
     // Validate topics
     const validTopics = topics.filter(t => t.title.trim())
     if (validTopics.length < 6) {
@@ -100,17 +183,51 @@ export function CreateRoundtablePage() {
       return
     }
 
+    // Validate sessions if configured
+    if (sessionsConfigured && sessions.length > 0) {
+      const sessionsWithoutDate = sessions.filter(s => !s.scheduledAt)
+      if (sessionsWithoutDate.length > 0) {
+        alert(`Please set dates for all sessions. ${sessionsWithoutDate.length} sessions missing dates.`)
+        return
+      }
+    }
+
     try {
       setLoading(true)
-      
-      const roundtableData = {
-        ...formData,
+
+      const roundtableData: any = {
+        name: formData.name,
+        description: formData.description,
+        clientId: formData.clientId,
+        maxParticipants: formData.maxParticipants,
+        numberOfSessions: formData.numberOfSessions,
         topics: validTopics,
         startDate: formData.startDate ? new Date(formData.startDate).toISOString() : undefined
       }
 
+      // Include sessions if configured
+      if (sessionsConfigured && sessions.length > 0) {
+        roundtableData.sessions = sessions.map(s => {
+          // Handle custom topic: if topicId is '__custom__', use customTopicTitle
+          let topicValue = s.topicId
+          if (s.topicId === '__custom__' && s.customTopicTitle) {
+            topicValue = s.customTopicTitle
+          }
+
+          return {
+            sessionNumber: s.sessionNumber,
+            scheduledAt: new Date(s.scheduledAt).toISOString(),
+            topicId: topicValue && topicValue !== '__custom__' ? topicValue : undefined,
+            customTopicTitle: s.topicId === '__custom__' ? s.customTopicTitle : undefined,
+            trainerId: s.trainerId || undefined,
+            notes: s.notes || undefined,
+            meetingLink: s.meetingLink || undefined
+          }
+        })
+      }
+
       const response = await roundtablesApi.create(roundtableData)
-      
+
       if (response?.id) {
         navigate(`/roundtables/${response.id}`)
       } else {
@@ -180,7 +297,7 @@ export function CreateRoundtablePage() {
                   required
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maka-teal"
                   placeholder="e.g., Q1 Leadership Training"
                 />
               </div>
@@ -193,7 +310,7 @@ export function CreateRoundtablePage() {
                   required
                   value={formData.clientId}
                   onChange={(e) => setFormData({...formData, clientId: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maka-teal"
                 >
                   <option value="">Select a client</option>
                   {clients.map((client) => (
@@ -203,9 +320,9 @@ export function CreateRoundtablePage() {
                   ))}
                 </select>
                 {selectedClient && (
-                  <div className="mt-2 p-2 bg-blue-50 rounded-md flex items-center">
-                    <Building className="h-4 w-4 text-blue-600 mr-2" />
-                    <span className="text-sm text-blue-800">
+                  <div className="mt-2 p-2 bg-primary-50 rounded-md flex items-center">
+                    <Building className="h-4 w-4 text-maka-teal mr-2" />
+                    <span className="text-sm text-maka-tealDark">
                       {selectedClient.name} at {selectedClient.company}
                     </span>
                   </div>
@@ -220,7 +337,7 @@ export function CreateRoundtablePage() {
                   type="date"
                   value={formData.startDate}
                   onChange={(e) => setFormData({...formData, startDate: e.target.value})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maka-teal"
                 />
               </div>
 
@@ -234,11 +351,29 @@ export function CreateRoundtablePage() {
                   max="20"
                   value={formData.maxParticipants}
                   onChange={(e) => setFormData({...formData, maxParticipants: parseInt(e.target.value) || 1})}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maka-teal"
                   placeholder="Enter number of participants"
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   Between 1 and 20 participants. Optimal discussion quality with 4-8 participants.
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Number of Sessions *
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  required
+                  value={formData.numberOfSessions}
+                  onChange={(e) => setFormData({...formData, numberOfSessions: parseInt(e.target.value) || 1})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maka-teal"
+                  placeholder="e.g., 10"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Total number of sessions for this roundtable (minimum 1, no maximum).
                 </p>
               </div>
             </div>
@@ -251,7 +386,7 @@ export function CreateRoundtablePage() {
                 value={formData.description}
                 onChange={(e) => setFormData({...formData, description: e.target.value})}
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maka-teal"
                 placeholder="Brief description of this roundtable program..."
               />
             </div>
@@ -277,7 +412,7 @@ export function CreateRoundtablePage() {
                       placeholder="Topic title (e.g., The Art of Negotiation)"
                       value={topic.title}
                       onChange={(e) => updateTopic(index, 'title', e.target.value)}
-                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-maka-teal"
                     />
                     {topics.length > 6 && (
                       <button
@@ -297,23 +432,80 @@ export function CreateRoundtablePage() {
             <button
               type="button"
               onClick={addTopic}
-              className="mt-4 w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-blue-500 hover:text-blue-600 flex items-center justify-center"
+              className="mt-4 w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-maka-teal hover:text-maka-teal flex items-center justify-center"
             >
               <Plus className="h-5 w-5 mr-2" />
               Add Topic
             </button>
 
-            <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+            <div className="mt-4 p-4 bg-primary-50 rounded-lg">
               <div className="flex items-center">
-                <Calendar className="h-5 w-5 text-blue-600 mr-2" />
+                <Calendar className="h-5 w-5 text-maka-teal mr-2" />
                 <div>
-                  <h4 className="text-sm font-medium text-blue-900">Session Structure</h4>
-                  <p className="text-sm text-blue-700">
-                    Participants will vote to select 8 topics for the sessions (from {topics.length} topics)
+                  <h4 className="text-sm font-medium text-maka-navy">Session Structure</h4>
+                  <p className="text-sm text-maka-tealDark">
+                    Configure {formData.numberOfSessions} session{formData.numberOfSessions !== 1 ? 's' : ''} below or use topic voting flow
                   </p>
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Session Configuration */}
+          <div className="bg-white rounded-lg shadow p-6">
+            <div className="flex items-center justify-between mb-2">
+              <h2 className="text-xl font-semibold text-gray-900">Session Configuration</h2>
+              <span className="text-sm text-gray-600">
+                {sessions.length > 0 ? `${sessions.length} sessions` : 'Not configured'}
+              </span>
+            </div>
+            <p className="text-gray-600 mb-6">
+              Configure all sessions with dates, topics, and trainers, or leave this blank to use the traditional scheduling flow later.
+            </p>
+
+            {!sessionsConfigured ? (
+              <button
+                type="button"
+                onClick={generateSessionFields}
+                className="w-full py-3 bg-maka-teal text-white rounded-lg hover:bg-maka-tealDark transition-all duration-200 flex items-center justify-center font-medium"
+              >
+                <Calendar className="h-5 w-5 mr-2" />
+                Configure {formData.numberOfSessions} Session{formData.numberOfSessions !== 1 ? 's' : ''} Now
+              </button>
+            ) : (
+              <>
+                <div className="space-y-4 mb-4">
+                  {sessions.map((session, index) => (
+                    <SessionFormFields
+                      key={index}
+                      session={session}
+                      topics={topics}
+                      trainers={trainers}
+                      onUpdate={(field, value) => updateSession(index, field, value)}
+                      onRemove={() => removeSession(index)}
+                      canRemove={sessions.length > 1}
+                    />
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={addSession}
+                  className="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-600 hover:border-maka-teal hover:text-maka-teal flex items-center justify-center"
+                >
+                  <Plus className="h-5 w-5 mr-2" />
+                  Add Another Session
+                </button>
+              </>
+            )}
+
+            {!sessionsConfigured && (
+              <div className="mt-4 p-4 bg-yellow-50 rounded-lg">
+                <p className="text-sm text-yellow-800">
+                  <strong>Note:</strong> If you skip this step, you can schedule sessions later using the traditional flow (topic voting → automatic scheduling).
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Submit */}
@@ -328,7 +520,7 @@ export function CreateRoundtablePage() {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+              className="px-6 py-2 bg-maka-teal text-white rounded-md hover:bg-maka-tealDark transition-all duration-200 disabled:opacity-50"
             >
               {loading ? 'Creating...' : 'Create Roundtable'}
             </button>

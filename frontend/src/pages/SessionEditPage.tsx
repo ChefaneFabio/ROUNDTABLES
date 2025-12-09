@@ -63,7 +63,8 @@ export function SessionEditPage() {
     meetingLink: '',
     notes: '',
     trainerId: '',
-    topicId: ''
+    topicId: '',
+    customTopicTitle: ''
   })
 
   useEffect(() => {
@@ -100,7 +101,8 @@ export function SessionEditPage() {
         meetingLink: sessionData.meetingLink || '',
         notes: sessionData.notes || '',
         trainerId: sessionData.trainer?.id || '',
-        topicId: sessionData.topic?.id || ''
+        topicId: sessionData.topic?.id || '',
+        customTopicTitle: ''
       })
 
     } catch (error) {
@@ -131,8 +133,13 @@ export function SessionEditPage() {
         updateData.trainerId = formData.trainerId
       }
 
-      // Only include topicId if it's set
-      if (formData.topicId) {
+      // Handle custom topic or existing topic
+      if (formData.topicId === '__custom__' && formData.customTopicTitle) {
+        // Pass custom topic title to backend
+        updateData.customTopicTitle = formData.customTopicTitle
+        updateData.roundtableId = session!.roundtable.id // Need roundtable ID for creating custom topic
+      } else if (formData.topicId) {
+        // Regular topic ID
         updateData.topicId = formData.topicId
       }
 
@@ -337,7 +344,7 @@ export function SessionEditPage() {
                 </label>
                 <select
                   value={formData.topicId}
-                  onChange={(e) => setFormData({...formData, topicId: e.target.value})}
+                  onChange={(e) => setFormData({...formData, topicId: e.target.value, customTopicTitle: ''})}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">-- No Topic Assigned --</option>
@@ -346,13 +353,31 @@ export function SessionEditPage() {
                       {topic.title}
                     </option>
                   ))}
+                  <option value="__custom__">✏️ Custom topic...</option>
                 </select>
-                {formData.topicId && (
+                {formData.topicId && formData.topicId !== '__custom__' && (
                   <p className="text-xs text-gray-500 mt-1">
                     Current: {topics.find(t => t.id === formData.topicId)?.title}
                   </p>
                 )}
               </div>
+
+              {/* Custom Topic Input (appears when "Custom topic" is selected) */}
+              {formData.topicId === '__custom__' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Custom Topic Title
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter custom topic title..."
+                    value={formData.customTopicTitle}
+                    onChange={(e) => setFormData({...formData, customTopicTitle: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    required
+                  />
+                </div>
+              )}
             </div>
           </div>
 

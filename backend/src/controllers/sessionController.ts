@@ -27,6 +27,19 @@ const rescheduleSessionSchema = Joi.object({
   reason: Joi.string().optional().max(200)
 })
 
+const updateSessionSchema = Joi.object({
+  scheduledAt: Joi.date().optional(),
+  status: Joi.string().optional(),
+  questionsStatus: Joi.string().optional(),
+  feedbacksStatus: Joi.string().optional(),
+  meetingLink: Joi.string().uri().optional().allow(null, ''),
+  notes: Joi.string().optional().allow(null, ''),
+  trainerId: Joi.string().optional().allow(null, ''),
+  topicId: Joi.string().optional().allow(null, ''),
+  customTopicTitle: Joi.string().optional().allow('').max(100),
+  roundtableId: Joi.string().optional() // Required when creating custom topic
+})
+
 // Get all sessions
 router.get('/', async (req: Request, res: Response) => {
   try {
@@ -287,6 +300,105 @@ router.get('/:id', async (req: Request, res: Response) => {
     res.json({ success: true, data: session })
   } catch (error) {
     console.error('Error fetching session:', error)
+    res.status(500).json({ success: false, error: 'Internal server error' })
+  }
+})
+
+// Update session
+router.put('/:id', validateRequest(updateSessionSchema), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const {
+      scheduledAt,
+      status,
+      questionsStatus,
+      feedbacksStatus,
+      meetingLink,
+      notes,
+      trainerId,
+      topicId,
+      customTopicTitle,
+      roundtableId
+    } = req.body
+
+    // Check if session exists
+    const existingSession = await prisma.session.findUnique({
+      where: { id }
+    })
+
+    if (!existingSession) {
+      return res.status(404).json({ success: false, error: 'Session not found' })
+    }
+
+    let finalTopicId = topicId
+
+    // Handle custom topic creation
+    if (customTopicTitle && customTopicTitle.trim()) {
+      if (!roundtableId) {
+        return res.status(400).json({
+          success: false,
+          error: 'roundtableId is required when creating a custom topic'
+        })
+      }
+
+      // Check if a topic with this title already exists for this roundtable
+      const existingTopic = await prisma.topic.findFirst({
+        where: {
+          roundtableId,
+          title: customTopicTitle.trim()
+        }
+      })
+
+      if (existingTopic) {
+        // Use existing topic
+        finalTopicId = existingTopic.id
+      } else {
+        // Create new custom topic
+        const customTopic = await prisma.topic.create({
+          data: {
+            title: customTopicTitle.trim(),
+            description: 'Custom topic for session',
+            roundtableId,
+            isSelected: false
+          }
+        })
+        finalTopicId = customTopic.id
+      }
+    }
+
+    // Build update data
+    const updateData: any = {
+      updatedAt: new Date()
+    }
+
+    if (scheduledAt !== undefined) updateData.scheduledAt = new Date(scheduledAt)
+    if (status !== undefined) updateData.status = status
+    if (questionsStatus !== undefined) updateData.questionsStatus = questionsStatus
+    if (feedbacksStatus !== undefined) updateData.feedbacksStatus = feedbacksStatus
+    if (meetingLink !== undefined) updateData.meetingLink = meetingLink || null
+    if (notes !== undefined) updateData.notes = notes || null
+    if (trainerId !== undefined) updateData.trainerId = trainerId || null
+    if (finalTopicId !== undefined) updateData.topicId = finalTopicId || null
+
+    // Update session
+    const updatedSession = await prisma.session.update({
+      where: { id },
+      data: updateData,
+      include: {
+        roundtable: {
+          select: {
+            name: true,
+            client: { select: { name: true, company: true } }
+          }
+        },
+        topic: true,
+        trainer: true
+      }
+    })
+
+    res.json({ success: true, data: updatedSession })
+  } catch (error) {
+    console.error('Error updating session:', error)
     res.status(500).json({ success: false, error: 'Internal server error' })
   }
 })
