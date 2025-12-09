@@ -381,4 +381,169 @@ export class RoundtableService {
       pendingFeedback
     }
   }
+
+  /**
+   * Check the impact of changing numberOfSessions
+   * Returns warnings and blockers
+   */
+  async checkNumberOfSessionsImpact(roundtableId: string, newNumberOfSessions: number) {
+    const roundtable = await prisma.roundtable.findUnique({
+      where: { id: roundtableId },
+      include: {
+        sessions: {
+          include: {
+            trainer: { select: { id: true, name: true, email: true } },
+            topic: { select: { title: true } },
+            questions: { select: { id: true, status: true } },
+            feedback: { select: { id: true, status: true } }
+          },
+          orderBy: { sessionNumber: 'asc' }
+        }
+      }
+    })
+
+    if (!roundtable) {
+      throw new Error('Roundtable not found')
+    }
+
+    const warnings: string[] = []
+    const blockers: string[] = []
+    const sessionsToDelete: any[] = []
+
+    // If decreasing numberOfSessions
+    if (newNumberOfSessions < roundtable.numberOfSessions) {
+      const sessionsToRemove = roundtable.sessions.filter(
+        s => s.sessionNumber > newNumberOfSessions
+      )
+
+      // Check each session that would be deleted
+      for (const session of sessionsToRemove) {
+        const sessionInfo: any = {
+          id: session.id,
+          sessionNumber: session.sessionNumber,
+          status: session.status,
+          trainer: session.trainer?.name || null,
+          topic: session.topic?.title || null,
+          hasQuestions: session.questions.length > 0,
+          hasFeedback: session.feedback.length > 0
+        }
+
+        sessionsToDelete.push(sessionInfo)
+
+        // BLOCKERS: Cannot delete these sessions
+        if (session.status === 'COMPLETED') {
+          blockers.push(`Cannot delete Session ${session.sessionNumber}: Session is COMPLETED`)
+        } else if (session.status === 'IN_PROGRESS') {
+          blockers.push(`Cannot delete Session ${session.sessionNumber}: Session is IN_PROGRESS`)
+        } else if (session.status === 'FEEDBACK_SENT') {
+          blockers.push(`Cannot delete Session ${session.sessionNumber}: Feedback already sent`)
+        }
+
+        // WARNINGS: Can delete but should warn user
+        if (session.trainer) {
+          warnings.push(`Session ${session.sessionNumber}: Trainer "${session.trainer.name}" will be unassigned`)
+        }
+
+        if (session.questions.length > 0) {
+          const approvedCount = session.questions.filter(q => q.status === 'APPROVED').length
+          if (approvedCount > 0) {
+            warnings.push(`Session ${session.sessionNumber}: ${approvedCount} approved question(s) will be deleted`)
+          }
+        }
+
+        if (session.feedback.length > 0) {
+          const approvedCount = session.feedback.filter(f => f.status === 'APPROVED').length
+          if (approvedCount > 0) {
+            warnings.push(`Session ${session.sessionNumber}: ${approvedCount} approved feedback item(s) will be deleted`)
+          }
+        }
+      }
+
+      // Check if we're trying to decrease below highest completed session
+      const highestCompletedSession = roundtable.sessions
+        .filter(s => s.status === 'COMPLETED' || s.status === 'FEEDBACK_SENT')
+        .sort((a, b) => b.sessionNumber - a.sessionNumber)[0]
+
+      if (highestCompletedSession && newNumberOfSessions < highestCompletedSession.sessionNumber) {
+        blockers.push(
+          `Cannot decrease to ${newNumberOfSessions} sessions: Session ${highestCompletedSession.sessionNumber} is already completed`
+        )
+      }
+    }
+
+    return {
+      canProceed: blockers.length === 0,
+      warnings,
+      blockers,
+      sessionsToDelete,
+      oldValue: roundtable.numberOfSessions,
+      newValue: newNumberOfSessions,
+      sessionsToCreate: Math.max(0, newNumberOfSessions - roundtable.sessions.length)
+    }
+  }
+
+  /**
+   * Adjust session count by creating or deleting sessions
+   */
+  async adjustSessionCount(
+    roundtableId: string,
+    newNumberOfSessions: number,
+    oldNumberOfSessions: number
+  ) {
+    return prisma.$transaction(async (tx) => {
+      const roundtable = await tx.roundtable.findUnique({
+        where: { id: roundtableId },
+        include: {
+          sessions: { orderBy: { sessionNumber: 'asc' } }
+        }
+      })
+
+      if (!roundtable) {
+        throw new Error('Roundtable not found')
+      }
+
+      const existingSessionCount = roundtable.sessions.length
+
+      // If decreasing, delete excess sessions
+      if (newNumberOfSessions < existingSessionCount) {
+        const deletedSessions = await tx.session.deleteMany({
+          where: {
+            roundtableId,
+            sessionNumber: { gt: newNumberOfSessions }
+          }
+        })
+
+        console.log(`Deleted ${deletedSessions.count} sessions for roundtable ${roundtableId}`)
+
+        // TODO: Send notifications to affected trainers
+        // This will be implemented in the notification service update
+      }
+
+      // If increasing, create new sessions
+      if (newNumberOfSessions > existingSessionCount) {
+        const newSessions = []
+        for (let i = existingSessionCount + 1; i <= newNumberOfSessions; i++) {
+          // Create placeholder date (will need to be scheduled later)
+          const placeholderDate = addWeeks(new Date(), i)
+
+          newSessions.push({
+            sessionNumber: i,
+            scheduledAt: placeholderDate,
+            status: 'SCHEDULED' as SessionStatus,
+            roundtableId
+          })
+        }
+
+        await tx.session.createMany({ data: newSessions })
+        console.log(`Created ${newSessions.length} new sessions for roundtable ${roundtableId}`)
+      }
+
+      return {
+        oldCount: existingSessionCount,
+        newCount: newNumberOfSessions,
+        created: Math.max(0, newNumberOfSessions - existingSessionCount),
+        deleted: Math.max(0, existingSessionCount - newNumberOfSessions)
+      }
+    })
+  }
 }

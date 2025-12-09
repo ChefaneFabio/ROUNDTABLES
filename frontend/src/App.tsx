@@ -8,6 +8,7 @@ import { ClientsPage } from './pages/ClientsPage'
 import { CreateRoundtablePage } from './pages/CreateRoundtablePage'
 import { CreateClientPage } from './pages/CreateClientPage'
 import { RoundtableDetailsPage } from './pages/RoundtableDetailsPage'
+import { EditRoundtablePage } from './pages/EditRoundtablePage'
 import { SessionsPage } from './pages/SessionsPage'
 import { QuestionsPage } from './pages/QuestionsPage'
 import { ParticipantsPage } from './pages/ParticipantsPage'
@@ -50,6 +51,7 @@ function App() {
           <Route path="/roundtables" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><RoundtablesPage /></ProtectedRoute>} />
           <Route path="/clients" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><ClientsPage /></ProtectedRoute>} />
           <Route path="/roundtables/new" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><CreateRoundtablePage /></ProtectedRoute>} />
+          <Route path="/roundtables/:id/edit" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><EditRoundtablePage /></ProtectedRoute>} />
           <Route path="/roundtables/:id" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><RoundtableDetailsPage /></ProtectedRoute>} />
           <Route path="/clients/new" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><CreateClientPage /></ProtectedRoute>} />
           <Route path="/clients/:id" element={<ProtectedRoute allowedRoles={['ADMIN', 'COORDINATOR']}><ClientDetailsPage /></ProtectedRoute>} />

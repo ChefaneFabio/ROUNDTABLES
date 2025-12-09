@@ -11,7 +11,8 @@ import {
   BarChart3,
   Plus,
   FileText,
-  Settings
+  Settings,
+  Edit2
 } from 'lucide-react'
 import { roundtablesApi } from '../services/api'
 
@@ -247,6 +248,17 @@ export function RoundtableDetailsPage() {
                   {roundtable.status.replace('_', ' ')}
                 </span>
               </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex items-center gap-3">
+              <button
+                onClick={() => navigate(`/roundtables/${id}/edit`)}
+                className="flex items-center gap-2 px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <Edit2 className="w-4 h-4" />
+                Edit
+              </button>
             </div>
           </div>
         </div>

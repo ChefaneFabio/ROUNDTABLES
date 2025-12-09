@@ -39,6 +39,14 @@ const updateStatusSchema = Joi.object({
   status: Joi.string().valid(...Object.values(RoundtableStatus)).required()
 })
 
+const updateRoundtableSchema = Joi.object({
+  name: Joi.string().optional().min(2).max(100),
+  description: Joi.string().optional().allow('').max(500),
+  maxParticipants: Joi.number().integer().min(1).max(50).optional(),
+  numberOfSessions: Joi.number().integer().min(1).max(100).optional(),
+  confirmDangerous: Joi.boolean().optional()
+})
+
 // Get all roundtables
 router.get('/', async (req: Request, res: Response) => {
   try {
@@ -259,6 +267,94 @@ router.post('/', validateRequest(createRoundtableSchema), async (req: Request, r
   } catch (error) {
     console.error('Error creating roundtable:', error)
     res.status(500).json({ success: false, error: 'Internal server error' })
+  }
+})
+
+// Update roundtable (general fields)
+router.put('/:id', validateRequest(updateRoundtableSchema), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { name, description, maxParticipants, numberOfSessions, confirmDangerous } = req.body
+
+    // Check if roundtable exists
+    const roundtable = await prisma.roundtable.findUnique({
+      where: { id },
+      include: {
+        sessions: {
+          include: {
+            trainer: { select: { name: true, email: true } },
+            topic: { select: { title: true } },
+            questions: { select: { id: true, status: true } },
+            feedback: { select: { id: true, status: true } }
+          },
+          orderBy: { sessionNumber: 'asc' }
+        }
+      }
+    })
+
+    if (!roundtable) {
+      return res.status(404).json({ success: false, error: 'Roundtable not found' })
+    }
+
+    // If numberOfSessions is changing, perform safety checks
+    if (numberOfSessions !== undefined && numberOfSessions !== roundtable.numberOfSessions) {
+      const impactReport = await roundtableService.checkNumberOfSessionsImpact(id, numberOfSessions)
+
+      if (impactReport.blockers.length > 0) {
+        // Cannot proceed - there are blockers
+        return res.status(400).json({
+          success: false,
+          error: 'Cannot change number of sessions',
+          blockers: impactReport.blockers,
+          impact: impactReport
+        })
+      }
+
+      if (impactReport.warnings.length > 0 && !confirmDangerous) {
+        // Warnings exist but user hasn't confirmed
+        return res.status(409).json({
+          success: false,
+          error: 'Confirmation required for dangerous operation',
+          warnings: impactReport.warnings,
+          impact: impactReport,
+          requiresConfirmation: true
+        })
+      }
+    }
+
+    // Prepare update data
+    const updateData: any = {}
+    if (name !== undefined) updateData.name = name
+    if (description !== undefined) updateData.description = description
+    if (maxParticipants !== undefined) updateData.maxParticipants = maxParticipants
+    if (numberOfSessions !== undefined) updateData.numberOfSessions = numberOfSessions
+
+    // Update roundtable
+    const updatedRoundtable = await prisma.roundtable.update({
+      where: { id },
+      data: updateData,
+      include: {
+        client: true,
+        sessions: {
+          include: {
+            topic: true,
+            trainer: { select: { name: true, email: true } }
+          },
+          orderBy: { sessionNumber: 'asc' }
+        },
+        topics: true
+      }
+    })
+
+    // If numberOfSessions changed, adjust sessions
+    if (numberOfSessions !== undefined && numberOfSessions !== roundtable.numberOfSessions) {
+      await roundtableService.adjustSessionCount(id, numberOfSessions, roundtable.numberOfSessions)
+    }
+
+    res.json({ success: true, data: updatedRoundtable })
+  } catch (error: any) {
+    console.error('Error updating roundtable:', error)
+    res.status(500).json({ success: false, error: error.message || 'Internal server error' })
   }
 })
 
