@@ -51,14 +51,11 @@ export function CreateRoundtablePage() {
     numberOfSessions: 10
   })
 
-  const [topics, setTopics] = useState<Topic[]>([
-    { title: '', description: '' },
-    { title: '', description: '' },
-    { title: '', description: '' },
-    { title: '', description: '' },
-    { title: '', description: '' },
-    { title: '', description: '' }
-  ])
+  // Initialize topics based on default numberOfSessions (10 sessions = 8 topics)
+  const [topics, setTopics] = useState<Topic[]>(() => {
+    const defaultTopicCount = 10 - 2 // numberOfSessions - 2 (first and last are intro/conclusion)
+    return Array.from({ length: defaultTopicCount }, () => ({ title: '', description: '' }))
+  })
 
   const [sessions, setSessions] = useState<SessionData[]>([])
   const [sessionsConfigured, setSessionsConfigured] = useState(false)
@@ -67,6 +64,32 @@ export function CreateRoundtablePage() {
     fetchClients()
     fetchTrainers()
   }, [])
+
+  // Sync topics count with numberOfSessions
+  // Formula: topics = sessions - 2 (first session = intro, last session = conclusion)
+  useEffect(() => {
+    const requiredTopics = Math.max(6, formData.numberOfSessions - 2) // Minimum 6 topics
+    const currentTopics = topics.length
+
+    if (requiredTopics !== currentTopics) {
+      if (requiredTopics > currentTopics) {
+        // Add empty topics
+        const newTopics = [...topics]
+        for (let i = currentTopics; i < requiredTopics; i++) {
+          newTopics.push({ title: '', description: '' })
+        }
+        setTopics(newTopics)
+      } else if (requiredTopics < currentTopics) {
+        // Remove extra topics, but only if they're empty
+        const filledTopics = topics.filter(t => t.title.trim())
+        if (filledTopics.length <= requiredTopics) {
+          // Safe to truncate
+          setTopics(topics.slice(0, requiredTopics))
+        }
+        // If user has more filled topics than required, keep them (don't force delete user data)
+      }
+    }
+  }, [formData.numberOfSessions])
 
   const fetchClients = async () => {
     try {
@@ -147,7 +170,8 @@ export function CreateRoundtablePage() {
   }
 
   const removeTopic = (index: number) => {
-    if (topics.length > 6) {
+    const minTopics = Math.max(6, formData.numberOfSessions - 2)
+    if (topics.length > minTopics) {
       const newTopics = topics.filter((_, i) => i !== index)
       setTopics(newTopics)
     }
@@ -162,10 +186,15 @@ export function CreateRoundtablePage() {
       return
     }
 
-    // Validate topics
+    // Validate topics (should match numberOfSessions - 2, minimum 6)
+    const requiredTopics = Math.max(6, formData.numberOfSessions - 2)
     const validTopics = topics.filter(t => t.title.trim())
-    if (validTopics.length < 6) {
-      alert(`Please provide at least 6 topics (currently have ${validTopics.length} valid topics)`)
+    if (validTopics.length < requiredTopics) {
+      alert(
+        `For ${formData.numberOfSessions} sessions, you need ${requiredTopics} topics.\n` +
+        `(Session 1 is introduction, Session ${formData.numberOfSessions} is conclusion)\n` +
+        `Currently you have ${validTopics.length} valid topics.`
+      )
       return
     }
 
@@ -373,7 +402,8 @@ export function CreateRoundtablePage() {
                   placeholder="e.g., 10"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Total number of sessions for this roundtable (minimum 1, no maximum).
+                  Session 1 will be the introduction, Session {formData.numberOfSessions} will be the conclusion.
+                  You'll need {Math.max(6, formData.numberOfSessions - 2)} topics for the middle sessions.
                 </p>
               </div>
             </div>
@@ -396,10 +426,20 @@ export function CreateRoundtablePage() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-xl font-semibold text-gray-900">Discussion Topics</h2>
-              <span className="text-sm text-gray-600">{topics.length} topics</span>
+              <span className={`text-sm font-medium px-3 py-1 rounded-full ${
+                topics.filter(t => t.title.trim()).length >= Math.max(6, formData.numberOfSessions - 2)
+                  ? 'bg-green-100 text-green-800'
+                  : 'bg-amber-100 text-amber-800'
+              }`}>
+                {topics.filter(t => t.title.trim()).length} / {Math.max(6, formData.numberOfSessions - 2)} topics
+              </span>
             </div>
-            <p className="text-gray-600 mb-6">
-              Define topics that participants will vote on. Minimum 6 topics required.
+            <p className="text-gray-600 mb-2">
+              Define topics that participants will vote on. Based on {formData.numberOfSessions} sessions,
+              you need {Math.max(6, formData.numberOfSessions - 2)} topics (minimum 6).
+            </p>
+            <p className="text-sm text-gray-500 mb-6">
+              Sessions 2 to {formData.numberOfSessions - 1} will have topics. Session 1 (introduction) and Session {formData.numberOfSessions} (conclusion) won't have topics.
             </p>
 
             <div className="space-y-3">
