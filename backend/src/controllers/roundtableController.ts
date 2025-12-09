@@ -21,7 +21,7 @@ const createRoundtableSchema = Joi.object({
       title: Joi.string().required().min(2).max(100),
       description: Joi.string().optional().allow('').max(500)
     })
-  ).min(6).max(20).required(),
+  ).min(0).required(),
   sessions: Joi.array().items(
     Joi.object({
       sessionNumber: Joi.number().integer().min(1).required(),

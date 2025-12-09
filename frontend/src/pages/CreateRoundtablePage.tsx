@@ -66,9 +66,10 @@ export function CreateRoundtablePage() {
   }, [])
 
   // Sync topics count with numberOfSessions
-  // Formula: topics = sessions - 2 (first session = intro, last session = conclusion)
+  // Formula: topics = max(0, sessions - 2) (first session = intro, last session = conclusion)
+  // If sessions <= 2, no topics needed
   useEffect(() => {
-    const requiredTopics = Math.max(6, formData.numberOfSessions - 2) // Minimum 6 topics
+    const requiredTopics = Math.max(0, formData.numberOfSessions - 2)
     const currentTopics = topics.length
 
     if (requiredTopics !== currentTopics) {
@@ -170,8 +171,8 @@ export function CreateRoundtablePage() {
   }
 
   const removeTopic = (index: number) => {
-    const minTopics = Math.max(6, formData.numberOfSessions - 2)
-    if (topics.length > minTopics) {
+    const requiredTopics = Math.max(0, formData.numberOfSessions - 2)
+    if (topics.length > requiredTopics) {
       const newTopics = topics.filter((_, i) => i !== index)
       setTopics(newTopics)
     }
@@ -186,10 +187,11 @@ export function CreateRoundtablePage() {
       return
     }
 
-    // Validate topics (should match numberOfSessions - 2, minimum 6)
-    const requiredTopics = Math.max(6, formData.numberOfSessions - 2)
+    // Validate topics (should match numberOfSessions - 2)
+    const requiredTopics = Math.max(0, formData.numberOfSessions - 2)
     const validTopics = topics.filter(t => t.title.trim())
-    if (validTopics.length < requiredTopics) {
+
+    if (formData.numberOfSessions > 2 && validTopics.length < requiredTopics) {
       alert(
         `For ${formData.numberOfSessions} sessions, you need ${requiredTopics} topics.\n` +
         `(Session 1 is introduction, Session ${formData.numberOfSessions} is conclusion)\n` +
@@ -402,8 +404,11 @@ export function CreateRoundtablePage() {
                   placeholder="e.g., 10"
                 />
                 <p className="text-xs text-gray-500 mt-1">
-                  Session 1 will be the introduction, Session {formData.numberOfSessions} will be the conclusion.
-                  You'll need {Math.max(6, formData.numberOfSessions - 2)} topics for the middle sessions.
+                  {formData.numberOfSessions > 2 ? (
+                    <>Session 1 will be the introduction, Session {formData.numberOfSessions} will be the conclusion. You'll need {formData.numberOfSessions - 2} topics for the middle sessions.</>
+                  ) : (
+                    <>For {formData.numberOfSessions} session(s), no topics are needed (topics are for middle sessions only).</>
+                  )}
                 </p>
               </div>
             </div>
@@ -426,21 +431,31 @@ export function CreateRoundtablePage() {
           <div className="bg-white rounded-lg shadow p-6">
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-xl font-semibold text-gray-900">Discussion Topics</h2>
-              <span className={`text-sm font-medium px-3 py-1 rounded-full ${
-                topics.filter(t => t.title.trim()).length >= Math.max(6, formData.numberOfSessions - 2)
-                  ? 'bg-green-100 text-green-800'
-                  : 'bg-amber-100 text-amber-800'
-              }`}>
-                {topics.filter(t => t.title.trim()).length} / {Math.max(6, formData.numberOfSessions - 2)} topics
-              </span>
+              {formData.numberOfSessions > 2 && (
+                <span className={`text-sm font-medium px-3 py-1 rounded-full ${
+                  topics.filter(t => t.title.trim()).length >= Math.max(0, formData.numberOfSessions - 2)
+                    ? 'bg-green-100 text-green-800'
+                    : 'bg-amber-100 text-amber-800'
+                }`}>
+                  {topics.filter(t => t.title.trim()).length} / {Math.max(0, formData.numberOfSessions - 2)} topics
+                </span>
+              )}
             </div>
-            <p className="text-gray-600 mb-2">
-              Define topics that participants will vote on. Based on {formData.numberOfSessions} sessions,
-              you need {Math.max(6, formData.numberOfSessions - 2)} topics (minimum 6).
-            </p>
-            <p className="text-sm text-gray-500 mb-6">
-              Sessions 2 to {formData.numberOfSessions - 1} will have topics. Session 1 (introduction) and Session {formData.numberOfSessions} (conclusion) won't have topics.
-            </p>
+            {formData.numberOfSessions > 2 ? (
+              <>
+                <p className="text-gray-600 mb-2">
+                  Define topics that participants will vote on. Based on {formData.numberOfSessions} sessions,
+                  you need {formData.numberOfSessions - 2} topics.
+                </p>
+                <p className="text-sm text-gray-500 mb-6">
+                  Sessions 2 to {formData.numberOfSessions - 1} will have topics. Session 1 (introduction) and Session {formData.numberOfSessions} (conclusion) won't have topics.
+                </p>
+              </>
+            ) : (
+              <p className="text-gray-600 mb-6">
+                For {formData.numberOfSessions} session(s), topics are optional. You can add topics if needed.
+              </p>
+            )}
 
             <div className="space-y-3">
               {topics.map((topic, index) => (
