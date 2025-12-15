@@ -234,7 +234,13 @@ async function initializeDefaultUsers() {
         data: {
           name: 'JEAN',
           email: 'jean@trainer.com',
+          phone: '+39 333 123 4567',
           expertise: ['Leadership', 'Team Management', 'Communication', 'Innovation'],
+          languages: ['English', 'Italian'],
+          hourlyRate: 85,
+          availability: { mon: true, tue: true, wed: true, thu: true, fri: true },
+          notes: 'Senior trainer specializing in corporate leadership development',
+          rating: 4.8,
           isActive: true
         }
       })

@@ -626,7 +626,12 @@ router.post('/', async (req: Request, res: Response) => {
     const {
       name,
       email,
+      phone,
       expertise,
+      languages,
+      hourlyRate,
+      availability,
+      notes,
       isActive = true
     } = req.body
 
@@ -653,7 +658,12 @@ router.post('/', async (req: Request, res: Response) => {
       data: {
         name,
         email,
+        phone: phone || null,
         expertise: expertise || [],
+        languages: languages || [],
+        hourlyRate: hourlyRate ? parseFloat(hourlyRate) : null,
+        availability: availability || null,
+        notes: notes || null,
         isActive
       }
     })
@@ -690,7 +700,13 @@ router.put('/:id', async (req: Request, res: Response) => {
     const updateData: any = {}
     if (req.body.name !== undefined) updateData.name = req.body.name
     if (req.body.email !== undefined) updateData.email = req.body.email
+    if (req.body.phone !== undefined) updateData.phone = req.body.phone
     if (req.body.expertise !== undefined) updateData.expertise = req.body.expertise
+    if (req.body.languages !== undefined) updateData.languages = req.body.languages
+    if (req.body.hourlyRate !== undefined) updateData.hourlyRate = parseFloat(req.body.hourlyRate) || null
+    if (req.body.availability !== undefined) updateData.availability = req.body.availability
+    if (req.body.notes !== undefined) updateData.notes = req.body.notes
+    if (req.body.rating !== undefined) updateData.rating = parseFloat(req.body.rating) || 0
     if (req.body.isActive !== undefined) updateData.isActive = req.body.isActive
     if (req.body.status !== undefined) updateData.isActive = req.body.status === 'ACTIVE'
 
