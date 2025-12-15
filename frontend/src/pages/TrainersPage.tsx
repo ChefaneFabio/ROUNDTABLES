@@ -104,18 +104,24 @@ export function TrainersPage() {
           name: t.name,
           email: t.email,
           phone: t.phone,
-          specialties: t.specialties || [],
-          status: t.status,
+          specialties: t.expertise || [],  // Backend uses 'expertise', frontend uses 'specialties'
+          status: t.isActive ? 'ACTIVE' : 'INACTIVE',  // Map isActive to status
           rating: t.rating || 0,
           totalSessions: t.sessionsCount || 0,
-          completedSessions: t.sessionsCount || 0, // TODO: Track separately
-          upcomingSessions: 0, // TODO: Fetch from sessions
-          languages: t.languages || ['English', 'Italian'],
+          completedSessions: t.sessionsCount || 0,
+          upcomingSessions: 0,
+          languages: t.languages || [],
           hourlyRate: t.hourlyRate,
-          notes: t.bio || '',
-          createdAt: t.joinedDate || new Date().toISOString(),
-          lastActiveAt: t.lastActive,
-          availability: t.availability || {
+          notes: t.notes || '',  // Backend uses 'notes'
+          createdAt: t.createdAt || new Date().toISOString(),
+          lastActiveAt: t.updatedAt,
+          availability: t.availability ? {
+            monday: t.availability.mon ?? true,
+            tuesday: t.availability.tue ?? true,
+            wednesday: t.availability.wed ?? true,
+            thursday: t.availability.thu ?? true,
+            friday: t.availability.fri ?? true
+          } : {
             monday: true,
             tuesday: true,
             wednesday: true,
@@ -144,14 +150,22 @@ export function TrainersPage() {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
       // Prepare trainer data for backend
+      // Map frontend field names to backend field names
       const trainerData = {
         name: newTrainer.name,
         email: newTrainer.email,
         phone: newTrainer.phone,
-        specialties: newTrainer.specialties,
-        bio: newTrainer.notes,
+        expertise: newTrainer.specialties,  // Backend uses 'expertise' not 'specialties'
+        notes: newTrainer.notes,
         hourlyRate: newTrainer.hourlyRate ? parseFloat(newTrainer.hourlyRate) : undefined,
-        availability: newTrainer.availability,
+        // Backend expects short day names: mon, tue, wed, thu, fri
+        availability: {
+          mon: newTrainer.availability.monday,
+          tue: newTrainer.availability.tuesday,
+          wed: newTrainer.availability.wednesday,
+          thu: newTrainer.availability.thursday,
+          fri: newTrainer.availability.friday
+        },
         languages: newTrainer.languages
       }
 
@@ -200,12 +214,15 @@ export function TrainersPage() {
     try {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
 
+      // Backend uses isActive boolean, not status string
+      const isActive = newStatus === 'ACTIVE'
+
       const response = await fetch(`${apiUrl}/trainers/${trainerId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ status: newStatus })
+        body: JSON.stringify({ isActive })
       })
 
       const data = await response.json()
