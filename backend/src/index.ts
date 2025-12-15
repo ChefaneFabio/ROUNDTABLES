@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import dotenv from 'dotenv'
+import bcrypt from 'bcryptjs'
 import { PrismaClient } from '@prisma/client'
 
 // Import routes
@@ -182,9 +183,74 @@ process.on('SIGINT', async () => {
   process.exit(0)
 })
 
-app.listen(PORT, () => {
+// Initialize default users on startup
+async function initializeDefaultUsers() {
+  try {
+    // Create default admin user if not exists
+    const adminExists = await prisma.user.findUnique({
+      where: { email: 'admin@makaitalia.com' }
+    })
+
+    if (!adminExists) {
+      const hashedAdminPassword = await bcrypt.hash('Admin123!', 10)
+      await prisma.user.create({
+        data: {
+          email: 'admin@makaitalia.com',
+          password: hashedAdminPassword,
+          name: 'Admin',
+          role: 'ADMIN',
+          isActive: true
+        }
+      })
+      console.log('✅ Default admin user created: admin@makaitalia.com')
+    }
+
+    // Create default trainer user if not exists
+    const trainerUserExists = await prisma.user.findUnique({
+      where: { email: 'jean@trainer.com' }
+    })
+
+    if (!trainerUserExists) {
+      const hashedTrainerPassword = await bcrypt.hash('Trainer123!', 10)
+      await prisma.user.create({
+        data: {
+          email: 'jean@trainer.com',
+          password: hashedTrainerPassword,
+          name: 'JEAN',
+          role: 'TRAINER',
+          isActive: true
+        }
+      })
+      console.log('✅ Default trainer user created: jean@trainer.com')
+    }
+
+    // Create trainer profile if not exists
+    const trainerProfileExists = await prisma.trainer.findUnique({
+      where: { email: 'jean@trainer.com' }
+    })
+
+    if (!trainerProfileExists) {
+      await prisma.trainer.create({
+        data: {
+          name: 'JEAN',
+          email: 'jean@trainer.com',
+          expertise: ['Leadership', 'Team Management', 'Communication', 'Innovation'],
+          isActive: true
+        }
+      })
+      console.log('✅ Default trainer profile created: JEAN')
+    }
+  } catch (error) {
+    console.error('Error initializing default users:', error)
+  }
+}
+
+app.listen(PORT, async () => {
   console.log(`🚀 Roundtable API running on port ${PORT}`)
   console.log(`📊 Health check: http://localhost:${PORT}/health`)
+
+  // Initialize default users
+  await initializeDefaultUsers()
 })
 
 export { prisma }
