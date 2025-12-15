@@ -73,84 +73,40 @@ export function FeedbackPage() {
   const fetchFeedbacks = async () => {
     try {
       setLoading(true)
-      // Simulate API call - in real implementation this would fetch from backend
-      const mockFeedbacks: Feedback[] = [
-        {
-          id: '1',
-          content: 'You effectively connected diversity and inclusion concepts, emphasizing how inclusive workplaces boost employee satisfaction and engagement, particularly in technical fields and concerning gender equality. You rightly identified the salary gap as a significant barrier and stressed the need for dedicated training. Your points on promoting the value of D&I, implementing regular assessments and feedback, and creating safe spaces for expression were well-highlighted and insightful.',
-          status: 'PENDING',
-          submittedAt: '2024-01-20T10:30:00Z',
-          session: {
-            id: '1',
-            sessionNumber: 3,
-            scheduledAt: '2024-01-19T14:00:00Z',
-            topic: { title: 'Diversity & Inclusion' },
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+      const response = await fetch(`${apiUrl}/feedback?limit=100`)
+      const data = await response.json()
+
+      if (data.success && data.data) {
+        // Map backend data to frontend structure
+        const mappedFeedbacks: Feedback[] = data.data.map((f: any) => ({
+          id: f.id,
+          content: f.content,
+          status: f.status,
+          reviewNotes: f.reviewNotes,
+          submittedAt: f.createdAt,
+          reviewedAt: f.updatedAt !== f.createdAt ? f.updatedAt : undefined,
+          sentAt: f.sentAt,
+          session: f.session ? {
+            id: f.session.id,
+            sessionNumber: f.session.sessionNumber,
+            scheduledAt: f.session.scheduledAt,
+            topic: f.session.topic,
             roundtable: {
-              name: 'Leadership Training Q1',
-              client: { company: 'Fastweb' }
+              name: f.session.roundtable?.name || '',
+              client: { company: f.session.roundtable?.client?.company || '' }
             },
-            trainer: { name: 'Marco Rossi', email: 'marco.rossi@trainer.com' }
-          },
-          participant: {
-            id: '1',
-            name: 'Stefania Bianchi',
-            email: 'stefania.bianchi@fastweb.it'
-          }
-        },
-        {
-          id: '2',
-          content: 'Great participation in the negotiation discussion. You demonstrated solid understanding of the key principles. I encourage you to broaden your functional vocabulary and enhance your pronunciation.',
-          status: 'REVIEWED',
-          originalContent: 'Good job in negotiation session. Need to improve vocabulary.',
-          editedContent: 'Great participation in the negotiation discussion. You demonstrated solid understanding of the key principles. I encourage you to broaden your functional vocabulary and enhance your pronunciation.',
-          reviewNotes: 'Expanded the feedback to be more specific and encouraging',
-          submittedAt: '2024-01-18T16:45:00Z',
-          reviewedAt: '2024-01-19T09:15:00Z',
-          session: {
-            id: '2',
-            sessionNumber: 4,
-            scheduledAt: '2024-01-18T15:00:00Z',
-            topic: { title: 'The Art of Negotiation' },
-            roundtable: {
-              name: 'Communication Skills',
-              client: { company: 'UniCredit' }
-            },
-            trainer: { name: 'Anna Verdi', email: 'anna.verdi@trainer.com' }
-          },
-          participant: {
-            id: '2',
-            name: 'Giovanni Rossi',
-            email: 'giovanni.rossi@unicredit.it'
-          }
-        },
-        {
-          id: '3',
-          content: 'Excellent contributions to the leadership discussion. Your insights on team motivation were particularly valuable. Continue to expand your leadership vocabulary and practice expressing complex ideas clearly.',
-          status: 'SENT',
-          submittedAt: '2024-01-17T11:20:00Z',
-          reviewedAt: '2024-01-17T14:30:00Z',
-          sentAt: '2024-01-17T15:00:00Z',
-          session: {
-            id: '3',
-            sessionNumber: 2,
-            scheduledAt: '2024-01-17T10:00:00Z',
-            topic: { title: 'Effective Leadership' },
-            roundtable: {
-              name: 'Management Development',
-              client: { company: 'Intesa Sanpaolo' }
-            },
-            trainer: { name: 'Luca Neri', email: 'luca.neri@trainer.com' }
-          },
-          participant: {
-            id: '3',
-            name: 'Maria Ferrari',
-            email: 'maria.ferrari@intesasanpaolo.com'
-          }
-        }
-      ]
-      setFeedbacks(mockFeedbacks)
+            trainer: f.trainer
+          } : null,
+          participant: f.participant
+        }))
+        setFeedbacks(mappedFeedbacks)
+      } else {
+        setFeedbacks([])
+      }
     } catch (error) {
       console.error('Error fetching feedbacks:', error)
+      setFeedbacks([])
     } finally {
       setLoading(false)
     }
@@ -308,23 +264,6 @@ export function FeedbackPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">Maka Roundtables</h1>
-              <div className="ml-10 flex items-baseline space-x-4">
-                <a href="/dashboard" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                <a href="/roundtables" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Roundtables</a>
-                <a href="/clients" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Clients</a>
-                <a href="/sessions" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Sessions</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8 flex justify-between items-center">

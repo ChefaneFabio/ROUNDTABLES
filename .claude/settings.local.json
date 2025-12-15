@@ -31,7 +31,12 @@
       "Bash(git config:*)",
       "Bash(curl -s -X POST \"https://roundtables.onrender.com/api/auth/login\" )",
       "Bash(npm install:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "WebSearch",
+      "WebFetch(domain:www.makaitalia.com)",
+      "WebFetch(domain:roundtables-frontend-final.vercel.app)",
+      "Bash(find:*)",
+      "Bash(psql:*)"
     ],
     "deny": [],
     "ask": []

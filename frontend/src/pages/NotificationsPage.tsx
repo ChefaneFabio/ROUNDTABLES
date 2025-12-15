@@ -41,87 +41,18 @@ export function NotificationsPage() {
   const fetchNotifications = async () => {
     try {
       setLoading(true)
-      // Simulate API call
-      const mockNotifications: Notification[] = [
-        {
-          id: '1',
-          type: 'WARNING',
-          title: 'Trainer Questions Overdue',
-          message: 'Marco Rossi has not submitted questions for tomorrow\'s session on "The Art of Negotiation"',
-          category: 'SESSION',
-          isRead: false,
-          createdAt: '2024-01-21T08:30:00Z',
-          actionUrl: '/sessions/1',
-          actionText: 'View Session'
-        },
-        {
-          id: '2',
-          type: 'SUCCESS',
-          title: 'Feedback Approved',
-          message: '5 feedback items have been reviewed and sent to participants',
-          category: 'FEEDBACK',
-          isRead: false,
-          createdAt: '2024-01-21T07:15:00Z',
-          actionUrl: '/feedback',
-          actionText: 'View Feedback'
-        },
-        {
-          id: '3',
-          type: 'INFO',
-          title: 'New Participant Added',
-          message: 'Anna Bianchi has been added to Leadership Training Q1',
-          category: 'PARTICIPANT',
-          isRead: true,
-          createdAt: '2024-01-20T16:45:00Z',
-          actionUrl: '/participants',
-          actionText: 'View Participants'
-        },
-        {
-          id: '4',
-          type: 'WARNING',
-          title: 'Low Attendance Alert',
-          message: 'Session #3 has only 3 confirmed attendees out of 6 participants',
-          category: 'SESSION',
-          isRead: false,
-          createdAt: '2024-01-20T14:20:00Z',
-          actionUrl: '/sessions/3',
-          actionText: 'Check Attendance'
-        },
-        {
-          id: '5',
-          type: 'SUCCESS',
-          title: 'Email Campaign Delivered',
-          message: 'Question email successfully sent to 6 participants for tomorrow\'s session',
-          category: 'EMAIL',
-          isRead: true,
-          createdAt: '2024-01-20T12:00:00Z'
-        },
-        {
-          id: '6',
-          type: 'ERROR',
-          title: 'Email Delivery Failed',
-          message: 'Failed to send reminder email to giuseppe.verde@fastweb.it',
-          category: 'EMAIL',
-          isRead: false,
-          createdAt: '2024-01-20T10:30:00Z',
-          actionUrl: '/email-templates',
-          actionText: 'Check Templates'
-        },
-        {
-          id: '7',
-          type: 'INFO',
-          title: 'Voting Period Ended',
-          message: 'Topic voting for Innovation Workshop has concluded with 100% participation',
-          category: 'PARTICIPANT',
-          isRead: true,
-          createdAt: '2024-01-19T23:59:00Z',
-          actionUrl: '/roundtables/3/voting',
-          actionText: 'View Results'
-        }
-      ]
-      setNotifications(mockNotifications)
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+      const response = await fetch(`${apiUrl}/notifications`)
+      const data = await response.json()
+
+      if (data.success && data.data) {
+        setNotifications(data.data)
+      } else {
+        setNotifications([])
+      }
     } catch (error) {
       console.error('Error fetching notifications:', error)
+      setNotifications([])
     } finally {
       setLoading(false)
     }
@@ -214,23 +145,6 @@ export function NotificationsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">Maka Roundtables</h1>
-              <div className="ml-10 flex items-baseline space-x-4">
-                <a href="/dashboard" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                <a href="/roundtables" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Roundtables</a>
-                <a href="/participants" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Participants</a>
-                <a href="/sessions" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Sessions</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8 flex justify-between items-center">

@@ -61,43 +61,52 @@ export function ReportsPage() {
   const fetchReportData = async () => {
     try {
       setLoading(true)
-      // Simulate API call - in real implementation this would fetch from backend
-      const mockData: ReportData = {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+      const response = await fetch(`${apiUrl}/dashboard/stats`)
+      const stats = await response.json()
+
+      // Build report data from dashboard stats
+      const totalSessions = (stats.completedSessions || 0) + (stats.upcomingSessions || 0)
+      const completionRate = totalSessions > 0
+        ? Math.round((stats.completedSessions / totalSessions) * 100)
+        : 0
+
+      const reportData: ReportData = {
         overview: {
-          totalRoundtables: 12,
-          activeRoundtables: 5,
-          completedRoundtables: 7,
-          totalParticipants: 72,
-          totalSessions: 120,
-          completedSessions: 84,
-          averageRating: 4.7,
-          completionRate: 87
+          totalRoundtables: stats.totalRoundtables || 0,
+          activeRoundtables: stats.activeRoundtables || 0,
+          completedRoundtables: (stats.totalRoundtables || 0) - (stats.activeRoundtables || 0),
+          totalParticipants: stats.totalParticipants || 0,
+          totalSessions: totalSessions,
+          completedSessions: stats.completedSessions || 0,
+          averageRating: 0,
+          completionRate: completionRate
         },
-        monthlyStats: [
-          { month: 'Oct 2023', roundtables: 2, participants: 12, sessions: 20, completion: 95 },
-          { month: 'Nov 2023', roundtables: 3, participants: 18, sessions: 30, completion: 89 },
-          { month: 'Dec 2023', roundtables: 2, participants: 12, sessions: 20, completion: 92 },
-          { month: 'Jan 2024', roundtables: 5, participants: 30, sessions: 50, completion: 82 }
-        ],
-        topClients: [
-          { name: 'Marco Bianchi', company: 'Fastweb', roundtables: 3, participants: 18, value: 25000 },
-          { name: 'Anna Rossi', company: 'UniCredit', roundtables: 2, participants: 12, value: 18000 },
-          { name: 'Giuseppe Verde', company: 'Intesa Sanpaolo', roundtables: 2, participants: 12, value: 16000 }
-        ],
-        trainerPerformance: [
-          { name: 'Marco Rossi', sessions: 28, rating: 4.8, feedback: 25 },
-          { name: 'Anna Verdi', sessions: 22, rating: 4.9, feedback: 20 },
-          { name: 'Luca Neri', sessions: 18, rating: 4.6, feedback: 16 }
-        ],
-        participantEngagement: [
-          { level: 'High (90-100%)', count: 45, percentage: 62 },
-          { level: 'Medium (70-89%)', count: 20, percentage: 28 },
-          { level: 'Low (<70%)', count: 7, percentage: 10 }
-        ]
+        monthlyStats: [],
+        topClients: [],
+        trainerPerformance: [],
+        participantEngagement: []
       }
-      setReportData(mockData)
+      setReportData(reportData)
     } catch (error) {
       console.error('Error fetching report data:', error)
+      // Set empty data on error
+      setReportData({
+        overview: {
+          totalRoundtables: 0,
+          activeRoundtables: 0,
+          completedRoundtables: 0,
+          totalParticipants: 0,
+          totalSessions: 0,
+          completedSessions: 0,
+          averageRating: 0,
+          completionRate: 0
+        },
+        monthlyStats: [],
+        topClients: [],
+        trainerPerformance: [],
+        participantEngagement: []
+      })
     } finally {
       setLoading(false)
     }
@@ -119,23 +128,6 @@ export function ReportsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">Maka Roundtables</h1>
-              <div className="ml-10 flex items-baseline space-x-4">
-                <a href="/dashboard" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                <a href="/roundtables" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Roundtables</a>
-                <a href="/participants" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Participants</a>
-                <a href="/sessions" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Sessions</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8 flex justify-between items-center">

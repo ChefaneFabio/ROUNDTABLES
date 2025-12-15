@@ -1,5 +1,6 @@
 import { PrismaClient, ParticipantStatus, RoundtableStatus } from '@prisma/client'
 import { addDays, addWeeks } from 'date-fns'
+import * as bcrypt from 'bcryptjs'
 
 const prisma = new PrismaClient()
 
@@ -19,8 +20,24 @@ async function main() {
   await prisma.client.deleteMany()
   await prisma.trainer.deleteMany()
 
+  // Create Trainer User for login
+  console.log('👤 Creating trainer user for login...')
+  const hashedPassword = await bcrypt.hash('Trainer123!', 10)
+  await prisma.user.upsert({
+    where: { email: 'jean@trainer.com' },
+    update: { password: hashedPassword, role: 'TRAINER' },
+    create: {
+      email: 'jean@trainer.com',
+      password: hashedPassword,
+      name: 'JEAN',
+      role: 'TRAINER',
+      isActive: true
+    }
+  })
+  console.log('✅ Trainer user created: jean@trainer.com / Trainer123!')
+
   // Create Trainer (JEAN)
-  console.log('👤 Creating trainer...')
+  console.log('👤 Creating trainer profile...')
   const trainer = await prisma.trainer.create({
     data: {
       name: 'JEAN',
@@ -29,7 +46,7 @@ async function main() {
       isActive: true
     }
   })
-  console.log(`✅ Trainer created: ${trainer.name} (${trainer.email})`)
+  console.log(`✅ Trainer profile created: ${trainer.name} (${trainer.email})`)
 
   // Create Client
   console.log('🏢 Creating client...')

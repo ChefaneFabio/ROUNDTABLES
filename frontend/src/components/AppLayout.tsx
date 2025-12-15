@@ -22,6 +22,7 @@ export function AppLayout({ children }: AppLayoutProps) {
     { name: 'Clients', path: '/clients' },
     { name: 'Participants', path: '/participants' },
     { name: 'Sessions', path: '/sessions' },
+    { name: 'Trainers', path: '/trainers' },
     { name: 'Questions', path: '/questions' },
     { name: 'Feedback', path: '/feedback' }
   ]

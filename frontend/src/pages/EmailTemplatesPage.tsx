@@ -143,48 +143,31 @@ export function EmailTemplatesPage() {
   const fetchTemplates = async () => {
     try {
       setLoading(true)
-      // Simulate API call - in real implementation this would fetch from backend
-      const mockTemplates: EmailTemplate[] = [
-        {
-          id: '1',
-          name: 'Weekly Trainer Reminder',
-          subject: 'REMINDER: {{roundtable_name}} Session {{session_number}} - {{session_date}}',
-          type: 'TRAINER_REMINDER',
-          content: defaultTemplates.TRAINER_REMINDER.content,
-          variables: defaultTemplates.TRAINER_REMINDER.variables,
-          isActive: true,
-          usageCount: 45,
-          createdAt: '2024-01-15',
-          lastUsed: '2024-01-20'
-        },
-        {
-          id: '2',
-          name: 'Questions to Participants',
-          subject: '{{roundtable_name}} | ROUNDTABLE {{session_date}} – QUESTIONS TO TOPIC "{{topic_title}}"',
-          type: 'QUESTION_EMAIL',
-          content: defaultTemplates.QUESTION_EMAIL.content,
-          variables: defaultTemplates.QUESTION_EMAIL.variables,
-          isActive: true,
-          usageCount: 32,
-          createdAt: '2024-01-15',
-          lastUsed: '2024-01-19'
-        },
-        {
-          id: '3',
-          name: 'Individual Feedback',
-          subject: 'Your Roundtable Feedback - {{topic_title}}',
-          type: 'FEEDBACK_EMAIL',
-          content: defaultTemplates.FEEDBACK_EMAIL.content,
-          variables: defaultTemplates.FEEDBACK_EMAIL.variables,
-          isActive: true,
-          usageCount: 28,
-          createdAt: '2024-01-15',
-          lastUsed: '2024-01-18'
-        }
-      ]
-      setTemplates(mockTemplates)
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+      const response = await fetch(`${apiUrl}/email-templates`)
+      const data = await response.json()
+
+      if (data.success && data.data) {
+        // Map backend data to frontend structure
+        const mappedTemplates: EmailTemplate[] = data.data.map((t: any) => ({
+          id: t.id,
+          name: t.name,
+          subject: t.subject,
+          type: t.type,
+          content: t.content,
+          variables: t.variables || [],
+          isActive: t.isActive,
+          usageCount: t.useCount || 0,
+          createdAt: t.createdAt,
+          lastUsed: t.lastUsed
+        }))
+        setTemplates(mappedTemplates)
+      } else {
+        setTemplates([])
+      }
     } catch (error) {
       console.error('Error fetching templates:', error)
+      setTemplates([])
     } finally {
       setLoading(false)
     }
@@ -347,23 +330,6 @@ export function EmailTemplatesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">Maka Roundtables</h1>
-              <div className="ml-10 flex items-baseline space-x-4">
-                <a href="/dashboard" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                <a href="/roundtables" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Roundtables</a>
-                <a href="/clients" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Clients</a>
-                <a href="/sessions" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Sessions</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8 flex justify-between items-center">

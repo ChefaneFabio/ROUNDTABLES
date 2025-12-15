@@ -286,12 +286,25 @@ export function LoginPage() {
 
           {/* Help Text */}
           <div className="mt-6 text-center">
-            <p className="text-sm text-maka-gray-600">
-              Default admin credentials:
-            </p>
-            <p className="text-xs text-maka-gray-500 mt-1">
-              admin@makaitalia.com / Admin123!
-            </p>
+            {selectedRole === 'COORDINATOR' ? (
+              <>
+                <p className="text-sm text-maka-gray-600">
+                  Coordinator credentials:
+                </p>
+                <p className="text-xs text-maka-gray-500 mt-1">
+                  admin@makaitalia.com / Admin123!
+                </p>
+              </>
+            ) : selectedRole === 'TRAINER' ? (
+              <>
+                <p className="text-sm text-maka-gray-600">
+                  Trainer credentials:
+                </p>
+                <p className="text-xs text-maka-gray-500 mt-1">
+                  jean@trainer.com / Trainer123!
+                </p>
+              </>
+            ) : null}
           </div>
         </div>
 

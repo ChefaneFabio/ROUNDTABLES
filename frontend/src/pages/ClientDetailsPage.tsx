@@ -83,95 +83,48 @@ export function ClientDetailsPage() {
   const fetchClientDetails = async () => {
     try {
       setLoading(true)
-      // Simulate API call - in real implementation this would fetch from backend
-      const mockClient: ClientDetails = {
-        id: id!,
-        name: 'Marco Bianchi',
-        email: 'marco.bianchi@fastweb.it',
-        company: 'Fastweb',
-        phone: '+39 02 4545 4545',
-        description: 'Leading telecommunications company in Italy focused on employee development and leadership training.',
-        createdAt: '2023-09-15T10:00:00Z',
-        roundtables: [
-          {
-            id: '1',
-            name: 'Leadership Training Q1',
-            status: 'IN_PROGRESS',
-            participantCount: 6,
-            maxParticipants: 6,
-            startDate: '2024-01-15T00:00:00Z',
-            endDate: '2024-03-15T00:00:00Z',
-            progress: 65,
-            completedSessions: 6,
-            totalSessions: 10
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+      const response = await fetch(`${apiUrl}/clients/${id}`)
+      const data = await response.json()
+
+      if (data.success && data.data) {
+        const clientData = data.data
+        // Map backend data to frontend structure
+        const mappedClient: ClientDetails = {
+          id: clientData.id,
+          name: clientData.name,
+          email: clientData.email,
+          company: clientData.company,
+          phone: clientData.phone,
+          description: clientData.description,
+          createdAt: clientData.createdAt,
+          roundtables: (clientData.roundtables || []).map((rt: any) => ({
+            id: rt.id,
+            name: rt.name,
+            status: rt.status,
+            participantCount: rt.participants?.length || 0,
+            maxParticipants: rt.maxParticipants || 6,
+            startDate: rt.startDate,
+            endDate: rt.endDate,
+            progress: rt.sessions?.length > 0
+              ? Math.round((rt.sessions.filter((s: any) => s.status === 'COMPLETED').length / rt.sessions.length) * 100)
+              : 0,
+            completedSessions: rt.sessions?.filter((s: any) => s.status === 'COMPLETED').length || 0,
+            totalSessions: rt.numberOfSessions || rt.sessions?.length || 0
+          })),
+          stats: {
+            totalRoundtables: clientData.roundtables?.length || 0,
+            activeRoundtables: clientData.roundtables?.filter((rt: any) => rt.status === 'IN_PROGRESS').length || 0,
+            completedRoundtables: clientData.roundtables?.filter((rt: any) => rt.status === 'COMPLETED').length || 0,
+            totalParticipants: clientData.roundtables?.reduce((sum: number, rt: any) => sum + (rt.participants?.length || 0), 0) || 0,
+            totalSessions: clientData.roundtables?.reduce((sum: number, rt: any) => sum + (rt.numberOfSessions || 0), 0) || 0,
+            completedSessions: clientData.roundtables?.reduce((sum: number, rt: any) =>
+              sum + (rt.sessions?.filter((s: any) => s.status === 'COMPLETED').length || 0), 0) || 0
           },
-          {
-            id: '2',
-            name: 'Communication Skills',
-            status: 'COMPLETED',
-            participantCount: 5,
-            maxParticipants: 6,
-            startDate: '2023-10-01T00:00:00Z',
-            endDate: '2023-12-15T00:00:00Z',
-            progress: 100,
-            completedSessions: 10,
-            totalSessions: 10
-          },
-          {
-            id: '3',
-            name: 'Innovation Workshop',
-            status: 'SCHEDULED',
-            participantCount: 4,
-            maxParticipants: 6,
-            startDate: '2024-02-01T00:00:00Z',
-            progress: 0,
-            completedSessions: 0,
-            totalSessions: 10
-          }
-        ],
-        stats: {
-          totalRoundtables: 3,
-          activeRoundtables: 2,
-          completedRoundtables: 1,
-          totalParticipants: 15,
-          totalSessions: 30,
-          completedSessions: 16
-        },
-        contractInfo: {
-          contractNumber: 'CNT-2023-FST-001',
-          startDate: '2023-09-01',
-          endDate: '2024-08-31',
-          value: 45000,
-          currency: 'EUR'
-        },
-        communicationHistory: [
-          {
-            id: '1',
-            type: 'EMAIL',
-            subject: 'Q1 Leadership Training Update',
-            content: 'Discussed progress and upcoming sessions with HR team.',
-            date: '2024-01-18T14:30:00Z',
-            author: 'Jean Kamotondo'
-          },
-          {
-            id: '2',
-            type: 'MEETING',
-            subject: 'Innovation Workshop Planning',
-            content: 'Met with HR to plan topics and participant selection for upcoming Innovation Workshop.',
-            date: '2024-01-15T10:00:00Z',
-            author: 'Alessia Cardile'
-          },
-          {
-            id: '3',
-            type: 'EMAIL',
-            subject: 'Communication Skills Completion',
-            content: 'Sent final feedback reports and completion certificates.',
-            date: '2023-12-20T16:45:00Z',
-            author: 'Jean Kamotondo'
-          }
-        ]
+          communicationHistory: []
+        }
+        setClient(mappedClient)
       }
-      setClient(mockClient)
     } catch (error) {
       console.error('Error fetching client details:', error)
     } finally {
@@ -270,23 +223,6 @@ export function ClientDetailsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">Maka Roundtables</h1>
-              <div className="ml-10 flex items-baseline space-x-4">
-                <a href="/dashboard" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                <a href="/roundtables" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Roundtables</a>
-                <a href="/clients" className="text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Clients</a>
-                <a href="/sessions" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Sessions</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">

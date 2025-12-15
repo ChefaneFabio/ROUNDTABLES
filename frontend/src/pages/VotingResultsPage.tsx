@@ -49,116 +49,44 @@ export function VotingResultsPage() {
   const fetchVotingResults = async () => {
     try {
       setLoading(true)
-      // Simulate API call
-      const mockData: VotingData = {
-        roundtableId: roundtableId!,
-        roundtableName: 'Leadership Training Q1',
-        clientCompany: 'Fastweb',
-        votingStarted: '2024-01-15T10:00:00Z',
-        votingEnded: '2024-01-20T23:59:00Z',
-        totalParticipants: 6,
-        participantsVoted: 6,
-        results: [
-          {
-            topicId: '1',
-            title: 'The Art of Negotiation',
-            description: 'Understanding negotiation strategies and building trust',
-            votes: 6,
-            percentage: 100,
-            isSelected: true,
-            voters: [
-              { name: 'Anna Bianchi', email: 'anna.bianchi@fastweb.it', votedAt: '2024-01-16T09:30:00Z' },
-              { name: 'Giuseppe Verde', email: 'giuseppe.verde@fastweb.it', votedAt: '2024-01-16T10:15:00Z' }
-            ]
-          },
-          {
-            topicId: '2',
-            title: 'Effective Leadership',
-            description: 'Building and motivating high-performing teams',
-            votes: 5,
-            percentage: 83,
-            isSelected: true,
-            voters: [
-              { name: 'Maria Rossi', email: 'maria.rossi@fastweb.it', votedAt: '2024-01-16T11:00:00Z' }
-            ]
-          },
-          {
-            topicId: '3',
-            title: 'Communication Skills',
-            description: 'Mastering verbal and non-verbal communication',
-            votes: 5,
-            percentage: 83,
-            isSelected: true,
-            voters: []
-          },
-          {
-            topicId: '4',
-            title: 'Time Management',
-            description: 'Optimizing productivity and work-life balance',
-            votes: 4,
-            percentage: 67,
-            isSelected: true,
-            voters: []
-          },
-          {
-            topicId: '5',
-            title: 'Conflict Resolution',
-            description: 'Managing and resolving workplace conflicts',
-            votes: 4,
-            percentage: 67,
-            isSelected: true,
-            voters: []
-          },
-          {
-            topicId: '6',
-            title: 'Decision Making',
-            description: 'Strategic thinking and problem-solving techniques',
-            votes: 4,
-            percentage: 67,
-            isSelected: true,
-            voters: []
-          },
-          {
-            topicId: '7',
-            title: 'Team Building',
-            description: 'Creating cohesive and collaborative teams',
-            votes: 3,
-            percentage: 50,
-            isSelected: true,
-            voters: []
-          },
-          {
-            topicId: '8',
-            title: 'Innovation & Creativity',
-            description: 'Fostering innovation in the workplace',
-            votes: 3,
-            percentage: 50,
-            isSelected: true,
-            voters: []
-          },
-          {
-            topicId: '9',
-            title: 'Diversity & Inclusion',
-            description: 'Building inclusive work environments',
-            votes: 2,
-            percentage: 33,
-            isSelected: false,
-            voters: []
-          },
-          {
-            topicId: '10',
-            title: 'Change Management',
-            description: 'Leading organizations through transformation',
-            votes: 1,
-            percentage: 17,
-            isSelected: false,
-            voters: []
-          }
-        ]
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+      const response = await fetch(`${apiUrl}/topics/results/${roundtableId}`)
+      const data = await response.json()
+
+      if (data.success && data.data) {
+        const results = data.data
+        // Map backend data to frontend structure
+        const votingData: VotingData = {
+          roundtableId: roundtableId!,
+          roundtableName: results.roundtable?.name || 'Roundtable',
+          clientCompany: results.roundtable?.client?.company || '',
+          votingStarted: results.votingStartDate || '',
+          votingEnded: results.votingEndDate || '',
+          totalParticipants: results.totalParticipants || 0,
+          participantsVoted: results.participantsVoted || 0,
+          results: (results.topics || []).map((topic: any, index: number) => ({
+            topicId: topic.id,
+            title: topic.title,
+            description: topic.description || '',
+            votes: topic.voteCount || 0,
+            percentage: results.totalParticipants > 0
+              ? Math.round((topic.voteCount / results.totalParticipants) * 100)
+              : 0,
+            isSelected: topic.isSelected || index < (results.roundtable?.numberOfSessions || 8),
+            voters: (topic.votes || []).map((v: any) => ({
+              name: v.participant?.name || 'Anonymous',
+              email: v.participant?.email || '',
+              votedAt: v.createdAt
+            }))
+          }))
+        }
+        setVotingData(votingData)
+      } else {
+        setVotingData(null)
       }
-      setVotingData(mockData)
     } catch (error) {
       console.error('Error fetching voting results:', error)
+      setVotingData(null)
     } finally {
       setLoading(false)
     }
@@ -193,23 +121,6 @@ export function VotingResultsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Navigation */}
-      <nav className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <h1 className="text-xl font-bold text-gray-900">Maka Roundtables</h1>
-              <div className="ml-10 flex items-baseline space-x-4">
-                <a href="/dashboard" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                <a href="/roundtables" className="text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Roundtables</a>
-                <a href="/participants" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Participants</a>
-                <a href="/sessions" className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Sessions</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">

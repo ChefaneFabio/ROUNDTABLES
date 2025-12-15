@@ -535,93 +535,41 @@ router.post('/me/sessions/:sessionId/feedback', async (req: Request, res: Respon
 
 // ==================== ADMIN ENDPOINTS (For coordinators) ====================
 
-// Mock data for development
-const mockTrainers: Trainer[] = [
-  {
-    id: '1',
-    name: 'Marco Rossi',
-    email: 'marco.rossi@makaroundtables.com',
-    specialties: ['Leadership', 'Team Management', 'Communication'],
-    status: 'ACTIVE',
-    rating: 4.8,
-    sessionsCount: 24,
-    availability: {
-      monday: true,
-      tuesday: true,
-      wednesday: true,
-      thursday: true,
-      friday: true,
-      saturday: false,
-      sunday: false
-    },
-    joinedDate: '2023-06-15',
-    lastActive: '2024-01-21T10:30:00Z',
-    bio: 'Experienced leadership coach with 10+ years in corporate training',
-    phone: '+39 345 678 9012',
-    hourlyRate: 85
-  },
-  {
-    id: '2',
-    name: 'Laura Bianchi',
-    email: 'laura.bianchi@makaroundtables.com',
-    specialties: ['Negotiation', 'Sales', 'Conflict Resolution'],
-    status: 'ACTIVE',
-    rating: 4.9,
-    sessionsCount: 18,
-    availability: {
-      monday: true,
-      tuesday: true,
-      wednesday: false,
-      thursday: true,
-      friday: true,
-      saturday: true,
-      sunday: false
-    },
-    joinedDate: '2023-08-20',
-    lastActive: '2024-01-20T15:45:00Z',
-    bio: 'Expert negotiator and sales trainer',
-    phone: '+39 346 789 0123',
-    hourlyRate: 90
-  }
-]
-
-// GET /api/trainers - Get all trainers
-router.get('/', (req: Request, res: Response) => {
+// GET /api/trainers - Get all trainers from database
+router.get('/', async (req: Request, res: Response) => {
   try {
-    const { status, specialty, availability } = req.query
+    const { status, isActive } = req.query
 
-    let filteredTrainers = [...mockTrainers]
+    const where: any = {}
 
-    // Filter by status
-    if (status && status !== 'all') {
-      filteredTrainers = filteredTrainers.filter(trainer => 
-        trainer.status === status
-      )
+    if (isActive !== undefined) {
+      where.isActive = isActive === 'true'
     }
 
-    // Filter by specialty
-    if (specialty && specialty !== 'all') {
-      filteredTrainers = filteredTrainers.filter(trainer =>
-        trainer.specialties.some(s => 
-          s.toLowerCase().includes((specialty as string).toLowerCase())
-        )
-      )
-    }
+    const trainers = await prisma.trainer.findMany({
+      where,
+      include: {
+        sessions: {
+          select: { id: true }
+        }
+      },
+      orderBy: { name: 'asc' }
+    })
 
-    // Filter by availability
-    if (availability && availability !== 'all') {
-      const day = availability as keyof Trainer['availability']
-      filteredTrainers = filteredTrainers.filter(trainer =>
-        trainer.availability[day]
-      )
-    }
+    // Map to expected format
+    const mappedTrainers = trainers.map(t => ({
+      ...t,
+      status: t.isActive ? 'ACTIVE' : 'INACTIVE',
+      sessionsCount: t.sessions.length
+    }))
 
     res.json({
       success: true,
-      data: filteredTrainers,
-      total: filteredTrainers.length
+      data: mappedTrainers,
+      total: mappedTrainers.length
     })
   } catch (error) {
+    console.error('Error fetching trainers:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to fetch trainers',
@@ -630,11 +578,22 @@ router.get('/', (req: Request, res: Response) => {
   }
 })
 
-// GET /api/trainers/:id - Get trainer by ID
-router.get('/:id', (req: Request, res: Response) => {
+// GET /api/trainers/:id - Get trainer by ID from database
+router.get('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const trainer = mockTrainers.find(t => t.id === id)
+
+    const trainer = await prisma.trainer.findUnique({
+      where: { id },
+      include: {
+        sessions: {
+          include: {
+            roundtable: { include: { client: true } },
+            topic: true
+          }
+        }
+      }
+    })
 
     if (!trainer) {
       return res.status(404).json({
@@ -645,9 +604,14 @@ router.get('/:id', (req: Request, res: Response) => {
 
     res.json({
       success: true,
-      data: trainer
+      data: {
+        ...trainer,
+        status: trainer.isActive ? 'ACTIVE' : 'INACTIVE',
+        sessionsCount: trainer.sessions.length
+      }
     })
   } catch (error) {
+    console.error('Error fetching trainer:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to fetch trainer',
@@ -656,59 +620,51 @@ router.get('/:id', (req: Request, res: Response) => {
   }
 })
 
-// POST /api/trainers - Create new trainer
-router.post('/', (req: Request, res: Response) => {
+// POST /api/trainers - Create new trainer in database
+router.post('/', async (req: Request, res: Response) => {
   try {
     const {
       name,
       email,
-      specialties,
-      bio,
-      phone,
-      hourlyRate,
-      availability
+      expertise,
+      isActive = true
     } = req.body
 
-    // Validation
-    if (!name || !email || !specialties || !Array.isArray(specialties)) {
+    if (!name || !email) {
       return res.status(400).json({
         success: false,
-        message: 'Name, email, and specialties are required'
+        message: 'Name and email are required'
       })
     }
 
-    const newTrainer: Trainer = {
-      id: (mockTrainers.length + 1).toString(),
-      name,
-      email,
-      specialties,
-      status: 'ACTIVE',
-      rating: 0,
-      sessionsCount: 0,
-      availability: availability || {
-        monday: true,
-        tuesday: true,
-        wednesday: true,
-        thursday: true,
-        friday: true,
-        saturday: false,
-        sunday: false
-      },
-      joinedDate: new Date().toISOString().split('T')[0],
-      lastActive: new Date().toISOString(),
-      bio,
-      phone,
-      hourlyRate
+    // Check if trainer with this email already exists
+    const existing = await prisma.trainer.findUnique({
+      where: { email }
+    })
+
+    if (existing) {
+      return res.status(400).json({
+        success: false,
+        message: 'A trainer with this email already exists'
+      })
     }
 
-    mockTrainers.push(newTrainer)
+    const trainer = await prisma.trainer.create({
+      data: {
+        name,
+        email,
+        expertise: expertise || [],
+        isActive
+      }
+    })
 
     res.status(201).json({
       success: true,
-      data: newTrainer,
+      data: trainer,
       message: 'Trainer created successfully'
     })
   } catch (error) {
+    console.error('Error creating trainer:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to create trainer',
@@ -717,33 +673,39 @@ router.post('/', (req: Request, res: Response) => {
   }
 })
 
-// PUT /api/trainers/:id - Update trainer
-router.put('/:id', (req: Request, res: Response) => {
+// PUT /api/trainers/:id - Update trainer in database
+router.put('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const trainerIndex = mockTrainers.findIndex(t => t.id === id)
 
-    if (trainerIndex === -1) {
+    const existing = await prisma.trainer.findUnique({ where: { id } })
+
+    if (!existing) {
       return res.status(404).json({
         success: false,
         message: 'Trainer not found'
       })
     }
 
-    const updatedTrainer = {
-      ...mockTrainers[trainerIndex],
-      ...req.body,
-      id // Ensure ID doesn't change
-    }
+    const updateData: any = {}
+    if (req.body.name !== undefined) updateData.name = req.body.name
+    if (req.body.email !== undefined) updateData.email = req.body.email
+    if (req.body.expertise !== undefined) updateData.expertise = req.body.expertise
+    if (req.body.isActive !== undefined) updateData.isActive = req.body.isActive
+    if (req.body.status !== undefined) updateData.isActive = req.body.status === 'ACTIVE'
 
-    mockTrainers[trainerIndex] = updatedTrainer
+    const trainer = await prisma.trainer.update({
+      where: { id },
+      data: updateData
+    })
 
     res.json({
       success: true,
-      data: updatedTrainer,
+      data: trainer,
       message: 'Trainer updated successfully'
     })
   } catch (error) {
+    console.error('Error updating trainer:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to update trainer',
@@ -752,27 +714,39 @@ router.put('/:id', (req: Request, res: Response) => {
   }
 })
 
-// DELETE /api/trainers/:id - Delete trainer
-router.delete('/:id', (req: Request, res: Response) => {
+// DELETE /api/trainers/:id - Delete trainer from database
+router.delete('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const trainerIndex = mockTrainers.findIndex(t => t.id === id)
 
-    if (trainerIndex === -1) {
+    const existing = await prisma.trainer.findUnique({
+      where: { id },
+      include: { sessions: true }
+    })
+
+    if (!existing) {
       return res.status(404).json({
         success: false,
         message: 'Trainer not found'
       })
     }
 
-    const deletedTrainer = mockTrainers.splice(trainerIndex, 1)[0]
+    // Check if trainer has any sessions
+    if (existing.sessions.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot delete trainer with assigned sessions. Deactivate instead.'
+      })
+    }
+
+    await prisma.trainer.delete({ where: { id } })
 
     res.json({
       success: true,
-      data: deletedTrainer,
       message: 'Trainer deleted successfully'
     })
   } catch (error) {
+    console.error('Error deleting trainer:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to delete trainer',
@@ -781,28 +755,29 @@ router.delete('/:id', (req: Request, res: Response) => {
   }
 })
 
-// GET /api/trainers/stats/overview - Get trainer statistics
-router.get('/stats/overview', (req: Request, res: Response) => {
+// GET /api/trainers/stats/overview - Get trainer statistics from database
+router.get('/stats/overview', async (req: Request, res: Response) => {
   try {
-    const stats = {
-      total: mockTrainers.length,
-      active: mockTrainers.filter(t => t.status === 'ACTIVE').length,
-      inactive: mockTrainers.filter(t => t.status === 'INACTIVE').length,
-      unavailable: mockTrainers.filter(t => t.status === 'UNAVAILABLE').length,
-      averageRating: mockTrainers.reduce((sum, t) => sum + t.rating, 0) / mockTrainers.length,
-      totalSessions: mockTrainers.reduce((sum, t) => sum + t.sessionsCount, 0),
-      specialties: [...new Set(mockTrainers.flatMap(t => t.specialties))],
-      averageHourlyRate: mockTrainers
-        .filter(t => t.hourlyRate)
-        .reduce((sum, t) => sum + (t.hourlyRate || 0), 0) / 
-        mockTrainers.filter(t => t.hourlyRate).length
-    }
+    const [total, active, inactive] = await Promise.all([
+      prisma.trainer.count(),
+      prisma.trainer.count({ where: { isActive: true } }),
+      prisma.trainer.count({ where: { isActive: false } })
+    ])
+
+    const sessionsCount = await prisma.session.count()
 
     res.json({
       success: true,
-      data: stats
+      data: {
+        total,
+        active,
+        inactive,
+        unavailable: 0,
+        totalSessions: sessionsCount
+      }
     })
   } catch (error) {
+    console.error('Error fetching trainer stats:', error)
     res.status(500).json({
       success: false,
       message: 'Failed to fetch trainer statistics',
