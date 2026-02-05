@@ -3,7 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { School, Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { Button } from '../components/common/Button'
 import { Alert } from '../components/common/Alert'
@@ -50,10 +50,10 @@ export function LoginPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <School className="h-12 w-12 text-primary-600" />
+          <img src="/logo.svg" alt="Maka Language Centre" className="h-16 w-16" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-          Sign in to ROUNDTABLES
+          Sign in to MAKA LANGUAGE CENTRE
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           Or{' '}

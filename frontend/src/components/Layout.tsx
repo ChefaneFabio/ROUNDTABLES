@@ -14,7 +14,6 @@ import {
   Settings,
   LogOut,
   ChevronDown,
-  School,
   User,
   CreditCard,
   FileText,
@@ -83,9 +82,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white">
           <div className="flex h-16 items-center justify-between px-4 border-b">
             <Link to="/" className="flex items-center">
-              <School className="h-8 w-8 text-primary-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">
-                ROUNDTABLES
+              <img src="/logo.svg" alt="Maka Language Centre" className="h-8 w-8" />
+              <span className="ml-2 text-lg font-bold text-gray-900">
+                MAKA LANGUAGE CENTRE
               </span>
             </Link>
             <button
@@ -124,9 +123,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col flex-grow border-r border-gray-200 bg-white">
           <div className="flex h-16 items-center px-4 border-b">
             <Link to="/" className="flex items-center">
-              <School className="h-8 w-8 text-primary-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">
-                ROUNDTABLES
+              <img src="/logo.svg" alt="Maka Language Centre" className="h-8 w-8" />
+              <span className="ml-2 text-lg font-bold text-gray-900">
+                MAKA LANGUAGE CENTRE
               </span>
             </Link>
           </div>
