@@ -1,394 +1,265 @@
 import { Link } from 'react-router-dom'
-import { GraduationCap, Users, Building2, ArrowRight, Globe, Award, Clock, Sparkles, Languages, Target, Play, CheckCircle2 } from 'lucide-react'
+import { GraduationCap, Users, Building2, ArrowRight, Award, Clock, Languages, CheckCircle, Shield, BarChart3, Headphones } from 'lucide-react'
 
 const portals = [
   {
-    title: 'Corporate',
-    description: 'Language training solutions for your organization. Manage employee enrollments, track progress, and view reports.',
+    title: 'Corporate Clients',
+    description: 'Manage your organization\'s language training programs. Access employee progress reports, enrollment management, and training analytics.',
     icon: Building2,
-    gradient: 'from-corporate-500 to-corporate-700',
-    bgLight: 'bg-blue-50',
-    textColor: 'text-corporate-600',
+    gradient: 'from-slate-700 to-slate-900',
     href: '/login?portal=corporate',
-    features: ['Employee Enrollment', 'Progress Tracking', 'Training Reports', 'Flexible Scheduling'],
+    features: ['Employee enrollment management', 'Progress tracking & reports', 'Customized training programs', 'Dedicated account support'],
   },
   {
-    title: 'Teacher',
-    description: 'Access your teaching schedule, manage lessons, provide student feedback, and track attendance.',
+    title: 'Teachers',
+    description: 'Access your teaching dashboard. Manage lessons, track attendance, provide feedback, and access course materials.',
     icon: GraduationCap,
-    gradient: 'from-teacher-500 to-teacher-700',
-    bgLight: 'bg-emerald-50',
-    textColor: 'text-teacher-600',
+    gradient: 'from-primary-600 to-primary-800',
     href: '/login?portal=teacher',
-    features: ['Lesson Management', 'Student Feedback', 'Attendance Tracking', 'Course Materials'],
+    features: ['Lesson scheduling', 'Student progress tracking', 'Feedback & assessment tools', 'Course material access'],
   },
   {
-    title: 'Student',
-    description: 'View your enrolled courses, attend lessons, track your progress, and receive personalized feedback.',
+    title: 'Students',
+    description: 'Access your personalized learning dashboard. View enrolled courses, attend lessons, and track your language learning progress.',
     icon: Users,
-    gradient: 'from-student-500 to-student-700',
-    bgLight: 'bg-violet-50',
-    textColor: 'text-student-600',
+    gradient: 'from-accent-600 to-accent-700',
     href: '/login?portal=student',
-    features: ['Course Access', 'Progress Tracking', 'Lesson Schedule', 'Feedback & Scores'],
+    features: ['Course enrollment', 'Progress monitoring', 'Lesson schedules', 'Teacher feedback access'],
   },
 ]
 
-const features = [
+const services = [
   {
     icon: Languages,
-    title: 'Multiple Languages',
-    description: 'Learn English, Italian, French, German, Spanish and more with native-speaking teachers.',
-    image: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?w=400&h=300&fit=crop',
+    title: 'Multi-Language Programs',
+    description: 'Comprehensive courses in English, Italian, French, German, Spanish, Portuguese, Chinese, Japanese, and more.',
   },
   {
-    icon: Award,
-    title: 'Expert Teachers',
-    description: 'Qualified instructors with years of experience in language education.',
-    image: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=400&h=300&fit=crop',
+    icon: Building2,
+    title: 'Corporate Training',
+    description: 'Tailored language programs designed to meet your organization\'s specific business communication needs.',
   },
   {
-    icon: Clock,
-    title: 'Flexible Scheduling',
-    description: 'Individual and group lessons tailored to your schedule and learning pace.',
-    image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&h=300&fit=crop',
+    icon: Users,
+    title: 'Individual Instruction',
+    description: 'Personalized one-on-one and small group lessons adapted to your learning objectives and schedule.',
+  },
+  {
+    icon: BarChart3,
+    title: 'Progress Analytics',
+    description: 'Comprehensive tracking and reporting tools to measure learning outcomes and ROI on training investment.',
   },
 ]
 
 const stats = [
-  { value: '15+', label: 'Languages' },
-  { value: '50+', label: 'Expert Teachers' },
-  { value: '1000+', label: 'Happy Students' },
-  { value: '98%', label: 'Success Rate' },
-]
-
-const languages = [
-  { name: 'English', flag: '🇬🇧' },
-  { name: 'Italian', flag: '🇮🇹' },
-  { name: 'French', flag: '🇫🇷' },
-  { name: 'German', flag: '🇩🇪' },
-  { name: 'Spanish', flag: '🇪🇸' },
-  { name: 'Portuguese', flag: '🇵🇹' },
-  { name: 'Chinese', flag: '🇨🇳' },
-  { name: 'Japanese', flag: '🇯🇵' },
+  { value: '15+', label: 'Languages Offered' },
+  { value: '50+', label: 'Qualified Instructors' },
+  { value: '1,000+', label: 'Students Trained' },
+  { value: '98%', label: 'Client Satisfaction' },
 ]
 
 const benefits = [
-  'Personalized learning paths',
-  'Native-speaking instructors',
-  'Flexible online & in-person classes',
-  'Progress tracking & certificates',
-  'Corporate training programs',
-  'Small group & 1-on-1 sessions',
+  { icon: Award, title: 'Certified Instructors', description: 'All teachers hold recognized language teaching certifications' },
+  { icon: Clock, title: 'Flexible Scheduling', description: 'Online and in-person options to fit your availability' },
+  { icon: Shield, title: 'Quality Assured', description: 'Structured curriculum with measurable learning outcomes' },
+  { icon: Headphones, title: 'Dedicated Support', description: 'Personal account management for corporate clients' },
 ]
 
 export function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white/95 backdrop-blur-sm fixed top-0 left-0 right-0 z-50 border-b border-primary-100">
+      <header className="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
-              <img src="/logo.svg" alt="Maka Language Centre" className="h-12 w-auto" />
+              <img src="/logo.svg" alt="Maka Language Centre" className="h-10 w-auto" />
             </div>
+            <nav className="hidden md:flex items-center gap-8">
+              <a href="#services" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Services</a>
+              <a href="#portals" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Access Portal</a>
+              <a href="#about" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">About</a>
+            </nav>
             <div className="flex items-center gap-4">
               <Link
                 to="/login"
-                className="text-primary-700 hover:text-primary-900 font-medium transition-colors"
+                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
               >
                 Sign In
               </Link>
               <Link
                 to="/register"
-                className="bg-gradient-to-r from-accent-500 to-accent-600 text-primary-900 px-6 py-2.5 rounded-full font-semibold hover:from-accent-400 hover:to-accent-500 transition-all shadow-lg shadow-accent-500/30"
+                className="bg-primary-600 text-white px-5 py-2.5 rounded-lg font-medium hover:bg-primary-700 transition-colors"
               >
-                Enroll Now
+                Register
               </Link>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Hero Section with Video Background */}
-      <section className="relative pt-24 pb-20 overflow-hidden min-h-[90vh] flex items-center">
-        {/* Video Background */}
-        <div className="absolute inset-0 z-0">
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="w-full h-full object-cover"
-            poster="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1920&h=1080&fit=crop"
-          >
-            <source
-              src="https://cdn.coverr.co/videos/coverr-students-in-a-classroom-1584/1080p.mp4"
-              type="video/mp4"
-            />
-          </video>
-          <div className="absolute inset-0 bg-gradient-to-br from-primary-900/90 via-primary-800/85 to-primary-900/90"></div>
-        </div>
-
-        {/* Decorative elements */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-accent-500/20 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 right-10 w-96 h-96 bg-accent-400/10 rounded-full blur-3xl"></div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-8">
+      {/* Hero Section */}
+      <section className="pt-24 bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <div className="inline-flex items-center gap-2 bg-accent-500/20 backdrop-blur-sm px-4 py-2 rounded-full mb-8">
-                <Sparkles className="h-4 w-4 text-accent-400" />
-                <span className="text-accent-300 text-sm font-medium">Professional Language Training</span>
-              </div>
-              <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-                Master Any Language<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-400 to-accent-300">
-                  With Confidence
-                </span>
-              </h1>
-              <p className="text-xl text-primary-100 mb-8 leading-relaxed">
-                Expert teachers, personalized learning paths, and flexible schedules for individuals and organizations.
+              <p className="text-primary-600 font-semibold mb-4 tracking-wide uppercase text-sm">
+                Language Management System
               </p>
-
-              {/* Benefits list */}
-              <div className="grid grid-cols-2 gap-3 mb-8">
-                {benefits.slice(0, 4).map((benefit) => (
-                  <div key={benefit} className="flex items-center gap-2 text-primary-100">
-                    <CheckCircle2 className="h-5 w-5 text-accent-400 flex-shrink-0" />
-                    <span className="text-sm">{benefit}</span>
-                  </div>
-                ))}
-              </div>
-
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                Professional Language Training for Business & Individuals
+              </h1>
+              <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                Maka Language Centre provides comprehensive language education solutions. Our integrated platform serves corporate clients, individual learners, and educators with structured programs and measurable outcomes.
+              </p>
               <div className="flex gap-4 flex-wrap">
                 <Link
                   to="/register"
-                  className="group bg-gradient-to-r from-accent-500 to-accent-400 text-primary-900 px-8 py-4 rounded-full font-bold text-lg hover:from-accent-400 hover:to-accent-300 transition-all shadow-xl shadow-accent-500/30 flex items-center gap-2"
+                  className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors flex items-center gap-2"
                 >
-                  Start Learning Today
-                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                  Get Started
+                  <ArrowRight className="h-5 w-5" />
                 </Link>
-                <a
-                  href="#video-section"
-                  className="group flex items-center gap-3 text-white font-semibold hover:text-accent-300 transition-colors"
+                <Link
+                  to="/register?type=corporate"
+                  className="border-2 border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:border-gray-400 hover:bg-gray-50 transition-colors"
                 >
-                  <span className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center group-hover:bg-accent-500/30 transition-colors">
-                    <Play className="h-6 w-6 ml-1" />
-                  </span>
-                  Watch Video
-                </a>
+                  Corporate Enquiries
+                </Link>
               </div>
             </div>
 
-            {/* Hero Image */}
-            <div className="hidden lg:block relative">
-              <div className="relative">
-                <img
-                  src="https://images.unsplash.com/photo-1577896851231-70ef18881754?w=600&h=700&fit=crop"
-                  alt="Students learning languages"
-                  className="rounded-3xl shadow-2xl"
-                />
-                {/* Floating card */}
-                <div className="absolute -bottom-6 -left-6 bg-white rounded-2xl p-4 shadow-xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-accent-400 to-accent-500 rounded-full flex items-center justify-center">
-                      <Languages className="h-6 w-6 text-primary-900" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold text-primary-900">15+</p>
-                      <p className="text-sm text-primary-600">Languages</p>
-                    </div>
+            {/* Stats Card */}
+            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8">
+              <h3 className="text-lg font-semibold text-gray-900 mb-6">Trusted by Organizations Worldwide</h3>
+              <div className="grid grid-cols-2 gap-6">
+                {stats.map((stat) => (
+                  <div key={stat.label} className="text-center p-4 bg-gray-50 rounded-xl">
+                    <div className="text-3xl font-bold text-primary-600 mb-1">{stat.value}</div>
+                    <div className="text-sm text-gray-600">{stat.label}</div>
                   </div>
-                </div>
-                {/* Another floating card */}
-                <div className="absolute -top-4 -right-4 bg-white rounded-2xl p-4 shadow-xl">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-teacher-500 to-teacher-600 rounded-full flex items-center justify-center">
-                      <GraduationCap className="h-6 w-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-2xl font-bold text-primary-900">50+</p>
-                      <p className="text-sm text-primary-600">Teachers</p>
-                    </div>
-                  </div>
-                </div>
+                ))}
+              </div>
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <p className="text-sm text-gray-500 text-center">
+                  A language management system by <span className="font-medium text-gray-700">Maka Language Consulting</span>
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Languages We Teach */}
-      <section className="py-12 bg-primary-50 border-y border-primary-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-12">
-            <span className="text-primary-600 font-medium">Languages we teach:</span>
-            {languages.map((lang) => (
-              <div key={lang.name} className="flex items-center gap-2 text-primary-700 hover:text-primary-900 transition-colors">
-                <span className="text-2xl">{lang.flag}</span>
-                <span className="font-medium">{lang.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Video Section */}
-      <section id="video-section" className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-primary-900 mb-6">
-              See How We <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-600">Transform Learning</span>
-            </h2>
-            <p className="text-primary-600 max-w-2xl mx-auto text-lg">
-              Discover our innovative approach to language education
-            </p>
-          </div>
-
-          <div className="relative max-w-4xl mx-auto">
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-primary-200">
-              <img
-                src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=675&fit=crop"
-                alt="Language learning classroom"
-                className="w-full"
-              />
-              <div className="absolute inset-0 bg-primary-900/40 flex items-center justify-center">
-                <button
-                  onClick={() => window.open('https://makalanguageconsulting.com', '_blank')}
-                  className="group w-24 h-24 rounded-full bg-accent-500 flex items-center justify-center hover:bg-accent-400 transition-all hover:scale-110 shadow-2xl cursor-pointer"
-                  aria-label="Learn more about Maka Language Centre"
-                >
-                  <Play className="h-10 w-10 text-primary-900 ml-1" />
-                </button>
-              </div>
-            </div>
-
-            {/* Decorative images */}
-            <div className="hidden md:block absolute -left-16 top-1/2 -translate-y-1/2">
-              <img
-                src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=200&h=200&fit=crop"
-                alt="Student studying"
-                className="w-32 h-32 rounded-2xl shadow-xl object-cover"
-              />
-            </div>
-            <div className="hidden md:block absolute -right-16 top-1/4">
-              <img
-                src="https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=200&h=200&fit=crop"
-                alt="Online learning"
-                className="w-28 h-28 rounded-2xl shadow-xl object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section with Images */}
-      <section className="py-24 bg-gradient-to-b from-primary-50 to-white">
+      {/* Services Section */}
+      <section id="services" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-primary-100 px-4 py-2 rounded-full mb-4">
-              <Target className="h-4 w-4 text-primary-600" />
-              <span className="text-primary-700 text-sm font-medium">Why Choose Us</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-primary-900 mb-6">
-              Your Success Is Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-600">Mission</span>
+            <p className="text-primary-600 font-semibold mb-2 tracking-wide uppercase text-sm">Our Services</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Comprehensive Language Solutions
             </h2>
-            <p className="text-primary-600 max-w-2xl mx-auto text-lg">
-              We combine expert instruction with modern technology to deliver exceptional language learning experiences.
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              From individual instruction to enterprise-wide training programs, we deliver measurable language learning outcomes.
             </p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((feature) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {services.map((service) => (
               <div
-                key={feature.title}
-                className="group bg-white rounded-3xl overflow-hidden shadow-lg shadow-primary-100 hover:shadow-xl hover:shadow-primary-200 transition-all duration-300 border border-primary-100 hover:border-accent-300"
+                key={service.title}
+                className="bg-white p-6 rounded-xl border border-gray-200 hover:border-primary-300 hover:shadow-lg transition-all duration-300"
               >
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={feature.image}
-                    alt={feature.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-primary-900/60 to-transparent"></div>
-                  <div className="absolute bottom-4 left-4 w-14 h-14 bg-gradient-to-br from-accent-400 to-accent-500 rounded-2xl flex items-center justify-center shadow-lg">
-                    <feature.icon className="h-7 w-7 text-primary-900" />
-                  </div>
+                <div className="w-12 h-12 bg-primary-50 rounded-lg flex items-center justify-center mb-4">
+                  <service.icon className="h-6 w-6 text-primary-600" />
                 </div>
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold text-primary-900 mb-3">{feature.title}</h3>
-                  <p className="text-primary-600 leading-relaxed">{feature.description}</p>
-                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{service.title}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{service.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Stats Section with Background Image */}
-      <section className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <img
-            src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1920&h=600&fit=crop"
-            alt="Students studying together"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-primary-900/85"></div>
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-5xl md:text-6xl font-bold text-accent-400 mb-2">{stat.value}</div>
-                <div className="text-primary-200 text-sm uppercase tracking-wider">{stat.label}</div>
+      {/* Benefits Section */}
+      <section className="py-20 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-primary-600 font-semibold mb-2 tracking-wide uppercase text-sm">Why Choose Us</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                Quality-Driven Language Education
+              </h2>
+              <p className="text-gray-600 text-lg mb-8">
+                Maka Language Centre combines experienced educators, proven methodologies, and modern technology to deliver effective language training that meets professional standards.
+              </p>
+              <div className="space-y-4">
+                {benefits.map((benefit) => (
+                  <div key={benefit.title} className="flex gap-4">
+                    <div className="w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <benefit.icon className="h-5 w-5 text-primary-600" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-gray-900">{benefit.title}</h4>
+                      <p className="text-gray-600 text-sm">{benefit.description}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+              <img
+                src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&h=400&fit=crop"
+                alt="Professional language training"
+                className="w-full h-64 object-cover"
+              />
+              <div className="p-6">
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">Professional Training Environment</h3>
+                <p className="text-gray-600">
+                  Our qualified instructors deliver structured lessons designed to achieve measurable language proficiency improvements.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Portals Section */}
-      <section id="portals" className="py-24 bg-white">
+      <section id="portals" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 bg-accent-100 px-4 py-2 rounded-full mb-4">
-              <Globe className="h-4 w-4 text-accent-600" />
-              <span className="text-accent-700 text-sm font-medium">Get Started</span>
-            </div>
-            <h2 className="text-4xl md:text-5xl font-bold text-primary-900 mb-6">
-              Access Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-500 to-primary-600">Portal</span>
+            <p className="text-primary-600 font-semibold mb-2 tracking-wide uppercase text-sm">Platform Access</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              Access Your Portal
             </h2>
-            <p className="text-primary-600 max-w-2xl mx-auto text-lg">
-              Choose your portal to access your personalized dashboard and start your journey.
+            <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+              Sign in to your dedicated dashboard based on your role within the Maka Language Centre system.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {portals.map((portal) => (
               <div
                 key={portal.title}
-                className="group bg-white rounded-3xl shadow-lg shadow-primary-100 overflow-hidden hover:shadow-2xl hover:shadow-primary-200 transition-all duration-500 border border-primary-100 hover:-translate-y-2"
+                className="bg-white rounded-xl border border-gray-200 overflow-hidden hover:shadow-xl transition-all duration-300"
               >
-                <div className={`bg-gradient-to-br ${portal.gradient} p-8 text-white relative overflow-hidden`}>
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-                  <portal.icon className="h-14 w-14 mb-4 relative z-10" />
-                  <h3 className="text-3xl font-bold relative z-10">{portal.title}</h3>
+                <div className={`bg-gradient-to-r ${portal.gradient} p-6 text-white`}>
+                  <portal.icon className="h-10 w-10 mb-3" />
+                  <h3 className="text-xl font-bold">{portal.title}</h3>
                 </div>
-                <div className="p-8">
-                  <p className="text-primary-600 mb-6 leading-relaxed">{portal.description}</p>
-                  <ul className="space-y-3 mb-8">
+                <div className="p-6">
+                  <p className="text-gray-600 mb-6 text-sm leading-relaxed">{portal.description}</p>
+                  <ul className="space-y-2 mb-6">
                     {portal.features.map((feature) => (
-                      <li key={feature} className="flex items-center text-sm text-primary-700">
-                        <CheckCircle2 className={`h-5 w-5 ${portal.textColor} mr-3`} />
+                      <li key={feature} className="flex items-start gap-2 text-sm text-gray-700">
+                        <CheckCircle className="h-4 w-4 text-primary-600 mt-0.5 flex-shrink-0" />
                         {feature}
                       </li>
                     ))}
                   </ul>
                   <Link
                     to={portal.href}
-                    className={`flex items-center justify-center w-full bg-gradient-to-r ${portal.gradient} text-white py-4 rounded-xl font-semibold transition-all group-hover:shadow-lg`}
+                    className={`flex items-center justify-center w-full bg-gradient-to-r ${portal.gradient} text-white py-3 rounded-lg font-medium transition-all hover:opacity-90`}
                   >
                     Access Portal
-                    <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
                 </div>
               </div>
@@ -397,131 +268,100 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Testimonial/Gallery Section */}
-      <section className="py-24 bg-primary-50">
+      {/* About Section */}
+      <section id="about" className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold text-primary-900 mb-6">
-              Learning in <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-accent-600">Action</span>
+          <div className="max-w-3xl mx-auto text-center">
+            <p className="text-primary-600 font-semibold mb-2 tracking-wide uppercase text-sm">About the Platform</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+              Built for Professional Language Education
             </h2>
-            <p className="text-primary-600 max-w-2xl mx-auto text-lg">
-              Real moments from our language learning community
+            <p className="text-gray-600 text-lg mb-8 leading-relaxed">
+              Maka Language Centre is a comprehensive language management system developed by Maka Language Consulting.
+              The platform integrates course management, student tracking, scheduling, and progress analytics into a
+              unified solution serving corporate clients, individual learners, and language educators.
             </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="col-span-2 row-span-2">
-              <img
-                src="https://images.unsplash.com/photo-1529390079861-591de354faf5?w=600&h=600&fit=crop"
-                alt="Group language class"
-                className="w-full h-full object-cover rounded-3xl shadow-lg"
-              />
-            </div>
-            <div>
-              <img
-                src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=300&h=300&fit=crop"
-                alt="One-on-one lesson"
-                className="w-full h-full object-cover rounded-2xl shadow-lg"
-              />
-            </div>
-            <div>
-              <img
-                src="https://images.unsplash.com/photo-1573497491208-6b1acb260507?w=300&h=300&fit=crop"
-                alt="Online learning session"
-                className="w-full h-full object-cover rounded-2xl shadow-lg"
-              />
-            </div>
-            <div>
-              <img
-                src="https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?w=300&h=300&fit=crop"
-                alt="Students celebrating"
-                className="w-full h-full object-cover rounded-2xl shadow-lg"
-              />
-            </div>
-            <div>
-              <img
-                src="https://images.unsplash.com/photo-1509062522246-3755977927d7?w=300&h=300&fit=crop"
-                alt="Interactive classroom"
-                className="w-full h-full object-cover rounded-2xl shadow-lg"
-              />
+            <div className="flex justify-center gap-4 flex-wrap">
+              <Link
+                to="/register"
+                className="bg-primary-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors"
+              >
+                Register Now
+              </Link>
+              <Link
+                to="/register?type=corporate"
+                className="border-2 border-primary-600 text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors"
+              >
+                Corporate Enquiries
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-700 via-primary-800 to-primary-900"></div>
-        <div className="absolute top-0 left-0 w-full h-full">
-          <div className="absolute top-10 left-10 w-64 h-64 bg-accent-500/20 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 right-10 w-80 h-80 bg-accent-400/10 rounded-full blur-3xl"></div>
-        </div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Ready to Start Your<br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-400 to-accent-300">Language Journey?</span>
-          </h2>
-          <p className="text-primary-200 mb-10 max-w-2xl mx-auto text-lg leading-relaxed">
-            Whether you're an individual looking to learn a new language or a company seeking training for your team, we're here to help you succeed.
-          </p>
-          <div className="flex justify-center gap-4 flex-wrap">
-            <Link
-              to="/register"
-              className="group inline-flex items-center bg-gradient-to-r from-accent-500 to-accent-400 text-primary-900 px-8 py-4 rounded-full font-bold text-lg hover:from-accent-400 hover:to-accent-300 transition-all shadow-xl shadow-accent-500/30"
-            >
-              Register as Student
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link
-              to="/register?type=corporate"
-              className="group inline-flex items-center border-2 border-accent-400/50 text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-accent-500/20 hover:border-accent-400 transition-all"
-            >
-              Corporate Enquiry
-              <Building2 className="ml-2 h-5 w-5" />
-            </Link>
+      <section className="py-16 bg-primary-600">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div>
+              <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+                Ready to Start Your Language Training?
+              </h2>
+              <p className="text-primary-100">
+                Contact us to discuss your language learning requirements.
+              </p>
+            </div>
+            <div className="flex gap-4">
+              <Link
+                to="/register"
+                className="bg-white text-primary-600 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+              >
+                Get Started
+              </Link>
+              <Link
+                to="/login"
+                className="border-2 border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors"
+              >
+                Sign In
+              </Link>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-primary-900 text-primary-300 py-16">
+      <footer className="bg-gray-900 text-gray-400 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-4 gap-8 mb-12">
+          <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div className="md:col-span-2">
-              <img src="/logo.svg" alt="Maka Language Centre" className="h-12 w-auto mb-4" />
-              <p className="text-primary-400 mb-4 max-w-md">
-                A comprehensive language management system designed and developed by Maka Language Consulting to deliver exceptional language education experiences.
+              <img src="/logo.svg" alt="Maka Language Centre" className="h-10 w-auto mb-4" />
+              <p className="text-sm mb-4 max-w-md">
+                A comprehensive language management system developed by Maka Language Consulting.
+                Providing professional language education solutions for organizations and individuals.
               </p>
-              <div className="flex gap-2">
-                {languages.slice(0, 5).map((lang) => (
-                  <span key={lang.name} className="text-2xl" title={lang.name}>{lang.flag}</span>
-                ))}
-              </div>
             </div>
             <div>
-              <h4 className="text-white font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2">
-                <li><Link to="/login" className="hover:text-accent-400 transition-colors">Sign In</Link></li>
-                <li><Link to="/register" className="hover:text-accent-400 transition-colors">Register</Link></li>
-                <li><a href="#portals" className="hover:text-accent-400 transition-colors">Portals</a></li>
+              <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wide">Platform</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link to="/login" className="hover:text-white transition-colors">Sign In</Link></li>
+                <li><Link to="/register" className="hover:text-white transition-colors">Register</Link></li>
+                <li><a href="#portals" className="hover:text-white transition-colors">Access Portals</a></li>
               </ul>
             </div>
             <div>
-              <h4 className="text-white font-semibold mb-4">For Organizations</h4>
-              <ul className="space-y-2">
-                <li><Link to="/register?type=corporate" className="hover:text-accent-400 transition-colors">Corporate Training</Link></li>
-                <li><a href="#" className="hover:text-accent-400 transition-colors">Group Packages</a></li>
-                <li><a href="#" className="hover:text-accent-400 transition-colors">Custom Programs</a></li>
+              <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wide">Services</h4>
+              <ul className="space-y-2 text-sm">
+                <li><Link to="/register?type=corporate" className="hover:text-white transition-colors">Corporate Training</Link></li>
+                <li><a href="#services" className="hover:text-white transition-colors">Individual Courses</a></li>
+                <li><a href="#about" className="hover:text-white transition-colors">About Us</a></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-primary-800 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-              <p className="text-sm text-primary-400">
-                &copy; {new Date().getFullYear()} Maka Language Centre. All rights reserved.
-              </p>
-              <p className="text-sm text-primary-500">
-                Designed & Developed by <span className="text-accent-400 font-medium">Maka Language Consulting</span>
+          <div className="border-t border-gray-800 pt-8">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
+              <p>&copy; {new Date().getFullYear()} Maka Language Centre. All rights reserved.</p>
+              <p className="text-gray-500">
+                Developed by <span className="text-gray-400">Maka Language Consulting</span>
               </p>
             </div>
           </div>
