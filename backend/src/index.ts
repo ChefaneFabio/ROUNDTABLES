@@ -23,6 +23,14 @@ import dashboardRoutes from './controllers/dashboardController'
 import availabilityRoutes from './controllers/availabilityController'
 import payrollRoutes from './controllers/payrollController'
 import invoiceRoutes from './controllers/invoiceController'
+// New feature routes
+import assessmentRoutes from './controllers/assessmentController'
+import certificateRoutes from './controllers/certificateController'
+import analyticsRoutes from './controllers/analyticsController'
+import ssoRoutes from './controllers/ssoController'
+import externalApiRoutes from './controllers/externalApiController'
+import recommendationRoutes from './controllers/recommendationController'
+import chatRoutes from './controllers/chatController'
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler'
@@ -95,6 +103,14 @@ app.use('/api/dashboard', dashboardRoutes)
 app.use('/api/availability', availabilityRoutes)
 app.use('/api/payroll', payrollRoutes)
 app.use('/api/invoices', invoiceRoutes)
+// New feature routes
+app.use('/api/assessments', assessmentRoutes)
+app.use('/api/certificates', certificateRoutes)
+app.use('/api/analytics', analyticsRoutes)
+app.use('/api/sso', ssoRoutes)
+app.use('/api/external', externalApiRoutes)
+app.use('/api/recommendations', recommendationRoutes)
+app.use('/api/chat', chatRoutes)
 
 // Error handling
 app.use(errorHandler)

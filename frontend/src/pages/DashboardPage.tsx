@@ -17,6 +17,7 @@ import { Alert } from '../components/common/Alert'
 import { StatCard } from '../components/dashboard/StatCard'
 import { UpcomingLessons } from '../components/dashboard/UpcomingLessons'
 import { RecentActivity } from '../components/dashboard/RecentActivity'
+import { RecommendationsCard } from '../components/dashboard/RecommendationsCard'
 
 export function DashboardPage() {
   const { user, isAdmin, isSchool, isTeacher, isStudent } = useAuth()
@@ -360,6 +361,9 @@ function TeacherDashboard({ data }: { data: any }) {
 function StudentDashboard({ data }: { data: any }) {
   return (
     <>
+      {/* AI Recommendations */}
+      <RecommendationsCard />
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard

@@ -81,6 +81,8 @@ model School {
   courses     Course[]
   payments    Payment[]
   invoices    Invoice[]
+  ssoConfig   SsoConfig?
+  apiKeys     ApiKey[]
 
   @@index([email])
   @@index([userId])
@@ -153,11 +155,14 @@ model Student {
   school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
   // Relations
-  enrollments Enrollment[]
-  attendance  Attendance[]
-  progress    Progress[]
-  feedback    Feedback[]
-  topicVotes  TopicVote[]
+  enrollments  Enrollment[]
+  attendance   Attendance[]
+  progress     Progress[]
+  feedback     Feedback[]
+  topicVotes   TopicVote[]
+  assessments  Assessment[]
+  certificates Certificate[]
+  chatSessions ChatSession[]
 
   @@index([userId])
   @@index([schoolId])
@@ -203,6 +208,7 @@ model Course {
   topicVotes     TopicVote[]
   progress       Progress[]
   courseTeachers CourseTeacher[]
+  certificates   Certificate[]
 
   @@index([schoolId])
   @@index([status])
@@ -987,4 +993,147 @@ enum PaymentMethodCode {
   MP21  // SEPA Direct Debit B2B
   MP22  // Trattenuta su somme già riscosse
   MP23  // PagoPA
+}
+
+// =====================================================
+// ASSESSMENT & CERTIFICATION
+// =====================================================
+
+model Assessment {
+  id          String           @id @default(cuid())
+  studentId   String
+  student     Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  language    String
+  type        AssessmentType   @default(PLACEMENT)
+  score       Int?
+  cefrLevel   String?          // A1, A2, B1, B2, C1, C2
+  status      AssessmentStatus @default(IN_PROGRESS)
+  answers     Json?            // Array of {questionId, answer, isCorrect}
+  startedAt   DateTime         @default(now())
+  completedAt DateTime?
+
+  @@index([studentId])
+  @@index([language])
+  @@map("assessments")
+}
+
+model AssessmentQuestion {
+  id           String              @id @default(cuid())
+  language     String
+  cefrLevel    String              // A1, A2, B1, B2, C1, C2
+  questionType AssessmentQuestionType
+  questionText String
+  options      Json?               // For multiple choice: [{label, value}]
+  correctAnswer String
+  audioUrl     String?
+  imageUrl     String?
+  points       Int                 @default(1)
+  orderIndex   Int                 @default(0)
+  isActive     Boolean             @default(true)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  @@index([language, cefrLevel])
+  @@index([isActive])
+  @@map("assessment_questions")
+}
+
+model Certificate {
+  id                String   @id @default(cuid())
+  studentId         String
+  student           Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  courseId          String?
+  course            Course?  @relation(fields: [courseId], references: [id])
+  assessmentId      String?
+  cefrLevel         String
+  language          String
+  certificateNumber String   @unique
+  issuedAt          DateTime @default(now())
+  pdfUrl            String?
+  validUntil        DateTime?
+  metadata          Json?    // Additional certificate data
+
+  @@index([studentId])
+  @@index([certificateNumber])
+  @@map("certificates")
+}
+
+enum AssessmentType {
+  PLACEMENT
+  PROGRESS
+  FINAL
+}
+
+enum AssessmentStatus {
+  IN_PROGRESS
+  COMPLETED
+  EXPIRED
+}
+
+enum AssessmentQuestionType {
+  MULTIPLE_CHOICE
+  FILL_BLANK
+  LISTENING
+  READING
+  WRITING
+}
+
+// =====================================================
+// ENTERPRISE INTEGRATIONS
+// =====================================================
+
+model SsoConfig {
+  id          String   @id @default(cuid())
+  schoolId    String   @unique
+  school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  provider    String   // SAML, OIDC
+  entityId    String
+  ssoUrl      String
+  certificate String   @db.Text
+  isActive    Boolean  @default(true)
+  metadata    Json?    // Additional provider config
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("sso_configs")
+}
+
+model ApiKey {
+  id          String    @id @default(cuid())
+  schoolId    String
+  school      School    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  name        String
+  key         String    @unique
+  keyPrefix   String    // First 8 chars for display (e.g., "maka_abc1...")
+  permissions Json      // ['read:courses', 'write:enrollments', etc.]
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([key])
+  @@index([schoolId])
+  @@map("api_keys")
+}
+
+// =====================================================
+// AI FEATURES
+// =====================================================
+
+model ChatSession {
+  id          String   @id @default(cuid())
+  studentId   String
+  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  language    String
+  topic       String?
+  cefrLevel   String?  // Target conversation level
+  messages    Json     // Array of {role, content, timestamp}
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([studentId])
+  @@index([createdAt])
+  @@map("chat_sessions")
 }

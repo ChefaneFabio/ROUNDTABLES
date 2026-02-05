@@ -18,6 +18,11 @@ import {
   CreditCard,
   FileText,
   MessageSquare,
+  ClipboardCheck,
+  Award,
+  BarChart3,
+  Bot,
+  Key,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -34,6 +39,11 @@ const navigation: NavItem[] = [
   { name: 'Teachers', href: '/teachers', icon: GraduationCap, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL] },
   { name: 'Students', href: '/students', icon: Users, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL] },
   { name: 'Lessons', href: '/lessons', icon: Calendar },
+  { name: 'Assessment', href: '/assessment', icon: ClipboardCheck, roles: [UserRole.STUDENT] },
+  { name: 'Certificates', href: '/certificates', icon: Award, roles: [UserRole.STUDENT] },
+  { name: 'AI Chat', href: '/chat', icon: Bot, roles: [UserRole.STUDENT] },
+  { name: 'Analytics', href: '/analytics', icon: BarChart3, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL] },
+  { name: 'API Keys', href: '/api-keys', icon: Key, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL] },
   { name: 'Feedback', href: '/feedback', icon: MessageSquare, roles: [UserRole.TEACHER, UserRole.STUDENT] },
   { name: 'Payments', href: '/payments', icon: CreditCard, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL] },
   { name: 'Reports', href: '/reports', icon: FileText, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL] },

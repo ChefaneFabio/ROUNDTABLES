@@ -11,7 +11,7 @@ export class NotificationService {
 
   constructor() {
     // Initialize email transporter (will be configured in environment)
-    this.transporter = nodemailer.createTransporter({
+    this.transporter = nodemailer.createTransport({
       host: process.env.SMTP_HOST || 'localhost',
       port: Number(process.env.SMTP_PORT) || 587,
       secure: false,

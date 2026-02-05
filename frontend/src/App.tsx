@@ -15,6 +15,14 @@ import { DashboardPage } from './pages/DashboardPage'
 import { CoursesPage } from './pages/CoursesPage'
 import { LessonsPage } from './pages/LessonsPage'
 import { VotingPage } from './pages/VotingPage'
+// New feature pages
+import { AssessmentPage } from './pages/AssessmentPage'
+import { AssessmentTakePage } from './pages/AssessmentTakePage'
+import { AssessmentResultPage } from './pages/AssessmentResultPage'
+import { AnalyticsPage } from './pages/AnalyticsPage'
+import { CertificatesPage } from './pages/CertificatesPage'
+import { ChatPage } from './pages/ChatPage'
+import { ApiKeysPage } from './pages/ApiKeysPage'
 
 // Placeholder pages for features that need to be built out
 function PlaceholderPage({ title }: { title: string }) {
@@ -268,6 +276,86 @@ function App() {
           <ProtectedRoute>
             <Layout>
               <SettingsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Assessment Routes */}
+      <Route
+        path="/assessment"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <AssessmentPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/assessment/take/:id"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <AssessmentTakePage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/assessment/result/:id"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <AssessmentResultPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Analytics Route */}
+      <Route
+        path="/analytics"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL]}>
+            <Layout>
+              <AnalyticsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Certificates Route */}
+      <Route
+        path="/certificates"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <CertificatesPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* AI Chat Route */}
+      <Route
+        path="/chat"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <ChatPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* API Keys Route */}
+      <Route
+        path="/api-keys"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL]}>
+            <Layout>
+              <ApiKeysPage />
             </Layout>
           </ProtectedRoute>
         }
