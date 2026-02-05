@@ -254,14 +254,13 @@ export function HomePage() {
                 className="w-full"
               />
               <div className="absolute inset-0 bg-primary-900/40 flex items-center justify-center">
-                <a
-                  href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group w-24 h-24 rounded-full bg-accent-500 flex items-center justify-center hover:bg-accent-400 transition-all hover:scale-110 shadow-2xl"
+                <button
+                  onClick={() => window.open('https://makalanguageconsulting.com', '_blank')}
+                  className="group w-24 h-24 rounded-full bg-accent-500 flex items-center justify-center hover:bg-accent-400 transition-all hover:scale-110 shadow-2xl cursor-pointer"
+                  aria-label="Learn more about Maka Language Centre"
                 >
                   <Play className="h-10 w-10 text-primary-900 ml-1" />
-                </a>
+                </button>
               </div>
             </div>
 
