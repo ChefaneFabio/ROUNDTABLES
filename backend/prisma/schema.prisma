@@ -1,0 +1,614 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =====================================================
+// USER & AUTHENTICATION
+// =====================================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String    // Hashed password
+  name          String
+  role          UserRole  @default(STUDENT)
+  isActive      Boolean   @default(true)
+  lastLoginAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  deletedAt     DateTime? // Soft delete
+
+  // Role-specific profiles (one-to-one)
+  schoolProfile  School?
+  teacherProfile Teacher?
+  studentProfile Student?
+
+  // Notifications sent to this user
+  notifications Notification[]
+
+  @@index([email])
+  @@index([role])
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN           // System administrator
+  LANGUAGE_SCHOOL // School/organization admin
+  TEACHER         // Instructor/trainer
+  STUDENT         // Learner/participant
+}
+
+// =====================================================
+// SCHOOL (Previously Client)
+// =====================================================
+
+model School {
+  id               String   @id @default(cuid())
+  name             String
+  email            String   @unique
+  company          String?
+  description      String?
+  logo             String?  // URL to logo image
+  subscriptionPlan SubscriptionPlan @default(BASIC)
+  billingEmail     String?
+  billingAddress   Json?    // { street, city, state, zip, country }
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  deletedAt        DateTime? // Soft delete
+
+  // Owner user account
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Relations
+  teachers    Teacher[]
+  students    Student[]
+  courses     Course[]
+  payments    Payment[]
+
+  @@index([email])
+  @@index([userId])
+  @@map("schools")
+}
+
+enum SubscriptionPlan {
+  BASIC
+  PROFESSIONAL
+  ENTERPRISE
+}
+
+// =====================================================
+// TEACHER (Previously Trainer)
+// =====================================================
+
+model Teacher {
+  id         String   @id @default(cuid())
+  bio        String?
+  expertise  String[] // Areas of expertise
+  hourlyRate Decimal? @db.Decimal(10, 2)
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  deletedAt  DateTime? // Soft delete
+
+  // User account
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // School affiliation
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  // Relations
+  lessons        Lesson[]
+  feedback       Feedback[]
+  questions      Question[]
+  courseTeachers CourseTeacher[]
+
+  @@index([userId])
+  @@index([schoolId])
+  @@map("teachers")
+}
+
+// =====================================================
+// STUDENT (Previously Participant)
+// =====================================================
+
+model Student {
+  id            String           @id @default(cuid())
+  languageLevel LanguageLevel    @default(B1)
+  bio           String?
+  isActive      Boolean          @default(true)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  deletedAt     DateTime? // Soft delete
+
+  // User account
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // School affiliation
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  // Relations
+  enrollments Enrollment[]
+  attendance  Attendance[]
+  progress    Progress[]
+  feedback    Feedback[]
+  topicVotes  TopicVote[]
+
+  @@index([userId])
+  @@index([schoolId])
+  @@map("students")
+}
+
+enum LanguageLevel {
+  A1
+  A2
+  B1
+  B2
+  C1
+  C2
+}
+
+// =====================================================
+// COURSE (Previously Roundtable)
+// =====================================================
+
+model Course {
+  id              String       @id @default(cuid())
+  name            String
+  description     String?
+  status          CourseStatus @default(DRAFT)
+  startDate       DateTime?
+  endDate         DateTime?
+  maxStudents     Int          @default(10)
+  price           Decimal?     @db.Decimal(10, 2)
+  currency        String       @default("EUR")
+  thumbnailUrl    String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  deletedAt       DateTime? // Soft delete
+
+  // School that owns this course
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  // Relations
+  enrollments    Enrollment[]
+  lessons        Lesson[]
+  modules        Module[]
+  topicVotes     TopicVote[]
+  progress       Progress[]
+  courseTeachers CourseTeacher[]
+
+  @@index([schoolId])
+  @@index([status])
+  @@map("courses")
+}
+
+enum CourseStatus {
+  DRAFT          // Course being set up
+  TOPIC_VOTING   // Students voting on topics
+  SCHEDULED      // Course scheduled to start
+  IN_PROGRESS    // Course actively running
+  COMPLETED      // Course finished
+  CANCELLED      // Course cancelled
+  ARCHIVED       // Course archived
+}
+
+// Many-to-many: Course <-> Teacher
+model CourseTeacher {
+  id        String   @id @default(cuid())
+  isPrimary Boolean  @default(false) // Primary teacher for the course
+  createdAt DateTime @default(now())
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  teacherId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, teacherId])
+  @@map("course_teachers")
+}
+
+// =====================================================
+// MODULE (Topic/Chapter within a Course)
+// =====================================================
+
+model Module {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  orderIndex  Int      @default(0)
+  isSelected  Boolean  @default(false) // For topic voting
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  // Relations
+  votes   TopicVote[]
+  lessons Lesson[]
+
+  @@index([courseId])
+  @@map("modules")
+}
+
+// =====================================================
+// LESSON (Previously Session)
+// =====================================================
+
+model Lesson {
+  id           String       @id @default(cuid())
+  lessonNumber Int          // Sequence number within course
+  title        String?
+  description  String?
+  scheduledAt  DateTime
+  duration     Int          @default(60) // Duration in minutes
+  status       LessonStatus @default(SCHEDULED)
+  meetingLink  String?
+  notes        String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  deletedAt    DateTime? // Soft delete
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  // Optional: specific module/topic for this lesson
+  moduleId String?
+  module   Module? @relation(fields: [moduleId], references: [id])
+
+  // Assigned teacher
+  teacherId String?
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
+
+  // Relations
+  questions     Question[]
+  feedback      Feedback[]
+  attendance    Attendance[]
+  materials     Material[]
+  notifications Notification[]
+
+  @@unique([courseId, lessonNumber])
+  @@index([scheduledAt])
+  @@index([teacherId])
+  @@map("lessons")
+}
+
+enum LessonStatus {
+  SCHEDULED
+  REMINDER_SENT
+  QUESTIONS_REQUESTED
+  QUESTIONS_READY
+  IN_PROGRESS
+  COMPLETED
+  FEEDBACK_PENDING
+  FEEDBACK_SENT
+  CANCELLED
+}
+
+// =====================================================
+// ENROLLMENT
+// =====================================================
+
+model Enrollment {
+  id            String           @id @default(cuid())
+  enrolledAt    DateTime         @default(now())
+  status        EnrollmentStatus @default(PENDING)
+  paymentStatus PaymentStatus    @default(PENDING)
+  amountDue     Decimal?         @db.Decimal(10, 2)
+  amountPaid    Decimal?         @db.Decimal(10, 2)
+  notes         String?
+  completedAt   DateTime?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  payments Payment[]
+
+  @@unique([studentId, courseId])
+  @@index([status])
+  @@index([paymentStatus])
+  @@map("enrollments")
+}
+
+enum EnrollmentStatus {
+  PENDING    // Awaiting confirmation
+  ACTIVE     // Currently enrolled
+  COMPLETED  // Finished the course
+  DROPPED    // Dropped out
+  SUSPENDED  // Temporarily suspended
+}
+
+enum PaymentStatus {
+  PENDING
+  PARTIAL
+  PAID
+  OVERDUE
+  REFUNDED
+}
+
+// =====================================================
+// ATTENDANCE
+// =====================================================
+
+model Attendance {
+  id        String    @id @default(cuid())
+  attended  Boolean   @default(false)
+  joinedAt  DateTime?
+  leftAt    DateTime?
+  notes     String?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, studentId])
+  @@map("attendance")
+}
+
+// =====================================================
+// PROGRESS
+// =====================================================
+
+model Progress {
+  id               String    @id @default(cuid())
+  completedLessons Int       @default(0)
+  totalLessons     Int       @default(0)
+  percentage       Decimal   @default(0) @db.Decimal(5, 2)
+  grade            String?   // A, B, C, D, F or custom grading
+  averageScore     Decimal?  @db.Decimal(5, 2)
+  completedAt      DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, courseId])
+  @@map("progress")
+}
+
+// =====================================================
+// TOPIC VOTING
+// =====================================================
+
+model TopicVote {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, moduleId])
+  @@map("topic_votes")
+}
+
+// =====================================================
+// QUESTIONS (Pre-lesson questions from teachers)
+// =====================================================
+
+model Question {
+  id          String         @id @default(cuid())
+  question    String
+  status      QuestionStatus @default(PENDING)
+  reviewNotes String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  // Teacher who submitted the question
+  teacherId String?
+  teacher   Teacher? @relation(fields: [teacherId], references: [id])
+
+  @@index([lessonId])
+  @@index([status])
+  @@map("questions")
+}
+
+enum QuestionStatus {
+  PENDING
+  APPROVED
+  NEEDS_REVISION
+  REJECTED
+}
+
+// =====================================================
+// FEEDBACK (Teacher feedback for students)
+// =====================================================
+
+model Feedback {
+  id          String         @id @default(cuid())
+  content     String
+  score       Int?           // 1-10 or 1-100 based on grading system
+  status      FeedbackStatus @default(PENDING)
+  reviewNotes String?
+  sentAt      DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  teacherId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonId, studentId])
+  @@map("feedback")
+}
+
+enum FeedbackStatus {
+  PENDING
+  APPROVED
+  NEEDS_REVISION
+  SENT
+  REJECTED
+}
+
+// =====================================================
+// MATERIALS (Lesson resources)
+// =====================================================
+
+model Material {
+  id          String       @id @default(cuid())
+  title       String
+  description String?
+  type        MaterialType
+  url         String       // File URL or external link
+  fileSize    Int?         // Size in bytes
+  mimeType    String?
+  orderIndex  Int          @default(0)
+  uploadedAt  DateTime     @default(now())
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  @@index([lessonId])
+  @@map("materials")
+}
+
+enum MaterialType {
+  PDF
+  VIDEO
+  LINK
+  IMAGE
+  DOCUMENT
+  AUDIO
+  OTHER
+}
+
+// =====================================================
+// PAYMENTS
+// =====================================================
+
+model Payment {
+  id            String        @id @default(cuid())
+  amount        Decimal       @db.Decimal(10, 2)
+  currency      String        @default("EUR")
+  status        PaymentStatus @default(PENDING)
+  paymentMethod String?       // card, bank_transfer, cash, etc.
+  transactionId String?       // External payment provider transaction ID
+  invoiceNumber String?       @unique
+  invoiceUrl    String?       // URL to PDF invoice
+  notes         String?
+  paidAt        DateTime?
+  dueDate       DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  // Can be linked to enrollment or directly to school
+  enrollmentId String?
+  enrollment   Enrollment? @relation(fields: [enrollmentId], references: [id])
+
+  schoolId String?
+  school   School? @relation(fields: [schoolId], references: [id])
+
+  @@index([status])
+  @@index([invoiceNumber])
+  @@map("payments")
+}
+
+// =====================================================
+// NOTIFICATIONS
+// =====================================================
+
+model Notification {
+  id          String             @id @default(cuid())
+  type        NotificationType
+  subject     String
+  content     String
+  status      NotificationStatus @default(PENDING)
+  scheduledAt DateTime?
+  sentAt      DateTime?
+  readAt      DateTime?
+  metadata    Json?              // Additional data for the notification
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+
+  // Recipient
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Optional: related lesson
+  lessonId String?
+  lesson   Lesson? @relation(fields: [lessonId], references: [id])
+
+  @@index([userId])
+  @@index([status])
+  @@index([scheduledAt])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  TEACHER_REMINDER
+  QUESTIONS_REQUEST
+  FEEDBACK_REQUEST
+  ENROLLMENT_CONFIRMED
+  LESSON_REMINDER
+  VOTING_INVITE
+  PAYMENT_REMINDER
+  PAYMENT_RECEIVED
+  COURSE_UPDATE
+  GENERAL
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+  CANCELLED
+  READ
+}
+
+// =====================================================
+// REFRESH TOKENS (for JWT refresh token rotation)
+// =====================================================
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  isRevoked Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([token])
+  @@map("refresh_tokens")
+}
