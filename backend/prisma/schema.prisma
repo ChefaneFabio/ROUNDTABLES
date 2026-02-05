@@ -62,6 +62,15 @@ model School {
   updatedAt        DateTime @updatedAt
   deletedAt        DateTime? // Soft delete
 
+  // Italian tax/billing information
+  vatNumber        String?  // Partita IVA
+  fiscalCode       String?  // Codice Fiscale
+  sdiCode          String?  // Codice Destinatario SDI (7 chars)
+  pecEmail         String?  // PEC email for electronic invoicing
+  legalAddress     Json?    // Sede Legale { street, city, province, cap, country }
+  reaNumber        String?  // Numero REA
+  shareCapital     Decimal? @db.Decimal(12, 2) // Capitale Sociale
+
   // Owner user account
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -71,9 +80,11 @@ model School {
   students    Student[]
   courses     Course[]
   payments    Payment[]
+  invoices    Invoice[]
 
   @@index([email])
   @@index([userId])
+  @@index([vatNumber])
   @@map("schools")
 }
 
@@ -106,10 +117,14 @@ model Teacher {
   school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
   // Relations
-  lessons        Lesson[]
-  feedback       Feedback[]
-  questions      Question[]
-  courseTeachers CourseTeacher[]
+  lessons             Lesson[]
+  feedback            Feedback[]
+  questions           Question[]
+  courseTeachers      CourseTeacher[]
+  availability        TeacherAvailability[]
+  substitutionsFrom   Substitution[] @relation("OriginalTeacher")
+  substitutionsTo     Substitution[] @relation("SubstituteTeacher")
+  payrollRecords      TeacherPayroll[]
 
   @@index([userId])
   @@index([schoolId])
@@ -256,11 +271,18 @@ model Lesson {
   scheduledAt  DateTime
   duration     Int          @default(60) // Duration in minutes
   status       LessonStatus @default(SCHEDULED)
-  meetingLink  String?
   notes        String?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   deletedAt    DateTime? // Soft delete
+
+  // Video Conferencing Integration
+  meetingProvider   MeetingProvider? // Which platform (Zoom, Meet, Teams)
+  meetingId         String?          // External meeting ID
+  meetingLink       String?          // Join link for students
+  meetingHostUrl    String?          // Host/start link for teacher
+  meetingPassword   String?          // Meeting password if required
+  meetingRecordingUrl String?        // Recording link after lesson
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -273,6 +295,10 @@ model Lesson {
   teacherId String?
   teacher   Teacher? @relation(fields: [teacherId], references: [id])
 
+  // Substitution tracking
+  originalTeacherId String?
+  substitution      Substitution?
+
   // Relations
   questions     Question[]
   feedback      Feedback[]
@@ -283,7 +309,15 @@ model Lesson {
   @@unique([courseId, lessonNumber])
   @@index([scheduledAt])
   @@index([teacherId])
+  @@index([meetingProvider])
   @@map("lessons")
+}
+
+enum MeetingProvider {
+  ZOOM
+  GOOGLE_MEET
+  MICROSOFT_TEAMS
+  CUSTOM // For custom/manual meeting links
 }
 
 enum LessonStatus {
@@ -320,7 +354,8 @@ model Enrollment {
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  payments Payment[]
+  payments        Payment[]
+  installmentPlan InstallmentPlan?
 
   @@unique([studentId, courseId])
   @@index([status])
@@ -524,8 +559,6 @@ model Payment {
   status        PaymentStatus @default(PENDING)
   paymentMethod String?       // card, bank_transfer, cash, etc.
   transactionId String?       // External payment provider transaction ID
-  invoiceNumber String?       @unique
-  invoiceUrl    String?       // URL to PDF invoice
   notes         String?
   paidAt        DateTime?
   dueDate       DateTime?
@@ -539,8 +572,15 @@ model Payment {
   schoolId String?
   school   School? @relation(fields: [schoolId], references: [id])
 
+  // Link to invoice
+  invoiceId String?
+  invoice   Invoice? @relation(fields: [invoiceId], references: [id])
+
+  // If payment is for an installment
+  installments Installment[]
+
   @@index([status])
-  @@index([invoiceNumber])
+  @@index([invoiceId])
   @@map("payments")
 }
 
@@ -611,4 +651,340 @@ model RefreshToken {
   @@index([userId])
   @@index([token])
   @@map("refresh_tokens")
+}
+
+// =====================================================
+// TEACHER AVAILABILITY & SCHEDULING
+// =====================================================
+
+model TeacherAvailability {
+  id          String              @id @default(cuid())
+  dayOfWeek   Int                 // 0=Sunday, 1=Monday, ..., 6=Saturday
+  startTime   String              // HH:MM format (e.g., "09:00")
+  endTime     String              // HH:MM format (e.g., "17:00")
+  isRecurring Boolean             @default(true) // Weekly recurring
+  specificDate DateTime?          // For non-recurring availability
+  status      AvailabilityStatus  @default(AVAILABLE)
+  notes       String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  teacherId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@index([teacherId])
+  @@index([dayOfWeek])
+  @@map("teacher_availability")
+}
+
+enum AvailabilityStatus {
+  AVAILABLE
+  BUSY
+  TENTATIVE
+  VACATION
+  SICK_LEAVE
+}
+
+model Substitution {
+  id              String             @id @default(cuid())
+  reason          SubstitutionReason
+  notes           String?
+  status          SubstitutionStatus @default(PENDING)
+  requestedAt     DateTime           @default(now())
+  confirmedAt     DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  // The lesson being substituted
+  lessonId String @unique
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  // Original teacher who can't attend
+  originalTeacherId String
+  originalTeacher   Teacher @relation("OriginalTeacher", fields: [originalTeacherId], references: [id])
+
+  // Substitute teacher (null until assigned)
+  substituteTeacherId String?
+  substituteTeacher   Teacher? @relation("SubstituteTeacher", fields: [substituteTeacherId], references: [id])
+
+  @@index([status])
+  @@map("substitutions")
+}
+
+enum SubstitutionReason {
+  SICK_LEAVE
+  VACATION
+  EMERGENCY
+  SCHEDULING_CONFLICT
+  OTHER
+}
+
+enum SubstitutionStatus {
+  PENDING           // Needs a substitute
+  SUBSTITUTE_FOUND  // Substitute assigned
+  CONFIRMED         // Substitute confirmed
+  CANCELLED         // Substitution cancelled
+  COMPLETED         // Lesson completed with substitute
+}
+
+// =====================================================
+// TEACHER PAYROLL
+// =====================================================
+
+model TeacherPayroll {
+  id              String        @id @default(cuid())
+  periodStart     DateTime      // Start of pay period
+  periodEnd       DateTime      // End of pay period
+  totalHours      Decimal       @db.Decimal(10, 2)
+  hourlyRate      Decimal       @db.Decimal(10, 2)
+  grossAmount     Decimal       @db.Decimal(10, 2)
+  deductions      Decimal       @default(0) @db.Decimal(10, 2)
+  netAmount       Decimal       @db.Decimal(10, 2)
+  currency        String        @default("EUR")
+  status          PayrollStatus @default(PENDING)
+  lessonsCount    Int           @default(0)
+  bonuses         Decimal       @default(0) @db.Decimal(10, 2)
+  bonusNotes      String?
+  paidAt          DateTime?
+  paymentMethod   String?       // bank_transfer, cash, etc.
+  paymentReference String?      // Transaction ID or reference
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  teacherId String
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  // Link to invoice if generated
+  invoiceId String?
+  invoice   Invoice? @relation(fields: [invoiceId], references: [id])
+
+  @@index([teacherId])
+  @@index([status])
+  @@index([periodStart, periodEnd])
+  @@map("teacher_payroll")
+}
+
+enum PayrollStatus {
+  PENDING     // Being calculated
+  APPROVED    // Approved for payment
+  PAID        // Payment completed
+  CANCELLED   // Cancelled
+}
+
+// =====================================================
+// INSTALLMENT PLANS
+// =====================================================
+
+model InstallmentPlan {
+  id                String              @id @default(cuid())
+  totalAmount       Decimal             @db.Decimal(10, 2)
+  numberOfInstallments Int
+  installmentAmount Decimal             @db.Decimal(10, 2)
+  currency          String              @default("EUR")
+  startDate         DateTime
+  frequency         InstallmentFrequency @default(MONTHLY)
+  status            InstallmentPlanStatus @default(ACTIVE)
+  notes             String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  // Link to enrollment
+  enrollmentId String @unique
+  enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+
+  // Individual installments
+  installments Installment[]
+
+  @@map("installment_plans")
+}
+
+enum InstallmentFrequency {
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  QUARTERLY
+}
+
+enum InstallmentPlanStatus {
+  ACTIVE
+  COMPLETED
+  DEFAULTED
+  CANCELLED
+}
+
+model Installment {
+  id          String            @id @default(cuid())
+  number      Int               // Installment number (1, 2, 3...)
+  amount      Decimal           @db.Decimal(10, 2)
+  dueDate     DateTime
+  status      InstallmentStatus @default(PENDING)
+  paidAt      DateTime?
+  paidAmount  Decimal?          @db.Decimal(10, 2)
+  notes       String?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  planId String
+  plan   InstallmentPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  // Link to payment record
+  paymentId String?
+  payment   Payment? @relation(fields: [paymentId], references: [id])
+
+  @@unique([planId, number])
+  @@index([dueDate])
+  @@index([status])
+  @@map("installments")
+}
+
+enum InstallmentStatus {
+  PENDING
+  PAID
+  PARTIAL
+  OVERDUE
+  WAIVED
+}
+
+// =====================================================
+// ITALIAN ELECTRONIC INVOICING (Fattura Elettronica)
+// =====================================================
+
+model Invoice {
+  id                  String        @id @default(cuid())
+  invoiceNumber       String        @unique // Progressive number
+  invoiceDate         DateTime      @default(now())
+  dueDate             DateTime?
+
+  // Amounts
+  subtotal            Decimal       @db.Decimal(10, 2)
+  vatRate             Decimal       @default(22) @db.Decimal(5, 2) // Italian VAT 22%
+  vatAmount           Decimal       @db.Decimal(10, 2)
+  totalAmount         Decimal       @db.Decimal(10, 2)
+  currency            String        @default("EUR")
+
+  // Status
+  status              InvoiceStatus @default(DRAFT)
+  paidAt              DateTime?
+
+  // Italian Electronic Invoice (FatturaPA) fields
+  isElectronic        Boolean       @default(false) // Is Fattura Elettronica
+  sdiStatus           SdiStatus?    // SDI transmission status
+  sdiIdentifier       String?       // SDI file identifier
+  sdiTransmissionDate DateTime?     // When sent to SDI
+  sdiResponseDate     DateTime?     // When SDI responded
+  sdiErrorMessage     String?       // SDI error if rejected
+
+  // Recipient details (for electronic invoice)
+  recipientType       RecipientType? // PA, B2B, B2C
+  recipientCodiceSDI  String?       // 7-char SDI code (Codice Destinatario)
+  recipientPEC        String?       // PEC email if no SDI code
+  recipientVatNumber  String?       // Partita IVA
+  recipientFiscalCode String?       // Codice Fiscale
+
+  // Document type
+  documentType        FatturaType   @default(TD01) // Tipo Documento
+
+  // Payment terms
+  paymentTerms        String?       // e.g., "30 days net"
+  paymentMethod       PaymentMethodCode? // Codice Modalità Pagamento
+
+  // Line items stored as JSON
+  lineItems           Json          // Array of line items
+
+  // PDF and XML storage
+  pdfUrl              String?       // Generated PDF invoice
+  xmlUrl              String?       // FatturaPA XML file
+
+  notes               String?
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
+
+  // Relations
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id])
+
+  payments        Payment[]
+  payrollRecords  TeacherPayroll[]
+
+  @@index([invoiceNumber])
+  @@index([status])
+  @@index([schoolId])
+  @@index([sdiStatus])
+  @@map("invoices")
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  SENT
+  PAID
+  PARTIAL
+  OVERDUE
+  CANCELLED
+  CREDITED
+}
+
+enum SdiStatus {
+  NOT_SENT         // Not yet sent to SDI
+  SENDING          // Transmission in progress
+  DELIVERED        // Delivered to recipient
+  NOT_DELIVERED    // Failed to deliver
+  ACCEPTED         // Accepted by PA (for public administration)
+  REJECTED         // Rejected by SDI
+  DECODING_ERROR   // File format error
+  FILE_REJECTED    // File rejected after delivery
+}
+
+enum RecipientType {
+  PA    // Pubblica Amministrazione
+  B2B   // Business to Business
+  B2C   // Business to Consumer
+}
+
+enum FatturaType {
+  TD01  // Fattura
+  TD02  // Acconto/Anticipo su fattura
+  TD03  // Acconto/Anticipo su parcella
+  TD04  // Nota di Credito
+  TD05  // Nota di Debito
+  TD06  // Parcella
+  TD16  // Integrazione fattura reverse charge interno
+  TD17  // Integrazione/autofattura per acquisto servizi dall'estero
+  TD18  // Integrazione per acquisto di beni intracomunitari
+  TD19  // Integrazione/autofattura per acquisto di beni ex art.17 c.2 DPR 633/72
+  TD20  // Autofattura per regolarizzazione e integrazione delle fatture
+  TD21  // Autofattura per splafonamento
+  TD22  // Estrazione beni da Deposito IVA
+  TD23  // Estrazione beni da Deposito IVA con versamento dell'IVA
+  TD24  // Fattura differita di cui all'art. 21, comma 4, lett. a)
+  TD25  // Fattura differita di cui all'art. 21, comma 4, terzo periodo lett. b)
+  TD26  // Cessione di beni ammortizzabili e per passaggi interni
+  TD27  // Fattura per autoconsumo o per cessioni gratuite senza rivalsa
+}
+
+enum PaymentMethodCode {
+  MP01  // Contanti
+  MP02  // Assegno
+  MP03  // Assegno circolare
+  MP04  // Contanti presso Tesoreria
+  MP05  // Bonifico
+  MP06  // Vaglia cambiario
+  MP07  // Bollettino bancario
+  MP08  // Carta di pagamento
+  MP09  // RID
+  MP10  // RID utenze
+  MP11  // RID veloce
+  MP12  // RIBA
+  MP13  // MAV
+  MP14  // Quietanza erario
+  MP15  // Giroconto su conti di contabilità speciale
+  MP16  // Domiciliazione bancaria
+  MP17  // Domiciliazione postale
+  MP18  // Bollettino di c/c postale
+  MP19  // SEPA Direct Debit
+  MP20  // SEPA Direct Debit CORE
+  MP21  // SEPA Direct Debit B2B
+  MP22  // Trattenuta su somme già riscosse
+  MP23  // PagoPA
 }

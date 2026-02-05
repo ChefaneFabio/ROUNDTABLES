@@ -6,8 +6,9 @@ import { authenticate } from '../middleware/auth'
 import { requireLessonAccess, requireTeacher, requireSchoolAdmin } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
 import { PAGINATION, VALID_STATUS_TRANSITIONS } from '../utils/constants'
-import { LessonStatus } from '@prisma/client'
+import { LessonStatus, MeetingProvider } from '@prisma/client'
 import { addDays, startOfMonth, endOfMonth, format } from 'date-fns'
+import { VideoConferencingService } from '../services/VideoConferencingService'
 
 const router = Router()
 
@@ -21,7 +22,9 @@ const createLessonSchema = Joi.object({
   duration: Joi.number().integer().min(15).max(180).optional(),
   moduleId: Joi.string().optional().allow(null),
   teacherId: Joi.string().optional().allow(null),
-  meetingLink: Joi.string().uri().optional().allow(null)
+  meetingProvider: Joi.string().valid('ZOOM', 'GOOGLE_MEET', 'MICROSOFT_TEAMS', 'CUSTOM').optional(),
+  meetingLink: Joi.string().uri().optional().allow(null),
+  createMeeting: Joi.boolean().optional() // Auto-create meeting on lesson creation
 })
 
 const updateLessonSchema = Joi.object({
@@ -31,8 +34,19 @@ const updateLessonSchema = Joi.object({
   duration: Joi.number().integer().min(15).max(180).optional(),
   moduleId: Joi.string().optional().allow(null),
   teacherId: Joi.string().optional().allow(null),
+  meetingProvider: Joi.string().valid('ZOOM', 'GOOGLE_MEET', 'MICROSOFT_TEAMS', 'CUSTOM').optional().allow(null),
   meetingLink: Joi.string().uri().optional().allow(null),
+  meetingPassword: Joi.string().max(50).optional().allow(null),
   notes: Joi.string().max(5000).optional().allow(null)
+})
+
+const createMeetingSchema = Joi.object({
+  provider: Joi.string().valid('ZOOM', 'GOOGLE_MEET', 'MICROSOFT_TEAMS').required(),
+  teamsUserId: Joi.string().when('provider', {
+    is: 'MICROSOFT_TEAMS',
+    then: Joi.required(),
+    otherwise: Joi.optional()
+  })
 })
 
 const updateStatusSchema = Joi.object({
@@ -420,12 +434,241 @@ router.delete('/:id', authenticate, requireSchoolAdmin, async (req: Request, res
       )
     }
 
+    // Delete associated meeting if exists
+    if (lesson.meetingId && lesson.meetingProvider && lesson.meetingProvider !== 'CUSTOM') {
+      try {
+        await VideoConferencingService.deleteMeeting(
+          lesson.meetingProvider as MeetingProvider,
+          lesson.meetingId
+        )
+      } catch (error) {
+        console.error('Failed to delete meeting:', error)
+        // Continue with lesson deletion even if meeting deletion fails
+      }
+    }
+
     await prisma.lesson.update({
       where: { id },
       data: { deletedAt: new Date(), status: 'CANCELLED' }
     })
 
     res.json(apiResponse.success(null, 'Lesson deleted successfully'))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// ============================================
+// VIDEO CONFERENCING ENDPOINTS
+// ============================================
+
+// Get available meeting providers
+router.get('/meeting-providers', authenticate, async (req: Request, res: Response) => {
+  try {
+    const providers = VideoConferencingService.getConfiguredProviders()
+
+    const providerInfo = providers.map(provider => ({
+      provider,
+      name: provider === 'ZOOM' ? 'Zoom' :
+            provider === 'GOOGLE_MEET' ? 'Google Meet' :
+            provider === 'MICROSOFT_TEAMS' ? 'Microsoft Teams' : 'Custom',
+      configured: VideoConferencingService.isProviderConfigured(provider)
+    }))
+
+    res.json(apiResponse.success(providerInfo))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Create meeting for a lesson
+router.post('/:id/meeting', authenticate, requireSchoolAdmin, validateRequest(createMeetingSchema), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { provider, teamsUserId } = req.body
+
+    const lesson = await prisma.lesson.findFirst({
+      where: { id, deletedAt: null },
+      include: {
+        course: { select: { name: true, schoolId: true } },
+        teacher: { include: { user: true } }
+      }
+    })
+
+    if (!lesson) {
+      return res.status(404).json(apiResponse.error('Lesson not found', 'NOT_FOUND'))
+    }
+
+    // Check if meeting already exists
+    if (lesson.meetingId) {
+      return res.status(400).json(
+        apiResponse.error('Meeting already exists for this lesson', 'MEETING_EXISTS')
+      )
+    }
+
+    // Verify provider is configured
+    if (!VideoConferencingService.isProviderConfigured(provider)) {
+      return res.status(400).json(
+        apiResponse.error(`${provider} is not configured`, 'PROVIDER_NOT_CONFIGURED')
+      )
+    }
+
+    // Create the meeting
+    const meetingDetails = await VideoConferencingService.createMeeting(
+      {
+        provider,
+        topic: lesson.title || `${lesson.course.name} - Lesson ${lesson.lessonNumber}`,
+        startTime: lesson.scheduledAt,
+        duration: lesson.duration,
+        hostEmail: lesson.teacher?.user?.email,
+        agenda: lesson.description || undefined
+      },
+      { teamsUserId }
+    )
+
+    // Update lesson with meeting details
+    const updated = await prisma.lesson.update({
+      where: { id },
+      data: {
+        meetingProvider: meetingDetails.provider,
+        meetingId: meetingDetails.meetingId,
+        meetingLink: meetingDetails.joinUrl,
+        meetingHostUrl: meetingDetails.hostUrl,
+        meetingPassword: meetingDetails.password
+      },
+      include: {
+        course: { select: { name: true } },
+        teacher: { include: { user: { select: { name: true } } } }
+      }
+    })
+
+    res.json(apiResponse.success(updated, 'Meeting created successfully'))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Delete meeting for a lesson
+router.delete('/:id/meeting', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+
+    const lesson = await prisma.lesson.findFirst({
+      where: { id, deletedAt: null }
+    })
+
+    if (!lesson) {
+      return res.status(404).json(apiResponse.error('Lesson not found', 'NOT_FOUND'))
+    }
+
+    if (!lesson.meetingId) {
+      return res.status(400).json(apiResponse.error('No meeting exists for this lesson', 'NO_MEETING'))
+    }
+
+    // Delete the meeting from the provider
+    if (lesson.meetingProvider && lesson.meetingProvider !== 'CUSTOM') {
+      await VideoConferencingService.deleteMeeting(
+        lesson.meetingProvider as MeetingProvider,
+        lesson.meetingId
+      )
+    }
+
+    // Clear meeting details from lesson
+    const updated = await prisma.lesson.update({
+      where: { id },
+      data: {
+        meetingProvider: null,
+        meetingId: null,
+        meetingLink: null,
+        meetingHostUrl: null,
+        meetingPassword: null,
+        meetingRecordingUrl: null
+      }
+    })
+
+    res.json(apiResponse.success(updated, 'Meeting deleted successfully'))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Get meeting join link (different for host vs participant)
+router.get('/:id/meeting/join', authenticate, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+
+    const lesson = await prisma.lesson.findFirst({
+      where: { id, deletedAt: null },
+      include: {
+        course: { select: { schoolId: true } }
+      }
+    })
+
+    if (!lesson) {
+      return res.status(404).json(apiResponse.error('Lesson not found', 'NOT_FOUND'))
+    }
+
+    if (!lesson.meetingLink) {
+      return res.status(400).json(apiResponse.error('No meeting configured for this lesson', 'NO_MEETING'))
+    }
+
+    // Determine if user is host (teacher or school admin)
+    const isHost = req.user?.role === 'ADMIN' ||
+      (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === lesson.course.schoolId) ||
+      (req.user?.role === 'TEACHER' && req.user.teacherId === lesson.teacherId)
+
+    const joinInfo = {
+      meetingLink: isHost && lesson.meetingHostUrl ? lesson.meetingHostUrl : lesson.meetingLink,
+      password: lesson.meetingPassword,
+      provider: lesson.meetingProvider,
+      isHost,
+      scheduledAt: lesson.scheduledAt,
+      duration: lesson.duration
+    }
+
+    res.json(apiResponse.success(joinInfo))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Get meeting recording (after lesson completed)
+router.get('/:id/meeting/recording', authenticate, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+
+    const lesson = await prisma.lesson.findFirst({
+      where: { id, deletedAt: null }
+    })
+
+    if (!lesson) {
+      return res.status(404).json(apiResponse.error('Lesson not found', 'NOT_FOUND'))
+    }
+
+    // Return cached recording URL if available
+    if (lesson.meetingRecordingUrl) {
+      return res.json(apiResponse.success({ recordingUrl: lesson.meetingRecordingUrl }))
+    }
+
+    // Try to fetch recording from provider
+    if (lesson.meetingId && lesson.meetingProvider) {
+      const recordingUrl = await VideoConferencingService.getRecording(
+        lesson.meetingProvider as MeetingProvider,
+        lesson.meetingId
+      )
+
+      if (recordingUrl) {
+        // Cache the recording URL
+        await prisma.lesson.update({
+          where: { id },
+          data: { meetingRecordingUrl: recordingUrl }
+        })
+
+        return res.json(apiResponse.success({ recordingUrl }))
+      }
+    }
+
+    res.json(apiResponse.success({ recordingUrl: null, message: 'No recording available' }))
   } catch (error) {
     handleError(res, error)
   }
