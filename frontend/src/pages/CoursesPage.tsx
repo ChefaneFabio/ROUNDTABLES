@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link, useNavigate } from 'react-router-dom'
 import { format } from 'date-fns'
@@ -12,7 +12,7 @@ import { LoadingSpinner } from '../components/common/LoadingSpinner'
 import { Pagination } from '../components/common/Table'
 
 export function CoursesPage() {
-  const { isSchool, isAdmin, isTeacher, isStudent } = useAuth()
+  const { isSchool, isAdmin, isStudent } = useAuth()
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')

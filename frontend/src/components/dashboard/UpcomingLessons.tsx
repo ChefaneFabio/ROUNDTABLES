@@ -1,7 +1,6 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { format } from 'date-fns'
-import { Calendar, Clock, Users, ArrowRight } from 'lucide-react'
+import { Calendar, Clock, ArrowRight } from 'lucide-react'
 import { Card, CardHeader, CardBody } from '../common/Card'
 import { StatusBadge } from '../common/Badge'
 

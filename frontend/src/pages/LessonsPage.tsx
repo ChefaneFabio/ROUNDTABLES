@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
-import { format, isToday, isTomorrow, isPast, addDays } from 'date-fns'
-import { Calendar, Clock, Users, BookOpen, Video, Filter } from 'lucide-react'
+import { format, isToday, isTomorrow } from 'date-fns'
+import { Calendar, Users, BookOpen, Video, Filter } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { lessonsApi } from '../services/api'
-import { Card, CardBody, CardHeader } from '../components/common/Card'
+import { Card, CardBody } from '../components/common/Card'
 import { Button } from '../components/common/Button'
 import { StatusBadge } from '../components/common/Badge'
 import { LoadingSpinner } from '../components/common/LoadingSpinner'
@@ -147,7 +147,6 @@ export function LessonsPage() {
 }
 
 function LessonCard({ lesson }: { lesson: any }) {
-  const isPastLesson = isPast(new Date(lesson.scheduledAt))
   const isLive = lesson.status === 'IN_PROGRESS'
 
   return (

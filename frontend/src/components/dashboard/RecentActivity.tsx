@@ -1,5 +1,4 @@
-import React from 'react'
-import { format, formatDistanceToNow } from 'date-fns'
+import { formatDistanceToNow } from 'date-fns'
 import {
   Bell,
   BookOpen,
