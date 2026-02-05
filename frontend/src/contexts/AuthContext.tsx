@@ -9,11 +9,11 @@ interface AuthContextType {
   isLoading: boolean
   login: (email: string, password: string) => Promise<void>
   logout: () => Promise<void>
-  registerSchool: (data: {
+  register: (data: {
     email: string
     password: string
     name: string
-    schoolName: string
+    phone?: string
     company?: string
   }) => Promise<void>
   refreshUser: () => Promise<void>
@@ -74,14 +74,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  const registerSchool = async (data: {
+  const register = async (data: {
     email: string
     password: string
     name: string
-    schoolName: string
+    phone?: string
     company?: string
   }) => {
-    const response = await authApi.registerSchool(data)
+    // Register as a student under MAKA Language Centre
+    const response = await authApi.registerStudent({
+      email: data.email,
+      password: data.password,
+      name: data.name,
+      schoolId: 'maka-language-centre', // MAKA's school ID
+      bio: data.company ? `Company: ${data.company}` : undefined,
+    })
     setUser(response.user)
     setProfile(response.profile)
   }
@@ -102,7 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isLoading,
     login,
     logout,
-    registerSchool,
+    register,
     refreshUser,
     hasRole,
     isAdmin: user?.role === UserRole.ADMIN,

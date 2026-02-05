@@ -56,12 +56,12 @@ export function LoginPage() {
           Sign in to MAKA LANGUAGE CENTRE
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Or{' '}
+          New to Maka?{' '}
           <Link
             to="/register"
             className="font-medium text-primary-600 hover:text-primary-500"
           >
-            create a new school account
+            Register here
           </Link>
         </p>
       </div>
@@ -171,8 +171,8 @@ export function LoginPage() {
 
             <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-gray-500">
               <div className="bg-gray-50 p-3 rounded">
-                <p className="font-medium">School Admin</p>
-                <p>school@demo.com</p>
+                <p className="font-medium">Corporate</p>
+                <p>corporate@demo.com</p>
               </div>
               <div className="bg-gray-50 p-3 rounded">
                 <p className="font-medium">Teacher</p>

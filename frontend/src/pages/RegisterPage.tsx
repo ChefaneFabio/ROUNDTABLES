@@ -11,7 +11,7 @@ import { Alert } from '../components/common/Alert'
 const schema = yup.object({
   name: yup.string().min(2, 'Name must be at least 2 characters').required('Name is required'),
   email: yup.string().email('Invalid email').required('Email is required'),
-  schoolName: yup.string().min(2, 'School name must be at least 2 characters').required('School name is required'),
+  phone: yup.string().optional(),
   company: yup.string().optional(),
   password: yup
     .string()
@@ -28,7 +28,7 @@ const schema = yup.object({
 type FormData = yup.InferType<typeof schema>
 
 export function RegisterPage() {
-  const { registerSchool } = useAuth()
+  const { register: registerUser } = useAuth()
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
@@ -46,11 +46,11 @@ export function RegisterPage() {
     try {
       setIsLoading(true)
       setError('')
-      await registerSchool({
+      await registerUser({
         name: data.name,
         email: data.email,
         password: data.password,
-        schoolName: data.schoolName,
+        phone: data.phone,
         company: data.company,
       })
       navigate('/')
@@ -68,7 +68,7 @@ export function RegisterPage() {
           <img src="/logo.svg" alt="Maka Language Centre" className="h-16 w-16" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-          Create your account
+          Register with Maka Language Centre
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           Already have an account?{' '}
@@ -124,31 +124,26 @@ export function RegisterPage() {
             </div>
 
             <div>
-              <label htmlFor="schoolName" className="label">
-                School name
+              <label htmlFor="phone" className="label">
+                Phone number (optional)
               </label>
               <input
-                {...register('schoolName')}
-                type="text"
-                className={`input ${errors.schoolName ? 'input-error' : ''}`}
-                placeholder="e.g., English Academy"
+                {...register('phone')}
+                type="tel"
+                className="input"
+                placeholder="e.g., +39 123 456 7890"
               />
-              {errors.schoolName && (
-                <p className="mt-1 text-sm text-red-600">
-                  {errors.schoolName.message}
-                </p>
-              )}
             </div>
 
             <div>
               <label htmlFor="company" className="label">
-                Company name (optional)
+                Company name (for corporate clients)
               </label>
               <input
                 {...register('company')}
                 type="text"
                 className="input"
-                placeholder="e.g., Learning Corp Ltd."
+                placeholder="Leave blank if individual student"
               />
             </div>
 

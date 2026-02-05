@@ -3,12 +3,12 @@ import { GraduationCap, Users, BookOpen, ArrowRight, Globe, Award, Clock } from 
 
 const portals = [
   {
-    title: 'School Admin',
-    description: 'Manage your language school, courses, teachers, and students. Track payments and generate reports.',
+    title: 'Corporate',
+    description: 'Language training solutions for your organization. Manage employee enrollments, track progress, and view reports.',
     icon: BookOpen,
     color: 'bg-blue-600 hover:bg-blue-700',
-    href: '/login?portal=school',
-    features: ['Course Management', 'Teacher & Student Management', 'Payment Tracking', 'Reports & Analytics'],
+    href: '/login?portal=corporate',
+    features: ['Employee Enrollment', 'Progress Tracking', 'Training Reports', 'Flexible Scheduling'],
   },
   {
     title: 'Teacher',
@@ -31,18 +31,18 @@ const portals = [
 const features = [
   {
     icon: Globe,
-    title: 'Multi-Language Support',
-    description: 'Built for language schools teaching any language to students worldwide.',
+    title: 'Multiple Languages',
+    description: 'Learn English, Italian, French, German, Spanish and more with native-speaking teachers.',
   },
   {
     icon: Award,
-    title: 'Quality Education',
-    description: 'Structured courses with professional feedback and progress tracking.',
+    title: 'Expert Teachers',
+    description: 'Qualified instructors with years of experience in language education.',
   },
   {
     icon: Clock,
     title: 'Flexible Scheduling',
-    description: 'Easy lesson scheduling with integrated calendar and reminders.',
+    description: 'Individual and group lessons tailored to your schedule and learning pace.',
   },
 ]
 
@@ -68,7 +68,7 @@ export function HomePage() {
                 to="/register"
                 className="bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 font-medium"
               >
-                Get Started
+                Enroll Now
               </Link>
             </div>
           </div>
@@ -82,21 +82,21 @@ export function HomePage() {
             Welcome to Maka Language Centre
           </h1>
           <p className="text-xl md:text-2xl text-primary-100 mb-8 max-w-3xl mx-auto">
-            A comprehensive platform for language schools to manage courses, teachers, and students efficiently.
+            Professional language training for individuals and organizations. Learn with expert teachers in a supportive environment.
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-4 flex-wrap">
             <Link
               to="/register"
               className="bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
             >
-              Register Your School
+              Start Learning
             </Link>
-            <a
-              href="#portals"
+            <Link
+              to="/register?type=corporate"
               className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors"
             >
-              Access Portal
-            </a>
+              Corporate Training
+            </Link>
           </div>
         </div>
       </section>
@@ -170,17 +170,26 @@ export function HomePage() {
       {/* CTA Section */}
       <section className="py-16 bg-primary-600 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
+          <h2 className="text-3xl font-bold mb-4">Ready to Start Your Language Journey?</h2>
           <p className="text-primary-100 mb-8 max-w-2xl mx-auto">
-            Join Maka Language Centre today and transform how you manage your language school.
+            Whether you're an individual looking to learn a new language or a company seeking training for your team, we're here to help.
           </p>
-          <Link
-            to="/register"
-            className="inline-flex items-center bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-          >
-            Register Your School
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Link>
+          <div className="flex justify-center gap-4 flex-wrap">
+            <Link
+              to="/register"
+              className="inline-flex items-center bg-white text-primary-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            >
+              Register as Student
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+            <Link
+              to="/register?type=corporate"
+              className="inline-flex items-center border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors"
+            >
+              Corporate Enquiry
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </div>
         </div>
       </section>
 
