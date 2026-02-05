@@ -29,7 +29,7 @@ interface NavItem {
 }
 
 const navigation: NavItem[] = [
-  { name: 'Dashboard', href: '/', icon: Home },
+  { name: 'Dashboard', href: '/dashboard', icon: Home },
   { name: 'Courses', href: '/courses', icon: BookOpen },
   { name: 'Teachers', href: '/teachers', icon: GraduationCap, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL] },
   { name: 'Students', href: '/students', icon: Users, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL] },
@@ -81,7 +81,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         />
         <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white">
           <div className="flex h-16 items-center justify-between px-4 border-b">
-            <Link to="/" className="flex items-center">
+            <Link to="/dashboard" className="flex items-center">
               <img src="/logo.svg" alt="Maka Language Centre" className="h-8 w-8" />
               <span className="ml-2 text-lg font-bold text-gray-900">
                 MAKA LANGUAGE CENTRE
@@ -96,7 +96,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
           <nav className="flex-1 overflow-y-auto p-4">
             {filteredNavigation.map((item) => {
-              const isActive = location.pathname === item.href
+              const isActive = location.pathname === item.href || (item.href === '/dashboard' && location.pathname === '/')
               return (
                 <Link
                   key={item.name}
@@ -122,7 +122,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-64 lg:flex-col">
         <div className="flex flex-col flex-grow border-r border-gray-200 bg-white">
           <div className="flex h-16 items-center px-4 border-b">
-            <Link to="/" className="flex items-center">
+            <Link to="/dashboard" className="flex items-center">
               <img src="/logo.svg" alt="Maka Language Centre" className="h-8 w-8" />
               <span className="ml-2 text-lg font-bold text-gray-900">
                 MAKA LANGUAGE CENTRE
@@ -131,7 +131,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
           <nav className="flex-1 overflow-y-auto p-4">
             {filteredNavigation.map((item) => {
-              const isActive = location.pathname === item.href
+              const isActive = location.pathname === item.href || (item.href === '/dashboard' && location.pathname === '/')
               return (
                 <Link
                   key={item.name}
