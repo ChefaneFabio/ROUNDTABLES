@@ -23,6 +23,9 @@ import {
   BarChart3,
   Bot,
   Key,
+  Video,
+  PenTool,
+  Mic,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -40,8 +43,13 @@ const navigation: NavItem[] = [
   { name: 'Students', href: '/students', icon: Users, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL] },
   { name: 'Lessons', href: '/lessons', icon: Calendar },
   { name: 'Assessment', href: '/assessment', icon: ClipboardCheck, roles: [UserRole.STUDENT] },
+  { name: 'Video Library', href: '/videos', icon: Video, roles: [UserRole.STUDENT] },
+  { name: 'Exercises', href: '/exercises', icon: PenTool, roles: [UserRole.STUDENT] },
+  { name: 'Speaking', href: '/speaking', icon: Mic, roles: [UserRole.STUDENT] },
   { name: 'Certificates', href: '/certificates', icon: Award, roles: [UserRole.STUDENT] },
   { name: 'AI Chat', href: '/chat', icon: Bot, roles: [UserRole.STUDENT] },
+  { name: 'Video Admin', href: '/admin/videos/libraries', icon: Video, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL, UserRole.TEACHER] },
+  { name: 'Exercise Admin', href: '/admin/exercises', icon: PenTool, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL, UserRole.TEACHER] },
   { name: 'Analytics', href: '/analytics', icon: BarChart3, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL] },
   { name: 'API Keys', href: '/api-keys', icon: Key, roles: [UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL] },
   { name: 'Feedback', href: '/feedback', icon: MessageSquare, roles: [UserRole.TEACHER, UserRole.STUDENT] },

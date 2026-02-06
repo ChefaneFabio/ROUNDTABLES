@@ -23,6 +23,23 @@ import { AnalyticsPage } from './pages/AnalyticsPage'
 import { CertificatesPage } from './pages/CertificatesPage'
 import { ChatPage } from './pages/ChatPage'
 import { ApiKeysPage } from './pages/ApiKeysPage'
+// Phase 2 feature pages
+import VideoLibraryPage from './pages/VideoLibraryPage'
+import VideoPlayerPage from './pages/VideoPlayerPage'
+import ExercisesPage from './pages/ExercisesPage'
+import ExerciseTakePage from './pages/ExerciseTakePage'
+import SpeakingPracticePage from './pages/SpeakingPracticePage'
+// Admin pages for Phase 2
+import AdminVideoLibrariesPage from './pages/admin/VideoLibrariesPage'
+import AdminExercisesPage from './pages/admin/ExercisesPage'
+// Portal pages
+import TeachersPage from './pages/TeachersPage'
+import StudentsPage from './pages/StudentsPage'
+import PaymentsPage from './pages/PaymentsPage'
+import ReportsPage from './pages/ReportsPage'
+import ProfilePage from './pages/ProfilePage'
+import SettingsPage from './pages/SettingsPage'
+import NotificationsPage from './pages/NotificationsPage'
 
 // Placeholder pages for features that need to be built out
 function PlaceholderPage({ title }: { title: string }) {
@@ -34,36 +51,8 @@ function PlaceholderPage({ title }: { title: string }) {
   )
 }
 
-function TeachersPage() {
-  return <PlaceholderPage title="Teachers" />
-}
-
-function StudentsPage() {
-  return <PlaceholderPage title="Students" />
-}
-
 function FeedbackPage() {
   return <PlaceholderPage title="Feedback" />
-}
-
-function PaymentsPage() {
-  return <PlaceholderPage title="Payments" />
-}
-
-function ReportsPage() {
-  return <PlaceholderPage title="Reports" />
-}
-
-function NotificationsPage() {
-  return <PlaceholderPage title="Notifications" />
-}
-
-function ProfilePage() {
-  return <PlaceholderPage title="Profile" />
-}
-
-function SettingsPage() {
-  return <PlaceholderPage title="Settings" />
 }
 
 function CourseDetailPage() {
@@ -356,6 +345,86 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL]}>
             <Layout>
               <ApiKeysPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Phase 2: Video Library Routes */}
+      <Route
+        path="/videos"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <VideoLibraryPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/videos/:id"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <VideoPlayerPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Phase 2: Exercises Routes */}
+      <Route
+        path="/exercises"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <ExercisesPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/exercises/:id"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <ExerciseTakePage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Phase 2: Speaking Practice Route */}
+      <Route
+        path="/speaking"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <SpeakingPracticePage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Video Libraries */}
+      <Route
+        path="/admin/videos/libraries"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL, UserRole.TEACHER]}>
+            <Layout>
+              <AdminVideoLibrariesPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Exercises */}
+      <Route
+        path="/admin/exercises"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL, UserRole.TEACHER]}>
+            <Layout>
+              <AdminExercisesPage />
             </Layout>
           </ProtectedRoute>
         }

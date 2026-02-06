@@ -31,6 +31,10 @@ import ssoRoutes from './controllers/ssoController'
 import externalApiRoutes from './controllers/externalApiController'
 import recommendationRoutes from './controllers/recommendationController'
 import chatRoutes from './controllers/chatController'
+// Phase 2 feature routes
+import videoLibraryRoutes from './controllers/videoLibraryController'
+import exerciseRoutes from './controllers/exerciseController'
+import speechRoutes from './controllers/speechController'
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler'
@@ -111,6 +115,10 @@ app.use('/api/sso', ssoRoutes)
 app.use('/api/external', externalApiRoutes)
 app.use('/api/recommendations', recommendationRoutes)
 app.use('/api/chat', chatRoutes)
+// Phase 2 feature routes
+app.use('/api/videos', videoLibraryRoutes)
+app.use('/api/exercises', exerciseRoutes)
+app.use('/api/speech', speechRoutes)
 
 // Error handling
 app.use(errorHandler)

@@ -31,6 +31,9 @@ model User {
   // Notifications sent to this user
   notifications Notification[]
 
+  // Exercises created by this user
+  createdExercises Exercise[]
+
   @@index([email])
   @@index([role])
   @@map("users")
@@ -76,13 +79,15 @@ model School {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   // Relations
-  teachers    Teacher[]
-  students    Student[]
-  courses     Course[]
-  payments    Payment[]
-  invoices    Invoice[]
-  ssoConfig   SsoConfig?
-  apiKeys     ApiKey[]
+  teachers       Teacher[]
+  students       Student[]
+  courses        Course[]
+  payments       Payment[]
+  invoices       Invoice[]
+  ssoConfig      SsoConfig?
+  apiKeys        ApiKey[]
+  videoLibraries VideoLibrary[]
+  exercises      Exercise[]
 
   @@index([email])
   @@index([userId])
@@ -155,14 +160,17 @@ model Student {
   school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
   // Relations
-  enrollments  Enrollment[]
-  attendance   Attendance[]
-  progress     Progress[]
-  feedback     Feedback[]
-  topicVotes   TopicVote[]
-  assessments  Assessment[]
-  certificates Certificate[]
-  chatSessions ChatSession[]
+  enrollments      Enrollment[]
+  attendance       Attendance[]
+  progress         Progress[]
+  feedback         Feedback[]
+  topicVotes       TopicVote[]
+  assessments      Assessment[]
+  certificates     Certificate[]
+  chatSessions     ChatSession[]
+  speakingSessions SpeakingSession[]
+  videoProgress    VideoProgress[]
+  exerciseAttempts ExerciseAttempt[]
 
   @@index([userId])
   @@index([schoolId])
@@ -311,6 +319,8 @@ model Lesson {
   attendance    Attendance[]
   materials     Material[]
   notifications Notification[]
+  videoContents VideoContent[]
+  exercises     Exercise[]
 
   @@unique([courseId, lessonNumber])
   @@index([scheduledAt])
@@ -1133,7 +1143,206 @@ model ChatSession {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  // Speaking sessions linked to this chat
+  speakingSessions SpeakingSession[]
+
   @@index([studentId])
   @@index([createdAt])
   @@map("chat_sessions")
+}
+
+// =====================================================
+// SPEECH RECOGNITION & SPEAKING PRACTICE
+// =====================================================
+
+model SpeakingSession {
+  id              String       @id @default(cuid())
+  studentId       String
+  student         Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  chatSessionId   String?
+  chatSession     ChatSession? @relation(fields: [chatSessionId], references: [id])
+  language        String
+  cefrLevel       String?
+  targetText      String?      // The text student should pronounce
+  recognizedText  String?      // What was recognized
+  accuracyScore   Int?         // 0-100
+  fluencyScore    Int?         // 0-100
+  feedback        Json?        // Detailed word-level feedback
+  audioUrl        String?      // Stored audio recording
+  duration        Int?         // Duration in seconds
+  createdAt       DateTime     @default(now())
+
+  @@index([studentId])
+  @@index([chatSessionId])
+  @@map("speaking_sessions")
+}
+
+// =====================================================
+// VIDEO CONTENT LIBRARY
+// =====================================================
+
+model VideoLibrary {
+  id          String          @id @default(cuid())
+  title       String
+  description String?
+  coverImage  String?
+  isPublished Boolean         @default(false)
+  schoolId    String
+  school      School          @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  categories  VideoCategory[]
+  videos      VideoContent[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([schoolId])
+  @@map("video_libraries")
+}
+
+model VideoCategory {
+  id          String         @id @default(cuid())
+  name        String
+  description String?
+  orderIndex  Int            @default(0)
+  libraryId   String
+  library     VideoLibrary   @relation(fields: [libraryId], references: [id], onDelete: Cascade)
+  videos      VideoContent[]
+
+  @@index([libraryId])
+  @@map("video_categories")
+}
+
+model VideoContent {
+  id            String          @id @default(cuid())
+  title         String
+  description   String?
+  url           String
+  thumbnailUrl  String?
+  duration      Int?            // Duration in seconds
+  language      String
+  cefrLevel     String?
+  tags          String[]
+  transcript    String?         @db.Text
+  subtitlesUrl  String?
+  isPublished   Boolean         @default(false)
+  orderIndex    Int             @default(0)
+  viewCount     Int             @default(0)
+  libraryId     String
+  library       VideoLibrary    @relation(fields: [libraryId], references: [id], onDelete: Cascade)
+  categoryId    String?
+  category      VideoCategory?  @relation(fields: [categoryId], references: [id])
+  lessonId      String?
+  lesson        Lesson?         @relation(fields: [lessonId], references: [id])
+  watchProgress VideoProgress[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+
+  @@index([libraryId])
+  @@index([categoryId])
+  @@index([cefrLevel])
+  @@map("video_contents")
+}
+
+model VideoProgress {
+  id             String       @id @default(cuid())
+  videoId        String
+  video          VideoContent @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  studentId      String
+  student        Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  watchedSeconds Int          @default(0)
+  totalSeconds   Int          @default(0)
+  percentage     Int          @default(0)
+  isCompleted    Boolean      @default(false)
+  lastWatchedAt  DateTime     @default(now())
+  completedAt    DateTime?
+
+  @@unique([videoId, studentId])
+  @@index([studentId])
+  @@map("video_progress")
+}
+
+// =====================================================
+// INTERACTIVE EXERCISES
+// =====================================================
+
+model Exercise {
+  id           String           @id @default(cuid())
+  title        String
+  description  String?
+  type         ExerciseType
+  language     String
+  cefrLevel    String?
+  instructions String?
+  timeLimit    Int?             // Time limit in seconds
+  passingScore Int              @default(70)
+  config       Json             // Exercise-type specific configuration
+  isPublished  Boolean          @default(false)
+  createdById  String
+  createdBy    User             @relation(fields: [createdById], references: [id])
+  schoolId     String
+  school       School           @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  lessonId     String?
+  lesson       Lesson?          @relation(fields: [lessonId], references: [id])
+  items        ExerciseItem[]
+  attempts     ExerciseAttempt[]
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@index([schoolId])
+  @@index([cefrLevel])
+  @@index([type])
+  @@map("exercises")
+}
+
+enum ExerciseType {
+  DRAG_DROP
+  MATCHING
+  FILL_BLANKS
+  LISTENING
+  REORDER
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+}
+
+model ExerciseItem {
+  id            String   @id @default(cuid())
+  exerciseId    String
+  exercise      Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  orderIndex    Int      @default(0)
+  questionText  String?
+  content       Json     // Item-specific content (options, pairs, blanks, etc.)
+  correctAnswer Json     // Correct answer(s)
+  points        Int      @default(1)
+  hint          String?
+  explanation   String?
+  audioUrl      String?
+  imageUrl      String?
+
+  @@index([exerciseId])
+  @@map("exercise_items")
+}
+
+model ExerciseAttempt {
+  id          String                @id @default(cuid())
+  exerciseId  String
+  exercise    Exercise              @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+  studentId   String
+  student     Student               @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  status      ExerciseAttemptStatus @default(IN_PROGRESS)
+  score       Int?
+  maxScore    Int?
+  percentage  Int?
+  answers     Json?                 // Array of {itemId, answer, isCorrect, points}
+  startedAt   DateTime              @default(now())
+  completedAt DateTime?
+  timeSpent   Int?                  // Time spent in seconds
+
+  @@index([studentId])
+  @@index([exerciseId])
+  @@map("exercise_attempts")
+}
+
+enum ExerciseAttemptStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
 }
