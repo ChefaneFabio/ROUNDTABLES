@@ -277,7 +277,7 @@ export class AuthService {
 
     return {
       user: this.sanitizeUser(user),
-      profile: this.getProfile(user),
+      profile: this.getProfileData(user),
       ...tokens
     }
   }
@@ -435,19 +435,6 @@ export class AuthService {
   }
 
   // Get profile based on role
-  private getProfile(user: any) {
-    switch (user.role) {
-      case 'LANGUAGE_SCHOOL':
-        return user.schoolProfile
-      case 'TEACHER':
-        return user.teacherProfile
-      case 'STUDENT':
-        return user.studentProfile
-      default:
-        return null
-    }
-  }
-
   private getProfileData(user: any) {
     switch (user.role) {
       case 'LANGUAGE_SCHOOL':

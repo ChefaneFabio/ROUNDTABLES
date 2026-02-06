@@ -39,11 +39,7 @@ const recordPaymentSchema = Joi.object({
 // Generate invoice number
 const generateInvoiceNumber = async (): Promise<string> => {
   const year = new Date().getFullYear()
-  const count = await prisma.payment.count({
-    where: {
-      invoiceNumber: { startsWith: `INV-${year}` }
-    }
-  })
+  const count = await prisma.payment.count()
   return `INV-${year}-${String(count + 1).padStart(5, '0')}`
 }
 

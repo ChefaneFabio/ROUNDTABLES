@@ -1,4 +1,4 @@
-import prisma from '../config/database';
+import { prisma } from '../config/database';
 import { PayrollStatus, LessonStatus } from '@prisma/client';
 import { Decimal } from '@prisma/client/runtime/library';
 

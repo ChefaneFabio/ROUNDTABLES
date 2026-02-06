@@ -351,7 +351,7 @@ async function getPaymentSummary(schoolId: string) {
   return {
     totalDue: totalDue._sum.amount || 0,
     totalPaid: totalPaid._sum.amount || 0,
-    outstanding: (totalDue._sum.amount || 0) - (totalPaid._sum.amount || 0),
+    outstanding: Number(totalDue._sum.amount || 0) - Number(totalPaid._sum.amount || 0),
     pendingCount,
     overdueCount
   }
