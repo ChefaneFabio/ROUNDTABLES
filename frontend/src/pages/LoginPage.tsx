@@ -171,7 +171,7 @@ export function LoginPage() {
 
             <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-gray-500">
               <div className="bg-gray-50 p-3 rounded">
-                <p className="font-medium">Corporate</p>
+                <p className="font-medium">School Admin</p>
                 <p>corporate@demo.com</p>
               </div>
               <div className="bg-gray-50 p-3 rounded">
