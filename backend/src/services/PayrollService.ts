@@ -154,7 +154,7 @@ export class PayrollService {
     const periodStart = new Date(year, month - 1, 1); // First day of month
     const periodEnd = new Date(year, month, 0, 23, 59, 59, 999); // Last day of month
 
-    const payrolls = [];
+    const payrolls: any[] = [];
 
     for (const teacher of teachers) {
       // Check if payroll already exists for this period

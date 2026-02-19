@@ -383,7 +383,7 @@ router.put('/:id', authenticate, requireSchoolAdmin, validateRequest(updatePayme
     // Validate status transition if status is being updated
     if (req.body.status) {
       const validTransitions = VALID_STATUS_TRANSITIONS.payment[payment.status as keyof typeof VALID_STATUS_TRANSITIONS.payment]
-      if (!validTransitions?.includes(req.body.status)) {
+      if (!(validTransitions as readonly string[])?.includes(req.body.status)) {
         return res.status(400).json(
           apiResponse.error(
             `Cannot transition from ${payment.status} to ${req.body.status}`,

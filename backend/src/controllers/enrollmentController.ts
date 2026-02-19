@@ -319,7 +319,7 @@ router.put('/:id', authenticate, requireSchoolAdmin, validateRequest(updateEnrol
     // Validate status transition
     if (status) {
       const validTransitions = VALID_STATUS_TRANSITIONS.enrollment[enrollment.status as keyof typeof VALID_STATUS_TRANSITIONS.enrollment]
-      if (!validTransitions?.includes(status)) {
+      if (!(validTransitions as readonly string[])?.includes(status)) {
         return res.status(400).json(
           apiResponse.error(
             `Cannot transition from ${enrollment.status} to ${status}`,
@@ -332,7 +332,7 @@ router.put('/:id', authenticate, requireSchoolAdmin, validateRequest(updateEnrol
     // Validate payment status transition
     if (paymentStatus) {
       const validPaymentTransitions = VALID_STATUS_TRANSITIONS.payment[enrollment.paymentStatus as keyof typeof VALID_STATUS_TRANSITIONS.payment]
-      if (!validPaymentTransitions?.includes(paymentStatus)) {
+      if (!(validPaymentTransitions as readonly string[])?.includes(paymentStatus)) {
         return res.status(400).json(
           apiResponse.error(
             `Cannot transition payment from ${enrollment.paymentStatus} to ${paymentStatus}`,

@@ -267,7 +267,7 @@ router.patch('/:id/status', authenticate, requireSchoolAdmin, validateRequest(up
 
     // Validate status transition
     const validTransitions = VALID_STATUS_TRANSITIONS.course[course.status as keyof typeof VALID_STATUS_TRANSITIONS.course]
-    if (!validTransitions?.includes(status)) {
+    if (!(validTransitions as readonly string[])?.includes(status)) {
       return res.status(400).json(
         apiResponse.error(
           `Cannot transition from ${course.status} to ${status}`,

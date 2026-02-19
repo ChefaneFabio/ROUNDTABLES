@@ -143,7 +143,7 @@ export class EmailTemplateService {
     templateName: string,
     recipients: Array<{ email: string; data: TemplateData }>
   ): Promise<Array<{ email: string; subject: string; html: string }>> {
-    const results = []
+    const results: Array<{ email: string; subject: string; html: string }> = []
 
     for (const recipient of recipients) {
       try {
