@@ -145,7 +145,6 @@ router.get('/:id', authenticate, async (req: Request, res: Response) => {
 
     // Access control
     const canAccess = req.user?.role === 'ADMIN' ||
-      (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === payroll.teacher.school.id) ||
       req.user?.teacherId === payroll.teacherId
 
     if (!canAccess) {

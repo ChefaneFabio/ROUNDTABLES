@@ -2,10 +2,9 @@ import { Request, Response, NextFunction } from 'express'
 import { UserRole } from '@prisma/client'
 import { prisma } from '../config/database'
 
-// Role hierarchy: ADMIN > LANGUAGE_SCHOOL > TEACHER > STUDENT
+// Role hierarchy: ADMIN > TEACHER > STUDENT
 const roleHierarchy: Record<UserRole, number> = {
   ADMIN: 100,
-  LANGUAGE_SCHOOL: 50,
   TEACHER: 25,
   STUDENT: 10
 }
@@ -62,10 +61,10 @@ export const requireMinRole = (minRole: UserRole) => {
 export const requireAdmin = requireRole('ADMIN')
 
 // School admin or higher
-export const requireSchoolAdmin = requireRole('ADMIN', 'LANGUAGE_SCHOOL')
+export const requireSchoolAdmin = requireRole('ADMIN')
 
 // Teacher or higher
-export const requireTeacher = requireRole('ADMIN', 'LANGUAGE_SCHOOL', 'TEACHER')
+export const requireTeacher = requireRole('ADMIN', 'TEACHER')
 
 // Any authenticated user
 export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
@@ -166,11 +165,6 @@ export const requireCourseAccess = async (
       })
     }
 
-    // School admin owns the course
-    if (req.user.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === course.schoolId) {
-      return next()
-    }
-
     // Teacher is assigned to the course
     if (req.user.role === 'TEACHER' && course.courseTeachers.length > 0) {
       return next()
@@ -244,11 +238,6 @@ export const requireLessonAccess = async (
         error: 'Lesson not found',
         code: 'NOT_FOUND'
       })
-    }
-
-    // School admin owns the course
-    if (req.user.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === lesson.course.schoolId) {
-      return next()
     }
 
     // Teacher is assigned to the lesson

@@ -1,5 +1,6 @@
 import { prisma } from '../config/database'
 import crypto from 'crypto'
+import PDFDocument from 'pdfkit'
 
 interface GenerateCertificateInput {
   studentId: string
@@ -203,30 +204,176 @@ export class CertificateService {
     })
   }
 
-  // Generate PDF certificate (placeholder - would use pdfkit in production)
+  // Generate PDF certificate
   async generatePdf(certificateId: string): Promise<Buffer> {
     const certificate = await this.getCertificate(certificateId)
 
-    // In production, use pdfkit to generate actual PDF
-    // For now, return a placeholder
-    const pdfContent = `
-      MAKA LANGUAGE CENTRE
-      Certificate of Achievement
+    return new Promise((resolve, reject) => {
+      const doc = new PDFDocument({ size: 'A4', layout: 'landscape', margin: 50 })
+      const chunks: Buffer[] = []
 
-      This is to certify that
-      ${certificate.student.user.name}
+      doc.on('data', (chunk: Buffer) => chunks.push(chunk))
+      doc.on('end', () => resolve(Buffer.concat(chunks)))
+      doc.on('error', reject)
 
-      has achieved CEFR Level ${certificate.cefrLevel}
-      in ${certificate.language}
+      const w = doc.page.width
+      const h = doc.page.height
 
-      ${certificate.course ? `Course: ${certificate.course.name}` : ''}
+      // Border
+      doc.lineWidth(3).rect(30, 30, w - 60, h - 60).stroke('#4f46e5')
+      doc.lineWidth(1).rect(36, 36, w - 72, h - 72).stroke('#c7d2fe')
 
-      Certificate Number: ${certificate.certificateNumber}
-      Issued: ${certificate.issuedAt.toISOString().split('T')[0]}
-      Valid Until: ${certificate.validUntil?.toISOString().split('T')[0] || 'N/A'}
-    `
+      // Header
+      doc.fontSize(14).fillColor('#6b7280').text('MAKA LANGUAGE CENTRE', 0, 70, { align: 'center' })
+      doc.moveDown(0.3)
+      doc.fontSize(32).fillColor('#111827').text('Certificate of Achievement', { align: 'center' })
 
-    return Buffer.from(pdfContent)
+      // Decorative line
+      const cx = w / 2
+      doc.moveTo(cx - 100, 145).lineTo(cx + 100, 145).lineWidth(2).stroke('#4f46e5')
+
+      // Body
+      doc.moveDown(1.5)
+      doc.fontSize(14).fillColor('#6b7280').text('This is to certify that', { align: 'center' })
+      doc.moveDown(0.5)
+      doc.fontSize(26).fillColor('#111827').text(certificate.student.user.name, { align: 'center' })
+      doc.moveDown(0.5)
+      doc.fontSize(14).fillColor('#6b7280').text('has demonstrated proficiency at', { align: 'center' })
+      doc.moveDown(0.5)
+      doc.fontSize(42).fillColor('#4f46e5').text(`CEFR ${certificate.cefrLevel}`, { align: 'center' })
+      doc.moveDown(0.3)
+      doc.fontSize(16).fillColor('#374151').text(`in ${certificate.language}`, { align: 'center' })
+
+      if (certificate.course) {
+        doc.moveDown(0.5)
+        doc.fontSize(12).fillColor('#6b7280').text(`Course: ${certificate.course.name}`, { align: 'center' })
+      }
+
+      // Footer
+      const footerY = h - 120
+      doc.fontSize(10).fillColor('#9ca3af')
+      doc.text(`Certificate No: ${certificate.certificateNumber}`, 60, footerY, { align: 'left' })
+      doc.text(`Issued: ${certificate.issuedAt.toISOString().split('T')[0]}`, 60, footerY + 14, { align: 'left' })
+      if (certificate.validUntil) {
+        doc.text(`Valid Until: ${certificate.validUntil.toISOString().split('T')[0]}`, 60, footerY + 28, { align: 'left' })
+      }
+      doc.text('MAKA Language Centre', 0, footerY + 14, { align: 'right', width: w - 60 })
+
+      doc.end()
+    })
+  }
+
+  // Generate assessment result PDF (detailed report)
+  async generateAssessmentResultPdf(assessmentId: string): Promise<Buffer> {
+    const assessment = await prisma.assessment.findUnique({
+      where: { id: assessmentId },
+      include: {
+        student: { include: { user: { select: { name: true, email: true } } } }
+      }
+    })
+
+    if (!assessment) throw new Error('Assessment not found')
+    if (assessment.status !== 'COMPLETED') throw new Error('Assessment not yet completed')
+
+    const answers = (assessment.answers as any[]) || []
+    const correctCount = answers.filter((a: any) => a.isCorrect).length
+
+    const LEVEL_NAMES: Record<string, string> = {
+      A1: 'Beginner', A2: 'Elementary', B1: 'Intermediate',
+      B2: 'Upper Intermediate', C1: 'Advanced', C2: 'Proficiency'
+    }
+    const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+
+    // Build level breakdown
+    const levelBreakdown: Record<string, { correct: number; total: number }> = {}
+    for (const answer of answers) {
+      if (!levelBreakdown[answer.cefrLevel]) {
+        levelBreakdown[answer.cefrLevel] = { correct: 0, total: 0 }
+      }
+      levelBreakdown[answer.cefrLevel].total++
+      if (answer.isCorrect) levelBreakdown[answer.cefrLevel].correct++
+    }
+
+    return new Promise((resolve, reject) => {
+      const doc = new PDFDocument({ size: 'A4', margin: 50 })
+      const chunks: Buffer[] = []
+
+      doc.on('data', (chunk: Buffer) => chunks.push(chunk))
+      doc.on('end', () => resolve(Buffer.concat(chunks)))
+      doc.on('error', reject)
+
+      const w = doc.page.width - 100 // usable width
+
+      // Header bar
+      doc.rect(0, 0, doc.page.width, 80).fill('#4f46e5')
+      doc.fontSize(22).fillColor('#ffffff').text('MAKA Language Centre', 50, 25)
+      doc.fontSize(12).text('Placement Test Results', 50, 52)
+
+      // Student info
+      let y = 110
+      doc.fillColor('#111827').fontSize(18).text(assessment.student.user.name, 50, y)
+      y += 24
+      doc.fillColor('#6b7280').fontSize(11).text(assessment.student.user.email, 50, y)
+      y += 16
+      doc.text(`${assessment.language} Placement Test  |  ${assessment.completedAt ? new Date(assessment.completedAt).toLocaleDateString() : ''}`, 50, y)
+
+      // Result box
+      y += 40
+      doc.roundedRect(50, y, w, 90, 8).fill('#f3f4f6')
+      doc.fillColor('#6b7280').fontSize(11).text('Your CEFR Level', 70, y + 12)
+      doc.fillColor('#4f46e5').fontSize(36).text(assessment.cefrLevel || 'A1', 70, y + 28)
+      doc.fillColor('#374151').fontSize(14).text(LEVEL_NAMES[assessment.cefrLevel || 'A1'] || '', 70, y + 68)
+
+      // Score summary on right
+      doc.fillColor('#111827').fontSize(28).text(`${assessment.score}%`, 350, y + 18, { width: w - 320, align: 'center' })
+      doc.fillColor('#6b7280').fontSize(11).text('Overall Score', 350, y + 50, { width: w - 320, align: 'center' })
+
+      doc.fillColor('#111827').fontSize(16).text(`${correctCount} / ${answers.length}`, 350, y + 68, { width: w - 320, align: 'center' })
+
+      // Level breakdown table
+      y += 120
+      doc.fillColor('#111827').fontSize(16).text('Performance by Level', 50, y)
+      y += 30
+
+      // Table header
+      doc.rect(50, y, w, 24).fill('#f9fafb')
+      doc.fillColor('#374151').fontSize(10)
+      doc.text('Level', 60, y + 7)
+      doc.text('Name', 130, y + 7)
+      doc.text('Correct', 300, y + 7)
+      doc.text('Total', 370, y + 7)
+      doc.text('Accuracy', 430, y + 7)
+      y += 24
+
+      for (const level of CEFR_LEVELS) {
+        const data = levelBreakdown[level]
+        if (!data) continue
+
+        const pct = Math.round((data.correct / data.total) * 100)
+        const barColor = pct >= 60 ? '#22c55e' : '#ef4444'
+
+        doc.fillColor('#111827').fontSize(10)
+        doc.text(level, 60, y + 6)
+        doc.text(LEVEL_NAMES[level], 130, y + 6)
+        doc.text(`${data.correct}`, 300, y + 6)
+        doc.text(`${data.total}`, 370, y + 6)
+
+        // Accuracy bar
+        doc.rect(430, y + 4, 80, 12).fill('#e5e7eb')
+        doc.rect(430, y + 4, Math.max(1, (pct / 100) * 80), 12).fill(barColor)
+        doc.fillColor('#111827').text(`${pct}%`, 515, y + 6)
+
+        doc.moveTo(50, y + 24).lineTo(50 + w, y + 24).lineWidth(0.5).stroke('#e5e7eb')
+        y += 28
+      }
+
+      // Footer
+      const footerY = doc.page.height - 60
+      doc.fillColor('#9ca3af').fontSize(9)
+      doc.text('This report was generated by MAKA Language Centre. Results are based on an adaptive placement test.', 50, footerY, { width: w, align: 'center' })
+
+      doc.end()
+    })
   }
 
   // Generate LinkedIn share URL

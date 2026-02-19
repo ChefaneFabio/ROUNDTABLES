@@ -132,23 +132,6 @@ export const authApi = {
     return response.data.data!
   },
 
-  async registerSchool(data: {
-    email: string
-    password: string
-    name: string
-    schoolName: string
-    company?: string
-  }): Promise<LoginResponse> {
-    const response = await api.post<ApiResponse<LoginResponse>>(
-      '/auth/register/school',
-      data
-    )
-    if (response.data.success && response.data.data) {
-      setTokens(response.data.data.accessToken, response.data.data.refreshToken)
-    }
-    return response.data.data!
-  },
-
   async registerTeacher(data: {
     email: string
     password: string
@@ -189,6 +172,16 @@ export const authApi = {
 
   async getMe(): Promise<User> {
     const response = await api.get<ApiResponse<User>>('/auth/me')
+    return response.data.data!
+  },
+
+  async getProfile(): Promise<{ user: User; profile: any }> {
+    const response = await api.get<ApiResponse<{ user: User; profile: any }>>('/auth/me')
+    return response.data.data!
+  },
+
+  async updateProfile(data: { name?: string; phone?: string; address?: string; bio?: string; preferredLanguage?: string }): Promise<{ user: User; profile: any }> {
+    const response = await api.put<ApiResponse<{ user: User; profile: any }>>('/auth/me', data)
     return response.data.data!
   },
 

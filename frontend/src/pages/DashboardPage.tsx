@@ -1,4 +1,5 @@
 import { useQuery } from 'react-query'
+import { useNavigate } from 'react-router-dom'
 import {
   Users,
   BookOpen,
@@ -9,6 +10,7 @@ import {
   Clock,
   MessageSquare,
   TrendingUp,
+  ClipboardCheck,
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { dashboardApi } from '../services/api'
@@ -20,7 +22,7 @@ import { RecentActivity } from '../components/dashboard/RecentActivity'
 import { RecommendationsCard } from '../components/dashboard/RecommendationsCard'
 
 export function DashboardPage() {
-  const { user, isAdmin, isSchool, isTeacher, isStudent } = useAuth()
+  const { user, isAdmin, isTeacher, isStudent } = useAuth()
 
   const { data, isLoading, error } = useQuery('dashboard', dashboardApi.getDashboard)
 
@@ -48,18 +50,14 @@ export function DashboardPage() {
           Welcome back, {user?.name}!
         </h1>
         <p className="text-gray-600 mt-1">
-          {isAdmin && "Here's an overview of your platform."}
-          {isSchool && `Here's an overview of ${data?.school?.name || 'your school'}.`}
+          {isAdmin && (data?.school ? `Here's an overview of ${data.school.name || 'your school'}.` : "Here's an overview of your platform.")}
           {isTeacher && "Here's your teaching schedule and tasks."}
           {isStudent && "Here's your learning progress."}
         </p>
       </div>
 
-      {/* Admin Dashboard */}
-      {isAdmin && <AdminDashboard data={data} />}
-
-      {/* School Dashboard */}
-      {isSchool && <SchoolDashboard data={data} />}
+      {/* Admin Dashboard (school dashboard if admin has a school) */}
+      {isAdmin && (data?.school ? <SchoolDashboard data={data} /> : <AdminDashboard data={data} />)}
 
       {/* Teacher Dashboard */}
       {isTeacher && <TeacherDashboard data={data} />}
@@ -359,8 +357,40 @@ function TeacherDashboard({ data }: { data: any }) {
 }
 
 function StudentDashboard({ data }: { data: any }) {
+  const navigate = useNavigate()
+  const assignedAssessments = data?.assignedAssessments || []
+
   return (
     <>
+      {/* Pending assigned tests */}
+      {assignedAssessments.length > 0 && (
+        <div className="bg-amber-50 border-2 border-amber-300 rounded-lg shadow-md p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <ClipboardCheck className="w-6 h-6 text-amber-600" />
+            <h3 className="text-lg font-semibold text-amber-800">Pending Placement Test{assignedAssessments.length > 1 ? 's' : ''}</h3>
+          </div>
+          <div className="space-y-3">
+            {assignedAssessments.map((a: any) => (
+              <div key={a.id} className="flex items-center justify-between bg-white rounded-lg p-4 border border-amber-200">
+                <div>
+                  <p className="font-medium text-gray-900">{a.language} Placement Test</p>
+                  <p className="text-sm text-gray-500">
+                    Time limit: {a.timeLimitMin} minutes
+                    {a.assignedAt && ` | Assigned: ${new Date(a.assignedAt).toLocaleDateString()}`}
+                  </p>
+                </div>
+                <button
+                  onClick={() => navigate('/assessment')}
+                  className="flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors font-medium"
+                >
+                  Take Test
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* AI Recommendations */}
       <RecommendationsCard />
 

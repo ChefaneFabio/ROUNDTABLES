@@ -7,6 +7,10 @@ export interface User {
   email: string
   name: string
   role: UserRole
+  phone?: string
+  address?: string
+  bio?: string
+  preferredLanguage?: string
   isActive: boolean
   lastLoginAt?: Date
   createdAt: Date
@@ -18,7 +22,6 @@ export interface User {
 
 export enum UserRole {
   ADMIN = 'ADMIN',
-  LANGUAGE_SCHOOL = 'LANGUAGE_SCHOOL',
   TEACHER = 'TEACHER',
   STUDENT = 'STUDENT'
 }
@@ -537,15 +540,6 @@ export interface PaginatedResponse<T> extends ApiResponse<T[]> {
 export interface LoginRequest {
   email: string
   password: string
-}
-
-export interface RegisterSchoolRequest {
-  email: string
-  password: string
-  name: string
-  schoolName: string
-  company?: string
-  description?: string
 }
 
 export interface RegisterTeacherRequest {

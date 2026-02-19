@@ -36,7 +36,7 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     const where: any = { deletedAt: null }
 
     // Apply access control
-    if (req.user?.role === 'LANGUAGE_SCHOOL') {
+    if (req.user?.role === 'ADMIN') {
       where.schoolId = req.user.schoolId
     } else if (req.user?.role === 'TEACHER') {
       // Teachers can see students in their courses
@@ -207,7 +207,6 @@ router.put('/:id', authenticate, validateRequest(updateStudentSchema), async (re
 
     // Check access - student can update their own profile, school admin can update any student
     const canEdit = req.user?.role === 'ADMIN' ||
-      (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === student.schoolId) ||
       (req.user?.role === 'STUDENT' && req.user.studentId === id)
 
     if (!canEdit) {

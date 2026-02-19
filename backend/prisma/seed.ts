@@ -17,7 +17,7 @@ async function main() {
         email: 'corporate@demo.com',
         password,
         name: 'Corporate Admin',
-        role: 'LANGUAGE_SCHOOL',
+        role: 'ADMIN',
         schoolProfile: {
           create: {
             name: 'Maka Language Centre',

@@ -41,13 +41,13 @@ const CEFR_COLORS: Record<string, string> = {
 }
 
 export function AnalyticsPage() {
-  const { isSchool, isAdmin } = useAuth()
+  const { isAdmin } = useAuth()
   const [dateRange] = useState<{ start?: string; end?: string }>({})
 
   const { data, isLoading, error } = useQuery<CorporateAnalytics>(
     ['corporateAnalytics', dateRange],
     () => analyticsApi.getCorporateAnalytics(dateRange.start, dateRange.end),
-    { enabled: isSchool || isAdmin }
+    { enabled: isAdmin }
   )
 
   if (isLoading) return <LoadingPage />

@@ -1,6 +1,7 @@
+import { useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import { useQuery, useMutation } from 'react-query'
-import { Award, Download, ChevronRight, BookOpen, MessageCircle } from 'lucide-react'
+import { Award, Download, ChevronRight, BookOpen, MessageCircle, Mail, FileText, Check, ClipboardList } from 'lucide-react'
 import { assessmentApi } from '../services/assessmentApi'
 import { certificateApi } from '../services/certificateApi'
 import { LoadingPage } from '../components/common/LoadingSpinner'
@@ -50,11 +51,38 @@ export function AssessmentResultPage() {
     { enabled: !!id }
   )
 
+  const [emailSent, setEmailSent] = useState(false)
+
   const generateCertificate = useMutation(
     () => certificateApi.generateAssessmentCertificate(id!),
     {
       onSuccess: (certificate) => {
         navigate(`/certificates/${certificate.id}`)
+      }
+    }
+  )
+
+  const downloadPdf = useMutation(
+    () => assessmentApi.downloadResultsPdf(id!),
+    {
+      onSuccess: (blob) => {
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = `${assessment?.language || 'placement'}-results.pdf`
+        document.body.appendChild(a)
+        a.click()
+        window.URL.revokeObjectURL(url)
+        document.body.removeChild(a)
+      }
+    }
+  )
+
+  const emailResults = useMutation(
+    () => assessmentApi.emailResults(id!),
+    {
+      onSuccess: () => {
+        setEmailSent(true)
       }
     }
   )
@@ -126,11 +154,14 @@ export function AssessmentResultPage() {
 
               const levelCorrect = levelAnswers.filter(a => a.isCorrect).length
               const percentage = Math.round((levelCorrect / levelAnswers.length) * 100)
+              const levelName = CEFR_DESCRIPTIONS[level]?.name || ''
 
               return (
                 <div key={level}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-700">{level}</span>
+                    <span className="text-sm font-medium text-gray-700">
+                      {level} — {levelName}
+                    </span>
                     <span className="text-sm text-gray-500">
                       {levelCorrect}/{levelAnswers.length} ({percentage}%)
                     </span>
@@ -150,17 +181,76 @@ export function AssessmentResultPage() {
         </Card>
       )}
 
-      {/* Actions */}
+      {/* Review Answers */}
       <Card>
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">What's Next?</h2>
+        <Link
+          to={`/assessment/review/${id}`}
+          className="flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all"
+        >
+          <div className="flex items-center gap-3">
+            <ClipboardList className="w-5 h-5 text-primary-600" />
+            <div>
+              <p className="font-medium text-gray-900">Review My Answers</p>
+              <p className="text-sm text-gray-500">See each question, your answer, and the correct answer</p>
+            </div>
+          </div>
+          <ChevronRight className="w-5 h-5 text-gray-400" />
+        </Link>
+      </Card>
+
+      {/* Download & Share */}
+      <Card>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">Download & Share Results</h2>
         <div className="space-y-3">
+          <button
+            onClick={() => downloadPdf.mutate()}
+            disabled={downloadPdf.isLoading}
+            className="w-full flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <FileText className="w-5 h-5 text-primary-600" />
+              <div className="text-left">
+                <p className="font-medium text-gray-900">
+                  {downloadPdf.isLoading ? 'Generating PDF...' : 'Download Results PDF'}
+                </p>
+                <p className="text-sm text-gray-500">Get a detailed report of your test results</p>
+              </div>
+            </div>
+            <Download className="w-5 h-5 text-gray-400" />
+          </button>
+
+          <button
+            onClick={() => emailResults.mutate()}
+            disabled={emailResults.isLoading || emailSent}
+            className="w-full flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all"
+          >
+            <div className="flex items-center gap-3">
+              <Mail className="w-5 h-5 text-primary-600" />
+              <div className="text-left">
+                <p className="font-medium text-gray-900">
+                  {emailResults.isLoading ? 'Sending...' : emailSent ? 'Email Sent!' : 'Email Results'}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {emailSent ? 'Check your inbox for the results' : 'Send results with PDF to your email'}
+                </p>
+              </div>
+            </div>
+            {emailSent ? <Check className="w-5 h-5 text-green-500" /> : <ChevronRight className="w-5 h-5 text-gray-400" />}
+          </button>
+
+          {emailResults.isError && (
+            <p className="text-sm text-red-600 px-4">
+              {(emailResults.error as Error)?.message || 'Failed to send email. SMTP may not be configured.'}
+            </p>
+          )}
+
           <button
             onClick={() => generateCertificate.mutate()}
             disabled={generateCertificate.isLoading}
             className="w-full flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all"
           >
             <div className="flex items-center gap-3">
-              <Download className="w-5 h-5 text-primary-600" />
+              <Award className="w-5 h-5 text-primary-600" />
               <div className="text-left">
                 <p className="font-medium text-gray-900">Get Your Certificate</p>
                 <p className="text-sm text-gray-500">Download and share your achievement</p>
@@ -169,6 +259,13 @@ export function AssessmentResultPage() {
             <ChevronRight className="w-5 h-5 text-gray-400" />
           </button>
 
+        </div>
+      </Card>
+
+      {/* What's Next */}
+      <Card>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4">What's Next?</h2>
+        <div className="space-y-3">
           <Link
             to="/courses"
             className="w-full flex items-center justify-between p-4 rounded-lg border border-gray-200 hover:border-primary-300 hover:bg-primary-50 transition-all"

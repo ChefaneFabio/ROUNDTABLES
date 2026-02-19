@@ -116,7 +116,6 @@ router.post('/', authenticate, requireTeacher, validateRequest(createMaterialSch
 
     // Check access - assigned teacher or school admin
     const canCreate = req.user?.role === 'ADMIN' ||
-      (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === lesson.course.schoolId) ||
       (req.user?.teacherId === lesson.teacherId)
 
     if (!canCreate) {
@@ -160,7 +159,6 @@ router.put('/:id', authenticate, requireTeacher, validateRequest(updateMaterialS
 
     // Check access
     const canEdit = req.user?.role === 'ADMIN' ||
-      (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === material.lesson.course.schoolId) ||
       (req.user?.teacherId === material.lesson.teacherId)
 
     if (!canEdit) {
@@ -195,7 +193,6 @@ router.post('/lesson/:lessonId/reorder', authenticate, requireTeacher, validateR
 
     // Check access
     const canReorder = req.user?.role === 'ADMIN' ||
-      (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === lesson.course.schoolId) ||
       (req.user?.teacherId === lesson.teacherId)
 
     if (!canReorder) {
@@ -248,7 +245,6 @@ router.delete('/:id', authenticate, requireTeacher, async (req: Request, res: Re
 
     // Check access
     const canDelete = req.user?.role === 'ADMIN' ||
-      (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === material.lesson.course.schoolId) ||
       (req.user?.teacherId === material.lesson.teacherId)
 
     if (!canDelete) {
@@ -313,7 +309,6 @@ router.post('/lesson/:lessonId/bulk', authenticate, requireTeacher, async (req: 
 
     // Check access
     const canCreate = req.user?.role === 'ADMIN' ||
-      (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === lesson.course.schoolId) ||
       (req.user?.teacherId === lesson.teacherId)
 
     if (!canCreate) {

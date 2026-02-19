@@ -60,7 +60,7 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     const where: any = { deletedAt: null }
 
     // Apply access control
-    if (req.user?.role === 'LANGUAGE_SCHOOL') {
+    if (req.user?.role === 'ADMIN') {
       where.schoolId = req.user.schoolId
     } else if (req.user?.role === 'TEACHER') {
       where.courseTeachers = { some: { teacherId: req.user.teacherId } }

@@ -15,13 +15,17 @@ model User {
   id            String    @id @default(cuid())
   email         String    @unique
   password      String    // Hashed password
-  name          String
-  role          UserRole  @default(STUDENT)
-  isActive      Boolean   @default(true)
-  lastLoginAt   DateTime?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  deletedAt     DateTime? // Soft delete
+  name              String
+  role              UserRole  @default(STUDENT)
+  phone             String?
+  address           String?
+  bio               String?
+  preferredLanguage String?   @default("en")
+  isActive          Boolean   @default(true)
+  lastLoginAt       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime? // Soft delete
 
   // Role-specific profiles (one-to-one)
   schoolProfile  School?
@@ -40,8 +44,7 @@ model User {
 }
 
 enum UserRole {
-  ADMIN           // System administrator
-  LANGUAGE_SCHOOL // School/organization admin
+  ADMIN           // System administrator (owns the school)
   TEACHER         // Instructor/trainer
   STUDENT         // Learner/participant
 }
@@ -641,6 +644,7 @@ enum NotificationType {
   PAYMENT_REMINDER
   PAYMENT_RECEIVED
   COURSE_UPDATE
+  ASSESSMENT_ASSIGNED
   GENERAL
 }
 
@@ -1010,17 +1014,26 @@ enum PaymentMethodCode {
 // =====================================================
 
 model Assessment {
-  id          String           @id @default(cuid())
-  studentId   String
-  student     Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  language    String
-  type        AssessmentType   @default(PLACEMENT)
-  score       Int?
-  cefrLevel   String?          // A1, A2, B1, B2, C1, C2
-  status      AssessmentStatus @default(IN_PROGRESS)
-  answers     Json?            // Array of {questionId, answer, isCorrect}
-  startedAt   DateTime         @default(now())
-  completedAt DateTime?
+  id             String           @id @default(cuid())
+  studentId      String
+  student        Student          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  language       String
+  type           AssessmentType   @default(PLACEMENT)
+  score          Int?
+  cefrLevel      String?          // A1, A2, B1, B2, C1, C2
+  status         AssessmentStatus @default(IN_PROGRESS)
+  answers        Json?            // Array of {questionId, answer, isCorrect}
+  targetLevel    String           @default("B1") // Adaptive state persisted across API calls
+  questionsLimit Int              @default(40)   // Configurable test length
+  startedAt      DateTime?
+  completedAt    DateTime?
+
+  // Assignment & security fields
+  assignedById   String?          // userId of admin who assigned (null = self-started)
+  assignedAt     DateTime?        // when assigned
+  timeLimitMin   Int?             // minutes allowed (null = unlimited for self-started)
+  expiresAt      DateTime?        // set when student starts: startedAt + timeLimitMin
+  violations     Json?            // [{type, timestamp, details}] — tab switches, copy attempts, etc.
 
   @@index([studentId])
   @@index([language])
@@ -1035,6 +1048,8 @@ model AssessmentQuestion {
   questionText String
   options      Json?               // For multiple choice: [{label, value}]
   correctAnswer String
+  passage      String?             // Reading comprehension text
+  passageTitle String?             // Optional passage header
   audioUrl     String?
   imageUrl     String?
   points       Int                 @default(1)
@@ -1075,6 +1090,7 @@ enum AssessmentType {
 }
 
 enum AssessmentStatus {
+  ASSIGNED
   IN_PROGRESS
   COMPLETED
   EXPIRED

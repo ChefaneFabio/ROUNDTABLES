@@ -32,6 +32,9 @@ import SpeakingPracticePage from './pages/SpeakingPracticePage'
 // Admin pages for Phase 2
 import AdminVideoLibrariesPage from './pages/admin/VideoLibrariesPage'
 import AdminExercisesPage from './pages/admin/ExercisesPage'
+// Assessment review pages
+import { AssessmentReviewPage } from './pages/AssessmentReviewPage'
+import { StudentAssessmentsPage } from './pages/StudentAssessmentsPage'
 // Portal pages
 import TeachersPage from './pages/TeachersPage'
 import StudentsPage from './pages/StudentsPage'
@@ -141,7 +144,7 @@ function App() {
       <Route
         path="/courses/new"
         element={
-          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL]}>
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <CreateCoursePage />
             </Layout>
@@ -185,7 +188,7 @@ function App() {
       <Route
         path="/teachers"
         element={
-          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL]}>
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <TeachersPage />
             </Layout>
@@ -196,7 +199,7 @@ function App() {
       <Route
         path="/students"
         element={
-          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL]}>
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <StudentsPage />
             </Layout>
@@ -218,7 +221,7 @@ function App() {
       <Route
         path="/payments"
         element={
-          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL]}>
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <PaymentsPage />
             </Layout>
@@ -229,7 +232,7 @@ function App() {
       <Route
         path="/reports"
         element={
-          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL]}>
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <ReportsPage />
             </Layout>
@@ -302,11 +305,47 @@ function App() {
         }
       />
 
+      {/* Assessment Review (student reviews own test) */}
+      <Route
+        path="/assessment/review/:id"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <AssessmentReviewPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: View student's assessments */}
+      <Route
+        path="/admin/student/:studentId/assessments"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <StudentAssessmentsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Review a specific assessment in detail */}
+      <Route
+        path="/admin/assessment/:id/review"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <AssessmentReviewPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
       {/* Analytics Route */}
       <Route
         path="/analytics"
         element={
-          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL]}>
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <AnalyticsPage />
             </Layout>
@@ -342,7 +381,7 @@ function App() {
       <Route
         path="/api-keys"
         element={
-          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL]}>
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <ApiKeysPage />
             </Layout>
@@ -410,7 +449,7 @@ function App() {
       <Route
         path="/admin/videos/libraries"
         element={
-          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL, UserRole.TEACHER]}>
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
             <Layout>
               <AdminVideoLibrariesPage />
             </Layout>
@@ -422,7 +461,7 @@ function App() {
       <Route
         path="/admin/exercises"
         element={
-          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.LANGUAGE_SCHOOL, UserRole.TEACHER]}>
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
             <Layout>
               <AdminExercisesPage />
             </Layout>

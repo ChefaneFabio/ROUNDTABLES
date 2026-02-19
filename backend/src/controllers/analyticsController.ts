@@ -66,7 +66,7 @@ router.get('/student/:studentId', authenticate, async (req: Request, res: Respon
     const report = await analyticsService.getStudentReport(req.params.studentId)
 
     // Verify school access for school admins
-    if (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId) {
+    if (req.user?.role === 'ADMIN' && req.user.schoolId) {
       // The student report includes school info, we can verify it matches
       // This is a simplified check - in production, add proper validation
     }
@@ -97,7 +97,7 @@ router.get('/course/:courseId', authenticate, async (req: Request, res: Response
     const report = await analyticsService.getCourseReport(req.params.courseId)
 
     // Verify access - school admin, teacher assigned to course, or admin
-    if (req.user?.role === 'LANGUAGE_SCHOOL') {
+    if (req.user?.role === 'ADMIN') {
       // Would need to verify course belongs to their school
     }
 

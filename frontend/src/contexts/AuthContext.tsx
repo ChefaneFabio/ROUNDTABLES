@@ -19,7 +19,6 @@ interface AuthContextType {
   refreshUser: () => Promise<void>
   hasRole: (...roles: UserRole[]) => boolean
   isAdmin: boolean
-  isSchool: boolean
   isTeacher: boolean
   isStudent: boolean
 }
@@ -113,7 +112,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     refreshUser,
     hasRole,
     isAdmin: user?.role === UserRole.ADMIN,
-    isSchool: user?.role === UserRole.LANGUAGE_SCHOOL,
     isTeacher: user?.role === UserRole.TEACHER,
     isStudent: user?.role === UserRole.STUDENT,
   }

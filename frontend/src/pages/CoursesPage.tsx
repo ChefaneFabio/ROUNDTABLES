@@ -12,7 +12,7 @@ import { LoadingSpinner } from '../components/common/LoadingSpinner'
 import { Pagination } from '../components/common/Table'
 
 export function CoursesPage() {
-  const { isSchool, isAdmin, isStudent } = useAuth()
+  const { isAdmin, isStudent } = useAuth()
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
@@ -39,7 +39,7 @@ export function CoursesPage() {
               : 'Manage your courses and track progress'}
           </p>
         </div>
-        {(isSchool || isAdmin) && (
+        {(isAdmin) && (
           <Button
             leftIcon={<Plus className="h-5 w-5" />}
             onClick={() => navigate('/courses/new')}
@@ -96,11 +96,11 @@ export function CoursesPage() {
             <p className="text-gray-500 mb-4">
               {statusFilter
                 ? 'Try adjusting your filters'
-                : isSchool || isAdmin
+                : isAdmin
                 ? 'Get started by creating your first course'
                 : 'No courses available yet'}
             </p>
-            {(isSchool || isAdmin) && !statusFilter && (
+            {(isAdmin) && !statusFilter && (
               <Button onClick={() => navigate('/courses/new')}>
                 Create Course
               </Button>

@@ -9,15 +9,6 @@ import { apiResponse, handleError } from '../utils/apiResponse'
 const router = Router()
 
 // Validation schemas
-const registerSchoolSchema = Joi.object({
-  email: Joi.string().email().required(),
-  password: Joi.string().min(8).max(100).required(),
-  name: Joi.string().min(2).max(100).required(),
-  schoolName: Joi.string().min(2).max(200).required(),
-  company: Joi.string().max(200).optional(),
-  description: Joi.string().max(1000).optional()
-})
-
 const registerTeacherSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().min(8).max(100).required(),
@@ -50,25 +41,6 @@ const refreshTokenSchema = Joi.object({
   refreshToken: Joi.string().required()
 })
 
-// Register a new school (public)
-router.post(
-  '/register/school',
-  authLimiter,
-  validateRequest(registerSchoolSchema),
-  async (req: Request, res: Response) => {
-    try {
-      const result = await authService.registerSchool({
-        ...req.body,
-        role: 'LANGUAGE_SCHOOL'
-      })
-
-      res.status(201).json(apiResponse.success(result, 'School registered successfully'))
-    } catch (error) {
-      handleError(res, error)
-    }
-  }
-)
-
 // Register a new teacher (school admin only)
 router.post(
   '/register/teacher',
@@ -81,7 +53,7 @@ router.post(
       }
 
       // Only school admins and system admins can create teachers
-      if (req.user.role !== 'ADMIN' && req.user.role !== 'LANGUAGE_SCHOOL') {
+      if (req.user.role !== 'ADMIN') {
         return res.status(403).json(apiResponse.error('Only school administrators can create teachers', 'FORBIDDEN'))
       }
 
@@ -194,6 +166,34 @@ router.get('/me', authenticate, async (req: Request, res: Response) => {
     handleError(res, error)
   }
 })
+
+// Update current user profile
+const updateProfileSchema = Joi.object({
+  name: Joi.string().min(2).max(100).optional(),
+  phone: Joi.string().max(30).allow('', null).optional(),
+  address: Joi.string().max(500).allow('', null).optional(),
+  bio: Joi.string().max(1000).allow('', null).optional(),
+  preferredLanguage: Joi.string().max(10).optional(),
+})
+
+router.put(
+  '/me',
+  authenticate,
+  validateRequest(updateProfileSchema),
+  async (req: Request, res: Response) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json(apiResponse.error('Authentication required', 'UNAUTHORIZED'))
+      }
+
+      const profile = await authService.updateProfile(req.user.id, req.body)
+
+      res.json(apiResponse.success(profile, 'Profile updated successfully'))
+    } catch (error) {
+      handleError(res, error)
+    }
+  }
+)
 
 // Change password
 router.post(

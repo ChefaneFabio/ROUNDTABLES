@@ -1,39 +1,77 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { User, Mail, Phone, MapPin, Calendar, Camera, Save, Shield } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import { authApi } from '../services/api'
+import { LoadingPage } from '../components/common/LoadingSpinner'
+import { Alert } from '../components/common/Alert'
 
 export const ProfilePage: React.FC = () => {
-  const { user } = useAuth()
+  const { user: authUser } = useAuth()
+  const queryClient = useQueryClient()
   const [isEditing, setIsEditing] = useState(false)
-  const [isSaving, setIsSaving] = useState(false)
+  const [successMsg, setSuccessMsg] = useState('')
   const [formData, setFormData] = useState({
-    name: user?.name || '',
-    email: user?.email || '',
+    name: '',
     phone: '',
     address: '',
     bio: '',
-    language: 'en'
+    preferredLanguage: 'en'
   })
 
-  const handleSave = async () => {
-    setIsSaving(true)
-    // Simulate API call
-    setTimeout(() => {
-      setIsSaving(false)
+  const { data, isLoading, error } = useQuery('profile', authApi.getProfile)
+
+  const user = data?.user || authUser
+  const profile = data?.profile
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        phone: user.phone || '',
+        address: user.address || '',
+        bio: user.bio || '',
+        preferredLanguage: user.preferredLanguage || 'en'
+      })
+    }
+  }, [user])
+
+  const updateMutation = useMutation(authApi.updateProfile, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('profile')
       setIsEditing(false)
-      alert('Profile updated successfully!')
-    }, 1000)
+      setSuccessMsg('Profile updated successfully!')
+      setTimeout(() => setSuccessMsg(''), 3000)
+    }
+  })
+
+  const handleSave = () => {
+    updateMutation.mutate(formData)
+  }
+
+  const handleCancel = () => {
+    if (user) {
+      setFormData({
+        name: user.name || '',
+        phone: user.phone || '',
+        address: user.address || '',
+        bio: user.bio || '',
+        preferredLanguage: user.preferredLanguage || 'en'
+      })
+    }
+    setIsEditing(false)
   }
 
   const getRoleBadge = () => {
     switch (user?.role) {
       case 'ADMIN': return { text: 'Administrator', color: 'bg-red-100 text-red-800' }
-      case 'LANGUAGE_SCHOOL': return { text: 'Language School', color: 'bg-blue-100 text-blue-800' }
       case 'TEACHER': return { text: 'Teacher', color: 'bg-green-100 text-green-800' }
       case 'STUDENT': return { text: 'Student', color: 'bg-purple-100 text-purple-800' }
       default: return { text: 'User', color: 'bg-gray-100 text-gray-800' }
     }
   }
+
+  if (isLoading) return <LoadingPage />
 
   const roleBadge = getRoleBadge()
 
@@ -55,17 +93,17 @@ export const ProfilePage: React.FC = () => {
         ) : (
           <div className="flex gap-2">
             <button
-              onClick={() => setIsEditing(false)}
+              onClick={handleCancel}
               className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
-              disabled={isSaving}
+              disabled={updateMutation.isLoading}
               className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
             >
-              {isSaving ? (
+              {updateMutation.isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   Saving...
@@ -80,6 +118,11 @@ export const ProfilePage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {successMsg && <Alert type="success" message={successMsg} />}
+      {(error || updateMutation.error) && (
+        <Alert type="error" message={(updateMutation.error as Error)?.message || 'Failed to load profile'} />
+      )}
 
       {/* Profile Card */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
@@ -156,7 +199,9 @@ export const ProfilePage: React.FC = () => {
               ) : (
                 <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
                   <Phone className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-500">{formData.phone || 'Not provided'}</span>
+                  <span className={user?.phone ? 'text-gray-900' : 'text-gray-500'}>
+                    {user?.phone || 'Not provided'}
+                  </span>
                 </div>
               )}
             </div>
@@ -167,8 +212,8 @@ export const ProfilePage: React.FC = () => {
               </label>
               {isEditing ? (
                 <select
-                  value={formData.language}
-                  onChange={(e) => setFormData({ ...formData, language: e.target.value })}
+                  value={formData.preferredLanguage}
+                  onChange={(e) => setFormData({ ...formData, preferredLanguage: e.target.value })}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 >
                   <option value="en">English</option>
@@ -180,7 +225,7 @@ export const ProfilePage: React.FC = () => {
               ) : (
                 <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
                   <span className="text-gray-900">
-                    {formData.language === 'en' ? 'English' : formData.language}
+                    {{ en: 'English', es: 'Spanish', fr: 'French', de: 'German', it: 'Italian' }[user?.preferredLanguage || 'en'] || user?.preferredLanguage || 'English'}
                   </span>
                 </div>
               )}
@@ -201,7 +246,9 @@ export const ProfilePage: React.FC = () => {
               ) : (
                 <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
                   <MapPin className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-500">{formData.address || 'Not provided'}</span>
+                  <span className={user?.address ? 'text-gray-900' : 'text-gray-500'}>
+                    {user?.address || 'Not provided'}
+                  </span>
                 </div>
               )}
             </div>
@@ -220,13 +267,64 @@ export const ProfilePage: React.FC = () => {
                 />
               ) : (
                 <div className="px-4 py-2 bg-gray-50 rounded-lg min-h-[100px]">
-                  <span className="text-gray-500">{formData.bio || 'No bio provided'}</span>
+                  <span className={user?.bio ? 'text-gray-900' : 'text-gray-500'}>
+                    {user?.bio || 'No bio provided'}
+                  </span>
                 </div>
               )}
             </div>
           </div>
         </div>
       </div>
+
+      {/* Role-specific info */}
+      {profile && (
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            {user?.role === 'ADMIN' ? 'School Details' :
+             user?.role === 'TEACHER' ? 'Teacher Details' :
+             user?.role === 'STUDENT' ? 'Student Details' : 'Details'}
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {user?.role === 'ADMIN' && (
+              <>
+                {profile.company && (
+                  <InfoItem label="Company" value={profile.company} />
+                )}
+                {profile.description && (
+                  <InfoItem label="Description" value={profile.description} className="md:col-span-2" />
+                )}
+                <InfoItem label="Subscription" value={profile.subscriptionPlan?.replace(/_/g, ' ')} />
+              </>
+            )}
+            {user?.role === 'TEACHER' && (
+              <>
+                {profile.expertise?.length > 0 && (
+                  <div className="md:col-span-2">
+                    <p className="text-sm text-gray-500 mb-1">Expertise</p>
+                    <div className="flex flex-wrap gap-2">
+                      {profile.expertise.map((e: string) => (
+                        <span key={e} className="px-2 py-1 bg-green-100 text-green-800 rounded text-sm">{e}</span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {profile.school?.name && (
+                  <InfoItem label="School" value={profile.school.name} />
+                )}
+              </>
+            )}
+            {user?.role === 'STUDENT' && (
+              <>
+                <InfoItem label="Language Level" value={profile.languageLevel} />
+                {profile.school?.name && (
+                  <InfoItem label="School" value={profile.school.name} />
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Account Info */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
@@ -236,18 +334,31 @@ export const ProfilePage: React.FC = () => {
             <Calendar className="w-5 h-5 text-gray-400" />
             <div>
               <p className="text-sm text-gray-500">Member since</p>
-              <p className="font-medium text-gray-900">January 2024</p>
+              <p className="font-medium text-gray-900">
+                {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Unknown'}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
             <Shield className="w-5 h-5 text-gray-400" />
             <div>
               <p className="text-sm text-gray-500">Account Status</p>
-              <p className="font-medium text-green-600">Active</p>
+              <p className={`font-medium ${user?.isActive ? 'text-green-600' : 'text-red-600'}`}>
+                {user?.isActive ? 'Active' : 'Inactive'}
+              </p>
             </div>
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+function InfoItem({ label, value, className }: { label: string; value: string; className?: string }) {
+  return (
+    <div className={`p-3 bg-gray-50 rounded-lg ${className || ''}`}>
+      <p className="text-sm text-gray-500">{label}</p>
+      <p className="font-medium text-gray-900">{value}</p>
     </div>
   )
 }

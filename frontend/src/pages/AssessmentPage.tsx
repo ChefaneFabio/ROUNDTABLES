@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { useQuery, useMutation } from 'react-query'
-import { ClipboardCheck, Clock, Award, ChevronRight, Play } from 'lucide-react'
+import { useQuery, useMutation, useQueryClient } from 'react-query'
+import { ClipboardCheck, Clock, Award, ChevronRight, Play, AlertTriangle, Timer } from 'lucide-react'
 import { assessmentApi, Assessment } from '../services/assessmentApi'
 import { LoadingPage } from '../components/common/LoadingSpinner'
 import { Alert } from '../components/common/Alert'
@@ -18,6 +18,7 @@ const LANGUAGES = [
 
 export function AssessmentPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const [selectedLanguage, setSelectedLanguage] = useState('')
   const [error, setError] = useState('')
 
@@ -26,10 +27,29 @@ export function AssessmentPage() {
     assessmentApi.getMyAssessments
   )
 
+  const { data: assignedAssessments, isLoading: loadingAssigned } = useQuery(
+    'myAssignedAssessments',
+    assessmentApi.getAssignedAssessments
+  )
+
   const startMutation = useMutation(
     (language: string) => assessmentApi.startAssessment(language, 'PLACEMENT'),
     {
       onSuccess: (assessment) => {
+        navigate(`/assessment/take/${assessment.id}`)
+      },
+      onError: (err: Error) => {
+        setError(err.message)
+      }
+    }
+  )
+
+  const startAssignedMutation = useMutation(
+    (id: string) => assessmentApi.startAssigned(id),
+    {
+      onSuccess: (assessment) => {
+        queryClient.invalidateQueries('myAssignedAssessments')
+        queryClient.invalidateQueries('myAssessments')
         navigate(`/assessment/take/${assessment.id}`)
       },
       onError: (err: Error) => {
@@ -50,7 +70,7 @@ export function AssessmentPage() {
   const inProgressAssessment = assessments?.find(a => a.status === 'IN_PROGRESS')
   const completedAssessments = assessments?.filter(a => a.status === 'COMPLETED') || []
 
-  if (isLoading) return <LoadingPage />
+  if (isLoading || loadingAssigned) return <LoadingPage />
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -66,6 +86,50 @@ export function AssessmentPage() {
       </div>
 
       {error && <Alert type="error" message={error} />}
+
+      {/* Assigned Tests */}
+      {assignedAssessments && assignedAssessments.length > 0 && (
+        <Card className="border-2 border-amber-300 bg-amber-50">
+          <h2 className="text-lg font-semibold text-amber-800 mb-4 flex items-center gap-2">
+            <ClipboardCheck className="w-5 h-5" />
+            Assigned Tests
+          </h2>
+          <div className="space-y-3">
+            {assignedAssessments.map(a => (
+              <div key={a.id} className="bg-white rounded-lg p-4 border border-amber-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="font-medium text-gray-900">{a.language} Placement Test</p>
+                    <div className="flex items-center gap-3 mt-1 text-sm text-gray-500">
+                      <span className="flex items-center gap-1">
+                        <Timer className="w-4 h-4" />
+                        {a.timeLimitMin} minutes
+                      </span>
+                      {a.assignedAt && (
+                        <span>Assigned: {new Date(a.assignedAt).toLocaleDateString()}</span>
+                      )}
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => startAssignedMutation.mutate(a.id)}
+                    disabled={startAssignedMutation.isLoading}
+                    className="flex items-center gap-2"
+                  >
+                    {startAssignedMutation.isLoading ? 'Starting...' : 'Begin Test'}
+                  </Button>
+                </div>
+                <div className="mt-3 flex items-start gap-2 bg-amber-50 border border-amber-200 rounded-lg p-3">
+                  <AlertTriangle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                  <p className="text-xs text-amber-700">
+                    This is a timed test. Once you start, you have {a.timeLimitMin} minutes to complete it.
+                    Tab switches, copy attempts, and other violations are monitored.
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {/* Continue In-Progress Assessment */}
       {inProgressAssessment && (
@@ -117,9 +181,10 @@ export function AssessmentPage() {
           <div className="bg-gray-50 rounded-lg p-4 mb-6">
             <h3 className="font-medium text-gray-900 mb-2">About the Test</h3>
             <ul className="text-sm text-gray-600 space-y-1">
-              <li>• Adaptive test that adjusts to your level</li>
-              <li>• Mix of multiple choice and fill-in-the-blank questions</li>
-              <li>• Takes approximately 15-20 minutes</li>
+              <li>• Adaptive placement test that adjusts to your level (A1-C2)</li>
+              <li>• Grammar, vocabulary, and reading comprehension questions</li>
+              <li>• Multiple choice, fill-in-the-blank, and passage-based questions</li>
+              <li>• Takes approximately 20-30 minutes</li>
               <li>• Get immediate results with your CEFR level</li>
               <li>• Receive a certificate upon completion</li>
             </ul>

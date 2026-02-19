@@ -93,7 +93,7 @@ router.get('/:id', authenticate, requireSchoolAccess, async (req: Request, res: 
     const { id } = req.params
 
     // School users can only view their own school
-    if (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId !== id) {
+    if (req.user?.role === 'ADMIN' && req.user.schoolId !== id) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
 
@@ -135,7 +135,7 @@ router.get('/:id', authenticate, requireSchoolAccess, async (req: Request, res: 
 // Get current school (for logged-in school admin)
 router.get('/me/profile', authenticate, async (req: Request, res: Response) => {
   try {
-    if (!req.user || req.user.role !== 'LANGUAGE_SCHOOL') {
+    if (!req.user || req.user.role !== 'ADMIN') {
       return res.status(403).json(apiResponse.error('Only school admins can access this endpoint', 'FORBIDDEN'))
     }
 
@@ -165,7 +165,7 @@ router.put('/:id', authenticate, requireSchoolAccess, validateRequest(updateScho
     const { id } = req.params
 
     // School users can only update their own school
-    if (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId !== id) {
+    if (req.user?.role === 'ADMIN' && req.user.schoolId !== id) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
 
@@ -236,7 +236,7 @@ router.get('/:id/stats', authenticate, requireSchoolAccess, async (req: Request,
   try {
     const { id } = req.params
 
-    if (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId !== id) {
+    if (req.user?.role === 'ADMIN' && req.user.schoolId !== id) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
 

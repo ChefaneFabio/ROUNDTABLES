@@ -13,12 +13,6 @@ interface RegisterUserInput {
   role: UserRole
 }
 
-interface RegisterSchoolInput extends RegisterUserInput {
-  schoolName: string
-  company?: string
-  description?: string
-}
-
 interface RegisterTeacherInput extends RegisterUserInput {
   schoolId: string
   bio?: string
@@ -64,49 +58,6 @@ export class AuthService {
 
     const tokens = generateTokens(user)
     return { user: this.sanitizeUser(user), ...tokens }
-  }
-
-  // Register a new language school
-  async registerSchool(input: RegisterSchoolInput) {
-    const { email, password, name, schoolName, company, description } = input
-
-    const existingUser = await prisma.user.findUnique({ where: { email } })
-    if (existingUser) {
-      throw new Error('User with this email already exists')
-    }
-
-    const hashedPassword = await this.hashPassword(password)
-
-    // Create user and school profile in a transaction
-    const result = await prisma.$transaction(async (tx) => {
-      const user = await tx.user.create({
-        data: {
-          email,
-          password: hashedPassword,
-          name,
-          role: 'LANGUAGE_SCHOOL'
-        }
-      })
-
-      const school = await tx.school.create({
-        data: {
-          name: schoolName,
-          email,
-          company,
-          description,
-          userId: user.id
-        }
-      })
-
-      return { user, school }
-    })
-
-    const tokens = generateTokens(result.user)
-    return {
-      user: this.sanitizeUser(result.user),
-      school: result.school,
-      ...tokens
-    }
   }
 
   // Register a new teacher (by school admin)
@@ -428,6 +379,30 @@ export class AuthService {
     }
   }
 
+  // Update user profile
+  async updateProfile(userId: string, data: { name?: string; phone?: string; address?: string; bio?: string; preferredLanguage?: string }) {
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        ...(data.name !== undefined && { name: data.name }),
+        ...(data.phone !== undefined && { phone: data.phone || null }),
+        ...(data.address !== undefined && { address: data.address || null }),
+        ...(data.bio !== undefined && { bio: data.bio || null }),
+        ...(data.preferredLanguage !== undefined && { preferredLanguage: data.preferredLanguage }),
+      },
+      include: {
+        schoolProfile: true,
+        teacherProfile: true,
+        studentProfile: true,
+      }
+    })
+
+    return {
+      user: this.sanitizeUser(user),
+      profile: this.getProfileData(user)
+    }
+  }
+
   // Remove sensitive data from user object
   private sanitizeUser(user: any) {
     const { password, ...sanitized } = user
@@ -437,7 +412,7 @@ export class AuthService {
   // Get profile based on role
   private getProfileData(user: any) {
     switch (user.role) {
-      case 'LANGUAGE_SCHOOL':
+      case 'ADMIN':
         return user.schoolProfile
       case 'TEACHER':
         return user.teacherProfile

@@ -15,9 +15,10 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
 
     switch (req.user.role) {
       case 'ADMIN':
+        if (req.user.schoolId) {
+          return res.json(apiResponse.success(await getSchoolDashboard(req.user.schoolId)))
+        }
         return res.json(apiResponse.success(await getAdminDashboard()))
-      case 'LANGUAGE_SCHOOL':
-        return res.json(apiResponse.success(await getSchoolDashboard(req.user.schoolId!)))
       case 'TEACHER':
         return res.json(apiResponse.success(await getTeacherDashboard(req.user.teacherId!)))
       case 'STUDENT':
@@ -223,7 +224,8 @@ async function getStudentDashboard(studentId: string) {
     upcomingLessons,
     recentFeedback,
     progressSummary,
-    attendanceStats
+    attendanceStats,
+    assignedAssessments
   ] = await Promise.all([
     prisma.student.findUnique({
       where: { id: studentId },
@@ -277,7 +279,11 @@ async function getStudentDashboard(studentId: string) {
       where: { studentId },
       include: { course: { select: { name: true } } }
     }),
-    getStudentAttendanceStats(studentId)
+    getStudentAttendanceStats(studentId),
+    prisma.assessment.findMany({
+      where: { studentId, status: 'ASSIGNED' },
+      orderBy: { assignedAt: 'desc' }
+    })
   ])
 
   // Calculate overall progress
@@ -297,7 +303,8 @@ async function getStudentDashboard(studentId: string) {
     enrollments,
     upcomingLessons,
     recentFeedback,
-    progress: progressSummary
+    progress: progressSummary,
+    assignedAssessments
   }
 }
 
@@ -402,7 +409,7 @@ router.get('/activity', authenticate, async (req: Request, res: Response) => {
 
     const where: any = {}
 
-    if (req.user?.role === 'LANGUAGE_SCHOOL') {
+    if (req.user?.role === 'ADMIN' && req.user.schoolId) {
       where.user = {
         OR: [
           { schoolProfile: { id: req.user.schoolId } },

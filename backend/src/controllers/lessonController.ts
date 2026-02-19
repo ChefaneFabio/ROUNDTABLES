@@ -74,7 +74,7 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     const where: any = { deletedAt: null }
 
     // Apply access control
-    if (req.user?.role === 'LANGUAGE_SCHOOL') {
+    if (req.user?.role === 'ADMIN') {
       where.course = { schoolId: req.user.schoolId }
     } else if (req.user?.role === 'TEACHER') {
       where.teacherId = req.user.teacherId
@@ -136,7 +136,7 @@ router.get('/upcoming', authenticate, async (req: Request, res: Response) => {
     }
 
     // Apply access control
-    if (req.user?.role === 'LANGUAGE_SCHOOL') {
+    if (req.user?.role === 'ADMIN') {
       where.course = { schoolId: req.user.schoolId }
     } else if (req.user?.role === 'TEACHER') {
       where.teacherId = req.user.teacherId
@@ -177,7 +177,7 @@ router.get('/calendar', authenticate, async (req: Request, res: Response) => {
     }
 
     // Apply access control
-    if (req.user?.role === 'LANGUAGE_SCHOOL') {
+    if (req.user?.role === 'ADMIN') {
       where.course = { schoolId: req.user.schoolId }
     } else if (req.user?.role === 'TEACHER') {
       where.teacherId = req.user.teacherId
@@ -316,7 +316,6 @@ router.put('/:id', authenticate, requireLessonAccess, validateRequest(updateLess
 
     // Only school admin or assigned teacher can edit
     const canEdit = req.user?.role === 'ADMIN' ||
-      (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === lesson.course.schoolId) ||
       (req.user?.role === 'TEACHER' && req.user.teacherId === lesson.teacherId)
 
     if (!canEdit) {
@@ -614,7 +613,6 @@ router.get('/:id/meeting/join', authenticate, async (req: Request, res: Response
 
     // Determine if user is host (teacher or school admin)
     const isHost = req.user?.role === 'ADMIN' ||
-      (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === lesson.course.schoolId) ||
       (req.user?.role === 'TEACHER' && req.user.teacherId === lesson.teacherId)
 
     const joinInfo = {

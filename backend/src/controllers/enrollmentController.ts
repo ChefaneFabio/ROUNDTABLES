@@ -50,7 +50,7 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     const where: any = {}
 
     // Apply access control
-    if (req.user?.role === 'LANGUAGE_SCHOOL') {
+    if (req.user?.role === 'ADMIN') {
       where.course = { schoolId: req.user.schoolId }
     } else if (req.user?.role === 'TEACHER') {
       where.course = { courseTeachers: { some: { teacherId: req.user.teacherId } } }
@@ -381,7 +381,6 @@ router.post('/:id/withdraw', authenticate, async (req: Request, res: Response) =
 
     // Check access - student can withdraw themselves, school admin can withdraw anyone
     const canWithdraw = req.user?.role === 'ADMIN' ||
-      (req.user?.role === 'LANGUAGE_SCHOOL' && req.user.schoolId === enrollment.course.schoolId) ||
       (req.user?.role === 'STUDENT' && req.user.studentId === enrollment.studentId)
 
     if (!canWithdraw) {
