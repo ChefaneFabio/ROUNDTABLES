@@ -20,6 +20,7 @@ export function SectionTakePage() {
   const [progress, setProgress] = useState<{ answered: number; total: number; currentLevel: string } | null>(null)
   const [feedback, setFeedback] = useState<{ isCorrect: boolean; correctAnswer: string } | null>(null)
   const [isComplete, setIsComplete] = useState(false)
+  const [answeredCount, setAnsweredCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -36,7 +37,13 @@ export function SectionTakePage() {
       setSection(startedSection)
       await fetchNextQuestion()
     } catch (err: any) {
-      setError(err.response?.data?.error || err.message)
+      const msg = err.response?.data?.error || err.message || ''
+      if (msg.includes('already completed')) {
+        // Section was ghost-completed with no questions — let user go back
+        setError('This section was already marked as completed. Please start a new assessment to retake it.')
+      } else {
+        setError(msg)
+      }
     } finally {
       setLoading(false)
     }
@@ -46,6 +53,13 @@ export function SectionTakePage() {
     try {
       const result = await assessmentApi.getSectionNextQuestion(assessmentId!, sectionId!)
       if (result.isComplete) {
+        const answered = result.totalAnswered || 0
+        setAnsweredCount(answered)
+        if (answered === 0) {
+          // No questions were served — don't mark as completed
+          setError('No questions are available for this section yet. Please try again later or contact your teacher.')
+          return
+        }
         // Mark section as completed in the backend so next sections unlock
         try {
           await assessmentApi.completeSection(assessmentId!, sectionId!)
@@ -80,6 +94,7 @@ export function SectionTakePage() {
       setTimeout(async () => {
         setFeedback(null)
         if (result.shouldAutoComplete || result.expired) {
+          setAnsweredCount(prev => prev + 1)
           // Mark section as completed in the backend so next sections unlock
           try {
             await assessmentApi.completeSection(assessmentId!, sectionId!)
@@ -190,9 +205,11 @@ export function SectionTakePage() {
           {SKILL_LABELS[section?.skill || '']} Section Complete
         </h2>
         <p className="text-gray-600 mb-6">
-          {section?.skill === 'WRITING' || section?.skill === 'SPEAKING'
-            ? 'Your responses will be evaluated by AI and may be reviewed by a teacher.'
-            : 'Your answers have been scored.'}
+          {answeredCount === 0
+            ? 'This section has been completed.'
+            : section?.skill === 'WRITING' || section?.skill === 'SPEAKING'
+              ? 'Your responses will be evaluated by AI and may be reviewed by a teacher.'
+              : `Your ${answeredCount} answer${answeredCount !== 1 ? 's have' : ' has'} been scored.`}
         </p>
         <button
           onClick={handleContinue}
