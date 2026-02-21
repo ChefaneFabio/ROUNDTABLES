@@ -344,5 +344,62 @@ export const assessmentApi = {
   async seedMultiSkillQuestions(language: string): Promise<any> {
     const response = await api.post('/assessments/multi-skill/admin/seed-multi-skill', { language })
     return response.data.data
+  },
+
+  // ==================== Question Bank Admin API ====================
+
+  // Get question bank summary (counts by language/skill/level)
+  async getQuestionBankSummary(): Promise<Record<string, Record<string, Record<string, number>>>> {
+    const response = await api.get('/assessments/multi-skill/admin/question-bank/summary')
+    return response.data.data
+  },
+
+  // List questions with filters + pagination
+  async getQuestionBank(filters: {
+    language?: string
+    skill?: string
+    cefrLevel?: string
+    search?: string
+    page?: number
+    limit?: number
+  }): Promise<{
+    questions: any[]
+    total: number
+    page: number
+    limit: number
+    totalPages: number
+  }> {
+    const params = new URLSearchParams()
+    if (filters.language) params.set('language', filters.language)
+    if (filters.skill) params.set('skill', filters.skill)
+    if (filters.cefrLevel) params.set('cefrLevel', filters.cefrLevel)
+    if (filters.search) params.set('search', filters.search)
+    if (filters.page) params.set('page', String(filters.page))
+    if (filters.limit) params.set('limit', String(filters.limit))
+    const response = await api.get(`/assessments/multi-skill/admin/question-bank?${params.toString()}`)
+    return response.data.data
+  },
+
+  // Get single question detail
+  async getQuestion(id: string): Promise<any> {
+    const response = await api.get(`/assessments/multi-skill/admin/question-bank/${id}`)
+    return response.data.data
+  },
+
+  // Create a new question
+  async createQuestion(data: any): Promise<any> {
+    const response = await api.post('/assessments/multi-skill/admin/question-bank', data)
+    return response.data.data
+  },
+
+  // Update a question
+  async updateQuestion(id: string, data: any): Promise<any> {
+    const response = await api.put(`/assessments/multi-skill/admin/question-bank/${id}`, data)
+    return response.data.data
+  },
+
+  // Delete a question (soft-delete)
+  async deleteQuestion(id: string): Promise<void> {
+    await api.delete(`/assessments/multi-skill/admin/question-bank/${id}`)
   }
 }

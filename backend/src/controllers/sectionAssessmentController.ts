@@ -242,6 +242,76 @@ router.post('/:id/sections/:sectionId/teacher-score', authenticate, requireTeach
   }
 })
 
+// ==================== Question Bank Admin Routes ====================
+
+// Get question bank summary (aggregated counts)
+router.get('/admin/question-bank/summary', authenticate, requireTeacher, async (req: Request, res: Response) => {
+  try {
+    const summary = await sectionAssessmentService.getQuestionBankSummary()
+    return res.json(apiResponse.success(summary))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// List questions with filters + pagination
+router.get('/admin/question-bank', authenticate, requireTeacher, async (req: Request, res: Response) => {
+  try {
+    const { language, skill, cefrLevel, search, page, limit } = req.query
+    const result = await sectionAssessmentService.getQuestionBank({
+      language: language as string,
+      skill: skill as string,
+      cefrLevel: cefrLevel as string,
+      search: search as string,
+      page: page ? parseInt(page as string) : undefined,
+      limit: limit ? parseInt(limit as string) : undefined
+    })
+    return res.json(apiResponse.success(result))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// Get single question detail
+router.get('/admin/question-bank/:id', authenticate, requireTeacher, async (req: Request, res: Response) => {
+  try {
+    const question = await sectionAssessmentService.getQuestionById(req.params.id)
+    return res.json(apiResponse.success(question))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// Create question
+router.post('/admin/question-bank', authenticate, requireTeacher, async (req: Request, res: Response) => {
+  try {
+    const question = await sectionAssessmentService.createMultiSkillQuestion(req.body)
+    return res.status(201).json(apiResponse.success(question, 'Question created'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// Update question
+router.put('/admin/question-bank/:id', authenticate, requireTeacher, async (req: Request, res: Response) => {
+  try {
+    const question = await sectionAssessmentService.updateQuestion(req.params.id, req.body)
+    return res.json(apiResponse.success(question, 'Question updated'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// Delete question (soft-delete)
+router.delete('/admin/question-bank/:id', authenticate, requireTeacher, async (req: Request, res: Response) => {
+  try {
+    await sectionAssessmentService.deleteQuestion(req.params.id)
+    return res.json(apiResponse.success(null, 'Question deleted'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // ==================== TTS & Audio Routes ====================
 
 // Get TTS audio for a question (generates on demand)

@@ -124,11 +124,12 @@ router.post(
 // Logout
 router.post(
   '/logout',
-  validateRequest(refreshTokenSchema),
   async (req: Request, res: Response) => {
     try {
-      const { refreshToken } = req.body
-      await authService.logout(refreshToken)
+      const refreshToken = req.body?.refreshToken
+      if (refreshToken) {
+        await authService.logout(refreshToken)
+      }
 
       res.json(apiResponse.success(null, 'Logged out successfully'))
     } catch (error) {

@@ -50,6 +50,7 @@ const navigation: NavItem[] = [
   { name: 'AI Chat', href: '/chat', icon: Bot, roles: [UserRole.STUDENT] },
   { name: 'Video Admin', href: '/admin/videos/libraries', icon: Video, roles: [UserRole.ADMIN, UserRole.TEACHER] },
   { name: 'Exercise Admin', href: '/admin/exercises', icon: PenTool, roles: [UserRole.ADMIN, UserRole.TEACHER] },
+  { name: 'Question Bank', href: '/admin/assessment-questions', icon: ClipboardCheck, roles: [UserRole.ADMIN, UserRole.TEACHER] },
   { name: 'Analytics', href: '/analytics', icon: BarChart3, roles: [UserRole.ADMIN] },
   { name: 'API Keys', href: '/api-keys', icon: Key, roles: [UserRole.ADMIN] },
   { name: 'Feedback', href: '/feedback', icon: MessageSquare, roles: [UserRole.TEACHER, UserRole.STUDENT] },

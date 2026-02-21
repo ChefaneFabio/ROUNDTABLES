@@ -32,6 +32,9 @@ import SpeakingPracticePage from './pages/SpeakingPracticePage'
 // Admin pages for Phase 2
 import AdminVideoLibrariesPage from './pages/admin/VideoLibrariesPage'
 import AdminExercisesPage from './pages/admin/ExercisesPage'
+import AdminExerciseEditorPage from './pages/admin/ExerciseEditorPage'
+import AdminExerciseStatsPage from './pages/admin/ExerciseStatsPage'
+import AdminAssessmentQuestionsPage from './pages/admin/AssessmentQuestionsPage'
 // Assessment review pages
 import { AssessmentReviewPage } from './pages/AssessmentReviewPage'
 import { StudentAssessmentsPage } from './pages/StudentAssessmentsPage'
@@ -500,6 +503,50 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
             <Layout>
               <AdminExercisesPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Exercise Editor */}
+      <Route
+        path="/admin/exercises/new"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
+            <Layout>
+              <AdminExerciseEditorPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/exercises/:id/stats"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
+            <Layout>
+              <AdminExerciseStatsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/exercises/:id"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
+            <Layout>
+              <AdminExerciseEditorPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Assessment Question Bank */}
+      <Route
+        path="/admin/assessment-questions"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
+            <Layout>
+              <AdminAssessmentQuestionsPage />
             </Layout>
           </ProtectedRoute>
         }

@@ -46,6 +46,12 @@ export function SectionTakePage() {
     try {
       const result = await assessmentApi.getSectionNextQuestion(assessmentId!, sectionId!)
       if (result.isComplete) {
+        // Mark section as completed in the backend so next sections unlock
+        try {
+          await assessmentApi.completeSection(assessmentId!, sectionId!)
+        } catch {
+          // May already be completed
+        }
         setIsComplete(true)
         setCurrentQuestion(null)
       } else {
@@ -74,6 +80,12 @@ export function SectionTakePage() {
       setTimeout(async () => {
         setFeedback(null)
         if (result.shouldAutoComplete || result.expired) {
+          // Mark section as completed in the backend so next sections unlock
+          try {
+            await assessmentApi.completeSection(assessmentId!, sectionId!)
+          } catch {
+            // May already be completed
+          }
           setIsComplete(true)
         } else {
           await fetchNextQuestion()

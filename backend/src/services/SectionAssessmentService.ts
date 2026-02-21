@@ -593,6 +593,144 @@ export class SectionAssessmentService {
     })
   }
 
+  // ==================== Question Bank CRUD ====================
+
+  async getQuestionBankSummary() {
+    const questions = await prisma.assessmentQuestion.groupBy({
+      by: ['language', 'skill', 'cefrLevel'],
+      where: { isActive: true },
+      _count: { id: true }
+    })
+
+    const summary: Record<string, Record<string, Record<string, number>>> = {}
+    for (const row of questions) {
+      const lang = row.language
+      const skill = row.skill || 'GENERAL'
+      const level = row.cefrLevel
+      if (!summary[lang]) summary[lang] = {}
+      if (!summary[lang][skill]) summary[lang][skill] = {}
+      summary[lang][skill][level] = row._count.id
+    }
+
+    return summary
+  }
+
+  async getQuestionBank(filters: {
+    language?: string
+    skill?: string
+    cefrLevel?: string
+    search?: string
+    page?: number
+    limit?: number
+  }) {
+    const { language, skill, cefrLevel, search, page = 1, limit = 20 } = filters
+
+    const where: Prisma.AssessmentQuestionWhereInput = { isActive: true }
+    if (language) where.language = language
+    if (skill) where.skill = skill as any
+    if (cefrLevel) where.cefrLevel = cefrLevel
+    if (search) {
+      where.questionText = { contains: search, mode: 'insensitive' }
+    }
+
+    const [questions, total] = await Promise.all([
+      prisma.assessmentQuestion.findMany({
+        where,
+        orderBy: [{ skill: 'asc' }, { cefrLevel: 'asc' }, { orderIndex: 'asc' }],
+        skip: (page - 1) * limit,
+        take: limit
+      }),
+      prisma.assessmentQuestion.count({ where })
+    ])
+
+    return {
+      questions,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    }
+  }
+
+  async getQuestionById(id: string) {
+    const question = await prisma.assessmentQuestion.findUnique({ where: { id } })
+    if (!question) throw new Error('Question not found')
+    return question
+  }
+
+  async createMultiSkillQuestion(data: {
+    language: string
+    cefrLevel: string
+    questionType: string
+    questionText: string
+    correctAnswer: string
+    skill?: string
+    options?: any
+    passage?: string
+    passageTitle?: string
+    points?: number
+    orderIndex?: number
+    ttsScript?: string
+    ttsLanguageCode?: string
+    speakingPrompt?: string
+    rubric?: any
+    tags?: string[]
+    timeSuggested?: number
+  }) {
+    return prisma.assessmentQuestion.create({
+      data: {
+        language: data.language,
+        cefrLevel: data.cefrLevel,
+        questionType: data.questionType as any,
+        questionText: data.questionText,
+        correctAnswer: data.correctAnswer,
+        skill: data.skill as any || null,
+        options: data.options || undefined,
+        passage: data.passage,
+        passageTitle: data.passageTitle,
+        points: data.points ?? 1,
+        orderIndex: data.orderIndex ?? 0,
+        ttsScript: data.ttsScript,
+        ttsLanguageCode: data.ttsLanguageCode,
+        speakingPrompt: data.speakingPrompt,
+        rubric: data.rubric || undefined,
+        tags: data.tags || [],
+        timeSuggested: data.timeSuggested
+      }
+    })
+  }
+
+  async updateQuestion(id: string, data: Record<string, any>) {
+    const existing = await prisma.assessmentQuestion.findUnique({ where: { id } })
+    if (!existing) throw new Error('Question not found')
+
+    const updateData: any = {}
+    const allowedFields = [
+      'language', 'cefrLevel', 'questionType', 'questionText', 'correctAnswer',
+      'skill', 'options', 'passage', 'passageTitle', 'points', 'orderIndex',
+      'ttsScript', 'ttsLanguageCode', 'speakingPrompt', 'rubric', 'tags',
+      'timeSuggested', 'isActive'
+    ]
+
+    for (const field of allowedFields) {
+      if (data[field] !== undefined) {
+        updateData[field] = data[field]
+      }
+    }
+
+    return prisma.assessmentQuestion.update({ where: { id }, data: updateData })
+  }
+
+  async deleteQuestion(id: string) {
+    const existing = await prisma.assessmentQuestion.findUnique({ where: { id } })
+    if (!existing) throw new Error('Question not found')
+
+    return prisma.assessmentQuestion.update({
+      where: { id },
+      data: { isActive: false }
+    })
+  }
+
   // Private helpers
   private async checkAndCompleteAssessment(assessmentId: string) {
     const sections = await prisma.assessmentSection.findMany({
