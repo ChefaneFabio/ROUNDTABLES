@@ -100,6 +100,52 @@ async function main() {
   }
   console.log('✓ Student ready:', studentUser.email)
 
+  // Seed multi-skill assessment questions (English)
+  const existingMultiSkillCount = await prisma.assessmentQuestion.count({
+    where: { language: 'English', skill: { not: null } }
+  })
+
+  if (existingMultiSkillCount === 0) {
+    console.log('Seeding multi-skill assessment questions...')
+    const { englishReadingQuestions } = await import('../src/services/questionBanks/english/reading')
+    const { englishListeningQuestions } = await import('../src/services/questionBanks/english/listening')
+    const { englishWritingQuestions } = await import('../src/services/questionBanks/english/writing')
+    const { englishSpeakingQuestions } = await import('../src/services/questionBanks/english/speaking')
+
+    const allQuestions = [
+      ...englishReadingQuestions,
+      ...englishListeningQuestions,
+      ...englishWritingQuestions,
+      ...englishSpeakingQuestions,
+    ]
+
+    await prisma.assessmentQuestion.createMany({
+      data: allQuestions.map((q: any) => ({
+        language: q.language,
+        cefrLevel: q.cefrLevel,
+        questionType: q.questionType,
+        questionText: q.questionText,
+        options: q.options || undefined,
+        correctAnswer: q.correctAnswer || '',
+        passage: q.passage,
+        passageTitle: q.passageTitle,
+        points: q.points,
+        orderIndex: q.orderIndex,
+        skill: q.skill,
+        ttsScript: q.ttsScript,
+        ttsLanguageCode: q.ttsLanguageCode,
+        speakingPrompt: q.speakingPrompt,
+        rubric: q.rubric || undefined,
+        tags: q.tags || [],
+        timeSuggested: q.timeSuggested,
+      })),
+    })
+
+    console.log(`✓ Seeded ${allQuestions.length} multi-skill questions (Reading: ${englishReadingQuestions.length}, Listening: ${englishListeningQuestions.length}, Writing: ${englishWritingQuestions.length}, Speaking: ${englishSpeakingQuestions.length})`)
+  } else {
+    console.log(`→ Multi-skill questions already exist (${existingMultiSkillCount})`)
+  }
+
   console.log('\n✅ Demo accounts ready!')
   console.log('   Email: admin@demo.com / teacher@demo.com / student@demo.com')
   console.log('   Password: demo123')

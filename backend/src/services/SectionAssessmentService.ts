@@ -243,6 +243,11 @@ export class SectionAssessmentService {
     }
 
     if (!question) {
+      // If no questions were answered at all, questions are missing from the database
+      if (answers.length === 0) {
+        throw new Error(`No ${section.skill} questions available for language "${section.assessment.language}". Please ask an admin to seed the question bank.`)
+      }
+      // Otherwise the student has exhausted all available questions — complete normally
       return { isComplete: true, totalAnswered: answers.length }
     }
 
