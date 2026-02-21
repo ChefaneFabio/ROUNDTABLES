@@ -112,7 +112,7 @@ export function CertificatesPage() {
             <p className="font-medium text-gray-700">Certificate Verification</p>
             <p className="mt-1">
               All certificates can be verified using the certificate number at{' '}
-              <span className="text-primary-600">maka.language/verify</span>
+              <span className="text-primary-600">makalmc.com/verify</span>
             </p>
           </div>
         </div>

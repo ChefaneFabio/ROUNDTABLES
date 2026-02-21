@@ -50,13 +50,13 @@ export function LoginPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <img src="/logo.svg" alt="Maka Language Centre" className="h-16 w-16" />
+          <img src="/logo.png" alt="Maka Learning Management Centre" className="h-16 w-16" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-          Sign in to MAKA LANGUAGE CENTRE
+          Sign in to MAKA LMC
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          New to Maka?{' '}
+          New to Maka LMC?{' '}
           <Link
             to="/register"
             className="font-medium text-primary-600 hover:text-primary-500"
@@ -172,7 +172,7 @@ export function LoginPage() {
             <div className="mt-4 grid grid-cols-2 gap-3 text-xs text-gray-500">
               <div className="bg-gray-50 p-3 rounded">
                 <p className="font-medium">School Admin</p>
-                <p>corporate@demo.com</p>
+                <p>admin@demo.com</p>
               </div>
               <div className="bg-gray-50 p-3 rounded">
                 <p className="font-medium">Teacher</p>

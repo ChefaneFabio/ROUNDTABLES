@@ -60,16 +60,16 @@ export class EmailTemplateService {
 
   private extractSubject(templateName: string, data: TemplateData): string {
     const subjects: Record<string, string> = {
-      trainer_reminder: `Roundtable Session Reminder - ${data.sessionDate}`,
-      pre_session: `${data.clientCompany} | ROUNDTABLE ${data.sessionDate} - ${data.topicTitle}`,
-      feedback: `Your Roundtable Session Feedback - ${data.topicTitle}`,
+      trainer_reminder: `Session Reminder - ${data.sessionDate}`,
+      pre_session: `${data.clientCompany} | Session ${data.sessionDate} - ${data.topicTitle}`,
+      feedback: `Your Session Feedback - ${data.topicTitle}`,
       voting_invite: `Topic Voting for ${data.roundtableName}`,
-      session_reminder: `Session Reminder - ${data.topicTitle || 'Roundtable Discussion'}`,
+      session_reminder: `Session Reminder - ${data.topicTitle || 'Discussion Session'}`,
       questions_request: `Questions Required - Session ${data.sessionNumber}`,
       feedback_request: `Feedback Required - Session ${data.sessionNumber}`
     }
 
-    return subjects[templateName] || 'Maka Roundtable Notification'
+    return subjects[templateName] || 'Maka LMC Notification'
   }
 
   // Pre-defined template data generators

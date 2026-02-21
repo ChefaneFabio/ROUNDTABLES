@@ -35,6 +35,10 @@ import AdminExercisesPage from './pages/admin/ExercisesPage'
 // Assessment review pages
 import { AssessmentReviewPage } from './pages/AssessmentReviewPage'
 import { StudentAssessmentsPage } from './pages/StudentAssessmentsPage'
+// Multi-skill assessment pages
+import { MultiSkillAssessmentPage } from './pages/MultiSkillAssessmentPage'
+import { SectionTakePage } from './pages/SectionTakePage'
+import { MultiSkillResultPage } from './pages/MultiSkillResultPage'
 // Portal pages
 import TeachersPage from './pages/TeachersPage'
 import StudentsPage from './pages/StudentsPage'
@@ -312,6 +316,38 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
             <Layout>
               <AssessmentReviewPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Multi-Skill Assessment Routes */}
+      <Route
+        path="/assessment/multi-skill/:id"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <MultiSkillAssessmentPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/assessment/multi-skill/:id/section/:sectionId"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <SectionTakePage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/assessment/multi-skill/:id/results"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <MultiSkillResultPage />
             </Layout>
           </ProtectedRoute>
         }

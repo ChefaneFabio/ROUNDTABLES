@@ -18,6 +18,36 @@ export interface Assessment {
   timeLimitMin?: number
   expiresAt?: string
   violations?: { type: string; timestamp: string; details?: string }[]
+  // Multi-skill fields
+  isMultiSkill?: boolean
+  currentSection?: number
+  readingLevel?: string
+  listeningLevel?: string
+  writingLevel?: string
+  speakingLevel?: string
+  sections?: AssessmentSection[]
+}
+
+export interface AssessmentSection {
+  id: string
+  assessmentId: string
+  skill: 'READING' | 'LISTENING' | 'WRITING' | 'SPEAKING'
+  orderIndex: number
+  status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'SKIPPED'
+  timeLimitMin: number
+  expiresAt?: string
+  startedAt?: string
+  completedAt?: string
+  targetLevel: string
+  questionsLimit: number
+  answers?: any[]
+  rawScore?: number
+  maxScore?: number
+  percentageScore?: number
+  cefrLevel?: string
+  aiScore?: any
+  teacherScore?: any
+  finalScore?: any
 }
 
 export interface AssessmentQuestion {
@@ -135,6 +165,14 @@ export const assessmentApi = {
     return response.data
   },
 
+  // Download multi-skill results PDF
+  async downloadMultiSkillResultsPdf(assessmentId: string): Promise<Blob> {
+    const response = await api.get(`/assessments/multi-skill/${assessmentId}/results/pdf`, {
+      responseType: 'blob'
+    })
+    return response.data
+  },
+
   // Email assessment results
   async emailResults(assessmentId: string, email?: string): Promise<{ messageId: string; sentTo: string }> {
     const response = await api.post(`/assessments/${assessmentId}/email-results`, { email })
@@ -190,6 +228,121 @@ export const assessmentApi = {
   // Admin: Seed all question banks (English + Italian)
   async seedAllQuestions(): Promise<{ english: any; italian: any; totalCount: number }> {
     const response = await api.post('/assessments/admin/seed-all-questions')
+    return response.data.data
+  },
+
+  // ==================== Multi-Skill Assessment API ====================
+
+  // Create a multi-skill assessment
+  async createMultiSkill(language: string): Promise<Assessment> {
+    const response = await api.post('/assessments/multi-skill', { language })
+    return response.data.data
+  },
+
+  // Get sections for an assessment
+  async getSections(assessmentId: string): Promise<AssessmentSection[]> {
+    const response = await api.get(`/assessments/multi-skill/${assessmentId}/sections`)
+    return response.data.data || []
+  },
+
+  // Start a section
+  async startSection(assessmentId: string, sectionId: string): Promise<AssessmentSection> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/start`)
+    return response.data.data
+  },
+
+  // Get next question for a section
+  async getSectionNextQuestion(assessmentId: string, sectionId: string): Promise<{
+    isComplete: boolean
+    expired?: boolean
+    question?: AssessmentQuestion & { skill?: string; ttsScript?: string; speakingPrompt?: string; rubric?: any }
+    progress?: { answered: number; total: number; currentLevel: string }
+    remainingSeconds?: number | null
+    totalAnswered?: number
+  }> {
+    const response = await api.get(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/next-question`)
+    return response.data.data
+  },
+
+  // Submit section answer
+  async submitSectionAnswer(assessmentId: string, sectionId: string, questionId: string, answer: string): Promise<{
+    isCorrect: boolean
+    correctAnswer: string
+    points: number
+    shouldAutoComplete?: boolean
+    expired?: boolean
+  }> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/answer`, {
+      questionId, answer
+    })
+    return response.data.data
+  },
+
+  // Complete a section
+  async completeSection(assessmentId: string, sectionId: string): Promise<AssessmentSection> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/complete`)
+    return response.data.data
+  },
+
+  // Submit writing response
+  async submitWritingResponse(assessmentId: string, sectionId: string, questionId: string, responseText: string): Promise<any> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/writing`, {
+      questionId, responseText
+    })
+    return response.data.data
+  },
+
+  // Submit speaking response
+  async submitSpeakingResponse(assessmentId: string, sectionId: string, questionId: string, audioUrl: string, duration?: number): Promise<any> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/speaking`, {
+      questionId, audioUrl, duration
+    })
+    return response.data.data
+  },
+
+  // Upload audio file
+  async uploadAudio(file: Blob): Promise<{ audioUrl: string; filename: string }> {
+    const formData = new FormData()
+    formData.append('audio', file, 'recording.webm')
+    const response = await api.post('/assessments/multi-skill/upload-audio', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    return response.data.data
+  },
+
+  // Get TTS audio for a question
+  async getTtsAudio(questionId: string): Promise<{ audioUrl: string | null; ttsScript: string; fallback: boolean }> {
+    const response = await api.get(`/assessments/multi-skill/tts/${questionId}`)
+    return response.data.data
+  },
+
+  // Get multi-skill results
+  async getMultiSkillResults(assessmentId: string): Promise<any> {
+    const response = await api.get(`/assessments/multi-skill/${assessmentId}/results`)
+    return response.data.data
+  },
+
+  // Admin: Get sections pending teacher review
+  async getPendingReview(): Promise<any[]> {
+    const response = await api.get('/assessments/multi-skill/admin/pending-review')
+    return response.data.data || []
+  },
+
+  // Admin: Submit teacher score
+  async submitTeacherScore(assessmentId: string, sectionId: string, score: any): Promise<any> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/teacher-score`, score)
+    return response.data.data
+  },
+
+  // Admin: Trigger AI scoring
+  async triggerAiScoring(assessmentId: string, sectionId: string): Promise<any> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/ai-score`)
+    return response.data.data
+  },
+
+  // Admin: Seed multi-skill questions
+  async seedMultiSkillQuestions(language: string): Promise<any> {
+    const response = await api.post('/assessments/multi-skill/admin/seed-multi-skill', { language })
     return response.data.data
   }
 }

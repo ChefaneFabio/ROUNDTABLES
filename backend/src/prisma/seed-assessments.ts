@@ -117,13 +117,13 @@ async function main() {
 
     await prisma.user.create({
       data: {
-        email: 'admin@maka.language',
+        email: 'admin@makalmc.com',
         name: 'Admin User',
         password: hashedPassword,
         role: 'ADMIN'
       }
     })
-    console.log('Created admin user: admin@maka.language / admin123')
+    console.log('Created admin user: admin@makalmc.com / admin123')
   }
 
   console.log('Seeding complete!')

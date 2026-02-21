@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
+import path from 'path'
 import dotenv from 'dotenv'
 import { prisma, disconnectPrisma } from './config/database'
 import { standardLimiter } from './middleware/rateLimit'
@@ -35,6 +36,7 @@ import chatRoutes from './controllers/chatController'
 import videoLibraryRoutes from './controllers/videoLibraryController'
 import exerciseRoutes from './controllers/exerciseController'
 import speechRoutes from './controllers/speechController'
+import sectionAssessmentRoutes from './controllers/sectionAssessmentController'
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler'
@@ -63,6 +65,10 @@ app.use(express.urlencoded({ extended: true }))
 
 // Request logging
 app.use(requestLogger)
+
+// Static file serving for TTS audio and speaking uploads
+app.use('/audio', express.static(path.join(__dirname, '../public/audio')))
+app.use('/uploads/speaking', express.static(path.join(__dirname, '../uploads/speaking')))
 
 // Apply rate limiting to all routes
 app.use(standardLimiter)
@@ -119,6 +125,8 @@ app.use('/api/chat', chatRoutes)
 app.use('/api/videos', videoLibraryRoutes)
 app.use('/api/exercises', exerciseRoutes)
 app.use('/api/speech', speechRoutes)
+// Phase 3: Multi-skill assessment routes
+app.use('/api/assessments/multi-skill', sectionAssessmentRoutes)
 
 // Error handling
 app.use(errorHandler)
@@ -147,7 +155,7 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'))
 app.listen(PORT, () => {
   console.log(`
 ╔═══════════════════════════════════════════════════════════╗
-║         ROUNDTABLES LMS API Server                        ║
+║         Maka LMC API Server                               ║
 ╠═══════════════════════════════════════════════════════════╣
 ║  Port:        ${PORT}                                         ║
 ║  Environment: ${(process.env.NODE_ENV || 'development').padEnd(40)}║

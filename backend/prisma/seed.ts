@@ -9,18 +9,18 @@ async function main() {
   const password = await bcrypt.hash('demo123', 10)
 
   // Create corporate user with school
-  let corporate = await prisma.user.findUnique({ where: { email: 'corporate@demo.com' } })
+  let corporate = await prisma.user.findUnique({ where: { email: 'admin@demo.com' } })
 
   if (!corporate) {
     corporate = await prisma.user.create({
       data: {
-        email: 'corporate@demo.com',
+        email: 'admin@demo.com',
         password,
-        name: 'Corporate Admin',
+        name: 'School Admin',
         role: 'ADMIN',
         schoolProfile: {
           create: {
-            name: 'Maka Language Centre',
+            name: 'Maka Learning Management Centre',
             email: 'info@makalanguage.com',
             isActive: true
           }
@@ -88,7 +88,7 @@ async function main() {
   }
 
   console.log('\n✅ Demo accounts ready!')
-  console.log('   Email: corporate@demo.com / teacher@demo.com / student@demo.com')
+  console.log('   Email: admin@demo.com / teacher@demo.com / student@demo.com')
   console.log('   Password: demo123')
 }
 

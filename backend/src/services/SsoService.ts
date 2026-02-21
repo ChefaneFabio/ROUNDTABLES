@@ -90,7 +90,7 @@ export class SsoService {
     const params = new URLSearchParams({
       SAMLRequest: Buffer.from(JSON.stringify({
         id: requestId,
-        issuer: `https://maka.language/sso/${schoolId}`,
+        issuer: `https://makalmc.com/sso/${schoolId}`,
         destination: config.ssoUrl,
         timestamp: new Date().toISOString()
       })).toString('base64'),

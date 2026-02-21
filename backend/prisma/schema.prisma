@@ -1035,6 +1035,19 @@ model Assessment {
   expiresAt      DateTime?        // set when student starts: startedAt + timeLimitMin
   violations     Json?            // [{type, timestamp, details}] — tab switches, copy attempts, etc.
 
+  // Multi-skill assessment fields
+  isMultiSkill   Boolean          @default(false)
+  currentSection Int?             // 0-3 index of current section
+  readingLevel   String?          // Per-skill CEFR results
+  listeningLevel String?
+  writingLevel   String?
+  speakingLevel  String?
+
+  // Relations
+  sections       AssessmentSection[]
+  writingResponses  WritingResponse[]
+  speakingResponses SpeakingResponse[]
+
   @@index([studentId])
   @@index([language])
   @@map("assessments")
@@ -1058,9 +1071,99 @@ model AssessmentQuestion {
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt
 
+  // Multi-skill fields
+  skill          AssessmentSkill?  // READING, LISTENING, WRITING, SPEAKING
+  ttsScript      String?           // Text for TTS audio generation (listening)
+  ttsLanguageCode String?          // e.g. "en-US", "it-IT"
+  speakingPrompt String?           // Prompt text for speaking questions
+  rubric         Json?             // Scoring rubric for writing/speaking
+  difficulty     Float?            // IRT difficulty parameter
+  discrimination Float?            // IRT discrimination parameter
+  tags           String[]          // Tags for categorization
+  timeSuggested  Int?              // Suggested time in seconds
+
   @@index([language, cefrLevel])
   @@index([isActive])
+  @@index([skill])
   @@map("assessment_questions")
+}
+
+model AssessmentSection {
+  id             String          @id @default(cuid())
+  assessmentId   String
+  assessment     Assessment      @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  skill          AssessmentSkill
+  orderIndex     Int             // 0=Reading, 1=Listening, 2=Writing, 3=Speaking
+  status         SectionStatus   @default(PENDING)
+  timeLimitMin   Int             // Time limit for this section
+  expiresAt      DateTime?       // Set when section starts
+  startedAt      DateTime?
+  completedAt    DateTime?
+  targetLevel    String          @default("B1") // Adaptive level within section
+  questionsLimit Int             @default(10)
+  answers        Json?           // [{questionId, answer, isCorrect, cefrLevel, points}]
+
+  // Scoring
+  rawScore       Int?
+  maxScore       Int?
+  percentageScore Int?
+  cefrLevel      String?         // Determined CEFR for this skill
+
+  // AI + Teacher scoring (for writing/speaking)
+  aiScore        Json?           // {grammar, coherence, vocabulary, spelling, taskAchievement, overall, cefrLevel, feedback}
+  aiScoredAt     DateTime?
+  teacherScore   Json?           // Same structure, teacher override
+  teacherReviewedBy String?      // userId of reviewing teacher
+  teacherReviewedAt DateTime?
+  finalScore     Json?           // teacherScore ?? aiScore
+
+  // Relations
+  writingResponses  WritingResponse[]
+  speakingResponses SpeakingResponse[]
+
+  @@unique([assessmentId, skill])
+  @@index([assessmentId])
+  @@map("assessment_sections")
+}
+
+model WritingResponse {
+  id             String            @id @default(cuid())
+  assessmentId   String
+  assessment     Assessment        @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  sectionId      String
+  section        AssessmentSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  questionId     String
+  studentId      String
+  responseText   String            @db.Text
+  wordCount      Int               @default(0)
+  aiEvaluation   Json?             // {grammar, coherence, vocabulary, spelling, taskAchievement, overall, cefrLevel, feedback}
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([assessmentId])
+  @@index([sectionId])
+  @@map("writing_responses")
+}
+
+model SpeakingResponse {
+  id             String            @id @default(cuid())
+  assessmentId   String
+  assessment     Assessment        @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  sectionId      String
+  section        AssessmentSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+  questionId     String
+  studentId      String
+  audioUrl       String?
+  duration       Int?              // Duration in seconds
+  transcript     String?           @db.Text
+  transcribedAt  DateTime?
+  aiEvaluation   Json?             // {pronunciation, fluency, grammar, vocabulary, overall, cefrLevel, feedback}
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([assessmentId])
+  @@index([sectionId])
+  @@map("speaking_responses")
 }
 
 model Certificate {
@@ -1102,6 +1205,24 @@ enum AssessmentQuestionType {
   LISTENING
   READING
   WRITING
+  SHORT_ANSWER
+  ESSAY
+  DICTATION
+  SPEAKING_PROMPT
+}
+
+enum AssessmentSkill {
+  READING
+  LISTENING
+  WRITING
+  SPEAKING
+}
+
+enum SectionStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  SKIPPED
 }
 
 // =====================================================

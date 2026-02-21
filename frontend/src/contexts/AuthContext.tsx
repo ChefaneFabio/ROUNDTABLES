@@ -80,12 +80,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     phone?: string
     company?: string
   }) => {
-    // Register as a student under MAKA Language Centre
+    // Register as a student under Maka Learning Management Centre
     const response = await authApi.registerStudent({
       email: data.email,
       password: data.password,
       name: data.name,
-      schoolId: 'maka-language-centre', // MAKA's school ID
+      schoolId: 'maka-language-centre', // Maka LMC's school ID
       bio: data.company ? `Company: ${data.company}` : undefined,
     })
     setUser(response.user)

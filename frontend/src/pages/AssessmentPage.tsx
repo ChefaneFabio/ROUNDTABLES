@@ -44,6 +44,18 @@ export function AssessmentPage() {
     }
   )
 
+  const startMultiSkillMutation = useMutation(
+    (language: string) => assessmentApi.createMultiSkill(language),
+    {
+      onSuccess: (assessment) => {
+        navigate(`/assessment/multi-skill/${assessment.id}`)
+      },
+      onError: (err: Error) => {
+        setError(err.message)
+      }
+    }
+  )
+
   const startAssignedMutation = useMutation(
     (id: string) => assessmentApi.startAssigned(id),
     {
@@ -67,7 +79,8 @@ export function AssessmentPage() {
     startMutation.mutate(selectedLanguage)
   }
 
-  const inProgressAssessment = assessments?.find(a => a.status === 'IN_PROGRESS')
+  const inProgressAssessment = assessments?.find(a => a.status === 'IN_PROGRESS' && !a.isMultiSkill)
+  const inProgressMultiSkill = assessments?.find(a => a.status === 'IN_PROGRESS' && a.isMultiSkill)
   const completedAssessments = assessments?.filter(a => a.status === 'COMPLETED') || []
 
   if (isLoading || loadingAssigned) return <LoadingPage />
@@ -154,6 +167,29 @@ export function AssessmentPage() {
         </Card>
       )}
 
+      {/* Continue In-Progress Multi-Skill */}
+      {inProgressMultiSkill && (
+        <Card className="border-2 border-purple-200 bg-purple-50">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 text-purple-700 mb-1">
+                <ClipboardCheck className="w-5 h-5" />
+                <span className="font-medium">4-Skills Assessment In Progress</span>
+              </div>
+              <p className="text-gray-600">
+                Continue your {inProgressMultiSkill.language} 4-skills placement test
+              </p>
+            </div>
+            <Button
+              onClick={() => navigate(`/assessment/multi-skill/${inProgressMultiSkill.id}`)}
+              className="flex items-center gap-2"
+            >
+              Continue <ChevronRight className="w-4 h-4" />
+            </Button>
+          </div>
+        </Card>
+      )}
+
       {/* Start New Assessment */}
       {!inProgressAssessment && (
         <Card>
@@ -190,20 +226,47 @@ export function AssessmentPage() {
             </ul>
           </div>
 
-          <Button
-            onClick={handleStartAssessment}
-            disabled={!selectedLanguage || startMutation.isLoading}
-            className="w-full flex items-center justify-center gap-2"
-          >
-            {startMutation.isLoading ? (
-              'Starting...'
-            ) : (
-              <>
-                <Play className="w-5 h-5" />
-                Start Placement Test
-              </>
-            )}
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              onClick={handleStartAssessment}
+              disabled={!selectedLanguage || startMutation.isLoading}
+              className="flex-1 flex items-center justify-center gap-2"
+            >
+              {startMutation.isLoading ? (
+                'Starting...'
+              ) : (
+                <>
+                  <Play className="w-5 h-5" />
+                  Quick Placement Test
+                </>
+              )}
+            </Button>
+
+            <button
+              onClick={() => {
+                if (!selectedLanguage) {
+                  setError('Please select a language')
+                  return
+                }
+                setError('')
+                startMultiSkillMutation.mutate(selectedLanguage)
+              }}
+              disabled={!selectedLanguage || startMultiSkillMutation.isLoading}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              {startMultiSkillMutation.isLoading ? (
+                'Starting...'
+              ) : (
+                <>
+                  <Award className="w-5 h-5" />
+                  4-Skills Assessment
+                </>
+              )}
+            </button>
+          </div>
+          <p className="text-xs text-gray-500 mt-2 text-center">
+            4-Skills: Reading, Listening, Writing, Speaking (~70 min) | Quick: Grammar &amp; Vocabulary (~25 min)
+          </p>
         </Card>
       )}
 
@@ -218,7 +281,11 @@ export function AssessmentPage() {
               <AssessmentCard
                 key={assessment.id}
                 assessment={assessment}
-                onClick={() => navigate(`/assessment/result/${assessment.id}`)}
+                onClick={() => navigate(
+                  assessment.isMultiSkill
+                    ? `/assessment/multi-skill/${assessment.id}/results`
+                    : `/assessment/result/${assessment.id}`
+                )}
               />
             ))}
           </div>
@@ -254,6 +321,11 @@ function AssessmentCard({ assessment, onClick }: { assessment: Assessment; onCli
           <div className="flex items-center gap-2">
             <Award className="w-5 h-5 text-primary-600" />
             <span className="font-medium text-gray-900">{assessment.language}</span>
+            {assessment.isMultiSkill && (
+              <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-medium">
+                4-Skills
+              </span>
+            )}
             {assessment.cefrLevel && (
               <span className="px-2 py-0.5 bg-primary-100 text-primary-700 rounded text-sm font-medium">
                 {assessment.cefrLevel}

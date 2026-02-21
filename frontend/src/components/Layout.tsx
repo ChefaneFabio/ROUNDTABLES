@@ -101,9 +101,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white">
           <div className="flex h-16 items-center justify-between px-4 border-b">
             <Link to="/dashboard" className="flex items-center">
-              <img src="/logo.svg" alt="Maka Language Centre" className="h-8 w-8" />
+              <img src="/logo.png" alt="Maka Learning Management Centre" className="h-8 w-8" />
               <span className="ml-2 text-lg font-bold text-gray-900">
-                MAKA LANGUAGE CENTRE
+                MAKA LMC
               </span>
             </Link>
             <button
@@ -148,9 +148,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="flex flex-col flex-grow border-r border-gray-200 bg-white">
           <div className="flex h-16 items-center px-4 border-b">
             <Link to="/dashboard" className="flex items-center">
-              <img src="/logo.svg" alt="Maka Language Centre" className="h-8 w-8" />
+              <img src="/logo.png" alt="Maka Learning Management Centre" className="h-8 w-8" />
               <span className="ml-2 text-lg font-bold text-gray-900">
-                MAKA LANGUAGE CENTRE
+                MAKA LMC
               </span>
             </Link>
           </div>

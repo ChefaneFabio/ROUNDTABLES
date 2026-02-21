@@ -65,10 +65,10 @@ export function RegisterPage() {
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <img src="/logo.svg" alt="Maka Language Centre" className="h-16 w-16" />
+          <img src="/logo.png" alt="Maka Learning Management Centre" className="h-16 w-16" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-          Register with Maka Language Centre
+          Register with Maka Learning Management Centre
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           Already have an account?{' '}
