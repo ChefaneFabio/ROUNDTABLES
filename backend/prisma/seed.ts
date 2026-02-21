@@ -100,50 +100,65 @@ async function main() {
   }
   console.log('✓ Student ready:', studentUser.email)
 
-  // Seed multi-skill assessment questions (English)
-  const existingMultiSkillCount = await prisma.assessmentQuestion.count({
-    where: { language: 'English', skill: { not: null } }
-  })
+  // Seed multi-skill assessment questions for all languages
+  const languages = [
+    { name: 'English', dir: 'english', prefix: 'english' },
+    { name: 'Spanish', dir: 'spanish', prefix: 'spanish' },
+    { name: 'French', dir: 'french', prefix: 'french' },
+    { name: 'German', dir: 'german', prefix: 'german' },
+    { name: 'Italian', dir: 'italian', prefix: 'italian' },
+  ]
 
-  if (existingMultiSkillCount === 0) {
-    console.log('Seeding multi-skill assessment questions...')
-    const { englishReadingQuestions } = await import('../src/services/questionBanks/english/reading')
-    const { englishListeningQuestions } = await import('../src/services/questionBanks/english/listening')
-    const { englishWritingQuestions } = await import('../src/services/questionBanks/english/writing')
-    const { englishSpeakingQuestions } = await import('../src/services/questionBanks/english/speaking')
-
-    const allQuestions = [
-      ...englishReadingQuestions,
-      ...englishListeningQuestions,
-      ...englishWritingQuestions,
-      ...englishSpeakingQuestions,
-    ]
-
-    await prisma.assessmentQuestion.createMany({
-      data: allQuestions.map((q: any) => ({
-        language: q.language,
-        cefrLevel: q.cefrLevel,
-        questionType: q.questionType,
-        questionText: q.questionText,
-        options: q.options || undefined,
-        correctAnswer: q.correctAnswer || '',
-        passage: q.passage,
-        passageTitle: q.passageTitle,
-        points: q.points,
-        orderIndex: q.orderIndex,
-        skill: q.skill,
-        ttsScript: q.ttsScript,
-        ttsLanguageCode: q.ttsLanguageCode,
-        speakingPrompt: q.speakingPrompt,
-        rubric: q.rubric || undefined,
-        tags: q.tags || [],
-        timeSuggested: q.timeSuggested,
-      })),
+  for (const lang of languages) {
+    const existingCount = await prisma.assessmentQuestion.count({
+      where: { language: lang.name, skill: { not: null } }
     })
 
-    console.log(`✓ Seeded ${allQuestions.length} multi-skill questions (Reading: ${englishReadingQuestions.length}, Listening: ${englishListeningQuestions.length}, Writing: ${englishWritingQuestions.length}, Speaking: ${englishSpeakingQuestions.length})`)
-  } else {
-    console.log(`→ Multi-skill questions already exist (${existingMultiSkillCount})`)
+    if (existingCount === 0) {
+      console.log(`Seeding ${lang.name} multi-skill questions...`)
+      try {
+        const reading = await import(`../src/services/questionBanks/${lang.dir}/reading`)
+        const listening = await import(`../src/services/questionBanks/${lang.dir}/listening`)
+        const writing = await import(`../src/services/questionBanks/${lang.dir}/writing`)
+        const speaking = await import(`../src/services/questionBanks/${lang.dir}/speaking`)
+
+        const readingQs = reading[`${lang.prefix}ReadingQuestions`] || []
+        const listeningQs = listening[`${lang.prefix}ListeningQuestions`] || []
+        const writingQs = writing[`${lang.prefix}WritingQuestions`] || []
+        const speakingQs = speaking[`${lang.prefix}SpeakingQuestions`] || []
+
+        const allQuestions = [...readingQs, ...listeningQs, ...writingQs, ...speakingQs]
+
+        if (allQuestions.length > 0) {
+          await prisma.assessmentQuestion.createMany({
+            data: allQuestions.map((q: any) => ({
+              language: q.language,
+              cefrLevel: q.cefrLevel,
+              questionType: q.questionType,
+              questionText: q.questionText,
+              options: q.options || undefined,
+              correctAnswer: q.correctAnswer || '',
+              passage: q.passage,
+              passageTitle: q.passageTitle,
+              points: q.points,
+              orderIndex: q.orderIndex,
+              skill: q.skill,
+              ttsScript: q.ttsScript,
+              ttsLanguageCode: q.ttsLanguageCode,
+              speakingPrompt: q.speakingPrompt,
+              rubric: q.rubric || undefined,
+              tags: q.tags || [],
+              timeSuggested: q.timeSuggested,
+            })),
+          })
+          console.log(`✓ Seeded ${allQuestions.length} ${lang.name} questions (R:${readingQs.length} L:${listeningQs.length} W:${writingQs.length} S:${speakingQs.length})`)
+        }
+      } catch (err) {
+        console.log(`→ Skipping ${lang.name}: question bank files not found`)
+      }
+    } else {
+      console.log(`→ ${lang.name} multi-skill questions already exist (${existingCount})`)
+    }
   }
 
   console.log('\n✅ Demo accounts ready!')

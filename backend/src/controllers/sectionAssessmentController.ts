@@ -394,18 +394,28 @@ router.post('/admin/seed-multi-skill', authenticate, requireAdmin, async (req: R
     let writingQs: any[] = []
     let speakingQs: any[] = []
 
-    if (language === 'English') {
-      const { englishReadingQuestions } = await import('../services/questionBanks/english/reading')
-      const { englishListeningQuestions } = await import('../services/questionBanks/english/listening')
-      const { englishWritingQuestions } = await import('../services/questionBanks/english/writing')
-      const { englishSpeakingQuestions } = await import('../services/questionBanks/english/speaking')
-      readingQs = englishReadingQuestions
-      listeningQs = englishListeningQuestions
-      writingQs = englishWritingQuestions
-      speakingQs = englishSpeakingQuestions
-    } else {
+    const langMap: Record<string, { dir: string; prefix: string }> = {
+      English: { dir: 'english', prefix: 'english' },
+      Spanish: { dir: 'spanish', prefix: 'spanish' },
+      French: { dir: 'french', prefix: 'french' },
+      German: { dir: 'german', prefix: 'german' },
+      Italian: { dir: 'italian', prefix: 'italian' },
+    }
+
+    const langConfig = langMap[language]
+    if (!langConfig) {
       return res.status(400).json(apiResponse.error(`Multi-skill questions not yet available for ${language}`, 'NOT_AVAILABLE'))
     }
+
+    const reading = await import(`../services/questionBanks/${langConfig.dir}/reading`)
+    const listening = await import(`../services/questionBanks/${langConfig.dir}/listening`)
+    const writing = await import(`../services/questionBanks/${langConfig.dir}/writing`)
+    const speaking = await import(`../services/questionBanks/${langConfig.dir}/speaking`)
+
+    readingQs = reading[`${langConfig.prefix}ReadingQuestions`]
+    listeningQs = listening[`${langConfig.prefix}ListeningQuestions`]
+    writingQs = writing[`${langConfig.prefix}WritingQuestions`]
+    speakingQs = speaking[`${langConfig.prefix}SpeakingQuestions`]
 
     const allQuestions = [...readingQs, ...listeningQs, ...writingQs, ...speakingQs]
 
