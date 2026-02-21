@@ -8,84 +8,97 @@ async function main() {
 
   const password = await bcrypt.hash('demo123', 10)
 
-  // Create corporate user with school
-  let corporate = await prisma.user.findUnique({ where: { email: 'admin@demo.com' } })
+  // Upsert admin user
+  const corporate = await prisma.user.upsert({
+    where: { email: 'admin@demo.com' },
+    update: { name: 'School Admin', role: 'ADMIN', password },
+    create: {
+      email: 'admin@demo.com',
+      password,
+      name: 'School Admin',
+      role: 'ADMIN'
+    }
+  })
+  console.log('✓ Admin user ready:', corporate.email)
 
-  if (!corporate) {
-    corporate = await prisma.user.create({
-      data: {
-        email: 'admin@demo.com',
-        password,
-        name: 'School Admin',
-        role: 'ADMIN',
-        schoolProfile: {
-          create: {
-            name: 'Maka Learning Management Centre',
-            email: 'info@makalanguage.com',
-            isActive: true
-          }
-        }
-      },
-      include: { schoolProfile: true }
-    })
-    console.log('✓ Corporate user + school created:', corporate.email)
-  } else {
-    console.log('→ Corporate user exists:', corporate.email)
-  }
-
-  // Get school ID
-  const school = await prisma.school.findFirst({ where: { userId: corporate.id } })
+  // Ensure school exists for this user
+  let school = await prisma.school.findFirst({ where: { userId: corporate.id } })
   if (!school) {
-    console.log('✗ Error: No school found')
-    return
-  }
-  console.log('✓ School:', school.name)
-
-  // Create teacher user
-  let teacherUser = await prisma.user.findUnique({ where: { email: 'teacher@demo.com' } })
-  if (!teacherUser) {
-    teacherUser = await prisma.user.create({
-      data: {
-        email: 'teacher@demo.com',
-        password,
-        name: 'Demo Teacher',
-        role: 'TEACHER',
-        teacherProfile: {
-          create: {
-            schoolId: school.id,
-            expertise: ['English', 'Business English'],
-            isActive: true
-          }
+    // Check if school email already exists
+    school = await prisma.school.findFirst({ where: { email: 'info@makalanguage.com' } })
+    if (school) {
+      // Reassign existing school to admin user
+      school = await prisma.school.update({
+        where: { id: school.id },
+        data: { userId: corporate.id }
+      })
+      console.log('✓ School reassigned to admin user')
+    } else {
+      school = await prisma.school.create({
+        data: {
+          name: 'Maka Learning Management Centre',
+          email: 'info@makalanguage.com',
+          userId: corporate.id,
+          isActive: true
         }
-      }
-    })
-    console.log('✓ Teacher created:', teacherUser.email)
+      })
+      console.log('✓ School created:', school.name)
+    }
   } else {
-    console.log('→ Teacher exists:', teacherUser.email)
+    console.log('→ School exists:', school.name)
   }
 
-  // Create student user
-  let studentUser = await prisma.user.findUnique({ where: { email: 'student@demo.com' } })
-  if (!studentUser) {
-    studentUser = await prisma.user.create({
+  // Upsert teacher user
+  const teacherUser = await prisma.user.upsert({
+    where: { email: 'teacher@demo.com' },
+    update: { name: 'Demo Teacher', role: 'TEACHER', password },
+    create: {
+      email: 'teacher@demo.com',
+      password,
+      name: 'Demo Teacher',
+      role: 'TEACHER'
+    }
+  })
+  // Ensure teacher profile
+  const existingTeacher = await prisma.teacher.findFirst({ where: { userId: teacherUser.id } })
+  if (!existingTeacher) {
+    await prisma.teacher.create({
       data: {
-        email: 'student@demo.com',
-        password,
-        name: 'Demo Student',
-        role: 'STUDENT',
-        studentProfile: {
-          create: {
-            schoolId: school.id,
-            languageLevel: 'B1',
-            isActive: true
-          }
-        }
+        userId: teacherUser.id,
+        schoolId: school.id,
+        expertise: ['English', 'Business English'],
+        isActive: true
       }
     })
-    console.log('✓ Student created:', studentUser.email)
-  } else {
-    console.log('→ Student exists:', studentUser.email)
+    console.log('✓ Teacher profile created')
   }
+  console.log('✓ Teacher ready:', teacherUser.email)
+
+  // Upsert student user
+  const studentUser = await prisma.user.upsert({
+    where: { email: 'student@demo.com' },
+    update: { name: 'Demo Student', role: 'STUDENT', password },
+    create: {
+      email: 'student@demo.com',
+      password,
+      name: 'Demo Student',
+      role: 'STUDENT'
+    }
+  })
+  // Ensure student profile
+  const existingStudent = await prisma.student.findFirst({ where: { userId: studentUser.id } })
+  if (!existingStudent) {
+    await prisma.student.create({
+      data: {
+        userId: studentUser.id,
+        schoolId: school.id,
+        languageLevel: 'B1',
+        isActive: true
+      }
+    })
+    console.log('✓ Student profile created')
+  }
+  console.log('✓ Student ready:', studentUser.email)
 
   console.log('\n✅ Demo accounts ready!')
   console.log('   Email: admin@demo.com / teacher@demo.com / student@demo.com')
