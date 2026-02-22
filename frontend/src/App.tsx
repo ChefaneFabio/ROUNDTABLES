@@ -35,6 +35,8 @@ import AdminExercisesPage from './pages/admin/ExercisesPage'
 import AdminExerciseEditorPage from './pages/admin/ExerciseEditorPage'
 import AdminExerciseStatsPage from './pages/admin/ExerciseStatsPage'
 import AdminAssessmentQuestionsPage from './pages/admin/AssessmentQuestionsPage'
+import AdminAssessmentManagementPage from './pages/admin/AssessmentManagementPage'
+import AdminCalendarPage from './pages/admin/CalendarPage'
 // Assessment review pages
 import { AssessmentReviewPage } from './pages/AssessmentReviewPage'
 import { StudentAssessmentsPage } from './pages/StudentAssessmentsPage'
@@ -535,6 +537,30 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
             <Layout>
               <AdminExerciseEditorPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Assessment Management */}
+      <Route
+        path="/admin/assessments"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
+            <Layout>
+              <AdminAssessmentManagementPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Calendar */}
+      <Route
+        path="/admin/calendar"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
+            <Layout>
+              <AdminCalendarPage />
             </Layout>
           </ProtectedRoute>
         }

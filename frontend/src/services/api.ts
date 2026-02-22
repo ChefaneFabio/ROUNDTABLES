@@ -355,6 +355,11 @@ export const lessonsApi = {
     const response = await api.get(`/lessons/${lessonId}/materials`)
     return response.data.data || []
   },
+
+  async getCalendar(year: number, month: number): Promise<any> {
+    const response = await api.get('/lessons/calendar', { params: { year, month } })
+    return response.data.data
+  },
 }
 
 // Teachers API
