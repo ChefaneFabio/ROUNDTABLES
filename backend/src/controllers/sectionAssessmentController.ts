@@ -425,7 +425,7 @@ router.get('/tts/:questionId', authenticate, async (req: Request, res: Response)
 // Upload audio for speaking response
 router.post('/upload-audio', authenticate, audioUpload.single('audio'), async (req: Request, res: Response) => {
   try {
-    const file = (req as any).file as Express.Multer.File | undefined
+    const file = (req as any).file as { filename: string; path: string; size: number; mimetype: string } | undefined
     if (!file) {
       return res.status(400).json(apiResponse.error('No audio file uploaded', 'NO_FILE'))
     }
