@@ -77,6 +77,9 @@ model School {
   reaNumber        String?  // Numero REA
   shareCapital     Decimal? @db.Decimal(12, 2) // Capitale Sociale
 
+  // Notification settings
+  lessonReminderMinutes Json? // Array of minutes before lesson, e.g. [1440, 60]. Default: [60]
+
   // Owner user account
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

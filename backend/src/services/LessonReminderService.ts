@@ -1,179 +1,227 @@
 import { prisma } from '../config/database'
 import { emailService } from './EmailService'
 import { NotificationType, NotificationStatus } from '@prisma/client'
+import { DEFAULT_LESSON_REMINDER_MINUTES } from '../utils/constants'
+
+/**
+ * Format minutes into a human-readable time description.
+ * e.g. 60 → "1 hour", 1440 → "24 hours", 30 → "30 minutes", 90 → "1 hour 30 minutes"
+ */
+function formatMinutesLabel(minutes: number): string {
+  if (minutes < 60) {
+    return `${minutes} minute${minutes === 1 ? '' : 's'}`
+  }
+  const hours = Math.floor(minutes / 60)
+  const remaining = minutes % 60
+  const hourPart = `${hours} hour${hours === 1 ? '' : 's'}`
+  if (remaining === 0) return hourPart
+  return `${hourPart} ${remaining} minute${remaining === 1 ? '' : 's'}`
+}
 
 class LessonReminderService {
   /**
-   * Find lessons starting in the next 60-75 minutes and send reminder
-   * emails to enrolled students and the assigned teacher.
-   * Uses a 75-minute window so that with a 15-minute cron interval
-   * no lesson is ever missed.
+   * Send reminders for upcoming lessons based on each school's configured
+   * reminder intervals (lessonReminderMinutes). Runs every 15 minutes via cron.
+   *
+   * For each school and each configured interval:
+   *   - Compute time window: [now + interval, now + interval + 15 min]
+   *   - Query lessons in that window belonging to that school's courses
+   *   - For each lesson + enrolled student, check idempotency via metadata.reminderMinutes
+   *   - Send email with dynamic wording ("starts in 24 hours" vs "starts in 1 hour")
+   *   - Teacher reminders only sent for the smallest (closest-to-lesson) interval
    */
   async sendUpcomingLessonReminders(): Promise<{ sent: number; failed: number }> {
     const now = new Date()
-    const sixtyMinutes = new Date(now.getTime() + 60 * 60 * 1000)
-    const seventyFiveMinutes = new Date(now.getTime() + 75 * 60 * 1000)
 
-    const lessons = await prisma.lesson.findMany({
-      where: {
-        deletedAt: null,
-        status: { in: ['SCHEDULED', 'REMINDER_SENT'] },
-        scheduledAt: { gte: sixtyMinutes, lte: seventyFiveMinutes }
-      },
-      include: {
-        course: {
-          include: {
-            enrollments: {
-              where: { status: 'ACTIVE' },
-              include: { student: { include: { user: true } } }
-            }
-          }
-        },
-        teacher: { include: { user: true } }
-      }
+    // Fetch all active schools with their reminder settings
+    const schools = await prisma.school.findMany({
+      where: { deletedAt: null, isActive: true },
+      select: { id: true, lessonReminderMinutes: true }
     })
-
-    if (lessons.length === 0) {
-      return { sent: 0, failed: 0 }
-    }
 
     let sent = 0
     let failed = 0
 
-    for (const lesson of lessons) {
-      const courseName = lesson.course.name
-      const teacherName = lesson.teacher?.user?.name || 'TBA'
-      const lessonDate = lesson.scheduledAt
-      const duration = lesson.duration
+    for (const school of schools) {
+      const intervals = (school.lessonReminderMinutes as number[] | null) || [...DEFAULT_LESSON_REMINDER_MINUTES]
 
-      // Send reminders to enrolled students
-      for (const enrollment of lesson.course.enrollments) {
-        const user = enrollment.student.user
-        try {
-          // Idempotency: skip if notification already exists
-          const existing = await prisma.notification.findFirst({
-            where: {
-              userId: user.id,
-              lessonId: lesson.id,
-              type: 'LESSON_REMINDER' as NotificationType
-            }
-          })
-          if (existing) continue
+      if (!Array.isArray(intervals) || intervals.length === 0) continue
 
-          const html = this.buildStudentEmailHtml({
-            studentName: user.name,
-            courseName,
-            teacherName,
-            lessonTitle: lesson.title || `Lesson ${lesson.lessonNumber}`,
-            lessonDate,
-            duration,
-            meetingProvider: lesson.meetingProvider,
-            meetingLink: lesson.meetingLink
-          })
+      // Determine the smallest interval (closest to lesson) for teacher reminders
+      const smallestInterval = Math.min(...intervals)
 
-          const subject = `Lesson Reminder: ${courseName} starts in 1 hour`
+      for (const intervalMinutes of intervals) {
+        const windowStart = new Date(now.getTime() + intervalMinutes * 60 * 1000)
+        const windowEnd = new Date(now.getTime() + (intervalMinutes + 15) * 60 * 1000)
 
-          await emailService.sendEmail({ to: user.email, subject, html })
-
-          await prisma.notification.create({
-            data: {
-              userId: user.id,
-              lessonId: lesson.id,
-              type: 'LESSON_REMINDER' as NotificationType,
-              subject,
-              content: `Your lesson for ${courseName} starts at ${lessonDate.toLocaleTimeString()}.`,
-              status: 'SENT' as NotificationStatus,
-              sentAt: new Date()
-            }
-          })
-          sent++
-        } catch (error) {
-          console.error(`[LessonReminder] Failed to send reminder to ${user.email}:`, error)
-          // Create a FAILED notification record so we don't retry endlessly
-          try {
-            await prisma.notification.create({
-              data: {
-                userId: user.id,
-                lessonId: lesson.id,
-                type: 'LESSON_REMINDER' as NotificationType,
-                subject: `Lesson Reminder: ${courseName} starts in 1 hour`,
-                content: `Your lesson for ${courseName} starts at ${lessonDate.toLocaleTimeString()}.`,
-                status: 'FAILED' as NotificationStatus
+        const lessons = await prisma.lesson.findMany({
+          where: {
+            deletedAt: null,
+            status: { in: ['SCHEDULED', 'REMINDER_SENT'] },
+            scheduledAt: { gte: windowStart, lte: windowEnd },
+            course: { schoolId: school.id }
+          },
+          include: {
+            course: {
+              include: {
+                enrollments: {
+                  where: { status: 'ACTIVE' },
+                  include: { student: { include: { user: true } } }
+                }
               }
-            })
-          } catch (_) { /* best effort */ }
-          failed++
-        }
-      }
+            },
+            teacher: { include: { user: true } }
+          }
+        })
 
-      // Send reminder to teacher
-      if (lesson.teacher?.user) {
-        const teacherUser = lesson.teacher.user
-        try {
-          const existing = await prisma.notification.findFirst({
-            where: {
-              userId: teacherUser.id,
-              lessonId: lesson.id,
-              type: 'TEACHER_REMINDER' as NotificationType
+        if (lessons.length === 0) continue
+
+        const timeLabel = formatMinutesLabel(intervalMinutes)
+
+        for (const lesson of lessons) {
+          const courseName = lesson.course.name
+          const teacherName = lesson.teacher?.user?.name || 'TBA'
+          const lessonDate = lesson.scheduledAt
+          const duration = lesson.duration
+
+          // Send reminders to enrolled students
+          for (const enrollment of lesson.course.enrollments) {
+            const user = enrollment.student.user
+            try {
+              // Idempotency: check by userId + lessonId + type + metadata.reminderMinutes
+              const existing = await prisma.notification.findFirst({
+                where: {
+                  userId: user.id,
+                  lessonId: lesson.id,
+                  type: 'LESSON_REMINDER' as NotificationType,
+                  metadata: { path: ['reminderMinutes'], equals: intervalMinutes }
+                }
+              })
+              if (existing) continue
+
+              const html = this.buildStudentEmailHtml({
+                studentName: user.name,
+                courseName,
+                teacherName,
+                lessonTitle: lesson.title || `Lesson ${lesson.lessonNumber}`,
+                lessonDate,
+                duration,
+                meetingProvider: lesson.meetingProvider,
+                meetingLink: lesson.meetingLink,
+                timeLabel
+              })
+
+              const subject = `Lesson Reminder: ${courseName} starts in ${timeLabel}`
+
+              await emailService.sendEmail({ to: user.email, subject, html })
+
+              await prisma.notification.create({
+                data: {
+                  userId: user.id,
+                  lessonId: lesson.id,
+                  type: 'LESSON_REMINDER' as NotificationType,
+                  subject,
+                  content: `Your lesson for ${courseName} starts at ${lessonDate.toLocaleTimeString()}.`,
+                  status: 'SENT' as NotificationStatus,
+                  sentAt: new Date(),
+                  metadata: { reminderMinutes: intervalMinutes }
+                }
+              })
+              sent++
+            } catch (error) {
+              console.error(`[LessonReminder] Failed to send reminder to ${user.email}:`, error)
+              try {
+                await prisma.notification.create({
+                  data: {
+                    userId: user.id,
+                    lessonId: lesson.id,
+                    type: 'LESSON_REMINDER' as NotificationType,
+                    subject: `Lesson Reminder: ${courseName} starts in ${timeLabel}`,
+                    content: `Your lesson for ${courseName} starts at ${lessonDate.toLocaleTimeString()}.`,
+                    status: 'FAILED' as NotificationStatus,
+                    metadata: { reminderMinutes: intervalMinutes }
+                  }
+                })
+              } catch (_) { /* best effort */ }
+              failed++
             }
-          })
-          if (existing) continue
+          }
 
-          const html = this.buildTeacherEmailHtml({
-            teacherName: teacherUser.name,
-            courseName,
-            lessonTitle: lesson.title || `Lesson ${lesson.lessonNumber}`,
-            lessonDate,
-            duration,
-            studentCount: lesson.course.enrollments.length,
-            meetingProvider: lesson.meetingProvider,
-            meetingHostUrl: lesson.meetingHostUrl,
-            meetingLink: lesson.meetingLink
-          })
+          // Send teacher reminder only for the smallest (closest-to-lesson) interval
+          if (intervalMinutes === smallestInterval && lesson.teacher?.user) {
+            const teacherUser = lesson.teacher.user
+            try {
+              const existing = await prisma.notification.findFirst({
+                where: {
+                  userId: teacherUser.id,
+                  lessonId: lesson.id,
+                  type: 'TEACHER_REMINDER' as NotificationType,
+                  metadata: { path: ['reminderMinutes'], equals: intervalMinutes }
+                }
+              })
+              if (existing) continue
 
-          const subject = `Teaching Reminder: ${courseName} starts in 1 hour`
+              const html = this.buildTeacherEmailHtml({
+                teacherName: teacherUser.name,
+                courseName,
+                lessonTitle: lesson.title || `Lesson ${lesson.lessonNumber}`,
+                lessonDate,
+                duration,
+                studentCount: lesson.course.enrollments.length,
+                meetingProvider: lesson.meetingProvider,
+                meetingHostUrl: lesson.meetingHostUrl,
+                meetingLink: lesson.meetingLink,
+                timeLabel
+              })
 
-          await emailService.sendEmail({ to: teacherUser.email, subject, html })
+              const subject = `Teaching Reminder: ${courseName} starts in ${timeLabel}`
 
-          await prisma.notification.create({
-            data: {
-              userId: teacherUser.id,
-              lessonId: lesson.id,
-              type: 'TEACHER_REMINDER' as NotificationType,
-              subject,
-              content: `Your lesson for ${courseName} starts at ${lessonDate.toLocaleTimeString()}.`,
-              status: 'SENT' as NotificationStatus,
-              sentAt: new Date()
+              await emailService.sendEmail({ to: teacherUser.email, subject, html })
+
+              await prisma.notification.create({
+                data: {
+                  userId: teacherUser.id,
+                  lessonId: lesson.id,
+                  type: 'TEACHER_REMINDER' as NotificationType,
+                  subject,
+                  content: `Your lesson for ${courseName} starts at ${lessonDate.toLocaleTimeString()}.`,
+                  status: 'SENT' as NotificationStatus,
+                  sentAt: new Date(),
+                  metadata: { reminderMinutes: intervalMinutes }
+                }
+              })
+              sent++
+            } catch (error) {
+              console.error(`[LessonReminder] Failed to send teacher reminder to ${teacherUser.email}:`, error)
+              try {
+                await prisma.notification.create({
+                  data: {
+                    userId: teacherUser.id,
+                    lessonId: lesson.id,
+                    type: 'TEACHER_REMINDER' as NotificationType,
+                    subject: `Teaching Reminder: ${courseName} starts in ${timeLabel}`,
+                    content: `Your lesson for ${courseName} starts at ${lessonDate.toLocaleTimeString()}.`,
+                    status: 'FAILED' as NotificationStatus,
+                    metadata: { reminderMinutes: intervalMinutes }
+                  }
+                })
+              } catch (_) { /* best effort */ }
+              failed++
             }
-          })
-          sent++
-        } catch (error) {
-          console.error(`[LessonReminder] Failed to send teacher reminder to ${teacherUser.email}:`, error)
-          try {
-            await prisma.notification.create({
-              data: {
-                userId: teacherUser.id,
-                lessonId: lesson.id,
-                type: 'TEACHER_REMINDER' as NotificationType,
-                subject: `Teaching Reminder: ${courseName} starts in 1 hour`,
-                content: `Your lesson for ${courseName} starts at ${lessonDate.toLocaleTimeString()}.`,
-                status: 'FAILED' as NotificationStatus
-              }
-            })
-          } catch (_) { /* best effort */ }
-          failed++
-        }
-      }
+          }
 
-      // Transition lesson status to REMINDER_SENT if it was SCHEDULED
-      if (lesson.status === 'SCHEDULED') {
-        try {
-          await prisma.lesson.update({
-            where: { id: lesson.id },
-            data: { status: 'REMINDER_SENT' }
-          })
-        } catch (error) {
-          console.error(`[LessonReminder] Failed to update lesson status for ${lesson.id}:`, error)
+          // Transition lesson status to REMINDER_SENT if it was SCHEDULED
+          // Only do this on the smallest interval (closest to lesson) to avoid premature transition
+          if (intervalMinutes === smallestInterval && lesson.status === 'SCHEDULED') {
+            try {
+              await prisma.lesson.update({
+                where: { id: lesson.id },
+                data: { status: 'REMINDER_SENT' }
+              })
+            } catch (error) {
+              console.error(`[LessonReminder] Failed to update lesson status for ${lesson.id}:`, error)
+            }
+          }
         }
       }
     }
@@ -201,8 +249,9 @@ class LessonReminderService {
     duration: number
     meetingProvider: string | null
     meetingLink: string | null
+    timeLabel: string
   }): string {
-    const { studentName, courseName, teacherName, lessonTitle, lessonDate, duration, meetingProvider, meetingLink } = params
+    const { studentName, courseName, teacherName, lessonTitle, lessonDate, duration, meetingProvider, meetingLink, timeLabel } = params
     const dateStr = lessonDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
     const timeStr = lessonDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
     const providerLabel = this.formatMeetingProvider(meetingProvider)
@@ -224,7 +273,7 @@ class LessonReminderService {
       <div style="padding:32px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px">
         <p style="font-size:16px;color:#374151">Dear <strong>${studentName}</strong>,</p>
         <p style="font-size:16px;color:#374151">
-          Your lesson is starting in <strong>1 hour</strong>. Here are the details:
+          Your lesson is starting in <strong>${timeLabel}</strong>. Here are the details:
         </p>
 
         <table style="width:100%;border-collapse:collapse;margin:24px 0;font-size:15px">
@@ -273,8 +322,9 @@ class LessonReminderService {
     meetingProvider: string | null
     meetingHostUrl: string | null
     meetingLink: string | null
+    timeLabel: string
   }): string {
-    const { teacherName, courseName, lessonTitle, lessonDate, duration, studentCount, meetingProvider, meetingHostUrl, meetingLink } = params
+    const { teacherName, courseName, lessonTitle, lessonDate, duration, studentCount, meetingProvider, meetingHostUrl, meetingLink, timeLabel } = params
     const dateStr = lessonDate.toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
     const timeStr = lessonDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
     const providerLabel = this.formatMeetingProvider(meetingProvider)
@@ -297,7 +347,7 @@ class LessonReminderService {
       <div style="padding:32px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px">
         <p style="font-size:16px;color:#374151">Dear <strong>${teacherName}</strong>,</p>
         <p style="font-size:16px;color:#374151">
-          You have a lesson starting in <strong>1 hour</strong>. Here are the details:
+          You have a lesson starting in <strong>${timeLabel}</strong>. Here are the details:
         </p>
 
         <table style="width:100%;border-collapse:collapse;margin:24px 0;font-size:15px">

@@ -5,7 +5,7 @@ import { validateRequest } from '../middleware/validateRequest'
 import { authenticate } from '../middleware/auth'
 import { requireAdmin, requireSchoolAdmin, requireSchoolAccess } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
-import { PAGINATION } from '../utils/constants'
+import { PAGINATION, DEFAULT_LESSON_REMINDER_MINUTES } from '../utils/constants'
 
 const router = Router()
 
@@ -23,7 +23,12 @@ const updateSchoolSchema = Joi.object({
     zip: Joi.string().optional(),
     country: Joi.string().optional()
   }).optional().allow(null),
-  subscriptionPlan: Joi.string().valid('BASIC', 'PROFESSIONAL', 'ENTERPRISE').optional()
+  subscriptionPlan: Joi.string().valid('BASIC', 'PROFESSIONAL', 'ENTERPRISE').optional(),
+  lessonReminderMinutes: Joi.array().items(Joi.number().integer().min(5).max(10080)).max(5).optional()
+})
+
+const notificationSettingsSchema = Joi.object({
+  lessonReminderMinutes: Joi.array().items(Joi.number().integer().min(5).max(10080)).max(5).required()
 })
 
 // Get all schools (admin only)
@@ -270,6 +275,63 @@ router.get('/:id/stats', authenticate, requireSchoolAccess, async (req: Request,
     }
 
     res.json(apiResponse.success(stats))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Get notification settings for a school
+router.get('/:id/notification-settings', authenticate, requireSchoolAccess, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+
+    if (req.user?.role === 'ADMIN' && req.user.schoolId !== id) {
+      return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
+    }
+
+    const school = await prisma.school.findFirst({
+      where: { id, deletedAt: null },
+      select: { lessonReminderMinutes: true }
+    })
+
+    if (!school) {
+      return res.status(404).json(apiResponse.error('School not found', 'NOT_FOUND'))
+    }
+
+    res.json(apiResponse.success({
+      lessonReminderMinutes: (school.lessonReminderMinutes as number[] | null) || [...DEFAULT_LESSON_REMINDER_MINUTES]
+    }))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Update notification settings for a school
+router.put('/:id/notification-settings', authenticate, requireSchoolAccess, validateRequest(notificationSettingsSchema), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+
+    if (req.user?.role === 'ADMIN' && req.user.schoolId !== id) {
+      return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
+    }
+
+    const school = await prisma.school.findFirst({
+      where: { id, deletedAt: null }
+    })
+
+    if (!school) {
+      return res.status(404).json(apiResponse.error('School not found', 'NOT_FOUND'))
+    }
+
+    const updated = await prisma.school.update({
+      where: { id },
+      data: { lessonReminderMinutes: req.body.lessonReminderMinutes },
+      select: { id: true, lessonReminderMinutes: true }
+    })
+
+    res.json(apiResponse.success({
+      lessonReminderMinutes: updated.lessonReminderMinutes as number[]
+    }, 'Notification settings updated successfully'))
   } catch (error) {
     handleError(res, error)
   }

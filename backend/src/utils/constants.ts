@@ -55,6 +55,9 @@ export const COURSE = {
   MIN_STUDENTS: 1
 } as const
 
+// Default lesson reminder intervals (minutes before lesson start)
+export const DEFAULT_LESSON_REMINDER_MINUTES = [60] as const // 1 hour before
+
 // Notification timing (in milliseconds)
 export const NOTIFICATION_TIMING = {
   LESSON_REMINDER_BEFORE: 60 * 60 * 1000,  // 1 hour before lesson
