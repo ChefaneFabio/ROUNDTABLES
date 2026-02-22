@@ -1,7 +1,19 @@
 import Stripe from 'stripe'
 import { prisma } from '../config/database'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '')
+// Lazy-initialize Stripe so the app doesn't crash at startup when
+// STRIPE_SECRET_KEY is not configured (e.g. staging/CI environments).
+let _stripe: Stripe | null = null
+function getStripe(): Stripe {
+  if (!_stripe) {
+    const key = process.env.STRIPE_SECRET_KEY
+    if (!key) {
+      throw new Error('STRIPE_SECRET_KEY environment variable is not set')
+    }
+    _stripe = new Stripe(key)
+  }
+  return _stripe
+}
 
 export interface PaymentMetadata {
   orgId: string
@@ -20,7 +32,7 @@ export const StripeService = {
     currency: string,
     metadata: PaymentMetadata
   ): Promise<{ clientSecret: string; paymentIntentId: string }> {
-    const paymentIntent = await stripe.paymentIntents.create({
+    const paymentIntent = await getStripe().paymentIntents.create({
       amount: Math.round(amount * 100), // Stripe expects cents
       currency: currency.toLowerCase(),
       metadata,
@@ -37,7 +49,7 @@ export const StripeService = {
    * After webhook confirms payment, provision the seat license
    */
   async confirmPaymentAndProvision(paymentIntentId: string) {
-    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
+    const paymentIntent = await getStripe().paymentIntents.retrieve(paymentIntentId)
     const metadata = paymentIntent.metadata as unknown as PaymentMetadata
 
     const orgId = metadata.orgId
@@ -132,7 +144,7 @@ export const StripeService = {
    * Verify Stripe webhook signature
    */
   constructEvent(payload: Buffer, signature: string): Stripe.Event {
-    return stripe.webhooks.constructEvent(
+    return getStripe().webhooks.constructEvent(
       payload,
       signature,
       process.env.STRIPE_WEBHOOK_SECRET || ''
