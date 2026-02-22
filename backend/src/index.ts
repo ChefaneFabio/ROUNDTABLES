@@ -43,7 +43,7 @@ import { errorHandler } from './middleware/errorHandler'
 import { requestLogger } from './middleware/requestLogger'
 
 // Import scheduled jobs
-// import './jobs/scheduler' // Disabled - uses legacy models
+import './jobs/scheduler'
 
 dotenv.config()
 

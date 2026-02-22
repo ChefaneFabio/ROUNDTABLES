@@ -57,7 +57,7 @@ export const COURSE = {
 
 // Notification timing (in milliseconds)
 export const NOTIFICATION_TIMING = {
-  LESSON_REMINDER_BEFORE: 24 * 60 * 60 * 1000,  // 24 hours before lesson
+  LESSON_REMINDER_BEFORE: 60 * 60 * 1000,  // 1 hour before lesson
   QUESTION_REQUEST_BEFORE: 48 * 60 * 60 * 1000, // 48 hours before lesson
   FEEDBACK_REQUEST_AFTER: 2 * 60 * 60 * 1000,   // 2 hours after lesson
   VOTING_DEADLINE_REMINDER: 24 * 60 * 60 * 1000 // 24 hours before voting deadline

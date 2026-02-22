@@ -7,6 +7,7 @@ import { requireSchoolAdmin, requireAdmin } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
 import { PAGINATION } from '../utils/constants'
 import { NotificationStatus, NotificationType } from '@prisma/client'
+import { emailService } from '../services/EmailService'
 
 const router = Router()
 
@@ -304,8 +305,23 @@ router.post('/:id/send', authenticate, requireSchoolAdmin, async (req: Request, 
       return res.status(400).json(apiResponse.error('Notification already sent', 'ALREADY_SENT'))
     }
 
-    // TODO: Actually send the notification (email, push, etc.)
-    // For now, just mark as sent
+    // Send the email
+    if (emailService.isConfigured()) {
+      try {
+        await emailService.sendEmail({
+          to: notification.user.email,
+          subject: notification.subject,
+          html: notification.content
+        })
+      } catch (emailError) {
+        console.error(`[Notification] Failed to send email for notification ${id}:`, emailError)
+        const failed = await prisma.notification.update({
+          where: { id },
+          data: { status: 'FAILED' }
+        })
+        return res.status(500).json(apiResponse.error('Failed to send email', 'EMAIL_FAILED'))
+      }
+    }
 
     const updated = await prisma.notification.update({
       where: { id },
