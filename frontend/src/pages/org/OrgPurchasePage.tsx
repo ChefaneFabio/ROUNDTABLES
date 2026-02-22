@@ -1,6 +1,6 @@
 import { useState, useEffect, FormEvent } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
-import { loadStripe } from '@stripe/stripe-js'
+import { loadStripe, Stripe } from '@stripe/stripe-js'
 import {
   Elements,
   CardElement,
@@ -18,9 +18,15 @@ import {
 import { catalogApi } from '../../services/organizationApi'
 import { stripeApi } from '../../services/stripeApi'
 
-const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || ''
-)
+// Lazy-load Stripe only when the key is available
+let stripePromise: Promise<Stripe | null> | null = null
+function getStripePromise() {
+  if (!stripePromise) {
+    const key = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY
+    stripePromise = key ? loadStripe(key) : Promise.resolve(null)
+  }
+  return stripePromise
+}
 
 interface CatalogCourse {
   id: string
@@ -338,7 +344,7 @@ export default function OrgPurchasePage() {
             Choose a different course
           </button>
 
-          <Elements stripe={stripePromise}>
+          <Elements stripe={getStripePromise()}>
             <PurchaseForm course={selectedCourse} initialSeats={1} />
           </Elements>
         </div>
