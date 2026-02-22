@@ -185,7 +185,8 @@ export class AuthService {
       include: {
         schoolProfile: true,
         teacherProfile: { include: { school: true } },
-        studentProfile: { include: { school: true } }
+        studentProfile: { include: { school: true } },
+        orgAdminProfile: { include: { organization: true } }
       }
     })
 
@@ -365,6 +366,11 @@ export class AuthService {
             enrollments: { include: { course: true } },
             progress: true
           }
+        },
+        orgAdminProfile: {
+          include: {
+            organization: true
+          }
         }
       }
     })
@@ -394,6 +400,7 @@ export class AuthService {
         schoolProfile: true,
         teacherProfile: true,
         studentProfile: true,
+        orgAdminProfile: { include: { organization: true } },
       }
     })
 
@@ -418,6 +425,8 @@ export class AuthService {
         return user.teacherProfile
       case 'STUDENT':
         return user.studentProfile
+      case 'ORG_ADMIN':
+        return user.orgAdminProfile
       default:
         return null
     }

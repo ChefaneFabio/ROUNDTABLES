@@ -26,6 +26,8 @@ import {
   Video,
   PenTool,
   Mic,
+  Building2,
+  Ticket,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -38,16 +40,24 @@ interface NavItem {
 
 const navigation: NavItem[] = [
   { name: 'Dashboard', href: '/dashboard', icon: Home },
-  { name: 'Courses', href: '/courses', icon: BookOpen },
+  { name: 'Courses', href: '/courses', icon: BookOpen, roles: [UserRole.ADMIN, UserRole.TEACHER, UserRole.STUDENT] },
   { name: 'Teachers', href: '/teachers', icon: GraduationCap, roles: [UserRole.ADMIN] },
   { name: 'Students', href: '/students', icon: Users, roles: [UserRole.ADMIN] },
-  { name: 'Lessons', href: '/lessons', icon: Calendar },
+  { name: 'Lessons', href: '/lessons', icon: Calendar, roles: [UserRole.ADMIN, UserRole.TEACHER, UserRole.STUDENT] },
   { name: 'Assessment', href: '/assessment', icon: ClipboardCheck, roles: [UserRole.STUDENT] },
   { name: 'Video Library', href: '/videos', icon: Video, roles: [UserRole.STUDENT] },
   { name: 'Exercises', href: '/exercises', icon: PenTool, roles: [UserRole.STUDENT] },
   { name: 'Speaking', href: '/speaking', icon: Mic, roles: [UserRole.STUDENT] },
   { name: 'Certificates', href: '/certificates', icon: Award, roles: [UserRole.STUDENT] },
   { name: 'AI Chat', href: '/chat', icon: Bot, roles: [UserRole.STUDENT] },
+  // ORG_ADMIN navigation
+  { name: 'Dashboard', href: '/org/dashboard', icon: Home, roles: [UserRole.ORG_ADMIN] },
+  { name: 'Purchase Seats', href: '/org/purchase', icon: CreditCard, roles: [UserRole.ORG_ADMIN] },
+  { name: 'Employees', href: '/org/employees', icon: Users, roles: [UserRole.ORG_ADMIN] },
+  { name: 'Seat Licenses', href: '/org/seats', icon: Ticket, roles: [UserRole.ORG_ADMIN] },
+  { name: 'Settings', href: '/org/settings', icon: Settings, roles: [UserRole.ORG_ADMIN] },
+  // Admin navigation
+  { name: 'Organizations', href: '/admin/organizations', icon: Building2, roles: [UserRole.ADMIN] },
   { name: 'Calendar', href: '/admin/calendar', icon: Calendar, roles: [UserRole.ADMIN, UserRole.TEACHER] },
   { name: 'Video Admin', href: '/admin/videos/libraries', icon: Video, roles: [UserRole.ADMIN, UserRole.TEACHER] },
   { name: 'Exercise Admin', href: '/admin/exercises', icon: PenTool, roles: [UserRole.ADMIN, UserRole.TEACHER] },
@@ -83,6 +93,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     if (isAdmin) return { text: 'Admin', color: 'bg-red-100 text-red-800' }
     if (isTeacher) return { text: 'Teacher', color: 'bg-green-100 text-green-800' }
     if (isStudent) return { text: 'Student', color: 'bg-purple-100 text-purple-800' }
+    if (user?.role === UserRole.ORG_ADMIN) return { text: 'Org Admin', color: 'bg-blue-100 text-blue-800' }
     return { text: 'User', color: 'bg-gray-100 text-gray-800' }
   }
 

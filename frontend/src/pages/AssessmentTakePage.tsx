@@ -22,7 +22,7 @@ export function AssessmentTakePage() {
   const [selectedAnswer, setSelectedAnswer] = useState('')
   const [fillAnswer, setFillAnswer] = useState('')
   const [feedback, setFeedback] = useState<{ isCorrect: boolean; correctAnswer: string } | null>(null)
-  const [progress, setProgress] = useState({ answered: 0, total: 30, currentLevel: 'B1' })
+  const [progress, setProgress] = useState({ answered: 0, total: 40, currentLevel: 'B1' })
   const [isComplete, setIsComplete] = useState(false)
 
   // Get assessment details
@@ -92,6 +92,7 @@ export function AssessmentTakePage() {
       onSuccess: (data) => {
         if (data.expired) {
           setIsComplete(true)
+          completeAssessment.mutate()
           return
         }
         setFeedback(data)
@@ -101,6 +102,13 @@ export function AssessmentTakePage() {
       }
     }
   )
+
+  // Sync progress total from assessment's questionsLimit
+  useEffect(() => {
+    if (assessment?.questionsLimit) {
+      setProgress(prev => ({ ...prev, total: assessment.questionsLimit! }))
+    }
+  }, [assessment?.questionsLimit])
 
   // Initial load
   useEffect(() => {

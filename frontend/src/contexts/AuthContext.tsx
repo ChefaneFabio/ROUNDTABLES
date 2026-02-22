@@ -1,10 +1,10 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react'
-import { User, UserRole, School, Teacher, Student } from '../types'
+import { User, UserRole, School, Teacher, Student, OrgAdmin, RegisterOrganizationRequest } from '../types'
 import { authApi, clearTokens, getAccessToken } from '../services/api'
 
 interface AuthContextType {
   user: User | null
-  profile: School | Teacher | Student | null
+  profile: School | Teacher | Student | OrgAdmin | null
   isAuthenticated: boolean
   isLoading: boolean
   login: (email: string, password: string) => Promise<void>
@@ -16,18 +16,21 @@ interface AuthContextType {
     phone?: string
     company?: string
   }) => Promise<void>
+  registerOrganization: (data: RegisterOrganizationRequest) => Promise<void>
   refreshUser: () => Promise<void>
   hasRole: (...roles: UserRole[]) => boolean
   isAdmin: boolean
   isTeacher: boolean
   isStudent: boolean
+  isOrgAdmin: boolean
+  organizationId: string | null
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
-  const [profile, setProfile] = useState<School | Teacher | Student | null>(null)
+  const [profile, setProfile] = useState<School | Teacher | Student | OrgAdmin | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
   const fetchUser = useCallback(async () => {
@@ -44,6 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (userData.schoolProfile) setProfile(userData.schoolProfile)
       else if (userData.teacherProfile) setProfile(userData.teacherProfile)
       else if (userData.studentProfile) setProfile(userData.studentProfile)
+      else if (userData.orgAdminProfile) setProfile(userData.orgAdminProfile)
     } catch (error) {
       console.error('Failed to fetch user:', error)
       clearTokens()
@@ -92,6 +96,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setProfile(response.profile)
   }
 
+  const registerOrganization = async (data: RegisterOrganizationRequest) => {
+    const response = await authApi.registerOrganization(data)
+    setUser(response.user)
+    if (response.user.orgAdminProfile) setProfile(response.user.orgAdminProfile)
+  }
+
   const refreshUser = async () => {
     await fetchUser()
   }
@@ -101,6 +111,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return roles.includes(user.role)
   }
 
+  const orgAdminProfile = user?.role === UserRole.ORG_ADMIN ? (profile as OrgAdmin | null) : null
+
   const value: AuthContextType = {
     user,
     profile,
@@ -109,11 +121,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     login,
     logout,
     register,
+    registerOrganization,
     refreshUser,
     hasRole,
     isAdmin: user?.role === UserRole.ADMIN,
     isTeacher: user?.role === UserRole.TEACHER,
     isStudent: user?.role === UserRole.STUDENT,
+    isOrgAdmin: user?.role === UserRole.ORG_ADMIN,
+    organizationId: orgAdminProfile?.organizationId || null,
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

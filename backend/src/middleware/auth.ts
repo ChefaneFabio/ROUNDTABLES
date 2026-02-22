@@ -15,6 +15,8 @@ declare global {
         schoolId?: string
         teacherId?: string
         studentId?: string
+        orgAdminId?: string
+        organizationId?: string
       }
     }
   }
@@ -71,7 +73,8 @@ export const authenticate = async (
       include: {
         schoolProfile: { select: { id: true } },
         teacherProfile: { select: { id: true, schoolId: true } },
-        studentProfile: { select: { id: true, schoolId: true } }
+        studentProfile: { select: { id: true, schoolId: true } },
+        orgAdminProfile: { select: { id: true, organizationId: true } }
       }
     })
 
@@ -107,7 +110,9 @@ export const authenticate = async (
       role: user.role,
       schoolId: user.schoolProfile?.id || user.teacherProfile?.schoolId || user.studentProfile?.schoolId,
       teacherId: user.teacherProfile?.id,
-      studentId: user.studentProfile?.id
+      studentId: user.studentProfile?.id,
+      orgAdminId: user.orgAdminProfile?.id,
+      organizationId: user.orgAdminProfile?.organizationId
     }
 
     next()
@@ -144,7 +149,8 @@ export const optionalAuth = async (
         include: {
           schoolProfile: { select: { id: true } },
           teacherProfile: { select: { id: true, schoolId: true } },
-          studentProfile: { select: { id: true, schoolId: true } }
+          studentProfile: { select: { id: true, schoolId: true } },
+          orgAdminProfile: { select: { id: true, organizationId: true } }
         }
       })
 
@@ -156,7 +162,9 @@ export const optionalAuth = async (
           role: user.role,
           schoolId: user.schoolProfile?.id || user.teacherProfile?.schoolId || user.studentProfile?.schoolId,
           teacherId: user.teacherProfile?.id,
-          studentId: user.studentProfile?.id
+          studentId: user.studentProfile?.id,
+          orgAdminId: user.orgAdminProfile?.id,
+          organizationId: user.orgAdminProfile?.organizationId
         }
       }
     } catch {

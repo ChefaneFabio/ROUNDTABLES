@@ -18,12 +18,14 @@ export interface User {
   schoolProfile?: School
   teacherProfile?: Teacher
   studentProfile?: Student
+  orgAdminProfile?: OrgAdmin
 }
 
 export enum UserRole {
   ADMIN = 'ADMIN',
   TEACHER = 'TEACHER',
-  STUDENT = 'STUDENT'
+  STUDENT = 'STUDENT',
+  ORG_ADMIN = 'ORG_ADMIN'
 }
 
 export interface AuthTokens {
@@ -33,7 +35,7 @@ export interface AuthTokens {
 
 export interface LoginResponse {
   user: User
-  profile: School | Teacher | Student | null
+  profile: School | Teacher | Student | OrgAdmin | null
   accessToken: string
   refreshToken: string
 }
@@ -121,6 +123,8 @@ export interface Student {
   user?: User
   schoolId: string
   school?: School
+  organizationId?: string
+  organization?: Organization
   enrollments?: Enrollment[]
   progress?: Progress[]
   _count?: {
@@ -143,11 +147,19 @@ export enum LanguageLevel {
 // COURSE (Previously Roundtable)
 // =====================================================
 
+export enum CourseType {
+  LIVE = 'LIVE',
+  SELF_PACED = 'SELF_PACED'
+}
+
 export interface Course {
   id: string
   name: string
   description?: string
   status: CourseStatus
+  courseType: CourseType
+  isPublic: boolean
+  language?: string
   startDate?: Date
   endDate?: Date
   maxStudents: number
@@ -162,6 +174,7 @@ export interface Course {
   lessons?: Lesson[]
   modules?: Module[]
   courseTeachers?: CourseTeacher[]
+  courseContents?: CourseContent[]
   progress?: number
   _count?: {
     enrollments: number
@@ -637,6 +650,138 @@ export interface PaymentSummary {
   outstanding: number
   pendingCount: number
   overdueCount: number
+}
+
+// =====================================================
+// B2B: ORGANIZATIONS
+// =====================================================
+
+export interface Organization {
+  id: string
+  name: string
+  email: string
+  phone?: string
+  website?: string
+  logo?: string
+  description?: string
+  industry?: string
+  size?: string
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+  schoolId: string
+  school?: School
+  vatNumber?: string
+  fiscalCode?: string
+  sdiCode?: string
+  pecEmail?: string
+  billingEmail?: string
+  billingAddress?: any
+  legalAddress?: any
+  orgAdmins?: OrgAdmin[]
+  employees?: Student[]
+  _count?: {
+    employees: number
+    seatLicenses: number
+  }
+}
+
+export interface OrgAdmin {
+  id: string
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+  userId: string
+  user?: User
+  organizationId: string
+  organization?: Organization
+}
+
+export enum SeatLicenseStatus {
+  ACTIVE = 'ACTIVE',
+  EXPIRED = 'EXPIRED',
+  CANCELLED = 'CANCELLED',
+  SUSPENDED = 'SUSPENDED'
+}
+
+export interface SeatLicense {
+  id: string
+  totalSeats: number
+  usedSeats: number
+  pricePerSeat: number
+  currency: string
+  status: SeatLicenseStatus
+  startsAt: Date
+  expiresAt?: Date
+  autoRenew: boolean
+  notes?: string
+  createdAt: Date
+  updatedAt: Date
+  organizationId: string
+  organization?: Organization
+  courseId: string
+  course?: Course
+  seatAllocations?: SeatAllocation[]
+  _count?: {
+    seatAllocations: number
+  }
+}
+
+export interface SeatAllocation {
+  id: string
+  allocatedAt: Date
+  revokedAt?: Date
+  seatLicenseId: string
+  seatLicense?: SeatLicense
+  studentId: string
+  student?: Student
+  enrollmentId?: string
+  enrollment?: Enrollment
+}
+
+export interface CourseContent {
+  id: string
+  orderIndex: number
+  isRequired: boolean
+  isPreview?: boolean
+  courseId: string
+  course?: Course
+  videoId?: string
+  video?: {
+    id: string
+    title: string
+    description?: string
+    duration?: number
+    cefrLevel?: string
+    url?: string
+    thumbnailUrl?: string
+    language?: string
+  }
+  exerciseId?: string
+  exercise?: {
+    id: string
+    title: string
+    description?: string
+    type?: string
+    cefrLevel?: string
+    language?: string
+  }
+  createdAt: Date
+  updatedAt: Date
+}
+
+export interface RegisterOrganizationRequest {
+  organizationName: string
+  organizationEmail: string
+  phone?: string
+  website?: string
+  industry?: string
+  size?: string
+  vatNumber?: string
+  fiscalCode?: string
+  adminEmail: string
+  adminPassword: string
+  adminName: string
 }
 
 // Legacy support - aliases for backward compatibility

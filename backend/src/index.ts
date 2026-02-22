@@ -37,6 +37,12 @@ import videoLibraryRoutes from './controllers/videoLibraryController'
 import exerciseRoutes from './controllers/exerciseController'
 import speechRoutes from './controllers/speechController'
 import sectionAssessmentRoutes from './controllers/sectionAssessmentController'
+// B2B feature routes
+import organizationRoutes from './controllers/organizationController'
+import seatLicenseRoutes from './controllers/seatLicenseController'
+import catalogRoutes from './controllers/catalogController'
+// Stripe payment routes
+import stripeRoutes from './controllers/stripeController'
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler'
@@ -58,6 +64,9 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }))
+
+// Stripe webhook needs raw body for signature verification — mount BEFORE json parsing
+app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }))
 
 // Body parsing
 app.use(express.json({ limit: '10mb' }))
@@ -127,6 +136,12 @@ app.use('/api/exercises', exerciseRoutes)
 app.use('/api/speech', speechRoutes)
 // Phase 3: Multi-skill assessment routes
 app.use('/api/assessments/multi-skill', sectionAssessmentRoutes)
+// B2B feature routes
+app.use('/api/organizations', organizationRoutes)
+app.use('/api/seat-licenses', seatLicenseRoutes)
+app.use('/api/catalog', catalogRoutes)
+// Stripe payment routes
+app.use('/api/stripe', stripeRoutes)
 
 // Error handling
 app.use(errorHandler)

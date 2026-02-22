@@ -52,6 +52,18 @@ import ReportsPage from './pages/ReportsPage'
 import ProfilePage from './pages/ProfilePage'
 import SettingsPage from './pages/SettingsPage'
 import NotificationsPage from './pages/NotificationsPage'
+// B2B pages
+import { CatalogPage } from './pages/CatalogPage'
+import { CatalogCourseDetailPage } from './pages/CatalogCourseDetailPage'
+import { OrgRegisterPage } from './pages/OrgRegisterPage'
+import OrgDashboardPage from './pages/org/OrgDashboardPage'
+import OrgEmployeesPage from './pages/org/OrgEmployeesPage'
+import OrgSeatsPage from './pages/org/OrgSeatsPage'
+import OrgSettingsPage from './pages/org/OrgSettingsPage'
+import OrgPurchasePage from './pages/org/OrgPurchasePage'
+import AdminOrganizationsPage from './pages/admin/OrganizationsPage'
+import SelfPacedCoursePage from './pages/SelfPacedCoursePage'
+import { BusinessPage } from './pages/BusinessPage'
 
 // Placeholder pages for features that need to be built out
 function PlaceholderPage({ title }: { title: string }) {
@@ -94,7 +106,7 @@ function NotFoundPage() {
 }
 
 function App() {
-  const { isLoading, isAuthenticated } = useAuth()
+  const { isLoading, isAuthenticated, user } = useAuth()
 
   if (isLoading) {
     return <LoadingPage />
@@ -106,7 +118,7 @@ function App() {
       <Route
         path="/"
         element={
-          isAuthenticated ? <Navigate to="/dashboard" replace /> : <HomePage />
+          isAuthenticated ? <Navigate to={user?.role === UserRole.ORG_ADMIN ? '/org/dashboard' : '/dashboard'} replace /> : <HomePage />
         }
       />
 
@@ -114,7 +126,7 @@ function App() {
       <Route
         path="/login"
         element={
-          isAuthenticated ? <Navigate to="/dashboard" replace /> : <LoginPage />
+          isAuthenticated ? <Navigate to={user?.role === UserRole.ORG_ADMIN ? '/org/dashboard' : '/dashboard'} replace /> : <LoginPage />
         }
       />
       <Route
@@ -126,6 +138,21 @@ function App() {
 
       {/* Public voting page (accessed via email link) */}
       <Route path="/vote/:roundtableId" element={<VotingPage />} />
+
+      {/* Public catalog routes */}
+      <Route path="/catalog" element={<CatalogPage />} />
+      <Route path="/catalog/:id" element={<CatalogCourseDetailPage />} />
+
+      {/* B2B landing page */}
+      <Route path="/business" element={<BusinessPage />} />
+
+      {/* Organization registration */}
+      <Route
+        path="/register/organization"
+        element={
+          isAuthenticated ? <Navigate to="/dashboard" replace /> : <OrgRegisterPage />
+        }
+      />
 
       {/* Protected routes */}
       <Route
@@ -573,6 +600,82 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
             <Layout>
               <AdminAssessmentQuestionsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Organizations */}
+      <Route
+        path="/admin/organizations"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <AdminOrganizationsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ORG_ADMIN routes */}
+      <Route
+        path="/org/dashboard"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+            <Layout>
+              <OrgDashboardPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/org/employees"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+            <Layout>
+              <OrgEmployeesPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/org/seats"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+            <Layout>
+              <OrgSeatsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/org/purchase"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+            <Layout>
+              <OrgPurchasePage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/org/settings"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+            <Layout>
+              <OrgSettingsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Self-paced course player */}
+      <Route
+        path="/courses/:id/learn"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <SelfPacedCoursePage />
             </Layout>
           </ProtectedRoute>
         }

@@ -48,8 +48,6 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     } else if (req.user?.role === 'STUDENT') {
       // Students can only see themselves
       where.id = req.user.studentId
-    } else if (req.user?.role === 'ADMIN' && schoolId) {
-      where.schoolId = String(schoolId)
     }
 
     if (search) {

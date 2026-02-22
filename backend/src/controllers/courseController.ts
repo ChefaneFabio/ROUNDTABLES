@@ -14,6 +14,9 @@ const router = Router()
 const createCourseSchema = Joi.object({
   name: Joi.string().min(2).max(200).required(),
   description: Joi.string().max(2000).optional(),
+  courseType: Joi.string().valid('LIVE', 'SELF_PACED').optional(),
+  isPublic: Joi.boolean().optional(),
+  language: Joi.string().max(50).optional(),
   startDate: Joi.date().iso().optional(),
   endDate: Joi.date().iso().greater(Joi.ref('startDate')).optional(),
   maxStudents: Joi.number().integer().min(1).max(100).optional(),
@@ -30,6 +33,9 @@ const createCourseSchema = Joi.object({
 const updateCourseSchema = Joi.object({
   name: Joi.string().min(2).max(200).optional(),
   description: Joi.string().max(2000).optional().allow(null),
+  courseType: Joi.string().valid('LIVE', 'SELF_PACED').optional(),
+  isPublic: Joi.boolean().optional(),
+  language: Joi.string().max(50).optional().allow(null),
   startDate: Joi.date().iso().optional().allow(null),
   endDate: Joi.date().iso().optional().allow(null),
   maxStudents: Joi.number().integer().min(1).max(100).optional(),
@@ -61,13 +67,18 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
 
     // Apply access control
     if (req.user?.role === 'ADMIN') {
-      where.schoolId = req.user.schoolId
+      if (schoolId) {
+        where.schoolId = String(schoolId)
+      } else {
+        where.schoolId = req.user.schoolId
+      }
     } else if (req.user?.role === 'TEACHER') {
       where.courseTeachers = { some: { teacherId: req.user.teacherId } }
     } else if (req.user?.role === 'STUDENT') {
       where.enrollments = { some: { studentId: req.user.studentId } }
-    } else if (req.user?.role === 'ADMIN' && schoolId) {
-      where.schoolId = String(schoolId)
+    } else if (req.user?.role === 'ORG_ADMIN') {
+      // ORG_ADMIN can see courses they have seat licenses for
+      where.seatLicenses = { some: { organizationId: req.user.organizationId } }
     }
 
     if (search) {
@@ -476,6 +487,154 @@ router.delete('/:id', authenticate, requireSchoolAdmin, async (req: Request, res
     })
 
     res.json(apiResponse.success(null, 'Course deleted successfully'))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// =====================================================
+// SELF-PACED COURSE CONTENT MANAGEMENT
+// =====================================================
+
+const addContentSchema = Joi.object({
+  videoId: Joi.string().optional(),
+  exerciseId: Joi.string().optional(),
+  isRequired: Joi.boolean().optional(),
+  isPreview: Joi.boolean().optional(),
+}).xor('videoId', 'exerciseId') // exactly one must be provided
+
+const reorderContentSchema = Joi.object({
+  contentIds: Joi.array().items(Joi.string()).min(1).required()
+})
+
+// Add content to a self-paced course
+router.post('/:id/contents', authenticate, requireSchoolAdmin, validateRequest(addContentSchema), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { videoId, exerciseId, isRequired, isPreview } = req.body
+
+    const course = await prisma.course.findFirst({
+      where: { id, deletedAt: null }
+    })
+
+    if (!course) {
+      return res.status(404).json(apiResponse.error('Course not found', 'NOT_FOUND'))
+    }
+
+    if (course.courseType !== 'SELF_PACED') {
+      return res.status(400).json(apiResponse.error('Content management is only for self-paced courses', 'INVALID_COURSE_TYPE'))
+    }
+
+    // Get max orderIndex
+    const maxOrder = await prisma.courseContent.aggregate({
+      where: { courseId: id },
+      _max: { orderIndex: true }
+    })
+
+    const content = await prisma.courseContent.create({
+      data: {
+        courseId: id,
+        videoId: videoId || null,
+        exerciseId: exerciseId || null,
+        isRequired: isRequired ?? true,
+        isPreview: isPreview ?? false,
+        orderIndex: (maxOrder._max.orderIndex ?? -1) + 1,
+      },
+      include: {
+        video: { select: { id: true, title: true, duration: true, cefrLevel: true } },
+        exercise: { select: { id: true, title: true, type: true, cefrLevel: true } },
+      }
+    })
+
+    res.status(201).json(apiResponse.success(content, 'Content added successfully'))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// List course contents (ordered)
+router.get('/:id/contents', authenticate, requireCourseAccess, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+
+    const contents = await prisma.courseContent.findMany({
+      where: { courseId: id },
+      orderBy: { orderIndex: 'asc' },
+      include: {
+        video: { select: { id: true, title: true, description: true, url: true, thumbnailUrl: true, duration: true, cefrLevel: true, language: true } },
+        exercise: { select: { id: true, title: true, description: true, type: true, cefrLevel: true, language: true } },
+      }
+    })
+
+    res.json(apiResponse.success(contents))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Reorder course contents
+router.put('/:id/contents/reorder', authenticate, requireSchoolAdmin, validateRequest(reorderContentSchema), async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { contentIds } = req.body
+
+    await prisma.$transaction(
+      contentIds.map((contentId: string, index: number) =>
+        prisma.courseContent.update({
+          where: { id: contentId },
+          data: { orderIndex: index }
+        })
+      )
+    )
+
+    const contents = await prisma.courseContent.findMany({
+      where: { courseId: id },
+      orderBy: { orderIndex: 'asc' },
+      include: {
+        video: { select: { id: true, title: true } },
+        exercise: { select: { id: true, title: true } },
+      }
+    })
+
+    res.json(apiResponse.success(contents, 'Content reordered successfully'))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Toggle preview flag on a content item
+router.patch('/:id/contents/:contentId/preview', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const { contentId } = req.params
+    const { isPreview } = req.body
+
+    if (typeof isPreview !== 'boolean') {
+      return res.status(400).json(apiResponse.error('isPreview must be a boolean', 'VALIDATION_ERROR'))
+    }
+
+    const content = await prisma.courseContent.update({
+      where: { id: contentId },
+      data: { isPreview },
+      include: {
+        video: { select: { id: true, title: true } },
+        exercise: { select: { id: true, title: true } },
+      },
+    })
+
+    res.json(apiResponse.success(content, `Preview ${isPreview ? 'enabled' : 'disabled'}`))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Remove content from course
+router.delete('/:id/contents/:contentId', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const { contentId } = req.params
+
+    await prisma.courseContent.delete({ where: { id: contentId } })
+
+    res.json(apiResponse.success(null, 'Content removed successfully'))
   } catch (error) {
     handleError(res, error)
   }

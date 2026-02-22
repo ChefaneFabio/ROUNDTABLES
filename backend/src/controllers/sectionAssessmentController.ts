@@ -5,7 +5,7 @@ import path from 'path'
 import fs from 'fs'
 import { validateRequest } from '../middleware/validateRequest'
 import { authenticate } from '../middleware/auth'
-import { requireTeacher, requireAdmin } from '../middleware/rbac'
+import { requireTeacher, requireAdmin, requireSchoolAdmin } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
 import { sectionAssessmentService } from '../services/SectionAssessmentService'
 import { ttsService } from '../services/TtsService'
@@ -307,6 +307,77 @@ router.delete('/admin/question-bank/:id', authenticate, requireTeacher, async (r
   try {
     await sectionAssessmentService.deleteQuestion(req.params.id)
     return res.json(apiResponse.success(null, 'Question deleted'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// ==================== Admin Assessment Assignment Routes ====================
+
+// Assign multi-skill assessment to students
+const assignMultiSkillSchema = Joi.object({
+  studentIds: Joi.array().items(Joi.string()).min(1).required(),
+  language: Joi.string().required(),
+  timeLimitMin: Joi.number().integer().min(10).max(300).optional()
+})
+
+router.post('/admin/assign', authenticate, requireSchoolAdmin, validateRequest(assignMultiSkillSchema), async (req: Request, res: Response) => {
+  try {
+    const { studentIds, language, timeLimitMin } = req.body
+    const assignedById = req.user!.id
+
+    const results: any[] = []
+    for (const studentId of studentIds) {
+      try {
+        const assessment = await sectionAssessmentService.createMultiSkillAssessment({
+          studentId,
+          language,
+          assignedById,
+          timeLimitMin
+        })
+        results.push(assessment)
+      } catch (err: any) {
+        results.push({ studentId, error: err.message })
+      }
+    }
+
+    return res.status(201).json(apiResponse.success(results, `Assigned ${results.filter(r => !('error' in r)).length} assessments`))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// List all multi-skill assessments for admin dashboard
+router.get('/admin/assessments', authenticate, requireTeacher, async (req: Request, res: Response) => {
+  try {
+    const { language, status, studentId } = req.query
+
+    const where: any = { isMultiSkill: true }
+    if (language) where.language = language as string
+    if (status) where.status = status as string
+    if (studentId) where.studentId = studentId as string
+
+    const assessments = await prisma.assessment.findMany({
+      where,
+      include: {
+        student: {
+          include: { user: { select: { name: true, email: true } } }
+        },
+        sections: {
+          orderBy: { orderIndex: 'asc' },
+          select: {
+            id: true,
+            skill: true,
+            status: true,
+            cefrLevel: true,
+            percentageScore: true
+          }
+        }
+      },
+      orderBy: { assignedAt: 'desc' }
+    })
+
+    return res.json(apiResponse.success(assessments))
   } catch (error) {
     return handleError(res, error)
   }

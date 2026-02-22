@@ -7,7 +7,7 @@ const portals = [
     description: 'Manage your organization\'s language training programs. Access employee progress reports, enrollment management, and training analytics.',
     icon: Building2,
     gradient: 'from-slate-700 to-slate-900',
-    href: '/login?portal=corporate',
+    href: '/business',
     features: ['Employee enrollment management', 'Progress tracking & reports', 'Customized training programs', 'Dedicated account support'],
   },
   {
@@ -77,6 +77,8 @@ export function HomePage() {
             </div>
             <nav className="hidden md:flex items-center gap-8">
               <a href="#services" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Services</a>
+              <Link to="/business" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">For Business</Link>
+              <Link to="/catalog" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Catalog</Link>
               <a href="#portals" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">Access Portal</a>
               <a href="#about" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">About</a>
             </nav>
@@ -121,7 +123,7 @@ export function HomePage() {
                   <ArrowRight className="h-5 w-5" />
                 </Link>
                 <Link
-                  to="/register?type=corporate"
+                  to="/business"
                   className="border-2 border-gray-300 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:border-gray-400 hover:bg-gray-50 transition-colors"
                 >
                   Corporate Enquiries

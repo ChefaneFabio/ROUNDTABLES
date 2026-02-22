@@ -23,6 +23,8 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
         return res.json(apiResponse.success(await getTeacherDashboard(req.user.teacherId!)))
       case 'STUDENT':
         return res.json(apiResponse.success(await getStudentDashboard(req.user.studentId!)))
+      case 'ORG_ADMIN':
+        return res.json(apiResponse.success(await getOrgAdminDashboard(req.user.organizationId!)))
       default:
         return res.status(403).json(apiResponse.error('Invalid role', 'FORBIDDEN'))
     }
@@ -305,6 +307,75 @@ async function getStudentDashboard(studentId: string) {
     recentFeedback,
     progress: progressSummary,
     assignedAssessments
+  }
+}
+
+// Org admin dashboard
+async function getOrgAdminDashboard(organizationId: string) {
+  const [
+    organization,
+    employeeCount,
+    seatLicenses,
+    activeEnrollments,
+    progressRecords,
+    recentEmployees
+  ] = await Promise.all([
+    prisma.organization.findUnique({
+      where: { id: organizationId },
+      select: { name: true, email: true, isActive: true }
+    }),
+    prisma.student.count({ where: { organizationId, deletedAt: null, isActive: true } }),
+    prisma.seatLicense.findMany({
+      where: { organizationId },
+      include: { course: { select: { id: true, name: true, courseType: true } } }
+    }),
+    prisma.enrollment.count({
+      where: {
+        student: { organizationId },
+        status: 'ACTIVE'
+      }
+    }),
+    prisma.progress.findMany({
+      where: { student: { organizationId } },
+      select: { percentage: true }
+    }),
+    prisma.student.findMany({
+      where: { organizationId, deletedAt: null },
+      take: 5,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        user: { select: { name: true, email: true } },
+        _count: { select: { enrollments: true } }
+      }
+    })
+  ])
+
+  const totalSeats = seatLicenses.reduce((sum, l) => sum + l.totalSeats, 0)
+  const usedSeats = seatLicenses.reduce((sum, l) => sum + l.usedSeats, 0)
+  const averageProgress = progressRecords.length > 0
+    ? Math.round(progressRecords.reduce((sum, p) => sum + Number(p.percentage), 0) / progressRecords.length)
+    : 0
+
+  return {
+    organization,
+    stats: {
+      employees: employeeCount,
+      totalSeats,
+      usedSeats,
+      availableSeats: totalSeats - usedSeats,
+      seatUtilization: totalSeats > 0 ? Math.round((usedSeats / totalSeats) * 100) : 0,
+      activeEnrollments,
+      averageProgress,
+      totalLicenses: seatLicenses.length,
+    },
+    seatLicenses: seatLicenses.map(l => ({
+      id: l.id,
+      course: l.course,
+      totalSeats: l.totalSeats,
+      usedSeats: l.usedSeats,
+      status: l.status,
+    })),
+    recentEmployees
   }
 }
 

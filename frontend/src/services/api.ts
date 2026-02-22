@@ -168,6 +168,19 @@ export const authApi = {
     return response.data.data!
   },
 
+  async registerOrganization(data: any): Promise<any> {
+    const response = await api.post<ApiResponse<any>>('/auth/register/organization', data)
+    if (response.data.success && response.data.data) {
+      setTokens(response.data.data.accessToken, response.data.data.refreshToken)
+    }
+    return response.data.data!
+  },
+
+  async registerEmployee(data: { email: string; name: string; languageLevel?: string }): Promise<any> {
+    const response = await api.post<ApiResponse<any>>('/auth/register/employee', data)
+    return response.data.data!
+  },
+
   async logout(): Promise<void> {
     try {
       await api.post('/auth/logout')

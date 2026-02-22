@@ -43,8 +43,6 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
     } else if (req.user?.role === 'STUDENT') {
       // Students can see teachers from their school
       where.schoolId = req.user.schoolId
-    } else if (req.user?.role === 'ADMIN' && schoolId) {
-      where.schoolId = String(schoolId)
     }
 
     if (search) {

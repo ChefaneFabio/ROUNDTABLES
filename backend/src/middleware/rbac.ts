@@ -2,10 +2,11 @@ import { Request, Response, NextFunction } from 'express'
 import { UserRole } from '@prisma/client'
 import { prisma } from '../config/database'
 
-// Role hierarchy: ADMIN > TEACHER > STUDENT
+// Role hierarchy: ADMIN > TEACHER > ORG_ADMIN > STUDENT
 const roleHierarchy: Record<UserRole, number> = {
   ADMIN: 100,
   TEACHER: 25,
+  ORG_ADMIN: 15,
   STUDENT: 10
 }
 
@@ -263,6 +264,41 @@ export const requireLessonAccess = async (
       code: 'ACCESS_CHECK_ERROR'
     })
   }
+}
+
+// Org admin or system admin
+export const requireOrgAdmin = requireRole('ADMIN', 'ORG_ADMIN')
+
+// Check that ORG_ADMIN user's organizationId matches the route param
+export const requireOrgAccess = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (!req.user) {
+    return res.status(401).json({
+      success: false,
+      error: 'Authentication required',
+      code: 'UNAUTHORIZED'
+    })
+  }
+
+  // System admin can access everything
+  if (req.user.role === 'ADMIN') {
+    return next()
+  }
+
+  // ORG_ADMIN can only access their own organization
+  const requestedOrgId = req.params.id || req.params.organizationId || req.query.organizationId || req.body?.organizationId
+  if (req.user.role === 'ORG_ADMIN' && requestedOrgId && req.user.organizationId !== requestedOrgId) {
+    return res.status(403).json({
+      success: false,
+      error: 'Access denied to this organization',
+      code: 'ORG_ACCESS_DENIED'
+    })
+  }
+
+  next()
 }
 
 // Owner or admin only - for resources that belong to a specific user

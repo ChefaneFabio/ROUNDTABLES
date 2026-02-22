@@ -346,6 +346,30 @@ export const assessmentApi = {
     return response.data.data
   },
 
+  // Admin: Assign multi-skill assessment to students
+  async assignMultiSkillAssessment(data: {
+    studentIds: string[]
+    language: string
+    timeLimitMin?: number
+  }): Promise<any[]> {
+    const response = await api.post('/assessments/multi-skill/admin/assign', data)
+    return response.data.data
+  },
+
+  // Admin: Get all multi-skill assessments with filters
+  async getAdminAssessments(filters?: {
+    language?: string
+    status?: string
+    studentId?: string
+  }): Promise<any[]> {
+    const params = new URLSearchParams()
+    if (filters?.language) params.set('language', filters.language)
+    if (filters?.status) params.set('status', filters.status)
+    if (filters?.studentId) params.set('studentId', filters.studentId)
+    const response = await api.get(`/assessments/multi-skill/admin/assessments?${params.toString()}`)
+    return response.data.data || []
+  },
+
   // ==================== Question Bank Admin API ====================
 
   // Get question bank summary (counts by language/skill/level)

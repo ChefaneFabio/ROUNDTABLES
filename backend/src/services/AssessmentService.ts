@@ -184,22 +184,25 @@ export class AssessmentService {
     }
 
     // Get a question from the target level that hasn't been answered
+    // Exclude skill-tagged questions (those belong to multi-skill assessments)
     let question = await prisma.assessmentQuestion.findFirst({
       where: {
         language: assessment.language,
         cefrLevel: targetLevel,
         isActive: true,
+        skill: null,
         id: { notIn: answeredIds }
       },
       orderBy: { orderIndex: 'asc' }
     })
 
-    // If no questions at target level, try adjacent levels
+    // If no questions at target level, try any level (still excluding skill-tagged)
     if (!question) {
       question = await prisma.assessmentQuestion.findFirst({
         where: {
           language: assessment.language,
           isActive: true,
+          skill: null,
           id: { notIn: answeredIds }
         },
         orderBy: { orderIndex: 'asc' }
@@ -332,19 +335,21 @@ export class AssessmentService {
       ? Math.round((totalWeightedPoints / maxWeightedPoints) * 100)
       : 0
 
-    // Determine CEFR level: highest level with ≥60% accuracy (skip levels with 0 questions)
+    // Determine CEFR level: highest level with ≥60% accuracy
+    // Skip levels with 0 questions (adaptive algorithm may jump over levels)
     let determinedLevel = 'A1'
     for (const level of CEFR_LEVELS) {
       const levelScore = levelScores[level]
-      if (levelScore && levelScore.total > 0) {
-        const accuracy = levelScore.correct / levelScore.total
-        if (accuracy >= 0.6) {
-          determinedLevel = level
-        } else {
-          break
-        }
+      if (!levelScore || levelScore.total === 0) {
+        // No questions at this level (adaptive skipped it) — continue checking higher levels
+        continue
       }
-      // If level has 0 questions (adaptive skipped it), continue checking
+      const accuracy = levelScore.correct / levelScore.total
+      if (accuracy >= 0.6) {
+        determinedLevel = level
+      } else {
+        break
+      }
     }
 
     const completed = await prisma.assessment.update({

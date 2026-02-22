@@ -1,9 +1,13 @@
 import { Router, Request, Response } from 'express'
 import Joi from 'joi'
+import bcrypt from 'bcryptjs'
+import crypto from 'crypto'
 import { validateRequest } from '../middleware/validateRequest'
-import { authenticate, optionalAuth } from '../middleware/auth'
+import { authenticate, optionalAuth, generateTokens } from '../middleware/auth'
+import { requireOrgAdmin } from '../middleware/rbac'
 import { authLimiter } from '../middleware/rateLimit'
 import { authService } from '../services/AuthService'
+import { prisma } from '../config/database'
 import { apiResponse, handleError } from '../utils/apiResponse'
 
 const router = Router()
@@ -25,6 +29,28 @@ const registerStudentSchema = Joi.object({
   schoolId: Joi.string().required(),
   languageLevel: Joi.string().valid('A1', 'A2', 'B1', 'B2', 'C1', 'C2').optional(),
   bio: Joi.string().max(1000).optional()
+})
+
+const registerOrganizationSchema = Joi.object({
+  // Organization details
+  organizationName: Joi.string().min(2).max(200).required(),
+  organizationEmail: Joi.string().email().required(),
+  phone: Joi.string().max(30).optional(),
+  website: Joi.string().uri().optional(),
+  industry: Joi.string().max(100).optional(),
+  size: Joi.string().valid('1-10', '11-50', '51-200', '201-500', '500+').optional(),
+  vatNumber: Joi.string().max(20).optional(),
+  fiscalCode: Joi.string().max(20).optional(),
+  // Admin user details
+  adminEmail: Joi.string().email().required(),
+  adminPassword: Joi.string().min(8).max(100).required(),
+  adminName: Joi.string().min(2).max(100).required(),
+})
+
+const registerEmployeeSchema = Joi.object({
+  email: Joi.string().email().required(),
+  name: Joi.string().min(2).max(100).required(),
+  languageLevel: Joi.string().valid('A1', 'A2', 'B1', 'B2', 'C1', 'C2').optional(),
 })
 
 const loginSchema = Joi.object({
@@ -231,6 +257,161 @@ router.post(
       const result = await authService.requestPasswordReset(email)
 
       res.json(apiResponse.success(result))
+    } catch (error) {
+      handleError(res, error)
+    }
+  }
+)
+
+// Register a new organization + ORG_ADMIN user (public)
+router.post(
+  '/register/organization',
+  validateRequest(registerOrganizationSchema),
+  async (req: Request, res: Response) => {
+    try {
+      const {
+        organizationName, organizationEmail, phone, website, industry, size,
+        vatNumber, fiscalCode,
+        adminEmail, adminPassword, adminName
+      } = req.body
+
+      // Check if admin email already exists
+      const existingUser = await prisma.user.findUnique({ where: { email: adminEmail } })
+      if (existingUser) {
+        return res.status(400).json(apiResponse.error('User with this email already exists', 'EMAIL_EXISTS'))
+      }
+
+      // Check if org email already exists
+      const existingOrg = await prisma.organization.findUnique({ where: { email: organizationEmail } })
+      if (existingOrg) {
+        return res.status(400).json(apiResponse.error('Organization with this email already exists', 'ORG_EMAIL_EXISTS'))
+      }
+
+      const hashedPassword = await bcrypt.hash(adminPassword, 12)
+
+      // Hardcode Maka Learning Centre school ID
+      const MAKA_SCHOOL_ID = 'maka-language-centre'
+
+      const result = await prisma.$transaction(async (tx) => {
+        // Create organization
+        const organization = await tx.organization.create({
+          data: {
+            name: organizationName,
+            email: organizationEmail,
+            phone,
+            website,
+            industry,
+            size,
+            vatNumber,
+            fiscalCode,
+            schoolId: MAKA_SCHOOL_ID,
+          }
+        })
+
+        // Create ORG_ADMIN user
+        const user = await tx.user.create({
+          data: {
+            email: adminEmail,
+            password: hashedPassword,
+            name: adminName,
+            role: 'ORG_ADMIN',
+          }
+        })
+
+        // Create OrgAdmin profile
+        const orgAdmin = await tx.orgAdmin.create({
+          data: {
+            userId: user.id,
+            organizationId: organization.id,
+          }
+        })
+
+        return { user, organization, orgAdmin }
+      })
+
+      const tokens = generateTokens(result.user)
+
+      // Store refresh token
+      const expiresAt = new Date()
+      expiresAt.setDate(expiresAt.getDate() + 7)
+      await prisma.refreshToken.create({
+        data: { token: tokens.refreshToken, userId: result.user.id, expiresAt }
+      })
+
+      const { password: _, ...sanitizedUser } = result.user
+
+      res.status(201).json(apiResponse.success({
+        user: sanitizedUser,
+        organization: result.organization,
+        ...tokens
+      }, 'Organization registered successfully'))
+    } catch (error) {
+      handleError(res, error)
+    }
+  }
+)
+
+// Register an employee under an organization (ORG_ADMIN only)
+router.post(
+  '/register/employee',
+  authenticate,
+  requireOrgAdmin,
+  validateRequest(registerEmployeeSchema),
+  async (req: Request, res: Response) => {
+    try {
+      if (!req.user || !req.user.organizationId) {
+        return res.status(403).json(apiResponse.error('Organization admin profile required', 'NO_ORG_PROFILE'))
+      }
+
+      const { email, name, languageLevel } = req.body
+
+      // Check if email already exists
+      const existingUser = await prisma.user.findUnique({ where: { email } })
+      if (existingUser) {
+        return res.status(400).json(apiResponse.error('User with this email already exists', 'EMAIL_EXISTS'))
+      }
+
+      // Get organization to find schoolId
+      const organization = await prisma.organization.findUnique({
+        where: { id: req.user.organizationId },
+        select: { id: true, schoolId: true }
+      })
+
+      if (!organization) {
+        return res.status(404).json(apiResponse.error('Organization not found', 'NOT_FOUND'))
+      }
+
+      const randomPassword = crypto.randomBytes(16).toString('hex')
+      const hashedPassword = await bcrypt.hash(randomPassword, 12)
+
+      const result = await prisma.$transaction(async (tx) => {
+        const user = await tx.user.create({
+          data: {
+            email,
+            password: hashedPassword,
+            name,
+            role: 'STUDENT',
+          }
+        })
+
+        const student = await tx.student.create({
+          data: {
+            userId: user.id,
+            schoolId: organization.schoolId,
+            organizationId: organization.id,
+            languageLevel: languageLevel || 'B1',
+          }
+        })
+
+        return { user, student }
+      })
+
+      const { password: _, ...sanitizedUser } = result.user
+
+      res.status(201).json(apiResponse.success({
+        user: sanitizedUser,
+        student: result.student,
+      }, 'Employee registered successfully'))
     } catch (error) {
       handleError(res, error)
     }

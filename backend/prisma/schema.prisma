@@ -28,9 +28,10 @@ model User {
   deletedAt         DateTime? // Soft delete
 
   // Role-specific profiles (one-to-one)
-  schoolProfile  School?
-  teacherProfile Teacher?
-  studentProfile Student?
+  schoolProfile    School?
+  teacherProfile   Teacher?
+  studentProfile   Student?
+  orgAdminProfile  OrgAdmin?
 
   // Notifications sent to this user
   notifications Notification[]
@@ -47,6 +48,7 @@ enum UserRole {
   ADMIN           // System administrator (owns the school)
   TEACHER         // Instructor/trainer
   STUDENT         // Learner/participant
+  ORG_ADMIN       // Organization administrator (B2B)
 }
 
 // =====================================================
@@ -94,6 +96,7 @@ model School {
   apiKeys        ApiKey[]
   videoLibraries VideoLibrary[]
   exercises      Exercise[]
+  organizations  Organization[]
 
   @@index([email])
   @@index([userId])
@@ -165,6 +168,10 @@ model Student {
   schoolId String
   school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
+  // Optional organization affiliation (B2B employees)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
   // Relations
   enrollments      Enrollment[]
   attendance       Attendance[]
@@ -177,9 +184,11 @@ model Student {
   speakingSessions SpeakingSession[]
   videoProgress    VideoProgress[]
   exerciseAttempts ExerciseAttempt[]
+  seatAllocations  SeatAllocation[]
 
   @@index([userId])
   @@index([schoolId])
+  @@index([organizationId])
   @@map("students")
 }
 
@@ -201,6 +210,9 @@ model Course {
   name            String
   description     String?
   status          CourseStatus @default(DRAFT)
+  courseType       CourseType   @default(LIVE)
+  isPublic        Boolean      @default(false)
+  language        String?
   startDate       DateTime?
   endDate         DateTime?
   maxStudents     Int          @default(10)
@@ -223,10 +235,19 @@ model Course {
   progress       Progress[]
   courseTeachers CourseTeacher[]
   certificates   Certificate[]
+  seatLicenses   SeatLicense[]
+  courseContents CourseContent[]
 
   @@index([schoolId])
   @@index([status])
+  @@index([courseType])
+  @@index([isPublic])
   @@map("courses")
+}
+
+enum CourseType {
+  LIVE
+  SELF_PACED
 }
 
 enum CourseStatus {
@@ -378,6 +399,7 @@ model Enrollment {
 
   payments        Payment[]
   installmentPlan InstallmentPlan?
+  seatAllocation  SeatAllocation?
 
   @@unique([studentId, courseId])
   @@index([status])
@@ -587,12 +609,20 @@ model Payment {
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
 
+  // Stripe integration
+  stripePaymentIntentId String?   // Links to Stripe PaymentIntent
+  stripeSessionId       String?   // Links to Stripe Checkout session (fallback)
+
   // Can be linked to enrollment or directly to school
   enrollmentId String?
   enrollment   Enrollment? @relation(fields: [enrollmentId], references: [id])
 
   schoolId String?
   school   School? @relation(fields: [schoolId], references: [id])
+
+  // Organization link (for B2B seat purchases)
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
 
   // Link to invoice
   invoiceId String?
@@ -603,6 +633,7 @@ model Payment {
 
   @@index([status])
   @@index([invoiceId])
+  @@index([stripePaymentIntentId])
   @@map("payments")
 }
 
@@ -927,12 +958,16 @@ model Invoice {
   schoolId String
   school   School @relation(fields: [schoolId], references: [id])
 
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id])
+
   payments        Payment[]
   payrollRecords  TeacherPayroll[]
 
   @@index([invoiceNumber])
   @@index([status])
   @@index([schoolId])
+  @@index([organizationId])
   @@index([sdiStatus])
   @@map("invoices")
 }
@@ -1370,11 +1405,12 @@ model VideoContent {
   library       VideoLibrary    @relation(fields: [libraryId], references: [id], onDelete: Cascade)
   categoryId    String?
   category      VideoCategory?  @relation(fields: [categoryId], references: [id])
-  lessonId      String?
-  lesson        Lesson?         @relation(fields: [lessonId], references: [id])
-  watchProgress VideoProgress[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  lessonId       String?
+  lesson         Lesson?         @relation(fields: [lessonId], references: [id])
+  watchProgress  VideoProgress[]
+  courseContents CourseContent[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 
   @@index([libraryId])
   @@index([categoryId])
@@ -1420,12 +1456,13 @@ model Exercise {
   createdBy    User             @relation(fields: [createdById], references: [id])
   schoolId     String
   school       School           @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  lessonId     String?
-  lesson       Lesson?          @relation(fields: [lessonId], references: [id])
-  items        ExerciseItem[]
-  attempts     ExerciseAttempt[]
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
+  lessonId       String?
+  lesson         Lesson?          @relation(fields: [lessonId], references: [id])
+  items          ExerciseItem[]
+  attempts       ExerciseAttempt[]
+  courseContents CourseContent[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 
   @@index([schoolId])
   @@index([cefrLevel])
@@ -1485,4 +1522,158 @@ enum ExerciseAttemptStatus {
   IN_PROGRESS
   COMPLETED
   ABANDONED
+}
+
+// =====================================================
+// B2B: ORGANIZATIONS
+// =====================================================
+
+model Organization {
+  id             String    @id @default(cuid())
+  name           String
+  email          String    @unique
+  phone          String?
+  website        String?
+  logo           String?
+  description    String?
+  industry       String?
+  size           String?   // e.g. "1-10", "11-50", "51-200", "201-500", "500+"
+  isActive       Boolean   @default(true)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  deletedAt      DateTime? // Soft delete
+
+  // Italian billing (same pattern as School)
+  vatNumber      String?
+  fiscalCode     String?
+  sdiCode        String?
+  pecEmail       String?
+  billingEmail   String?
+  billingAddress Json?
+  legalAddress   Json?
+
+  // Always under Maka Learning Centre
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  // Relations
+  orgAdmins    OrgAdmin[]
+  seatLicenses SeatLicense[]
+  employees    Student[]
+  invoices     Invoice[]
+  payments     Payment[]
+
+  @@index([schoolId])
+  @@index([email])
+  @@map("organizations")
+}
+
+// =====================================================
+// B2B: ORG ADMIN PROFILE
+// =====================================================
+
+model OrgAdmin {
+  id             String   @id @default(cuid())
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([organizationId])
+  @@map("org_admins")
+}
+
+// =====================================================
+// B2B: SEAT LICENSES
+// =====================================================
+
+model SeatLicense {
+  id           String           @id @default(cuid())
+  totalSeats   Int
+  usedSeats    Int              @default(0)
+  pricePerSeat Decimal          @db.Decimal(10, 2)
+  currency     String           @default("EUR")
+  status       SeatLicenseStatus @default(ACTIVE)
+  startsAt     DateTime
+  expiresAt    DateTime?
+  autoRenew    Boolean          @default(false)
+  notes        String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  seatAllocations SeatAllocation[]
+
+  @@unique([organizationId, courseId])
+  @@index([organizationId])
+  @@index([courseId])
+  @@index([status])
+  @@map("seat_licenses")
+}
+
+enum SeatLicenseStatus {
+  ACTIVE
+  EXPIRED
+  CANCELLED
+  SUSPENDED
+}
+
+// =====================================================
+// B2B: SEAT ALLOCATIONS
+// =====================================================
+
+model SeatAllocation {
+  id          String    @id @default(cuid())
+  allocatedAt DateTime  @default(now())
+  revokedAt   DateTime?
+
+  seatLicenseId String
+  seatLicense   SeatLicense @relation(fields: [seatLicenseId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  enrollmentId String?     @unique
+  enrollment   Enrollment? @relation(fields: [enrollmentId], references: [id])
+
+  @@unique([seatLicenseId, studentId])
+  @@index([seatLicenseId])
+  @@index([studentId])
+  @@map("seat_allocations")
+}
+
+// =====================================================
+// SELF-PACED COURSE CONTENT
+// =====================================================
+
+model CourseContent {
+  id         String   @id @default(cuid())
+  orderIndex Int      @default(0)
+  isRequired Boolean  @default(true)
+  isPreview  Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  courseId String
+  course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  videoId String?
+  video   VideoContent? @relation(fields: [videoId], references: [id])
+
+  exerciseId String?
+  exercise   Exercise? @relation(fields: [exerciseId], references: [id])
+
+  @@index([courseId])
+  @@map("course_contents")
 }
