@@ -25,13 +25,17 @@ export interface Assessment {
   listeningLevel?: string
   writingLevel?: string
   speakingLevel?: string
+  grammarLevel?: string
+  vocabularyLevel?: string
+  errorCorrectionLevel?: string
+  sentenceTransformationLevel?: string
   sections?: AssessmentSection[]
 }
 
 export interface AssessmentSection {
   id: string
   assessmentId: string
-  skill: 'READING' | 'LISTENING' | 'WRITING' | 'SPEAKING'
+  skill: 'READING' | 'LISTENING' | 'WRITING' | 'SPEAKING' | 'GRAMMAR' | 'VOCABULARY' | 'ERROR_CORRECTION' | 'SENTENCE_TRANSFORMATION'
   orderIndex: number
   status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'SKIPPED'
   timeLimitMin: number
@@ -54,7 +58,7 @@ export interface AssessmentQuestion {
   id: string
   language: string
   cefrLevel: string
-  questionType: 'MULTIPLE_CHOICE' | 'FILL_BLANK' | 'LISTENING' | 'READING' | 'WRITING'
+  questionType: 'MULTIPLE_CHOICE' | 'FILL_BLANK' | 'LISTENING' | 'READING' | 'WRITING' | 'ERROR_CORRECTION' | 'SENTENCE_TRANSFORMATION'
   questionText: string
   options?: { label: string; value: string }[]
   passage?: string

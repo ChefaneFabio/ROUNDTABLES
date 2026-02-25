@@ -64,32 +64,11 @@ import OrgPurchasePage from './pages/org/OrgPurchasePage'
 import AdminOrganizationsPage from './pages/admin/OrganizationsPage'
 import SelfPacedCoursePage from './pages/SelfPacedCoursePage'
 import { BusinessPage } from './pages/BusinessPage'
-
-// Placeholder pages for features that need to be built out
-function PlaceholderPage({ title }: { title: string }) {
-  return (
-    <div className="bg-white rounded-lg shadow-md p-8 text-center">
-      <h1 className="text-2xl font-bold text-gray-900 mb-2">{title}</h1>
-      <p className="text-gray-600">This page is under construction.</p>
-    </div>
-  )
-}
-
-function FeedbackPage() {
-  return <PlaceholderPage title="Feedback" />
-}
-
-function CourseDetailPage() {
-  return <PlaceholderPage title="Course Details" />
-}
-
-function CreateCoursePage() {
-  return <PlaceholderPage title="Create Course" />
-}
-
-function LessonDetailPage() {
-  return <PlaceholderPage title="Lesson Details" />
-}
+// Detail & form pages
+import { CourseDetailPage } from './pages/CourseDetailPage'
+import { CreateCoursePage } from './pages/CreateCoursePage'
+import { LessonDetailPage } from './pages/LessonDetailPage'
+import { FeedbackPage } from './pages/FeedbackPage'
 
 function NotFoundPage() {
   return (

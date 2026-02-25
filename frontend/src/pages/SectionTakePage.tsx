@@ -6,9 +6,13 @@ import { ReadingQuestion } from '../components/assessment/ReadingQuestion'
 import { ListeningQuestion } from '../components/assessment/ListeningQuestion'
 import { WritingQuestion } from '../components/assessment/WritingQuestion'
 import { SpeakingQuestion } from '../components/assessment/SpeakingQuestion'
+import { ErrorCorrectionQuestion } from '../components/assessment/ErrorCorrectionQuestion'
+import { SentenceTransformationQuestion } from '../components/assessment/SentenceTransformationQuestion'
 
 const SKILL_LABELS: Record<string, string> = {
-  READING: 'Reading', LISTENING: 'Listening', WRITING: 'Writing', SPEAKING: 'Speaking'
+  GRAMMAR: 'Grammar', VOCABULARY: 'Vocabulary', READING: 'Reading',
+  ERROR_CORRECTION: 'Error Correction', SENTENCE_TRANSFORMATION: 'Sentence Transformation',
+  WRITING: 'Writing', LISTENING: 'Listening', SPEAKING: 'Speaking'
 }
 
 export function SectionTakePage() {
@@ -199,7 +203,7 @@ export function SectionTakePage() {
     return (
       <div className="max-w-2xl mx-auto text-center py-12">
         <div className="text-6xl mb-4">
-          {section?.skill === 'READING' ? '📖' : section?.skill === 'LISTENING' ? '🎧' : section?.skill === 'WRITING' ? '✍️' : '🎤'}
+          {({ GRAMMAR: '📝', VOCABULARY: '📚', READING: '📖', ERROR_CORRECTION: '✏️', SENTENCE_TRANSFORMATION: '🔄', WRITING: '✍️', LISTENING: '🎧', SPEAKING: '🎤' } as Record<string, string>)[section?.skill || ''] || '✅'}
         </div>
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
           {SKILL_LABELS[section?.skill || '']} Section Complete
@@ -300,6 +304,30 @@ export function SectionTakePage() {
         <SpeakingQuestion
           question={currentQuestion}
           onSubmit={handleSpeakingSubmit}
+          disabled={submitting}
+        />
+      )}
+
+      {currentQuestion && (section?.skill === 'GRAMMAR' || section?.skill === 'VOCABULARY') && (
+        <ReadingQuestion
+          question={currentQuestion}
+          onSubmit={handleReadingListeningAnswer}
+          disabled={submitting}
+        />
+      )}
+
+      {currentQuestion && section?.skill === 'ERROR_CORRECTION' && (
+        <ErrorCorrectionQuestion
+          question={currentQuestion}
+          onSubmit={handleReadingListeningAnswer}
+          disabled={submitting}
+        />
+      )}
+
+      {currentQuestion && section?.skill === 'SENTENCE_TRANSFORMATION' && (
+        <SentenceTransformationQuestion
+          question={currentQuestion}
+          onSubmit={handleReadingListeningAnswer}
           disabled={submitting}
         />
       )}

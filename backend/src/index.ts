@@ -53,13 +53,38 @@ import './jobs/scheduler'
 
 dotenv.config()
 
+// Validate required secrets in production
+if (process.env.NODE_ENV === 'production') {
+  const required = ['JWT_SECRET', 'CORS_ORIGIN']
+  const missing = required.filter(key => !process.env[key])
+  if (missing.length > 0) {
+    console.error(`FATAL: Missing required environment variables in production: ${missing.join(', ')}`)
+    process.exit(1)
+  }
+
+  const recommended = ['STRIPE_SECRET_KEY', 'STRIPE_WEBHOOK_SECRET']
+  const missingRecommended = recommended.filter(key => !process.env[key])
+  if (missingRecommended.length > 0) {
+    console.warn(`WARNING: Missing recommended environment variables: ${missingRecommended.join(', ')}`)
+  }
+}
+
 const app = express()
 const PORT = process.env.PORT || 5000
 
 // Security middleware
 app.use(helmet())
+
+const corsOrigin = process.env.CORS_ORIGIN
+  || (process.env.NODE_ENV === 'production' ? undefined : '*')
+
+if (process.env.NODE_ENV === 'production' && !corsOrigin) {
+  console.error('FATAL: CORS_ORIGIN must be set in production')
+  process.exit(1)
+}
+
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || '*',
+  origin: corsOrigin,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']

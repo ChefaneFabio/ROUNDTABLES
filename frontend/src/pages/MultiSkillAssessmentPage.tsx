@@ -4,20 +4,40 @@ import { assessmentApi, AssessmentSection } from '../services/assessmentApi'
 import { SectionNav } from '../components/assessment/SectionNav'
 
 const SKILL_INFO: Record<string, { icon: string; title: string; description: string; color: string }> = {
+  GRAMMAR: {
+    icon: '📝', title: 'Grammar',
+    description: 'Multiple choice grammar questions testing your knowledge of English structures.',
+    color: 'border-indigo-300 bg-indigo-50'
+  },
+  VOCABULARY: {
+    icon: '📚', title: 'Vocabulary',
+    description: 'Choose the word that best fits the context in each sentence.',
+    color: 'border-teal-300 bg-teal-50'
+  },
   READING: {
     icon: '📖', title: 'Reading',
     description: 'Read passages and answer comprehension questions.',
     color: 'border-blue-300 bg-blue-50'
   },
-  LISTENING: {
-    icon: '🎧', title: 'Listening',
-    description: 'Listen to audio clips and answer questions. You can play each audio up to 2 times.',
-    color: 'border-green-300 bg-green-50'
+  ERROR_CORRECTION: {
+    icon: '✏️', title: 'Error Correction',
+    description: 'Find and correct the error in each sentence.',
+    color: 'border-red-300 bg-red-50'
+  },
+  SENTENCE_TRANSFORMATION: {
+    icon: '🔄', title: 'Sentence Transformation',
+    description: 'Rewrite sentences according to the given instruction.',
+    color: 'border-orange-300 bg-orange-50'
   },
   WRITING: {
     icon: '✍️', title: 'Writing',
     description: 'Write responses to prompts. Your writing will be evaluated by AI and reviewed by a teacher.',
     color: 'border-amber-300 bg-amber-50'
+  },
+  LISTENING: {
+    icon: '🎧', title: 'Listening',
+    description: 'Listen to audio clips and answer questions. You can play each audio up to 2 times.',
+    color: 'border-green-300 bg-green-50'
   },
   SPEAKING: {
     icon: '🎤', title: 'Speaking',
@@ -89,8 +109,8 @@ export function MultiSkillAssessmentPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">4-Skills Placement Test</h1>
-        <p className="text-gray-600">Complete all four sections to determine your CEFR level across all language skills.</p>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Placement Test</h1>
+        <p className="text-gray-600">Complete all sections to determine your CEFR level across all language skills.</p>
       </div>
 
       {/* Section progress nav */}

@@ -14,12 +14,46 @@ const LEVEL_NAMES: Record<string, string> = {
   B2: 'Upper Intermediate', C1: 'Advanced', C2: 'Proficiency'
 }
 
-// Default section configuration
-const SECTION_CONFIG: Record<string, { timeLimitMin: number; questionsLimit: number; orderIndex: number }> = {
+// Legacy 4-section configuration
+const SECTION_CONFIG_V1: Record<string, { timeLimitMin: number; questionsLimit: number; orderIndex: number }> = {
   READING: { timeLimitMin: 20, questionsLimit: 10, orderIndex: 0 },
   LISTENING: { timeLimitMin: 15, questionsLimit: 8, orderIndex: 1 },
   WRITING: { timeLimitMin: 20, questionsLimit: 3, orderIndex: 2 },
   SPEAKING: { timeLimitMin: 15, questionsLimit: 3, orderIndex: 3 }
+}
+
+// 8-section granular placement test configuration
+const SECTION_CONFIG_V2: Record<string, { timeLimitMin: number; questionsLimit: number; orderIndex: number }> = {
+  GRAMMAR:                 { timeLimitMin: 20, questionsLimit: 40, orderIndex: 0 },
+  VOCABULARY:              { timeLimitMin: 8,  questionsLimit: 15, orderIndex: 1 },
+  READING:                 { timeLimitMin: 12, questionsLimit: 8,  orderIndex: 2 },
+  ERROR_CORRECTION:        { timeLimitMin: 5,  questionsLimit: 10, orderIndex: 3 },
+  SENTENCE_TRANSFORMATION: { timeLimitMin: 5,  questionsLimit: 10, orderIndex: 4 },
+  WRITING:                 { timeLimitMin: 10, questionsLimit: 2,  orderIndex: 5 },
+  LISTENING:               { timeLimitMin: 15, questionsLimit: 8,  orderIndex: 6 },
+  SPEAKING:                { timeLimitMin: 15, questionsLimit: 3,  orderIndex: 7 },
+}
+
+// Default to V2 for new assessments
+const SECTION_CONFIG = SECTION_CONFIG_V2
+
+// Jean's scoring grid: total raw score -> CEFR level (for 8-section assessments)
+const RAW_SCORE_TO_CEFR: [number, string][] = [
+  [116, 'C2'], [106, 'C1'], [96, 'B2+'], [86, 'B2'],
+  [76, 'B1+'], [66, 'B1'], [51, 'A2+'], [36, 'A2'],
+  [21, 'A1+'], [0, 'A1']
+]
+
+function rawScoreToCefr(totalRawScore: number): string {
+  for (const [threshold, level] of RAW_SCORE_TO_CEFR) {
+    if (totalRawScore >= threshold) return level
+  }
+  return 'A1'
+}
+
+// Normalize extended CEFR (A1+, A2+, B1+, B2+) to standard for DB storage
+function normalizeToStandardCefr(level: string): string {
+  return level.replace('+', '')
 }
 
 interface AnswerRecord {
@@ -37,10 +71,17 @@ interface CreateMultiSkillInput {
   timeLimitMin?: number
 }
 
+// Normalize language to title case (e.g. "english" -> "English") to match question bank format
+function normalizeLanguage(lang: string): string {
+  if (!lang) return lang
+  return lang.charAt(0).toUpperCase() + lang.slice(1).toLowerCase()
+}
+
 export class SectionAssessmentService {
   // Create a 4-skills assessment with all sections
   async createMultiSkillAssessment(input: CreateMultiSkillInput) {
-    const { studentId, language, assignedById } = input
+    const { studentId, assignedById } = input
+    const language = normalizeLanguage(input.language)
 
     const student = await prisma.student.findUnique({ where: { id: studentId } })
     if (!student) throw new Error('Student not found')
@@ -56,6 +97,9 @@ export class SectionAssessmentService {
     })
     if (existing) return existing
 
+    const sectionSkills = Object.keys(SECTION_CONFIG_V2) as Array<keyof typeof SECTION_CONFIG_V2>
+    const totalQuestions = sectionSkills.reduce((sum, skill) => sum + SECTION_CONFIG_V2[skill].questionsLimit, 0)
+
     const assessment = await prisma.assessment.create({
       data: {
         studentId,
@@ -66,17 +110,17 @@ export class SectionAssessmentService {
         currentSection: 0,
         answers: [],
         targetLevel: 'B1',
-        questionsLimit: 24, // total across sections: 10+8+3+3
+        questionsLimit: totalQuestions,
         startedAt: assignedById ? undefined : new Date(),
         assignedById,
         assignedAt: assignedById ? new Date() : undefined,
         sections: {
-          create: (['READING', 'LISTENING', 'WRITING', 'SPEAKING'] as const).map(skill => ({
-            skill,
-            orderIndex: SECTION_CONFIG[skill].orderIndex,
+          create: sectionSkills.map(skill => ({
+            skill: skill as any,
+            orderIndex: SECTION_CONFIG_V2[skill].orderIndex,
             status: 'PENDING',
-            timeLimitMin: SECTION_CONFIG[skill].timeLimitMin,
-            questionsLimit: SECTION_CONFIG[skill].questionsLimit,
+            timeLimitMin: SECTION_CONFIG_V2[skill].timeLimitMin,
+            questionsLimit: SECTION_CONFIG_V2[skill].questionsLimit,
             targetLevel: 'B1',
             answers: []
           }))
@@ -298,7 +342,10 @@ export class SectionAssessmentService {
       throw new Error('Question already answered')
     }
 
-    const isCorrect = answer.toLowerCase().trim() === question.correctAnswer.toLowerCase().trim()
+    // Support pipe-separated multiple accepted answers (for error correction / sentence transformation)
+    const studentAnswer = answer.toLowerCase().trim()
+    const acceptedAnswers = question.correctAnswer.split('|').map(a => a.toLowerCase().trim())
+    const isCorrect = acceptedAnswers.includes(studentAnswer)
 
     const newAnswer: AnswerRecord = {
       questionId,
@@ -441,7 +488,8 @@ export class SectionAssessmentService {
     let maxScore = 0
     let determinedLevel = 'A1'
 
-    if (section.skill === 'READING' || section.skill === 'LISTENING') {
+    const autoScoredSkills = ['READING', 'LISTENING', 'GRAMMAR', 'VOCABULARY', 'ERROR_CORRECTION', 'SENTENCE_TRANSFORMATION']
+    if (autoScoredSkills.includes(section.skill)) {
       const levelScores: Record<string, { correct: number; total: number }> = {}
 
       for (const answer of answers) {
@@ -565,7 +613,11 @@ export class SectionAssessmentService {
         readingLevel: assessment.readingLevel,
         listeningLevel: assessment.listeningLevel,
         writingLevel: assessment.writingLevel,
-        speakingLevel: assessment.speakingLevel
+        speakingLevel: assessment.speakingLevel,
+        grammarLevel: assessment.grammarLevel,
+        vocabularyLevel: assessment.vocabularyLevel,
+        errorCorrectionLevel: assessment.errorCorrectionLevel,
+        sentenceTransformationLevel: assessment.sentenceTransformationLevel
       },
       student: {
         id: assessment.student.id,
@@ -758,15 +810,34 @@ export class SectionAssessmentService {
       }
     }
 
-    // Overall = average (rounded down)
-    const avgIndex = skillCount > 0 ? Math.floor(totalIndex / skillCount) : 0
-    const overallLevel = CEFR_LEVELS[Math.min(avgIndex, CEFR_LEVELS.length - 1)]
+    // Determine if this is an 8-section assessment
+    const is8Section = sections.length >= 8
 
-    // Calculate overall score
-    const totalPercentage = sections
-      .filter(s => s.percentageScore !== null)
-      .reduce((sum, s) => sum + (s.percentageScore || 0), 0)
-    const avgPercentage = skillCount > 0 ? Math.round(totalPercentage / skillCount) : 0
+    let overallLevel: string
+    let avgPercentage: number
+
+    if (is8Section) {
+      // Use Jean's raw score grid for 8-section assessments
+      const totalRawScore = sections
+        .filter(s => s.rawScore !== null)
+        .reduce((sum, s) => sum + (s.rawScore || 0), 0)
+      const extendedLevel = rawScoreToCefr(totalRawScore)
+      overallLevel = normalizeToStandardCefr(extendedLevel)
+
+      const totalPercentage = sections
+        .filter(s => s.percentageScore !== null)
+        .reduce((sum, s) => sum + (s.percentageScore || 0), 0)
+      avgPercentage = skillCount > 0 ? Math.round(totalPercentage / skillCount) : 0
+    } else {
+      // Legacy averaging for 4-section assessments
+      const avgIndex = skillCount > 0 ? Math.floor(totalIndex / skillCount) : 0
+      overallLevel = CEFR_LEVELS[Math.min(avgIndex, CEFR_LEVELS.length - 1)]
+
+      const totalPercentage = sections
+        .filter(s => s.percentageScore !== null)
+        .reduce((sum, s) => sum + (s.percentageScore || 0), 0)
+      avgPercentage = skillCount > 0 ? Math.round(totalPercentage / skillCount) : 0
+    }
 
     await prisma.assessment.update({
       where: { id: assessmentId },
@@ -778,7 +849,11 @@ export class SectionAssessmentService {
         readingLevel: skillLevels['READING'] || null,
         listeningLevel: skillLevels['LISTENING'] || null,
         writingLevel: skillLevels['WRITING'] || null,
-        speakingLevel: skillLevels['SPEAKING'] || null
+        speakingLevel: skillLevels['SPEAKING'] || null,
+        grammarLevel: skillLevels['GRAMMAR'] || null,
+        vocabularyLevel: skillLevels['VOCABULARY'] || null,
+        errorCorrectionLevel: skillLevels['ERROR_CORRECTION'] || null,
+        sentenceTransformationLevel: skillLevels['SENTENCE_TRANSFORMATION'] || null,
       }
     })
 
@@ -839,6 +914,14 @@ export class SectionAssessmentService {
         return ['WRITING', 'SHORT_ANSWER', 'ESSAY'] as AssessmentQuestionType[]
       case 'SPEAKING':
         return ['SPEAKING_PROMPT'] as AssessmentQuestionType[]
+      case 'GRAMMAR':
+        return ['MULTIPLE_CHOICE'] as AssessmentQuestionType[]
+      case 'VOCABULARY':
+        return ['MULTIPLE_CHOICE', 'FILL_BLANK'] as AssessmentQuestionType[]
+      case 'ERROR_CORRECTION':
+        return ['ERROR_CORRECTION'] as AssessmentQuestionType[]
+      case 'SENTENCE_TRANSFORMATION':
+        return ['SENTENCE_TRANSFORMATION'] as AssessmentQuestionType[]
       default:
         return []
     }

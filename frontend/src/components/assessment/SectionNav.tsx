@@ -1,16 +1,24 @@
 import { AssessmentSection } from '../../services/assessmentApi'
 
 const SKILL_LABELS: Record<string, string> = {
+  GRAMMAR: 'Grammar',
+  VOCABULARY: 'Vocabulary',
   READING: 'Reading',
-  LISTENING: 'Listening',
+  ERROR_CORRECTION: 'Error Fix',
+  SENTENCE_TRANSFORMATION: 'Transform',
   WRITING: 'Writing',
+  LISTENING: 'Listening',
   SPEAKING: 'Speaking'
 }
 
 const SKILL_ICONS: Record<string, string> = {
+  GRAMMAR: '📝',
+  VOCABULARY: '📚',
   READING: '📖',
-  LISTENING: '🎧',
+  ERROR_CORRECTION: '✏️',
+  SENTENCE_TRANSFORMATION: '🔄',
   WRITING: '✍️',
+  LISTENING: '🎧',
   SPEAKING: '🎤'
 }
 
@@ -29,7 +37,7 @@ interface SectionNavProps {
 
 export function SectionNav({ sections, currentSectionId, onSectionClick }: SectionNavProps) {
   return (
-    <div className="flex items-center justify-between mb-6">
+    <div className="flex items-center gap-1 mb-6 overflow-x-auto pb-2">
       {sections.map((section, index) => (
         <div key={section.id} className="flex items-center">
           <button

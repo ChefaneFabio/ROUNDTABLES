@@ -12,9 +12,9 @@ datasource db {
 // =====================================================
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  password      String    // Hashed password
+  id                String    @id @default(cuid())
+  email             String    @unique
+  password          String // Hashed password
   name              String
   role              UserRole  @default(STUDENT)
   phone             String?
@@ -28,10 +28,10 @@ model User {
   deletedAt         DateTime? // Soft delete
 
   // Role-specific profiles (one-to-one)
-  schoolProfile    School?
-  teacherProfile   Teacher?
-  studentProfile   Student?
-  orgAdminProfile  OrgAdmin?
+  schoolProfile   School?
+  teacherProfile  Teacher?
+  studentProfile  Student?
+  orgAdminProfile OrgAdmin?
 
   // Notifications sent to this user
   notifications Notification[]
@@ -45,10 +45,10 @@ model User {
 }
 
 enum UserRole {
-  ADMIN           // System administrator (owns the school)
-  TEACHER         // Instructor/trainer
-  STUDENT         // Learner/participant
-  ORG_ADMIN       // Organization administrator (B2B)
+  ADMIN // System administrator (owns the school)
+  TEACHER // Instructor/trainer
+  STUDENT // Learner/participant
+  ORG_ADMIN // Organization administrator (B2B)
 }
 
 // =====================================================
@@ -56,28 +56,28 @@ enum UserRole {
 // =====================================================
 
 model School {
-  id               String   @id @default(cuid())
+  id               String           @id @default(cuid())
   name             String
-  email            String   @unique
+  email            String           @unique
   company          String?
   description      String?
-  logo             String?  // URL to logo image
+  logo             String? // URL to logo image
   subscriptionPlan SubscriptionPlan @default(BASIC)
   billingEmail     String?
-  billingAddress   Json?    // { street, city, state, zip, country }
-  isActive         Boolean  @default(true)
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  billingAddress   Json? // { street, city, state, zip, country }
+  isActive         Boolean          @default(true)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
   deletedAt        DateTime? // Soft delete
 
   // Italian tax/billing information
-  vatNumber        String?  // Partita IVA
-  fiscalCode       String?  // Codice Fiscale
-  sdiCode          String?  // Codice Destinatario SDI (7 chars)
-  pecEmail         String?  // PEC email for electronic invoicing
-  legalAddress     Json?    // Sede Legale { street, city, province, cap, country }
-  reaNumber        String?  // Numero REA
-  shareCapital     Decimal? @db.Decimal(12, 2) // Capitale Sociale
+  vatNumber    String? // Partita IVA
+  fiscalCode   String? // Codice Fiscale
+  sdiCode      String? // Codice Destinatario SDI (7 chars)
+  pecEmail     String? // PEC email for electronic invoicing
+  legalAddress Json? // Sede Legale { street, city, province, cap, country }
+  reaNumber    String? // Numero REA
+  shareCapital Decimal? @db.Decimal(12, 2) // Capitale Sociale
 
   // Notification settings
   lessonReminderMinutes Json? // Array of minutes before lesson, e.g. [1440, 60]. Default: [60]
@@ -115,13 +115,13 @@ enum SubscriptionPlan {
 // =====================================================
 
 model Teacher {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   bio        String?
   expertise  String[] // Areas of expertise
-  hourlyRate Decimal? @db.Decimal(10, 2)
-  isActive   Boolean  @default(true)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  hourlyRate Decimal?  @db.Decimal(10, 2)
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
   deletedAt  DateTime? // Soft delete
 
   // User account
@@ -133,14 +133,14 @@ model Teacher {
   school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
   // Relations
-  lessons             Lesson[]
-  feedback            Feedback[]
-  questions           Question[]
-  courseTeachers      CourseTeacher[]
-  availability        TeacherAvailability[]
-  substitutionsFrom   Substitution[] @relation("OriginalTeacher")
-  substitutionsTo     Substitution[] @relation("SubstituteTeacher")
-  payrollRecords      TeacherPayroll[]
+  lessons           Lesson[]
+  feedback          Feedback[]
+  questions         Question[]
+  courseTeachers    CourseTeacher[]
+  availability      TeacherAvailability[]
+  substitutionsFrom Substitution[]        @relation("OriginalTeacher")
+  substitutionsTo   Substitution[]        @relation("SubstituteTeacher")
+  payrollRecords    TeacherPayroll[]
 
   @@index([userId])
   @@index([schoolId])
@@ -152,12 +152,12 @@ model Teacher {
 // =====================================================
 
 model Student {
-  id            String           @id @default(cuid())
-  languageLevel LanguageLevel    @default(B1)
+  id            String        @id @default(cuid())
+  languageLevel LanguageLevel @default(B1)
   bio           String?
-  isActive      Boolean          @default(true)
-  createdAt     DateTime         @default(now())
-  updatedAt     DateTime         @updatedAt
+  isActive      Boolean       @default(true)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
   deletedAt     DateTime? // Soft delete
 
   // User account
@@ -206,22 +206,22 @@ enum LanguageLevel {
 // =====================================================
 
 model Course {
-  id              String       @id @default(cuid())
-  name            String
-  description     String?
-  status          CourseStatus @default(DRAFT)
-  courseType       CourseType   @default(LIVE)
-  isPublic        Boolean      @default(false)
-  language        String?
-  startDate       DateTime?
-  endDate         DateTime?
-  maxStudents     Int          @default(10)
-  price           Decimal?     @db.Decimal(10, 2)
-  currency        String       @default("EUR")
-  thumbnailUrl    String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
-  deletedAt       DateTime? // Soft delete
+  id           String       @id @default(cuid())
+  name         String
+  description  String?
+  status       CourseStatus @default(DRAFT)
+  courseType   CourseType   @default(LIVE)
+  isPublic     Boolean      @default(false)
+  language     String?
+  startDate    DateTime?
+  endDate      DateTime?
+  maxStudents  Int          @default(10)
+  price        Decimal?     @db.Decimal(10, 2)
+  currency     String       @default("EUR")
+  thumbnailUrl String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  deletedAt    DateTime? // Soft delete
 
   // School that owns this course
   schoolId String
@@ -251,13 +251,13 @@ enum CourseType {
 }
 
 enum CourseStatus {
-  DRAFT          // Course being set up
-  TOPIC_VOTING   // Students voting on topics
-  SCHEDULED      // Course scheduled to start
-  IN_PROGRESS    // Course actively running
-  COMPLETED      // Course finished
-  CANCELLED      // Course cancelled
-  ARCHIVED       // Course archived
+  DRAFT // Course being set up
+  TOPIC_VOTING // Students voting on topics
+  SCHEDULED // Course scheduled to start
+  IN_PROGRESS // Course actively running
+  COMPLETED // Course finished
+  CANCELLED // Course cancelled
+  ARCHIVED // Course archived
 }
 
 // Many-to-many: Course <-> Teacher
@@ -306,7 +306,7 @@ model Module {
 
 model Lesson {
   id           String       @id @default(cuid())
-  lessonNumber Int          // Sequence number within course
+  lessonNumber Int // Sequence number within course
   title        String?
   description  String?
   scheduledAt  DateTime
@@ -318,12 +318,12 @@ model Lesson {
   deletedAt    DateTime? // Soft delete
 
   // Video Conferencing Integration
-  meetingProvider   MeetingProvider? // Which platform (Zoom, Meet, Teams)
-  meetingId         String?          // External meeting ID
-  meetingLink       String?          // Join link for students
-  meetingHostUrl    String?          // Host/start link for teacher
-  meetingPassword   String?          // Meeting password if required
-  meetingRecordingUrl String?        // Recording link after lesson
+  meetingProvider     MeetingProvider? // Which platform (Zoom, Meet, Teams)
+  meetingId           String? // External meeting ID
+  meetingLink         String? // Join link for students
+  meetingHostUrl      String? // Host/start link for teacher
+  meetingPassword     String? // Meeting password if required
+  meetingRecordingUrl String? // Recording link after lesson
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -350,9 +350,12 @@ model Lesson {
   exercises     Exercise[]
 
   @@unique([courseId, lessonNumber])
+  @@index([courseId])
   @@index([scheduledAt])
   @@index([teacherId])
+  @@index([moduleId])
   @@index([meetingProvider])
+  @@index([courseId, scheduledAt])
   @@map("lessons")
 }
 
@@ -404,15 +407,16 @@ model Enrollment {
   @@unique([studentId, courseId])
   @@index([status])
   @@index([paymentStatus])
+  @@index([status, paymentStatus])
   @@map("enrollments")
 }
 
 enum EnrollmentStatus {
-  PENDING    // Awaiting confirmation
-  ACTIVE     // Currently enrolled
-  COMPLETED  // Finished the course
-  DROPPED    // Dropped out
-  SUSPENDED  // Temporarily suspended
+  PENDING // Awaiting confirmation
+  ACTIVE // Currently enrolled
+  COMPLETED // Finished the course
+  DROPPED // Dropped out
+  SUSPENDED // Temporarily suspended
 }
 
 enum PaymentStatus {
@@ -443,6 +447,8 @@ model Attendance {
   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@unique([lessonId, studentId])
+  @@index([lessonId])
+  @@index([studentId])
   @@map("attendance")
 }
 
@@ -455,7 +461,7 @@ model Progress {
   completedLessons Int       @default(0)
   totalLessons     Int       @default(0)
   percentage       Decimal   @default(0) @db.Decimal(5, 2)
-  grade            String?   // A, B, C, D, F or custom grading
+  grade            String? // A, B, C, D, F or custom grading
   averageScore     Decimal?  @db.Decimal(5, 2)
   completedAt      DateTime?
   createdAt        DateTime  @default(now())
@@ -489,6 +495,7 @@ model TopicVote {
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, moduleId])
+  @@index([courseId])
   @@map("topic_votes")
 }
 
@@ -513,6 +520,7 @@ model Question {
 
   @@index([lessonId])
   @@index([status])
+  @@index([teacherId])
   @@map("questions")
 }
 
@@ -530,7 +538,7 @@ enum QuestionStatus {
 model Feedback {
   id          String         @id @default(cuid())
   content     String
-  score       Int?           // 1-10 or 1-100 based on grading system
+  score       Int? // 1-10 or 1-100 based on grading system
   status      FeedbackStatus @default(PENDING)
   reviewNotes String?
   sentAt      DateTime?
@@ -547,6 +555,7 @@ model Feedback {
   teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
 
   @@unique([lessonId, studentId])
+  @@index([teacherId])
   @@map("feedback")
 }
 
@@ -567,8 +576,8 @@ model Material {
   title       String
   description String?
   type        MaterialType
-  url         String       // File URL or external link
-  fileSize    Int?         // Size in bytes
+  url         String // File URL or external link
+  fileSize    Int? // Size in bytes
   mimeType    String?
   orderIndex  Int          @default(0)
   uploadedAt  DateTime     @default(now())
@@ -601,8 +610,8 @@ model Payment {
   amount        Decimal       @db.Decimal(10, 2)
   currency      String        @default("EUR")
   status        PaymentStatus @default(PENDING)
-  paymentMethod String?       // card, bank_transfer, cash, etc.
-  transactionId String?       // External payment provider transaction ID
+  paymentMethod String? // card, bank_transfer, cash, etc.
+  transactionId String? // External payment provider transaction ID
   notes         String?
   paidAt        DateTime?
   dueDate       DateTime?
@@ -610,8 +619,8 @@ model Payment {
   updatedAt     DateTime      @updatedAt
 
   // Stripe integration
-  stripePaymentIntentId String?   // Links to Stripe PaymentIntent
-  stripeSessionId       String?   // Links to Stripe Checkout session (fallback)
+  stripePaymentIntentId String? // Links to Stripe PaymentIntent
+  stripeSessionId       String? // Links to Stripe Checkout session (fallback)
 
   // Can be linked to enrollment or directly to school
   enrollmentId String?
@@ -634,6 +643,9 @@ model Payment {
   @@index([status])
   @@index([invoiceId])
   @@index([stripePaymentIntentId])
+  @@index([enrollmentId])
+  @@index([schoolId])
+  @@index([organizationId])
   @@map("payments")
 }
 
@@ -650,7 +662,7 @@ model Notification {
   scheduledAt DateTime?
   sentAt      DateTime?
   readAt      DateTime?
-  metadata    Json?              // Additional data for the notification
+  metadata    Json? // Additional data for the notification
   createdAt   DateTime           @default(now())
   updatedAt   DateTime           @updatedAt
 
@@ -665,6 +677,7 @@ model Notification {
   @@index([userId])
   @@index([status])
   @@index([scheduledAt])
+  @@index([lessonId])
   @@map("notifications")
 }
 
@@ -712,16 +725,16 @@ model RefreshToken {
 // =====================================================
 
 model TeacherAvailability {
-  id          String              @id @default(cuid())
-  dayOfWeek   Int                 // 0=Sunday, 1=Monday, ..., 6=Saturday
-  startTime   String              // HH:MM format (e.g., "09:00")
-  endTime     String              // HH:MM format (e.g., "17:00")
-  isRecurring Boolean             @default(true) // Weekly recurring
-  specificDate DateTime?          // For non-recurring availability
-  status      AvailabilityStatus  @default(AVAILABLE)
-  notes       String?
-  createdAt   DateTime            @default(now())
-  updatedAt   DateTime            @updatedAt
+  id           String             @id @default(cuid())
+  dayOfWeek    Int // 0=Sunday, 1=Monday, ..., 6=Saturday
+  startTime    String // HH:MM format (e.g., "09:00")
+  endTime      String // HH:MM format (e.g., "17:00")
+  isRecurring  Boolean            @default(true) // Weekly recurring
+  specificDate DateTime? // For non-recurring availability
+  status       AvailabilityStatus @default(AVAILABLE)
+  notes        String?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
 
   teacherId String
   teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
@@ -740,14 +753,14 @@ enum AvailabilityStatus {
 }
 
 model Substitution {
-  id              String             @id @default(cuid())
-  reason          SubstitutionReason
-  notes           String?
-  status          SubstitutionStatus @default(PENDING)
-  requestedAt     DateTime           @default(now())
-  confirmedAt     DateTime?
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  id          String             @id @default(cuid())
+  reason      SubstitutionReason
+  notes       String?
+  status      SubstitutionStatus @default(PENDING)
+  requestedAt DateTime           @default(now())
+  confirmedAt DateTime?
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
 
   // The lesson being substituted
   lessonId String @unique
@@ -762,6 +775,8 @@ model Substitution {
   substituteTeacher   Teacher? @relation("SubstituteTeacher", fields: [substituteTeacherId], references: [id])
 
   @@index([status])
+  @@index([originalTeacherId])
+  @@index([substituteTeacherId])
   @@map("substitutions")
 }
 
@@ -774,11 +789,11 @@ enum SubstitutionReason {
 }
 
 enum SubstitutionStatus {
-  PENDING           // Needs a substitute
-  SUBSTITUTE_FOUND  // Substitute assigned
-  CONFIRMED         // Substitute confirmed
-  CANCELLED         // Substitution cancelled
-  COMPLETED         // Lesson completed with substitute
+  PENDING // Needs a substitute
+  SUBSTITUTE_FOUND // Substitute assigned
+  CONFIRMED // Substitute confirmed
+  CANCELLED // Substitution cancelled
+  COMPLETED // Lesson completed with substitute
 }
 
 // =====================================================
@@ -786,25 +801,25 @@ enum SubstitutionStatus {
 // =====================================================
 
 model TeacherPayroll {
-  id              String        @id @default(cuid())
-  periodStart     DateTime      // Start of pay period
-  periodEnd       DateTime      // End of pay period
-  totalHours      Decimal       @db.Decimal(10, 2)
-  hourlyRate      Decimal       @db.Decimal(10, 2)
-  grossAmount     Decimal       @db.Decimal(10, 2)
-  deductions      Decimal       @default(0) @db.Decimal(10, 2)
-  netAmount       Decimal       @db.Decimal(10, 2)
-  currency        String        @default("EUR")
-  status          PayrollStatus @default(PENDING)
-  lessonsCount    Int           @default(0)
-  bonuses         Decimal       @default(0) @db.Decimal(10, 2)
-  bonusNotes      String?
-  paidAt          DateTime?
-  paymentMethod   String?       // bank_transfer, cash, etc.
-  paymentReference String?      // Transaction ID or reference
-  notes           String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id               String        @id @default(cuid())
+  periodStart      DateTime // Start of pay period
+  periodEnd        DateTime // End of pay period
+  totalHours       Decimal       @db.Decimal(10, 2)
+  hourlyRate       Decimal       @db.Decimal(10, 2)
+  grossAmount      Decimal       @db.Decimal(10, 2)
+  deductions       Decimal       @default(0) @db.Decimal(10, 2)
+  netAmount        Decimal       @db.Decimal(10, 2)
+  currency         String        @default("EUR")
+  status           PayrollStatus @default(PENDING)
+  lessonsCount     Int           @default(0)
+  bonuses          Decimal       @default(0) @db.Decimal(10, 2)
+  bonusNotes       String?
+  paidAt           DateTime?
+  paymentMethod    String? // bank_transfer, cash, etc.
+  paymentReference String? // Transaction ID or reference
+  notes            String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   teacherId String
   teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
@@ -816,14 +831,15 @@ model TeacherPayroll {
   @@index([teacherId])
   @@index([status])
   @@index([periodStart, periodEnd])
+  @@index([invoiceId])
   @@map("teacher_payroll")
 }
 
 enum PayrollStatus {
-  PENDING     // Being calculated
-  APPROVED    // Approved for payment
-  PAID        // Payment completed
-  CANCELLED   // Cancelled
+  PENDING // Being calculated
+  APPROVED // Approved for payment
+  PAID // Payment completed
+  CANCELLED // Cancelled
 }
 
 // =====================================================
@@ -831,20 +847,20 @@ enum PayrollStatus {
 // =====================================================
 
 model InstallmentPlan {
-  id                String              @id @default(cuid())
-  totalAmount       Decimal             @db.Decimal(10, 2)
+  id                   String                @id @default(cuid())
+  totalAmount          Decimal               @db.Decimal(10, 2)
   numberOfInstallments Int
-  installmentAmount Decimal             @db.Decimal(10, 2)
-  currency          String              @default("EUR")
-  startDate         DateTime
-  frequency         InstallmentFrequency @default(MONTHLY)
-  status            InstallmentPlanStatus @default(ACTIVE)
-  notes             String?
-  createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
+  installmentAmount    Decimal               @db.Decimal(10, 2)
+  currency             String                @default("EUR")
+  startDate            DateTime
+  frequency            InstallmentFrequency  @default(MONTHLY)
+  status               InstallmentPlanStatus @default(ACTIVE)
+  notes                String?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
 
   // Link to enrollment
-  enrollmentId String @unique
+  enrollmentId String     @unique
   enrollment   Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
 
   // Individual installments
@@ -868,16 +884,16 @@ enum InstallmentPlanStatus {
 }
 
 model Installment {
-  id          String            @id @default(cuid())
-  number      Int               // Installment number (1, 2, 3...)
-  amount      Decimal           @db.Decimal(10, 2)
-  dueDate     DateTime
-  status      InstallmentStatus @default(PENDING)
-  paidAt      DateTime?
-  paidAmount  Decimal?          @db.Decimal(10, 2)
-  notes       String?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  id         String            @id @default(cuid())
+  number     Int // Installment number (1, 2, 3...)
+  amount     Decimal           @db.Decimal(10, 2)
+  dueDate    DateTime
+  status     InstallmentStatus @default(PENDING)
+  paidAt     DateTime?
+  paidAmount Decimal?          @db.Decimal(10, 2)
+  notes      String?
+  createdAt  DateTime          @default(now())
+  updatedAt  DateTime          @updatedAt
 
   planId String
   plan   InstallmentPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
@@ -889,6 +905,7 @@ model Installment {
   @@unique([planId, number])
   @@index([dueDate])
   @@index([status])
+  @@index([paymentId])
   @@map("installments")
 }
 
@@ -905,54 +922,54 @@ enum InstallmentStatus {
 // =====================================================
 
 model Invoice {
-  id                  String        @id @default(cuid())
-  invoiceNumber       String        @unique // Progressive number
-  invoiceDate         DateTime      @default(now())
-  dueDate             DateTime?
+  id            String    @id @default(cuid())
+  invoiceNumber String    @unique // Progressive number
+  invoiceDate   DateTime  @default(now())
+  dueDate       DateTime?
 
   // Amounts
-  subtotal            Decimal       @db.Decimal(10, 2)
-  vatRate             Decimal       @default(22) @db.Decimal(5, 2) // Italian VAT 22%
-  vatAmount           Decimal       @db.Decimal(10, 2)
-  totalAmount         Decimal       @db.Decimal(10, 2)
-  currency            String        @default("EUR")
+  subtotal    Decimal @db.Decimal(10, 2)
+  vatRate     Decimal @default(22) @db.Decimal(5, 2) // Italian VAT 22%
+  vatAmount   Decimal @db.Decimal(10, 2)
+  totalAmount Decimal @db.Decimal(10, 2)
+  currency    String  @default("EUR")
 
   // Status
-  status              InvoiceStatus @default(DRAFT)
-  paidAt              DateTime?
+  status InvoiceStatus @default(DRAFT)
+  paidAt DateTime?
 
   // Italian Electronic Invoice (FatturaPA) fields
-  isElectronic        Boolean       @default(false) // Is Fattura Elettronica
-  sdiStatus           SdiStatus?    // SDI transmission status
-  sdiIdentifier       String?       // SDI file identifier
-  sdiTransmissionDate DateTime?     // When sent to SDI
-  sdiResponseDate     DateTime?     // When SDI responded
-  sdiErrorMessage     String?       // SDI error if rejected
+  isElectronic        Boolean    @default(false) // Is Fattura Elettronica
+  sdiStatus           SdiStatus? // SDI transmission status
+  sdiIdentifier       String? // SDI file identifier
+  sdiTransmissionDate DateTime? // When sent to SDI
+  sdiResponseDate     DateTime? // When SDI responded
+  sdiErrorMessage     String? // SDI error if rejected
 
   // Recipient details (for electronic invoice)
   recipientType       RecipientType? // PA, B2B, B2C
-  recipientCodiceSDI  String?       // 7-char SDI code (Codice Destinatario)
-  recipientPEC        String?       // PEC email if no SDI code
-  recipientVatNumber  String?       // Partita IVA
-  recipientFiscalCode String?       // Codice Fiscale
+  recipientCodiceSDI  String? // 7-char SDI code (Codice Destinatario)
+  recipientPEC        String? // PEC email if no SDI code
+  recipientVatNumber  String? // Partita IVA
+  recipientFiscalCode String? // Codice Fiscale
 
   // Document type
-  documentType        FatturaType   @default(TD01) // Tipo Documento
+  documentType FatturaType @default(TD01) // Tipo Documento
 
   // Payment terms
-  paymentTerms        String?       // e.g., "30 days net"
-  paymentMethod       PaymentMethodCode? // Codice Modalità Pagamento
+  paymentTerms  String? // e.g., "30 days net"
+  paymentMethod PaymentMethodCode? // Codice Modalità Pagamento
 
   // Line items stored as JSON
-  lineItems           Json          // Array of line items
+  lineItems Json // Array of line items
 
   // PDF and XML storage
-  pdfUrl              String?       // Generated PDF invoice
-  xmlUrl              String?       // FatturaPA XML file
+  pdfUrl String? // Generated PDF invoice
+  xmlUrl String? // FatturaPA XML file
 
-  notes               String?
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Relations
   schoolId String
@@ -961,8 +978,8 @@ model Invoice {
   organizationId String?
   organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  payments        Payment[]
-  payrollRecords  TeacherPayroll[]
+  payments       Payment[]
+  payrollRecords TeacherPayroll[]
 
   @@index([invoiceNumber])
   @@index([status])
@@ -984,67 +1001,67 @@ enum InvoiceStatus {
 }
 
 enum SdiStatus {
-  NOT_SENT         // Not yet sent to SDI
-  SENDING          // Transmission in progress
-  DELIVERED        // Delivered to recipient
-  NOT_DELIVERED    // Failed to deliver
-  ACCEPTED         // Accepted by PA (for public administration)
-  REJECTED         // Rejected by SDI
-  DECODING_ERROR   // File format error
-  FILE_REJECTED    // File rejected after delivery
+  NOT_SENT // Not yet sent to SDI
+  SENDING // Transmission in progress
+  DELIVERED // Delivered to recipient
+  NOT_DELIVERED // Failed to deliver
+  ACCEPTED // Accepted by PA (for public administration)
+  REJECTED // Rejected by SDI
+  DECODING_ERROR // File format error
+  FILE_REJECTED // File rejected after delivery
 }
 
 enum RecipientType {
-  PA    // Pubblica Amministrazione
-  B2B   // Business to Business
-  B2C   // Business to Consumer
+  PA // Pubblica Amministrazione
+  B2B // Business to Business
+  B2C // Business to Consumer
 }
 
 enum FatturaType {
-  TD01  // Fattura
-  TD02  // Acconto/Anticipo su fattura
-  TD03  // Acconto/Anticipo su parcella
-  TD04  // Nota di Credito
-  TD05  // Nota di Debito
-  TD06  // Parcella
-  TD16  // Integrazione fattura reverse charge interno
-  TD17  // Integrazione/autofattura per acquisto servizi dall'estero
-  TD18  // Integrazione per acquisto di beni intracomunitari
-  TD19  // Integrazione/autofattura per acquisto di beni ex art.17 c.2 DPR 633/72
-  TD20  // Autofattura per regolarizzazione e integrazione delle fatture
-  TD21  // Autofattura per splafonamento
-  TD22  // Estrazione beni da Deposito IVA
-  TD23  // Estrazione beni da Deposito IVA con versamento dell'IVA
-  TD24  // Fattura differita di cui all'art. 21, comma 4, lett. a)
-  TD25  // Fattura differita di cui all'art. 21, comma 4, terzo periodo lett. b)
-  TD26  // Cessione di beni ammortizzabili e per passaggi interni
-  TD27  // Fattura per autoconsumo o per cessioni gratuite senza rivalsa
+  TD01 // Fattura
+  TD02 // Acconto/Anticipo su fattura
+  TD03 // Acconto/Anticipo su parcella
+  TD04 // Nota di Credito
+  TD05 // Nota di Debito
+  TD06 // Parcella
+  TD16 // Integrazione fattura reverse charge interno
+  TD17 // Integrazione/autofattura per acquisto servizi dall'estero
+  TD18 // Integrazione per acquisto di beni intracomunitari
+  TD19 // Integrazione/autofattura per acquisto di beni ex art.17 c.2 DPR 633/72
+  TD20 // Autofattura per regolarizzazione e integrazione delle fatture
+  TD21 // Autofattura per splafonamento
+  TD22 // Estrazione beni da Deposito IVA
+  TD23 // Estrazione beni da Deposito IVA con versamento dell'IVA
+  TD24 // Fattura differita di cui all'art. 21, comma 4, lett. a)
+  TD25 // Fattura differita di cui all'art. 21, comma 4, terzo periodo lett. b)
+  TD26 // Cessione di beni ammortizzabili e per passaggi interni
+  TD27 // Fattura per autoconsumo o per cessioni gratuite senza rivalsa
 }
 
 enum PaymentMethodCode {
-  MP01  // Contanti
-  MP02  // Assegno
-  MP03  // Assegno circolare
-  MP04  // Contanti presso Tesoreria
-  MP05  // Bonifico
-  MP06  // Vaglia cambiario
-  MP07  // Bollettino bancario
-  MP08  // Carta di pagamento
-  MP09  // RID
-  MP10  // RID utenze
-  MP11  // RID veloce
-  MP12  // RIBA
-  MP13  // MAV
-  MP14  // Quietanza erario
-  MP15  // Giroconto su conti di contabilità speciale
-  MP16  // Domiciliazione bancaria
-  MP17  // Domiciliazione postale
-  MP18  // Bollettino di c/c postale
-  MP19  // SEPA Direct Debit
-  MP20  // SEPA Direct Debit CORE
-  MP21  // SEPA Direct Debit B2B
-  MP22  // Trattenuta su somme già riscosse
-  MP23  // PagoPA
+  MP01 // Contanti
+  MP02 // Assegno
+  MP03 // Assegno circolare
+  MP04 // Contanti presso Tesoreria
+  MP05 // Bonifico
+  MP06 // Vaglia cambiario
+  MP07 // Bollettino bancario
+  MP08 // Carta di pagamento
+  MP09 // RID
+  MP10 // RID utenze
+  MP11 // RID veloce
+  MP12 // RIBA
+  MP13 // MAV
+  MP14 // Quietanza erario
+  MP15 // Giroconto su conti di contabilità speciale
+  MP16 // Domiciliazione bancaria
+  MP17 // Domiciliazione postale
+  MP18 // Bollettino di c/c postale
+  MP19 // SEPA Direct Debit
+  MP20 // SEPA Direct Debit CORE
+  MP21 // SEPA Direct Debit B2B
+  MP22 // Trattenuta su somme già riscosse
+  MP23 // PagoPA
 }
 
 // =====================================================
@@ -1058,67 +1075,72 @@ model Assessment {
   language       String
   type           AssessmentType   @default(PLACEMENT)
   score          Int?
-  cefrLevel      String?          // A1, A2, B1, B2, C1, C2
+  cefrLevel      String? // A1, A2, B1, B2, C1, C2
   status         AssessmentStatus @default(IN_PROGRESS)
-  answers        Json?            // Array of {questionId, answer, isCorrect}
+  answers        Json? // Array of {questionId, answer, isCorrect}
   targetLevel    String           @default("B1") // Adaptive state persisted across API calls
-  questionsLimit Int              @default(40)   // Configurable test length
+  questionsLimit Int              @default(40) // Configurable test length
   startedAt      DateTime?
   completedAt    DateTime?
 
   // Assignment & security fields
-  assignedById   String?          // userId of admin who assigned (null = self-started)
-  assignedAt     DateTime?        // when assigned
-  timeLimitMin   Int?             // minutes allowed (null = unlimited for self-started)
-  expiresAt      DateTime?        // set when student starts: startedAt + timeLimitMin
-  violations     Json?            // [{type, timestamp, details}] — tab switches, copy attempts, etc.
+  assignedById String? // userId of admin who assigned (null = self-started)
+  assignedAt   DateTime? // when assigned
+  timeLimitMin Int? // minutes allowed (null = unlimited for self-started)
+  expiresAt    DateTime? // set when student starts: startedAt + timeLimitMin
+  violations   Json? // [{type, timestamp, details}] — tab switches, copy attempts, etc.
 
   // Multi-skill assessment fields
-  isMultiSkill   Boolean          @default(false)
-  currentSection Int?             // 0-3 index of current section
-  readingLevel   String?          // Per-skill CEFR results
-  listeningLevel String?
-  writingLevel   String?
-  speakingLevel  String?
+  isMultiSkill                Boolean @default(false)
+  currentSection              Int? // 0-3 index of current section
+  readingLevel                String? // Per-skill CEFR results
+  listeningLevel              String?
+  writingLevel                String?
+  speakingLevel               String?
+  grammarLevel                String?
+  vocabularyLevel             String?
+  errorCorrectionLevel        String?
+  sentenceTransformationLevel String?
 
   // Relations
-  sections       AssessmentSection[]
+  sections          AssessmentSection[]
   writingResponses  WritingResponse[]
   speakingResponses SpeakingResponse[]
 
   @@index([studentId])
   @@index([language])
+  @@index([studentId, language])
   @@map("assessments")
 }
 
 model AssessmentQuestion {
-  id           String              @id @default(cuid())
-  language     String
-  cefrLevel    String              // A1, A2, B1, B2, C1, C2
-  questionType AssessmentQuestionType
-  questionText String
-  options      Json?               // For multiple choice: [{label, value}]
+  id            String                 @id @default(cuid())
+  language      String
+  cefrLevel     String // A1, A2, B1, B2, C1, C2
+  questionType  AssessmentQuestionType
+  questionText  String
+  options       Json? // For multiple choice: [{label, value}]
   correctAnswer String
-  passage      String?             // Reading comprehension text
-  passageTitle String?             // Optional passage header
-  audioUrl     String?
-  imageUrl     String?
-  points       Int                 @default(1)
-  orderIndex   Int                 @default(0)
-  isActive     Boolean             @default(true)
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime            @updatedAt
+  passage       String? // Reading comprehension text
+  passageTitle  String? // Optional passage header
+  audioUrl      String?
+  imageUrl      String?
+  points        Int                    @default(1)
+  orderIndex    Int                    @default(0)
+  isActive      Boolean                @default(true)
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
 
   // Multi-skill fields
-  skill          AssessmentSkill?  // READING, LISTENING, WRITING, SPEAKING
-  ttsScript      String?           // Text for TTS audio generation (listening)
-  ttsLanguageCode String?          // e.g. "en-US", "it-IT"
-  speakingPrompt String?           // Prompt text for speaking questions
-  rubric         Json?             // Scoring rubric for writing/speaking
-  difficulty     Float?            // IRT difficulty parameter
-  discrimination Float?            // IRT discrimination parameter
-  tags           String[]          // Tags for categorization
-  timeSuggested  Int?              // Suggested time in seconds
+  skill           AssessmentSkill? // READING, LISTENING, WRITING, SPEAKING
+  ttsScript       String? // Text for TTS audio generation (listening)
+  ttsLanguageCode String? // e.g. "en-US", "it-IT"
+  speakingPrompt  String? // Prompt text for speaking questions
+  rubric          Json? // Scoring rubric for writing/speaking
+  difficulty      Float? // IRT difficulty parameter
+  discrimination  Float? // IRT discrimination parameter
+  tags            String[] // Tags for categorization
+  timeSuggested   Int? // Suggested time in seconds
 
   @@index([language, cefrLevel])
   @@index([isActive])
@@ -1131,29 +1153,29 @@ model AssessmentSection {
   assessmentId   String
   assessment     Assessment      @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
   skill          AssessmentSkill
-  orderIndex     Int             // 0=Reading, 1=Listening, 2=Writing, 3=Speaking
+  orderIndex     Int // 0=Reading, 1=Listening, 2=Writing, 3=Speaking
   status         SectionStatus   @default(PENDING)
-  timeLimitMin   Int             // Time limit for this section
-  expiresAt      DateTime?       // Set when section starts
+  timeLimitMin   Int // Time limit for this section
+  expiresAt      DateTime? // Set when section starts
   startedAt      DateTime?
   completedAt    DateTime?
   targetLevel    String          @default("B1") // Adaptive level within section
   questionsLimit Int             @default(10)
-  answers        Json?           // [{questionId, answer, isCorrect, cefrLevel, points}]
+  answers        Json? // [{questionId, answer, isCorrect, cefrLevel, points}]
 
   // Scoring
-  rawScore       Int?
-  maxScore       Int?
+  rawScore        Int?
+  maxScore        Int?
   percentageScore Int?
-  cefrLevel      String?         // Determined CEFR for this skill
+  cefrLevel       String? // Determined CEFR for this skill
 
   // AI + Teacher scoring (for writing/speaking)
-  aiScore        Json?           // {grammar, coherence, vocabulary, spelling, taskAchievement, overall, cefrLevel, feedback}
-  aiScoredAt     DateTime?
-  teacherScore   Json?           // Same structure, teacher override
-  teacherReviewedBy String?      // userId of reviewing teacher
+  aiScore           Json? // {grammar, coherence, vocabulary, spelling, taskAchievement, overall, cefrLevel, feedback}
+  aiScoredAt        DateTime?
+  teacherScore      Json? // Same structure, teacher override
+  teacherReviewedBy String? // userId of reviewing teacher
   teacherReviewedAt DateTime?
-  finalScore     Json?           // teacherScore ?? aiScore
+  finalScore        Json? // teacherScore ?? aiScore
 
   // Relations
   writingResponses  WritingResponse[]
@@ -1165,62 +1187,66 @@ model AssessmentSection {
 }
 
 model WritingResponse {
-  id             String            @id @default(cuid())
-  assessmentId   String
-  assessment     Assessment        @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
-  sectionId      String
-  section        AssessmentSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
-  questionId     String
-  studentId      String
-  responseText   String            @db.Text
-  wordCount      Int               @default(0)
-  aiEvaluation   Json?             // {grammar, coherence, vocabulary, spelling, taskAchievement, overall, cefrLevel, feedback}
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  id           String            @id @default(cuid())
+  assessmentId String
+  assessment   Assessment        @relation(fields: [assessmentId], references: [id], onDelete: Restrict)
+  sectionId    String
+  section      AssessmentSection @relation(fields: [sectionId], references: [id], onDelete: Restrict)
+  questionId   String
+  studentId    String
+  responseText String            @db.Text
+  wordCount    Int               @default(0)
+  aiEvaluation Json? // {grammar, coherence, vocabulary, spelling, taskAchievement, overall, cefrLevel, feedback}
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
 
   @@index([assessmentId])
   @@index([sectionId])
+  @@index([studentId])
   @@map("writing_responses")
 }
 
 model SpeakingResponse {
-  id             String            @id @default(cuid())
-  assessmentId   String
-  assessment     Assessment        @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
-  sectionId      String
-  section        AssessmentSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
-  questionId     String
-  studentId      String
-  audioUrl       String?
-  duration       Int?              // Duration in seconds
-  transcript     String?           @db.Text
-  transcribedAt  DateTime?
-  aiEvaluation   Json?             // {pronunciation, fluency, grammar, vocabulary, overall, cefrLevel, feedback}
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  id            String            @id @default(cuid())
+  assessmentId  String
+  assessment    Assessment        @relation(fields: [assessmentId], references: [id], onDelete: Restrict)
+  sectionId     String
+  section       AssessmentSection @relation(fields: [sectionId], references: [id], onDelete: Restrict)
+  questionId    String
+  studentId     String
+  audioUrl      String?
+  duration      Int? // Duration in seconds
+  transcript    String?           @db.Text
+  transcribedAt DateTime?
+  aiEvaluation  Json? // {pronunciation, fluency, grammar, vocabulary, overall, cefrLevel, feedback}
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
 
   @@index([assessmentId])
   @@index([sectionId])
+  @@index([studentId])
   @@map("speaking_responses")
 }
 
 model Certificate {
-  id                String   @id @default(cuid())
+  id                String    @id @default(cuid())
   studentId         String
-  student           Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  student           Student   @relation(fields: [studentId], references: [id], onDelete: Restrict)
   courseId          String?
-  course            Course?  @relation(fields: [courseId], references: [id])
+  course            Course?   @relation(fields: [courseId], references: [id])
   assessmentId      String?
   cefrLevel         String
   language          String
-  certificateNumber String   @unique
-  issuedAt          DateTime @default(now())
+  certificateNumber String    @unique
+  issuedAt          DateTime  @default(now())
   pdfUrl            String?
   validUntil        DateTime?
-  metadata          Json?    // Additional certificate data
+  metadata          Json? // Additional certificate data
 
   @@index([studentId])
   @@index([certificateNumber])
+  @@index([courseId])
+  @@index([assessmentId])
   @@map("certificates")
 }
 
@@ -1247,6 +1273,8 @@ enum AssessmentQuestionType {
   ESSAY
   DICTATION
   SPEAKING_PROMPT
+  ERROR_CORRECTION
+  SENTENCE_TRANSFORMATION
 }
 
 enum AssessmentSkill {
@@ -1254,6 +1282,10 @@ enum AssessmentSkill {
   LISTENING
   WRITING
   SPEAKING
+  GRAMMAR
+  VOCABULARY
+  ERROR_CORRECTION
+  SENTENCE_TRANSFORMATION
 }
 
 enum SectionStatus {
@@ -1271,12 +1303,12 @@ model SsoConfig {
   id          String   @id @default(cuid())
   schoolId    String   @unique
   school      School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
-  provider    String   // SAML, OIDC
+  provider    String // SAML, OIDC
   entityId    String
   ssoUrl      String
   certificate String   @db.Text
   isActive    Boolean  @default(true)
-  metadata    Json?    // Additional provider config
+  metadata    Json? // Additional provider config
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -1289,8 +1321,8 @@ model ApiKey {
   school      School    @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   name        String
   key         String    @unique
-  keyPrefix   String    // First 8 chars for display (e.g., "maka_abc1...")
-  permissions Json      // ['read:courses', 'write:enrollments', etc.]
+  keyPrefix   String // First 8 chars for display (e.g., "maka_abc1...")
+  permissions Json // ['read:courses', 'write:enrollments', etc.]
   lastUsedAt  DateTime?
   expiresAt   DateTime?
   isActive    Boolean   @default(true)
@@ -1307,16 +1339,16 @@ model ApiKey {
 // =====================================================
 
 model ChatSession {
-  id          String   @id @default(cuid())
-  studentId   String
-  student     Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  language    String
-  topic       String?
-  cefrLevel   String?  // Target conversation level
-  messages    Json     // Array of {role, content, timestamp}
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id        String   @id @default(cuid())
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  language  String
+  topic     String?
+  cefrLevel String? // Target conversation level
+  messages  Json // Array of {role, content, timestamp}
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   // Speaking sessions linked to this chat
   speakingSessions SpeakingSession[]
@@ -1331,21 +1363,21 @@ model ChatSession {
 // =====================================================
 
 model SpeakingSession {
-  id              String       @id @default(cuid())
-  studentId       String
-  student         Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  chatSessionId   String?
-  chatSession     ChatSession? @relation(fields: [chatSessionId], references: [id])
-  language        String
-  cefrLevel       String?
-  targetText      String?      // The text student should pronounce
-  recognizedText  String?      // What was recognized
-  accuracyScore   Int?         // 0-100
-  fluencyScore    Int?         // 0-100
-  feedback        Json?        // Detailed word-level feedback
-  audioUrl        String?      // Stored audio recording
-  duration        Int?         // Duration in seconds
-  createdAt       DateTime     @default(now())
+  id             String       @id @default(cuid())
+  studentId      String
+  student        Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  chatSessionId  String?
+  chatSession    ChatSession? @relation(fields: [chatSessionId], references: [id])
+  language       String
+  cefrLevel      String?
+  targetText     String? // The text student should pronounce
+  recognizedText String? // What was recognized
+  accuracyScore  Int? // 0-100
+  fluencyScore   Int? // 0-100
+  feedback       Json? // Detailed word-level feedback
+  audioUrl       String? // Stored audio recording
+  duration       Int? // Duration in seconds
+  createdAt      DateTime     @default(now())
 
   @@index([studentId])
   @@index([chatSessionId])
@@ -1387,24 +1419,24 @@ model VideoCategory {
 }
 
 model VideoContent {
-  id            String          @id @default(cuid())
-  title         String
-  description   String?
-  url           String
-  thumbnailUrl  String?
-  duration      Int?            // Duration in seconds
-  language      String
-  cefrLevel     String?
-  tags          String[]
-  transcript    String?         @db.Text
-  subtitlesUrl  String?
-  isPublished   Boolean         @default(false)
-  orderIndex    Int             @default(0)
-  viewCount     Int             @default(0)
-  libraryId     String
-  library       VideoLibrary    @relation(fields: [libraryId], references: [id], onDelete: Cascade)
-  categoryId    String?
-  category      VideoCategory?  @relation(fields: [categoryId], references: [id])
+  id             String          @id @default(cuid())
+  title          String
+  description    String?
+  url            String
+  thumbnailUrl   String?
+  duration       Int? // Duration in seconds
+  language       String
+  cefrLevel      String?
+  tags           String[]
+  transcript     String?         @db.Text
+  subtitlesUrl   String?
+  isPublished    Boolean         @default(false)
+  orderIndex     Int             @default(0)
+  viewCount      Int             @default(0)
+  libraryId      String
+  library        VideoLibrary    @relation(fields: [libraryId], references: [id], onDelete: Cascade)
+  categoryId     String?
+  category       VideoCategory?  @relation(fields: [categoryId], references: [id])
   lessonId       String?
   lesson         Lesson?         @relation(fields: [lessonId], references: [id])
   watchProgress  VideoProgress[]
@@ -1414,6 +1446,7 @@ model VideoContent {
 
   @@index([libraryId])
   @@index([categoryId])
+  @@index([lessonId])
   @@index([cefrLevel])
   @@map("video_contents")
 }
@@ -1441,32 +1474,34 @@ model VideoProgress {
 // =====================================================
 
 model Exercise {
-  id           String           @id @default(cuid())
-  title        String
-  description  String?
-  type         ExerciseType
-  language     String
-  cefrLevel    String?
-  instructions String?
-  timeLimit    Int?             // Time limit in seconds
-  passingScore Int              @default(70)
-  config       Json             // Exercise-type specific configuration
-  isPublished  Boolean          @default(false)
-  createdById  String
-  createdBy    User             @relation(fields: [createdById], references: [id])
-  schoolId     String
-  school       School           @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  id             String            @id @default(cuid())
+  title          String
+  description    String?
+  type           ExerciseType
+  language       String
+  cefrLevel      String?
+  instructions   String?
+  timeLimit      Int? // Time limit in seconds
+  passingScore   Int               @default(70)
+  config         Json // Exercise-type specific configuration
+  isPublished    Boolean           @default(false)
+  createdById    String
+  createdBy      User              @relation(fields: [createdById], references: [id])
+  schoolId       String
+  school         School            @relation(fields: [schoolId], references: [id], onDelete: Cascade)
   lessonId       String?
-  lesson         Lesson?          @relation(fields: [lessonId], references: [id])
+  lesson         Lesson?           @relation(fields: [lessonId], references: [id])
   items          ExerciseItem[]
   attempts       ExerciseAttempt[]
   courseContents CourseContent[]
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
 
   @@index([schoolId])
   @@index([cefrLevel])
   @@index([type])
+  @@index([createdById])
+  @@index([lessonId])
   @@map("exercises")
 }
 
@@ -1486,8 +1521,8 @@ model ExerciseItem {
   exercise      Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
   orderIndex    Int      @default(0)
   questionText  String?
-  content       Json     // Item-specific content (options, pairs, blanks, etc.)
-  correctAnswer Json     // Correct answer(s)
+  content       Json // Item-specific content (options, pairs, blanks, etc.)
+  correctAnswer Json // Correct answer(s)
   points        Int      @default(1)
   hint          String?
   explanation   String?
@@ -1508,10 +1543,10 @@ model ExerciseAttempt {
   score       Int?
   maxScore    Int?
   percentage  Int?
-  answers     Json?                 // Array of {itemId, answer, isCorrect, points}
+  answers     Json? // Array of {itemId, answer, isCorrect, points}
   startedAt   DateTime              @default(now())
   completedAt DateTime?
-  timeSpent   Int?                  // Time spent in seconds
+  timeSpent   Int? // Time spent in seconds
 
   @@index([studentId])
   @@index([exerciseId])
@@ -1529,19 +1564,19 @@ enum ExerciseAttemptStatus {
 // =====================================================
 
 model Organization {
-  id             String    @id @default(cuid())
-  name           String
-  email          String    @unique
-  phone          String?
-  website        String?
-  logo           String?
-  description    String?
-  industry       String?
-  size           String?   // e.g. "1-10", "11-50", "51-200", "201-500", "500+"
-  isActive       Boolean   @default(true)
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  deletedAt      DateTime? // Soft delete
+  id          String    @id @default(cuid())
+  name        String
+  email       String    @unique
+  phone       String?
+  website     String?
+  logo        String?
+  description String?
+  industry    String?
+  size        String? // e.g. "1-10", "11-50", "51-200", "201-500", "500+"
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  deletedAt   DateTime? // Soft delete
 
   // Italian billing (same pattern as School)
   vatNumber      String?
@@ -1573,10 +1608,10 @@ model Organization {
 // =====================================================
 
 model OrgAdmin {
-  id             String   @id @default(cuid())
-  isActive       Boolean  @default(true)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id        String   @id @default(cuid())
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -1594,18 +1629,18 @@ model OrgAdmin {
 // =====================================================
 
 model SeatLicense {
-  id           String           @id @default(cuid())
+  id           String            @id @default(cuid())
   totalSeats   Int
-  usedSeats    Int              @default(0)
-  pricePerSeat Decimal          @db.Decimal(10, 2)
-  currency     String           @default("EUR")
+  usedSeats    Int               @default(0)
+  pricePerSeat Decimal           @db.Decimal(10, 2)
+  currency     String            @default("EUR")
   status       SeatLicenseStatus @default(ACTIVE)
   startsAt     DateTime
   expiresAt    DateTime?
-  autoRenew    Boolean          @default(false)
+  autoRenew    Boolean           @default(false)
   notes        String?
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
 
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -1666,7 +1701,7 @@ model CourseContent {
   updatedAt  DateTime @updatedAt
 
   courseId String
-  course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   videoId String?
   video   VideoContent? @relation(fields: [videoId], references: [id])
@@ -1675,5 +1710,7 @@ model CourseContent {
   exercise   Exercise? @relation(fields: [exerciseId], references: [id])
 
   @@index([courseId])
+  @@index([videoId])
+  @@index([exerciseId])
   @@map("course_contents")
 }

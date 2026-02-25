@@ -209,6 +209,19 @@ router.post('/:id/sections/:sectionId/speaking', authenticate, validateRequest(s
 // Get multi-skill results
 router.get('/:id/results', authenticate, async (req: Request, res: Response) => {
   try {
+    // Ownership check: only the student who owns this assessment, or a teacher/admin, can view results
+    const assessment = await prisma.assessment.findUnique({
+      where: { id: req.params.id },
+      select: { studentId: true }
+    })
+    if (!assessment) {
+      return res.status(404).json(apiResponse.error('Assessment not found', 'NOT_FOUND'))
+    }
+    const role = req.user?.role
+    if (role !== 'ADMIN' && role !== 'TEACHER' && assessment.studentId !== req.user?.studentId) {
+      return res.status(403).json(apiResponse.error('Not authorized to view these results', 'FORBIDDEN'))
+    }
+
     const results = await sectionAssessmentService.getMultiSkillResults(req.params.id)
     return res.json(apiResponse.success(results))
   } catch (error) {
@@ -231,6 +244,18 @@ router.get('/admin/pending-review', authenticate, requireTeacher, async (req: Re
 // Submit teacher score for a section
 router.post('/:id/sections/:sectionId/teacher-score', authenticate, requireTeacher, validateRequest(teacherScoreSchema), async (req: Request, res: Response) => {
   try {
+    // Verify the section belongs to the specified assessment
+    const section = await prisma.assessmentSection.findUnique({
+      where: { id: req.params.sectionId },
+      select: { assessmentId: true }
+    })
+    if (!section) {
+      return res.status(404).json(apiResponse.error('Section not found', 'NOT_FOUND'))
+    }
+    if (section.assessmentId !== req.params.id) {
+      return res.status(400).json(apiResponse.error('Section does not belong to this assessment', 'INVALID_SECTION'))
+    }
+
     const result = await sectionAssessmentService.submitTeacherScore({
       sectionId: req.params.sectionId,
       teacherUserId: req.user!.id,
@@ -464,6 +489,10 @@ router.post('/admin/seed-multi-skill', authenticate, requireAdmin, async (req: R
     let listeningQs: any[] = []
     let writingQs: any[] = []
     let speakingQs: any[] = []
+    let grammarQs: any[] = []
+    let vocabularyQs: any[] = []
+    let errorCorrectionQs: any[] = []
+    let sentenceTransformationQs: any[] = []
 
     const langMap: Record<string, { dir: string; prefix: string }> = {
       English: { dir: 'english', prefix: 'english' },
@@ -488,7 +517,31 @@ router.post('/admin/seed-multi-skill', authenticate, requireAdmin, async (req: R
     writingQs = writing[`${langConfig.prefix}WritingQuestions`]
     speakingQs = speaking[`${langConfig.prefix}SpeakingQuestions`]
 
-    const allQuestions = [...readingQs, ...listeningQs, ...writingQs, ...speakingQs]
+    // Import new 4-section question banks (wrapped in try/catch for languages that don't have them yet)
+    try {
+      const grammar = await import(`../services/questionBanks/${langConfig.dir}/grammar`)
+      grammarQs = grammar[`${langConfig.prefix}GrammarQuestions`] || []
+    } catch { /* not available for this language */ }
+
+    try {
+      const vocabulary = await import(`../services/questionBanks/${langConfig.dir}/vocabulary`)
+      vocabularyQs = vocabulary[`${langConfig.prefix}VocabularyQuestions`] || []
+    } catch { /* not available for this language */ }
+
+    try {
+      const errorCorrection = await import(`../services/questionBanks/${langConfig.dir}/errorCorrection`)
+      errorCorrectionQs = errorCorrection[`${langConfig.prefix}ErrorCorrectionQuestions`] || []
+    } catch { /* not available for this language */ }
+
+    try {
+      const sentenceTransformation = await import(`../services/questionBanks/${langConfig.dir}/sentenceTransformation`)
+      sentenceTransformationQs = sentenceTransformation[`${langConfig.prefix}SentenceTransformationQuestions`] || []
+    } catch { /* not available for this language */ }
+
+    const allQuestions = [
+      ...readingQs, ...listeningQs, ...writingQs, ...speakingQs,
+      ...grammarQs, ...vocabularyQs, ...errorCorrectionQs, ...sentenceTransformationQs
+    ]
 
     // Check if already seeded
     const existingCount = await prisma.assessmentQuestion.count({
@@ -528,7 +581,11 @@ router.post('/admin/seed-multi-skill', authenticate, requireAdmin, async (req: R
         reading: readingQs.length,
         listening: listeningQs.length,
         writing: writingQs.length,
-        speaking: speakingQs.length
+        speaking: speakingQs.length,
+        grammar: grammarQs.length,
+        vocabulary: vocabularyQs.length,
+        errorCorrection: errorCorrectionQs.length,
+        sentenceTransformation: sentenceTransformationQs.length
       }
     }))
   } catch (error) {
@@ -557,7 +614,7 @@ router.get('/:id/results/pdf', authenticate, async (req: Request, res: Response)
 
     const pdfBuffer = await certificateService.generateMultiSkillResultPdf(id)
     res.setHeader('Content-Type', 'application/pdf')
-    res.setHeader('Content-Disposition', `attachment; filename="${assessment.language}-4skills-results.pdf"`)
+    res.setHeader('Content-Disposition', `attachment; filename="${assessment.language}-placement-results.pdf"`)
     res.send(pdfBuffer)
   } catch (error) {
     return handleError(res, error)

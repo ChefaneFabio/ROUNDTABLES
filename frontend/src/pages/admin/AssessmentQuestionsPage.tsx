@@ -5,15 +5,20 @@ import {
 } from 'lucide-react'
 import { assessmentApi } from '../../services/assessmentApi'
 
-const SKILLS = ['READING', 'LISTENING', 'WRITING', 'SPEAKING'] as const
+const SKILLS = ['GRAMMAR', 'VOCABULARY', 'READING', 'ERROR_CORRECTION', 'SENTENCE_TRANSFORMATION', 'WRITING', 'LISTENING', 'SPEAKING'] as const
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 const QUESTION_TYPES = [
   'MULTIPLE_CHOICE', 'FILL_BLANK', 'SHORT_ANSWER', 'READING',
-  'LISTENING', 'DICTATION', 'WRITING', 'ESSAY', 'SPEAKING_PROMPT'
+  'LISTENING', 'DICTATION', 'WRITING', 'ESSAY', 'SPEAKING_PROMPT',
+  'ERROR_CORRECTION', 'SENTENCE_TRANSFORMATION'
 ]
 
 const SKILL_COLORS: Record<string, string> = {
+  GRAMMAR: 'bg-indigo-100 text-indigo-700',
+  VOCABULARY: 'bg-teal-100 text-teal-700',
   READING: 'bg-blue-100 text-blue-700',
+  ERROR_CORRECTION: 'bg-red-100 text-red-700',
+  SENTENCE_TRANSFORMATION: 'bg-orange-100 text-orange-700',
   LISTENING: 'bg-purple-100 text-purple-700',
   WRITING: 'bg-green-100 text-green-700',
   SPEAKING: 'bg-orange-100 text-orange-700',
@@ -21,7 +26,11 @@ const SKILL_COLORS: Record<string, string> = {
 }
 
 const SKILL_ICONS: Record<string, React.ElementType> = {
+  GRAMMAR: Edit,
+  VOCABULARY: BookOpen,
   READING: BookOpen,
+  ERROR_CORRECTION: Edit,
+  SENTENCE_TRANSFORMATION: Edit,
   LISTENING: Headphones,
   WRITING: PenTool,
   SPEAKING: Mic
@@ -625,7 +634,7 @@ const AssessmentQuestionsPage: React.FC = () => {
               )}
 
               {/* Passage (Reading) */}
-              {(form.skill === 'READING' || form.questionType === 'READING') && (
+              {(form.skill === 'READING' || form.questionType === 'READING' || form.skill === 'ERROR_CORRECTION' || form.skill === 'SENTENCE_TRANSFORMATION' || form.questionType === 'ERROR_CORRECTION' || form.questionType === 'SENTENCE_TRANSFORMATION') && (
                 <>
                   <div>
                     <label className="block text-xs font-medium text-gray-500 mb-1">Passage Title</label>

@@ -491,6 +491,15 @@ export const modulesApi = {
 
 // Feedback API
 export const feedbackApi = {
+  async getAll(params?: {
+    status?: string
+    page?: number
+    limit?: number
+  }): Promise<any> {
+    const response = await api.get('/feedback', { params })
+    return response.data
+  },
+
   async create(data: {
     lessonId: string
     studentId: string

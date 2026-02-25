@@ -127,7 +127,36 @@ async function main() {
         const writingQs = writing[`${lang.prefix}WritingQuestions`] || []
         const speakingQs = speaking[`${lang.prefix}SpeakingQuestions`] || []
 
-        const allQuestions = [...readingQs, ...listeningQs, ...writingQs, ...speakingQs]
+        // Import new 4-section question banks (grammar, vocabulary, errorCorrection, sentenceTransformation)
+        let grammarQs: any[] = []
+        let vocabularyQs: any[] = []
+        let errorCorrectionQs: any[] = []
+        let sentenceTransformationQs: any[] = []
+
+        try {
+          const grammar = await import(`../src/services/questionBanks/${lang.dir}/grammar`)
+          grammarQs = grammar[`${lang.prefix}GrammarQuestions`] || []
+        } catch { /* not available for this language yet */ }
+
+        try {
+          const vocabulary = await import(`../src/services/questionBanks/${lang.dir}/vocabulary`)
+          vocabularyQs = vocabulary[`${lang.prefix}VocabularyQuestions`] || []
+        } catch { /* not available for this language yet */ }
+
+        try {
+          const errorCorrection = await import(`../src/services/questionBanks/${lang.dir}/errorCorrection`)
+          errorCorrectionQs = errorCorrection[`${lang.prefix}ErrorCorrectionQuestions`] || []
+        } catch { /* not available for this language yet */ }
+
+        try {
+          const sentenceTransformation = await import(`../src/services/questionBanks/${lang.dir}/sentenceTransformation`)
+          sentenceTransformationQs = sentenceTransformation[`${lang.prefix}SentenceTransformationQuestions`] || []
+        } catch { /* not available for this language yet */ }
+
+        const allQuestions = [
+          ...readingQs, ...listeningQs, ...writingQs, ...speakingQs,
+          ...grammarQs, ...vocabularyQs, ...errorCorrectionQs, ...sentenceTransformationQs
+        ]
 
         if (allQuestions.length > 0) {
           await prisma.assessmentQuestion.createMany({
@@ -151,7 +180,7 @@ async function main() {
               timeSuggested: q.timeSuggested,
             })),
           })
-          console.log(`✓ Seeded ${allQuestions.length} ${lang.name} questions (R:${readingQs.length} L:${listeningQs.length} W:${writingQs.length} S:${speakingQs.length})`)
+          console.log(`✓ Seeded ${allQuestions.length} ${lang.name} questions (R:${readingQs.length} L:${listeningQs.length} W:${writingQs.length} S:${speakingQs.length} G:${grammarQs.length} V:${vocabularyQs.length} EC:${errorCorrectionQs.length} ST:${sentenceTransformationQs.length})`)
         }
       } catch (err) {
         console.log(`→ Skipping ${lang.name}: question bank files not found`)

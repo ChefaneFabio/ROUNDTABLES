@@ -3,9 +3,13 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { assessmentApi } from '../services/assessmentApi'
 
 const SKILL_META: Record<string, { icon: string; label: string; color: string; bg: string }> = {
+  GRAMMAR: { icon: '📝', label: 'Grammar', color: 'text-indigo-700', bg: 'bg-indigo-100' },
+  VOCABULARY: { icon: '📚', label: 'Vocabulary', color: 'text-teal-700', bg: 'bg-teal-100' },
   READING: { icon: '📖', label: 'Reading', color: 'text-blue-700', bg: 'bg-blue-100' },
-  LISTENING: { icon: '🎧', label: 'Listening', color: 'text-green-700', bg: 'bg-green-100' },
+  ERROR_CORRECTION: { icon: '✏️', label: 'Error Correction', color: 'text-red-700', bg: 'bg-red-100' },
+  SENTENCE_TRANSFORMATION: { icon: '🔄', label: 'Transformation', color: 'text-orange-700', bg: 'bg-orange-100' },
   WRITING: { icon: '✍️', label: 'Writing', color: 'text-amber-700', bg: 'bg-amber-100' },
+  LISTENING: { icon: '🎧', label: 'Listening', color: 'text-green-700', bg: 'bg-green-100' },
   SPEAKING: { icon: '🎤', label: 'Speaking', color: 'text-purple-700', bg: 'bg-purple-100' }
 }
 
@@ -54,7 +58,7 @@ export function MultiSkillResultPage() {
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Overall result */}
       <div className="text-center bg-white rounded-xl shadow-lg p-8 border">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">4-Skills Placement Test Results</h1>
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">Placement Test Results</h1>
         <p className="text-gray-500 mb-6">{assessment.language} &middot; {assessment.student?.name}</p>
 
         <div className="flex items-center justify-center gap-4 mb-4">
@@ -76,7 +80,7 @@ export function MultiSkillResultPage() {
       </div>
 
       {/* Per-skill breakdown */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {sections.map((section: any) => {
           const meta = SKILL_META[section.skill]
           const score = section.finalScore || section.aiScore
@@ -138,7 +142,7 @@ export function MultiSkillResultPage() {
               const url = URL.createObjectURL(blob)
               const a = document.createElement('a')
               a.href = url
-              a.download = `${assessment.language}-4skills-results.pdf`
+              a.download = `${assessment.language}-placement-results.pdf`
               a.click()
               URL.revokeObjectURL(url)
             } catch {

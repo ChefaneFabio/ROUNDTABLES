@@ -11,7 +11,7 @@ export interface MultiSkillQuestionData {
   points: number
   orderIndex: number
   // Multi-skill fields
-  skill: 'READING' | 'LISTENING' | 'WRITING' | 'SPEAKING'
+  skill: 'READING' | 'LISTENING' | 'WRITING' | 'SPEAKING' | 'GRAMMAR' | 'VOCABULARY' | 'ERROR_CORRECTION' | 'SENTENCE_TRANSFORMATION'
   ttsScript?: string         // Text for TTS audio generation (listening)
   ttsLanguageCode?: string   // e.g. "en-US", "it-IT"
   speakingPrompt?: string    // Prompt text for speaking questions

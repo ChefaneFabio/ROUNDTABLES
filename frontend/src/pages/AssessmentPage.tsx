@@ -120,7 +120,7 @@ export function AssessmentPage() {
           <h1 className="text-2xl font-bold">Language Assessment Center</h1>
         </div>
         <p className="text-primary-100">
-          Take a standardized placement test to determine your CEFR level (A1-C2). Choose a quick grammar test or a comprehensive 4-skills assessment.
+          Take a standardized placement test to determine your CEFR level (A1-C2). Choose a quick grammar test or a comprehensive placement test.
         </p>
       </div>
 
@@ -140,18 +140,18 @@ export function AssessmentPage() {
                   <div>
                     <div className="flex items-center gap-2">
                       <p className="font-medium text-gray-900">
-                        {a.language} {a.isMultiSkill ? '4-Skills Assessment' : 'Placement Test'}
+                        {a.language} {a.isMultiSkill ? 'Placement Test' : 'Placement Test'}
                       </p>
                       {a.isMultiSkill && (
                         <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-medium">
-                          4-Skills
+                          Placement
                         </span>
                       )}
                     </div>
                     <div className="flex items-center gap-3 mt-1 text-sm text-gray-500">
                       <span className="flex items-center gap-1">
                         <Timer className="w-4 h-4" />
-                        {a.isMultiSkill ? '~70 min' : `${a.timeLimitMin || 30} minutes`}
+                        {a.isMultiSkill ? '~90 min' : `${a.timeLimitMin || 30} minutes`}
                       </span>
                       {a.assignedAt && (
                         <span>Assigned: {new Date(a.assignedAt).toLocaleDateString()}</span>
@@ -212,10 +212,10 @@ export function AssessmentPage() {
                 <div>
                   <div className="flex items-center gap-2 text-purple-700 mb-1">
                     <ClipboardCheck className="w-5 h-5" />
-                    <span className="font-medium">4-Skills Assessment In Progress</span>
+                    <span className="font-medium">Placement Test In Progress</span>
                   </div>
                   <p className="text-gray-600">
-                    Continue your {inProgressMultiSkill.language} 4-skills assessment
+                    Continue your {inProgressMultiSkill.language} placement test
                   </p>
                 </div>
                 <Button
@@ -281,12 +281,12 @@ export function AssessmentPage() {
                         </button>
                       </div>
 
-                      {/* 4-Skills Card */}
+                      {/* Placement Card */}
                       <div className="border border-gray-200 rounded-lg p-4 hover:border-purple-300 transition-colors">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
                             <Award className="w-4 h-4 text-purple-600" />
-                            <span className="font-medium text-sm text-gray-900">4-Skills Assessment</span>
+                            <span className="font-medium text-sm text-gray-900">Placement Test</span>
                           </div>
                           {multiResult && (
                             <span className="flex items-center gap-1 text-xs text-green-600">
@@ -302,7 +302,7 @@ export function AssessmentPage() {
                           <SkillBadge icon={Mic} label="Speak" result={multiResult?.speakingLevel} />
                         </div>
                         <p className="text-xs text-gray-500 mb-3">
-                          Comprehensive assessment (~70 min). Reading, Listening, Writing, Speaking.
+                          Comprehensive assessment (~90 min). Grammar, Vocabulary, Reading, Error Correction, Sentence Transformation, Writing, Listening, Speaking.
                         </p>
                         <button
                           onClick={() => {
@@ -401,7 +401,7 @@ function AssessmentCard({ assessment, onClick }: { assessment: Assessment; onCli
             <span className="font-medium text-gray-900">{assessment.language}</span>
             {assessment.isMultiSkill && (
               <span className="px-2 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-medium">
-                4-Skills
+                Placement
               </span>
             )}
             {assessment.cefrLevel && (

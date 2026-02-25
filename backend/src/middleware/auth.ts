@@ -28,7 +28,11 @@ interface JwtPayload {
   role: UserRole
 }
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production'
+const JWT_SECRET = process.env.JWT_SECRET || (
+  process.env.NODE_ENV === 'production'
+    ? (() => { throw new Error('JWT_SECRET environment variable is required in production') })()
+    : 'dev-only-secret-do-not-use-in-production'
+)
 
 // Verify JWT token and attach user to request
 export const authenticate = async (
