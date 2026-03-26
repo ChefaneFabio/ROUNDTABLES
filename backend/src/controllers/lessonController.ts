@@ -285,6 +285,55 @@ router.post('/', authenticate, requireSchoolAdmin, validateRequest(createLessonS
       )
     }
 
+    // Conflict detection: check teacher availability and existing lessons
+    if (data.teacherId && data.scheduledAt) {
+      const lessonDate = new Date(data.scheduledAt)
+      const duration = data.duration || 60
+      const lessonEnd = new Date(lessonDate.getTime() + duration * 60000)
+      const dayOfWeek = lessonDate.getDay()
+      const timeStr = `${String(lessonDate.getHours()).padStart(2, '0')}:${String(lessonDate.getMinutes()).padStart(2, '0')}`
+      const endMinutes = lessonDate.getHours() * 60 + lessonDate.getMinutes() + duration
+      const endTimeStr = `${String(Math.floor(endMinutes / 60)).padStart(2, '0')}:${String(endMinutes % 60).padStart(2, '0')}`
+
+      // Check for conflicting lessons with same teacher
+      const conflicting = await prisma.lesson.findMany({
+        where: {
+          teacherId: data.teacherId,
+          deletedAt: null,
+          status: { notIn: ['CANCELLED'] },
+          scheduledAt: { lt: lessonEnd, gte: new Date(lessonDate.getTime() - 180 * 60000) },
+        },
+        select: { id: true, scheduledAt: true, duration: true, title: true, course: { select: { name: true } } },
+      })
+
+      const realConflicts = conflicting.filter(l => {
+        const existEnd = new Date(l.scheduledAt.getTime() + l.duration * 60000)
+        return l.scheduledAt < lessonEnd && existEnd > lessonDate
+      })
+
+      if (realConflicts.length > 0) {
+        const c = realConflicts[0]
+        return res.status(409).json(apiResponse.error(
+          `Teacher has a conflicting lesson "${c.title || c.course?.name}" at ${format(c.scheduledAt, 'HH:mm')}`,
+          'TEACHER_CONFLICT'
+        ))
+      }
+
+      // Check teacher availability (warn only — still allow creation)
+      const availSlots = await prisma.teacherAvailability.findMany({
+        where: { teacherId: data.teacherId, dayOfWeek, status: 'AVAILABLE', isRecurring: true },
+      })
+
+      const isWithinAvailability = availSlots.some(s => s.startTime <= timeStr && s.endTime >= endTimeStr)
+      if (availSlots.length > 0 && !isWithinAvailability) {
+        // Include warning in response but still create
+        data._availabilityWarning = 'Teacher is not marked as available at this time'
+      }
+    }
+
+    const availWarning = data._availabilityWarning
+    delete data._availabilityWarning
+
     const lesson = await prisma.lesson.create({
       data,
       include: {
@@ -294,7 +343,10 @@ router.post('/', authenticate, requireSchoolAdmin, validateRequest(createLessonS
       }
     })
 
-    res.status(201).json(apiResponse.success(lesson, 'Lesson created successfully'))
+    const message = availWarning
+      ? `Lesson created (warning: ${availWarning})`
+      : 'Lesson created successfully'
+    res.status(201).json(apiResponse.success(lesson, message))
   } catch (error) {
     handleError(res, error)
   }
@@ -671,5 +723,95 @@ router.get('/:id/meeting/recording', authenticate, async (req: Request, res: Res
     handleError(res, error)
   }
 })
+
+// ─── iCal EXPORT ──────────────────────────────────
+
+// GET /api/lessons/calendar/ical — Generate .ics calendar feed
+// Supports ?token= query param for browser download (window.open can't set headers)
+router.get('/calendar/ical', (req: Request, res: Response, next) => {
+  if (req.query.token && !req.headers.authorization) {
+    req.headers.authorization = `Bearer ${req.query.token}`
+  }
+  next()
+}, authenticate, async (req: Request, res: Response) => {
+  try {
+    // Fetch upcoming lessons (next 90 days) based on user role
+    const now = new Date()
+    const futureLimit = new Date(now.getTime() + 90 * 24 * 60 * 60 * 1000)
+
+    const where: any = {
+      deletedAt: null,
+      scheduledAt: { gte: now, lte: futureLimit },
+      status: { notIn: ['CANCELLED'] },
+    }
+
+    if (req.user?.role === 'ADMIN') {
+      where.course = { schoolId: req.user.schoolId }
+    } else if (req.user?.role === 'TEACHER') {
+      where.teacherId = req.user.teacherId
+    } else if (req.user?.role === 'STUDENT') {
+      where.course = { enrollments: { some: { studentId: req.user.studentId } } }
+    }
+
+    const lessons = await prisma.lesson.findMany({
+      where,
+      include: {
+        course: { select: { name: true } },
+        teacher: { include: { user: { select: { name: true, email: true } } } },
+      },
+      orderBy: { scheduledAt: 'asc' },
+    })
+
+    // Build iCal
+    const lines: string[] = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//Maka Language Consulting//ROUNDTABLES//EN',
+      'CALSCALE:GREGORIAN',
+      'METHOD:PUBLISH',
+      `X-WR-CALNAME:ROUNDTABLES - ${req.user?.role === 'TEACHER' ? 'Teaching' : 'Learning'} Schedule`,
+    ]
+
+    for (const lesson of lessons) {
+      const dtStart = formatICalDate(lesson.scheduledAt)
+      const dtEnd = formatICalDate(new Date(lesson.scheduledAt.getTime() + lesson.duration * 60000))
+      const uid = `lesson-${lesson.id}@roundtables`
+      const summary = lesson.title || `${lesson.course?.name} - Lesson ${lesson.lessonNumber}`
+      const description = [
+        lesson.description || '',
+        lesson.meetingLink ? `Join: ${lesson.meetingLink}` : '',
+      ].filter(Boolean).join('\\n')
+
+      lines.push('BEGIN:VEVENT')
+      lines.push(`UID:${uid}`)
+      lines.push(`DTSTART:${dtStart}`)
+      lines.push(`DTEND:${dtEnd}`)
+      lines.push(`SUMMARY:${escapeIcal(summary)}`)
+      if (description) lines.push(`DESCRIPTION:${escapeIcal(description)}`)
+      if (lesson.meetingLink) lines.push(`URL:${lesson.meetingLink}`)
+      if (lesson.teacher?.user) {
+        lines.push(`ORGANIZER;CN=${escapeIcal(lesson.teacher.user.name)}:mailto:${lesson.teacher.user.email}`)
+      }
+      lines.push(`STATUS:${lesson.status === 'CANCELLED' ? 'CANCELLED' : 'CONFIRMED'}`)
+      lines.push('END:VEVENT')
+    }
+
+    lines.push('END:VCALENDAR')
+
+    res.setHeader('Content-Type', 'text/calendar; charset=utf-8')
+    res.setHeader('Content-Disposition', 'attachment; filename="roundtables-schedule.ics"')
+    res.send(lines.join('\r\n'))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+function formatICalDate(date: Date): string {
+  return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+}
+
+function escapeIcal(str: string): string {
+  return str.replace(/[\\;,]/g, (m) => '\\' + m).replace(/\n/g, '\\n')
+}
 
 export default router

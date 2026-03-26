@@ -21,7 +21,7 @@ import questionRoutes from './controllers/questionController'
 import notificationRoutes from './controllers/notificationController'
 import paymentRoutes from './controllers/paymentController'
 import dashboardRoutes from './controllers/dashboardController'
-// import availabilityRoutes from './controllers/availabilityController' // Legacy - disabled
+import availabilityRoutes from './controllers/availabilityController'
 import payrollRoutes from './controllers/payrollController'
 import invoiceRoutes from './controllers/invoiceController'
 // New feature routes
@@ -146,7 +146,7 @@ app.use('/api/questions', questionRoutes)
 app.use('/api/notifications', notificationRoutes)
 app.use('/api/payments', paymentRoutes)
 app.use('/api/dashboard', dashboardRoutes)
-// app.use('/api/availability', availabilityRoutes) // Legacy - disabled
+app.use('/api/availability', availabilityRoutes)
 app.use('/api/payroll', payrollRoutes)
 app.use('/api/invoices', invoiceRoutes)
 // New feature routes

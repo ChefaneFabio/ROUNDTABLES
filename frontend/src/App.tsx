@@ -67,6 +67,9 @@ import { BusinessPage } from './pages/BusinessPage'
 // Gamification pages
 import LeaderboardPage from './pages/LeaderboardPage'
 import BadgesPage from './pages/BadgesPage'
+// Calendar & availability pages
+import StudentCalendarPage from './pages/StudentCalendarPage'
+import TeacherAvailabilityPage from './pages/TeacherAvailabilityPage'
 // Detail & form pages
 import { CourseDetailPage } from './pages/CourseDetailPage'
 import { CreateCoursePage } from './pages/CreateCoursePage'
@@ -308,6 +311,28 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
             <Layout>
               <BadgesPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Calendar & Availability Routes */}
+      <Route
+        path="/my-calendar"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <StudentCalendarPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/availability"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.TEACHER]}>
+            <Layout>
+              <TeacherAvailabilityPage />
             </Layout>
           </ProtectedRoute>
         }

@@ -30,6 +30,7 @@ import {
   Ticket,
   Trophy,
   Flame,
+  Clock,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -52,6 +53,7 @@ const navigation: NavItem[] = [
   { name: 'Speaking', href: '/speaking', icon: Mic, roles: [UserRole.STUDENT] },
   { name: 'Certificates', href: '/certificates', icon: Award, roles: [UserRole.STUDENT] },
   { name: 'AI Chat', href: '/chat', icon: Bot, roles: [UserRole.STUDENT] },
+  { name: 'My Calendar', href: '/my-calendar', icon: Calendar, roles: [UserRole.STUDENT] },
   { name: 'Leaderboard', href: '/leaderboard', icon: Trophy, roles: [UserRole.STUDENT] },
   { name: 'Badges', href: '/badges', icon: Flame, roles: [UserRole.STUDENT] },
   // ORG_ADMIN navigation
@@ -62,6 +64,7 @@ const navigation: NavItem[] = [
   { name: 'Settings', href: '/org/settings', icon: Settings, roles: [UserRole.ORG_ADMIN] },
   // Admin navigation
   { name: 'Organizations', href: '/admin/organizations', icon: Building2, roles: [UserRole.ADMIN] },
+  { name: 'My Availability', href: '/availability', icon: Clock, roles: [UserRole.TEACHER] },
   { name: 'Calendar', href: '/admin/calendar', icon: Calendar, roles: [UserRole.ADMIN, UserRole.TEACHER] },
   { name: 'Video Admin', href: '/admin/videos/libraries', icon: Video, roles: [UserRole.ADMIN, UserRole.TEACHER] },
   { name: 'Exercise Admin', href: '/admin/exercises', icon: PenTool, roles: [UserRole.ADMIN, UserRole.TEACHER] },
