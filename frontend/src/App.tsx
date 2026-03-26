@@ -64,6 +64,9 @@ import OrgPurchasePage from './pages/org/OrgPurchasePage'
 import AdminOrganizationsPage from './pages/admin/OrganizationsPage'
 import SelfPacedCoursePage from './pages/SelfPacedCoursePage'
 import { BusinessPage } from './pages/BusinessPage'
+// Gamification pages
+import LeaderboardPage from './pages/LeaderboardPage'
+import BadgesPage from './pages/BadgesPage'
 // Detail & form pages
 import { CourseDetailPage } from './pages/CourseDetailPage'
 import { CreateCoursePage } from './pages/CreateCoursePage'
@@ -283,6 +286,28 @@ function App() {
           <ProtectedRoute>
             <Layout>
               <SettingsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Gamification Routes */}
+      <Route
+        path="/leaderboard"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <LeaderboardPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/badges"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <BadgesPage />
             </Layout>
           </ProtectedRoute>
         }

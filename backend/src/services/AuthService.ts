@@ -213,6 +213,16 @@ export class AuthService {
       data: { lastLoginAt: new Date() }
     })
 
+    // Gamification: record daily activity for students
+    if (user.studentProfile) {
+      try {
+        const { gamificationService } = await import('./GamificationService')
+        await gamificationService.recordActivity(user.studentProfile.id)
+      } catch (e) {
+        console.error('Gamification error (non-blocking):', e)
+      }
+    }
+
     const tokens = generateTokens(user)
 
     // Store refresh token

@@ -97,6 +97,7 @@ model School {
   videoLibraries VideoLibrary[]
   exercises      Exercise[]
   organizations  Organization[]
+  leaderboardSnapshots LeaderboardSnapshot[]
 
   @@index([email])
   @@index([userId])
@@ -185,6 +186,12 @@ model Student {
   videoProgress    VideoProgress[]
   exerciseAttempts ExerciseAttempt[]
   seatAllocations  SeatAllocation[]
+
+  // Gamification
+  badges               UserBadge[]
+  streak               Streak?
+  xpTransactions       XpTransaction[]
+  leaderboardSnapshots LeaderboardSnapshot[]
 
   @@index([userId])
   @@index([schoolId])
@@ -1686,6 +1693,139 @@ model SeatAllocation {
   @@index([seatLicenseId])
   @@index([studentId])
   @@map("seat_allocations")
+}
+
+// =====================================================
+// GAMIFICATION
+// =====================================================
+
+model Badge {
+  id          String    @id @default(cuid())
+  slug        String    @unique // e.g. "first-lesson", "streak-7"
+  name        String
+  description String
+  icon        String    @default("star") // icon name or emoji
+  category    BadgeCategory
+  criteria    Json      // { type: "exercise_count", threshold: 10 }
+  xpReward    Int       @default(0)
+  rarity      BadgeRarity @default(COMMON)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+
+  userBadges UserBadge[]
+
+  @@index([category])
+  @@index([slug])
+  @@map("badges")
+}
+
+model UserBadge {
+  id        String   @id @default(cuid())
+  earnedAt  DateTime @default(now())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  badgeId String
+  badge   Badge  @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, badgeId])
+  @@index([studentId])
+  @@index([badgeId])
+  @@map("user_badges")
+}
+
+model Streak {
+  id            String   @id @default(cuid())
+  currentStreak Int      @default(0)
+  longestStreak Int      @default(0)
+  lastActivityDate DateTime?
+  streakFreezeUsed Boolean @default(false)
+  freezesRemaining Int    @default(1)
+  updatedAt     DateTime @updatedAt
+
+  studentId String @unique
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@map("streaks")
+}
+
+model XpTransaction {
+  id        String       @id @default(cuid())
+  amount    Int
+  source    XpSource
+  sourceId  String?      // ID of the exercise/lesson/assessment that triggered it
+  note      String?
+  createdAt DateTime     @default(now())
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+  @@index([createdAt])
+  @@index([source])
+  @@map("xp_transactions")
+}
+
+model LeaderboardSnapshot {
+  id        String   @id @default(cuid())
+  period    LeaderboardPeriod
+  weekStart DateTime?
+  monthStart DateTime?
+  rank      Int
+  totalXp   Int
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  schoolId String
+  school   School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([studentId, period, weekStart])
+  @@unique([studentId, period, monthStart])
+  @@index([schoolId, period, createdAt])
+  @@index([period, rank])
+  @@map("leaderboard_snapshots")
+}
+
+enum BadgeCategory {
+  MILESTONE      // Completion-based (first lesson, 100 exercises)
+  STREAK         // Streak-based (7-day, 30-day)
+  SKILL          // Skill mastery (reach B2 reading)
+  SOCIAL         // Community (help others, feedback)
+  SPEED          // Performance (fast completion)
+  PERFECTION     // Accuracy (100% score)
+  EXPLORER       // Variety (try all exercise types)
+}
+
+enum BadgeRarity {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+enum XpSource {
+  EXERCISE_COMPLETE
+  ASSESSMENT_COMPLETE
+  LESSON_ATTENDED
+  STREAK_BONUS
+  BADGE_EARNED
+  COURSE_COMPLETE
+  VIDEO_WATCHED
+  CHAT_SESSION
+  SPEAKING_PRACTICE
+  DAILY_LOGIN
+  PERFECT_SCORE
+}
+
+enum LeaderboardPeriod {
+  WEEKLY
+  MONTHLY
+  ALL_TIME
 }
 
 // =====================================================

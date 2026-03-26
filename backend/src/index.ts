@@ -43,6 +43,8 @@ import seatLicenseRoutes from './controllers/seatLicenseController'
 import catalogRoutes from './controllers/catalogController'
 // Stripe payment routes
 import stripeRoutes from './controllers/stripeController'
+// Gamification routes
+import gamificationRoutes from './controllers/gamificationController'
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler'
@@ -167,6 +169,8 @@ app.use('/api/seat-licenses', seatLicenseRoutes)
 app.use('/api/catalog', catalogRoutes)
 // Stripe payment routes
 app.use('/api/stripe', stripeRoutes)
+// Gamification routes
+app.use('/api/gamification', gamificationRoutes)
 
 // Error handling
 app.use(errorHandler)

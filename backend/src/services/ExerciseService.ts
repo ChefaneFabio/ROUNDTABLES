@@ -563,6 +563,18 @@ export class ExerciseService {
 
     const passed = percentage >= attempt.exercise.passingScore
 
+    // Gamification: award XP for exercise completion
+    try {
+      const { gamificationService } = await import('./GamificationService')
+      await gamificationService.recordActivity(attempt.studentId)
+      const xpResult = await gamificationService.awardXp(attempt.studentId, 'EXERCISE_COMPLETE', attemptId)
+      if (percentage === 100) {
+        await gamificationService.awardXp(attempt.studentId, 'PERFECT_SCORE', attemptId)
+      }
+    } catch (e) {
+      console.error('Gamification error (non-blocking):', e)
+    }
+
     return {
       attempt: completed,
       score,

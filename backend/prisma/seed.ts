@@ -190,6 +190,18 @@ async function main() {
     }
   }
 
+  // Seed gamification badges
+  console.log('\nSeeding gamification badges...')
+  const { BADGE_DEFINITIONS } = await import('../src/services/GamificationService')
+  for (const badge of BADGE_DEFINITIONS) {
+    await prisma.badge.upsert({
+      where: { slug: badge.slug },
+      update: { name: badge.name, description: badge.description, icon: badge.icon, category: badge.category, criteria: badge.criteria, xpReward: badge.xpReward, rarity: badge.rarity },
+      create: badge,
+    })
+  }
+  console.log(`✅ Seeded ${BADGE_DEFINITIONS.length} badges`)
+
   console.log('\n✅ Demo accounts ready!')
   console.log('   Email: admin@demo.com / teacher@demo.com / student@demo.com')
   console.log('   Password: demo123')

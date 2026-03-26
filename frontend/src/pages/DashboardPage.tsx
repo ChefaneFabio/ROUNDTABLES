@@ -20,6 +20,7 @@ import { StatCard } from '../components/dashboard/StatCard'
 import { UpcomingLessons } from '../components/dashboard/UpcomingLessons'
 import { RecentActivity } from '../components/dashboard/RecentActivity'
 import { RecommendationsCard } from '../components/dashboard/RecommendationsCard'
+import GamificationWidget from '../components/dashboard/GamificationWidget'
 
 export function DashboardPage() {
   const { user, isAdmin, isTeacher, isStudent } = useAuth()
@@ -422,6 +423,9 @@ function StudentDashboard({ data }: { data: any }) {
           color="purple"
         />
       </div>
+
+      {/* Gamification Widget */}
+      <GamificationWidget />
 
       {/* Attendance Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
