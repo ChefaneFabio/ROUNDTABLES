@@ -77,6 +77,14 @@ export default function CalendarPage() {
   const [loading, setLoading] = useState(true)
   const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null)
 
+  // Swap mode
+  const [swapMode, setSwapMode] = useState(false)
+  const [swapSource, setSwapSource] = useState<Lesson | null>(null)
+  const [swapTarget, setSwapTarget] = useState<Lesson | null>(null)
+  const [swapNotify, setSwapNotify] = useState(true)
+  const [swapping, setSwapping] = useState(false)
+  const [swapMessage, setSwapMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
   // Filters
   const [teachers, setTeachers] = useState<any[]>([])
   const [courses, setCourses] = useState<any[]>([])
@@ -119,6 +127,54 @@ export default function CalendarPage() {
     }
     loadCalendar()
   }, [currentDate])
+
+  const reloadCalendar = async () => {
+    const year = currentDate.getFullYear()
+    const month = currentDate.getMonth() + 1
+    const data = await lessonsApi.getCalendar(year, month)
+    setLessons(data.lessons || {})
+  }
+
+  // Lesson click handler — different behavior in swap mode
+  const handleLessonClick = (lesson: Lesson) => {
+    if (swapMode && swapSource) {
+      if (lesson.id === swapSource.id) return // can't swap with self
+      setSwapTarget(lesson)
+    } else {
+      setSelectedLesson(lesson)
+    }
+  }
+
+  const startSwap = (lesson: Lesson) => {
+    setSwapSource(lesson)
+    setSwapMode(true)
+    setSelectedLesson(null)
+    setSwapTarget(null)
+    setSwapMessage(null)
+  }
+
+  const cancelSwap = () => {
+    setSwapMode(false)
+    setSwapSource(null)
+    setSwapTarget(null)
+  }
+
+  const confirmSwap = async () => {
+    if (!swapSource || !swapTarget) return
+    setSwapping(true)
+    try {
+      const result = await lessonsApi.swapLessons(swapSource.id, swapTarget.id, swapNotify)
+      setSwapMessage({ type: 'success', text: result.message || 'Lessons swapped successfully' })
+      setSwapMode(false)
+      setSwapSource(null)
+      setSwapTarget(null)
+      await reloadCalendar()
+    } catch (e: any) {
+      setSwapMessage({ type: 'error', text: e.response?.data?.error || 'Swap failed' })
+    } finally {
+      setSwapping(false)
+    }
+  }
 
   // Filter lessons
   const filteredLessons = useMemo(() => {
@@ -365,6 +421,87 @@ export default function CalendarPage() {
         </div>
       </div>
 
+      {/* Swap mode banner */}
+      {swapMode && (
+        <div className="bg-amber-50 border border-amber-300 rounded-lg p-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center">
+              <span className="text-lg">🔄</span>
+            </div>
+            <div>
+              <p className="font-semibold text-amber-900">Swap Mode</p>
+              <p className="text-sm text-amber-700">
+                Swapping: <strong>{swapSource?.course?.name || 'Lesson'}</strong> ({swapSource?.scheduledAt ? format(parseISO(swapSource.scheduledAt), 'MMM d HH:mm') : ''}).
+                Click another lesson to swap with.
+              </p>
+            </div>
+          </div>
+          <button onClick={cancelSwap} className="px-4 py-2 text-amber-700 hover:bg-amber-100 rounded-lg font-medium text-sm">
+            Cancel
+          </button>
+        </div>
+      )}
+
+      {/* Swap message */}
+      {swapMessage && (
+        <div className={`rounded-lg p-3 text-sm font-medium flex items-center justify-between ${
+          swapMessage.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+        }`}>
+          <span>{swapMessage.text}</span>
+          <button onClick={() => setSwapMessage(null)} className="ml-4 opacity-60 hover:opacity-100">✕</button>
+        </div>
+      )}
+
+      {/* Swap confirm dialog */}
+      {swapTarget && swapSource && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6">
+            <h2 className="text-lg font-bold text-gray-900 mb-4">Confirm Lesson Swap</h2>
+            <div className="space-y-3 mb-4">
+              <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                <span className="text-2xl">📅</span>
+                <div>
+                  <p className="font-medium text-gray-900">{swapSource.course?.name} — {swapSource.teacher?.user?.name}</p>
+                  <p className="text-sm text-gray-500">{format(parseISO(swapSource.scheduledAt), 'EEEE MMM d · HH:mm')}</p>
+                </div>
+              </div>
+              <div className="text-center text-lg">🔄</div>
+              <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-3">
+                <span className="text-2xl">📅</span>
+                <div>
+                  <p className="font-medium text-gray-900">{swapTarget.course?.name} — {swapTarget.teacher?.user?.name}</p>
+                  <p className="text-sm text-gray-500">{format(parseISO(swapTarget.scheduledAt), 'EEEE MMM d · HH:mm')}</p>
+                </div>
+              </div>
+            </div>
+            <label className="flex items-center gap-2 mb-5 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={swapNotify}
+                onChange={e => setSwapNotify(e.target.checked)}
+                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <span className="text-sm text-gray-700">Notify teachers and students about the change</span>
+            </label>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => setSwapTarget(null)}
+                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmSwap}
+                disabled={swapping}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              >
+                {swapping ? 'Swapping...' : 'Confirm Swap'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Calendar grid */}
       <div className="bg-white rounded-lg shadow-sm border overflow-hidden">
         {loading ? (
@@ -376,22 +513,22 @@ export default function CalendarPage() {
             days={monthDays}
             currentDate={currentDate}
             getLessonsForDay={getLessonsForDay}
-            onSelectLesson={setSelectedLesson}
+            onSelectLesson={handleLessonClick}
             currentUserId={user?.teacherProfile?.id}
           />
         ) : (
           <WeekView
             days={weekDays}
             getLessonsForDay={getLessonsForDay}
-            onSelectLesson={setSelectedLesson}
+            onSelectLesson={handleLessonClick}
             currentUserId={user?.teacherProfile?.id}
           />
         )}
       </div>
 
       {/* Lesson detail panel */}
-      {selectedLesson && (
-        <LessonDetail lesson={selectedLesson} onClose={() => setSelectedLesson(null)} />
+      {selectedLesson && !swapMode && (
+        <LessonDetail lesson={selectedLesson} onClose={() => setSelectedLesson(null)} onSwap={() => startSwap(selectedLesson)} />
       )}
     </div>
   )
@@ -619,7 +756,7 @@ function LessonPill({
 }
 
 // ---- Lesson Detail Panel ----
-function LessonDetail({ lesson, onClose }: { lesson: Lesson; onClose: () => void }) {
+function LessonDetail({ lesson, onClose, onSwap }: { lesson: Lesson; onClose: () => void; onSwap?: () => void }) {
   const scheduledAt = parseISO(lesson.scheduledAt)
 
   return (
@@ -701,6 +838,18 @@ function LessonDetail({ lesson, onClose }: { lesson: Lesson; onClose: () => void
               Host Meeting
             </a>
           )}
+        </div>
+      )}
+
+      {/* Swap button */}
+      {onSwap && lesson.status !== 'CANCELLED' && (
+        <div className="mt-4 pt-4 border-t">
+          <button
+            onClick={onSwap}
+            className="flex items-center gap-2 px-4 py-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-lg hover:bg-amber-100 text-sm font-medium w-full justify-center"
+          >
+            🔄 Swap This Lesson
+          </button>
         </div>
       )}
     </div>

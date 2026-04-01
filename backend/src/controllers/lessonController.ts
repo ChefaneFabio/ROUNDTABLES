@@ -1005,6 +1005,189 @@ router.get('/:id/meeting/recording', authenticate, async (req: Request, res: Res
   }
 })
 
+// ============================================
+// LESSON SWAP
+// ============================================
+
+const swapLessonsSchema = Joi.object({
+  lessonAId: Joi.string().required(),
+  lessonBId: Joi.string().required(),
+  notifyParticipants: Joi.boolean().default(true)
+})
+
+// Swap two lessons: exchange their scheduledAt (and optionally meeting links)
+router.post('/swap', authenticate, requireSchoolAdmin, validateRequest(swapLessonsSchema), async (req: Request, res: Response) => {
+  try {
+    const { lessonAId, lessonBId, notifyParticipants } = req.body
+
+    if (lessonAId === lessonBId) {
+      return res.status(400).json(apiResponse.error('Cannot swap a lesson with itself', 'SAME_LESSON'))
+    }
+
+    // Load both lessons with course and teacher info
+    const [lessonA, lessonB] = await Promise.all([
+      prisma.lesson.findFirst({
+        where: { id: lessonAId, deletedAt: null },
+        include: {
+          course: { select: { id: true, name: true } },
+          teacher: { include: { user: { select: { name: true, email: true } } } }
+        }
+      }),
+      prisma.lesson.findFirst({
+        where: { id: lessonBId, deletedAt: null },
+        include: {
+          course: { select: { id: true, name: true } },
+          teacher: { include: { user: { select: { name: true, email: true } } } }
+        }
+      })
+    ])
+
+    if (!lessonA || !lessonB) {
+      return res.status(404).json(apiResponse.error('One or both lessons not found', 'NOT_FOUND'))
+    }
+
+    // Cannot swap cancelled lessons
+    if (lessonA.status === 'CANCELLED' || lessonB.status === 'CANCELLED') {
+      return res.status(400).json(apiResponse.error('Cannot swap cancelled lessons', 'CANCELLED_LESSON'))
+    }
+
+    // Swap scheduledAt in a transaction
+    const aScheduledAt = lessonA.scheduledAt
+    const bScheduledAt = lessonB.scheduledAt
+
+    await prisma.$transaction([
+      prisma.lesson.update({
+        where: { id: lessonAId },
+        data: { scheduledAt: bScheduledAt }
+      }),
+      prisma.lesson.update({
+        where: { id: lessonBId },
+        data: { scheduledAt: aScheduledAt }
+      })
+    ])
+
+    // Reload with updated data
+    const [updatedA, updatedB] = await Promise.all([
+      prisma.lesson.findUnique({
+        where: { id: lessonAId },
+        include: {
+          course: { select: { id: true, name: true } },
+          teacher: { include: { user: { select: { name: true, email: true } } } }
+        }
+      }),
+      prisma.lesson.findUnique({
+        where: { id: lessonBId },
+        include: {
+          course: { select: { id: true, name: true } },
+          teacher: { include: { user: { select: { name: true, email: true } } } }
+        }
+      })
+    ])
+
+    // Notify participants if requested
+    if (notifyParticipants && emailService.isConfigured()) {
+      sendSwapNotifications(lessonA, lessonB, updatedA!, updatedB!)
+        .catch(e => console.error('Failed to send swap notifications:', e))
+    }
+
+    res.json(apiResponse.success(
+      { lessonA: updatedA, lessonB: updatedB },
+      `Lessons swapped: "${lessonA.title || lessonA.course.name}" moved to ${format(bScheduledAt, 'MMM d HH:mm')}, "${lessonB.title || lessonB.course.name}" moved to ${format(aScheduledAt, 'MMM d HH:mm')}`
+    ))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Helper: send swap notification emails to affected teachers and students
+async function sendSwapNotifications(
+  oldA: any, oldB: any, newA: any, newB: any
+) {
+  const formatDt = (d: Date) => format(d, 'EEEE, MMMM d · HH:mm')
+
+  // Collect affected people for each lesson
+  const [enrollmentsA, enrollmentsB, courseTeachersA, courseTeachersB] = await Promise.all([
+    prisma.enrollment.findMany({
+      where: { courseId: oldA.courseId, status: { in: ['ACTIVE', 'PENDING'] } },
+      include: { student: { include: { user: { select: { email: true, name: true } } } } }
+    }),
+    prisma.enrollment.findMany({
+      where: { courseId: oldB.courseId, status: { in: ['ACTIVE', 'PENDING'] } },
+      include: { student: { include: { user: { select: { email: true, name: true } } } } }
+    }),
+    prisma.courseTeacher.findMany({
+      where: { courseId: oldA.courseId },
+      include: { teacher: { include: { user: { select: { email: true, name: true } } } } }
+    }),
+    prisma.courseTeacher.findMany({
+      where: { courseId: oldB.courseId },
+      include: { teacher: { include: { user: { select: { email: true, name: true } } } } }
+    })
+  ])
+
+  const buildSwapEmail = (lessonName: string, oldDate: Date, newDate: Date, otherLessonName: string) => `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #2563eb;">📅 Lesson Schedule Change</h2>
+      <p>The following lesson has been rescheduled:</p>
+      <div style="background: #f3f4f6; border-radius: 8px; padding: 16px; margin: 16px 0;">
+        <p style="margin: 0; font-weight: bold; font-size: 16px;">${lessonName}</p>
+        <p style="margin: 8px 0 0; color: #dc2626;">
+          <s>${formatDt(oldDate)}</s>
+        </p>
+        <p style="margin: 4px 0 0; color: #16a34a; font-weight: bold;">
+          → ${formatDt(newDate)}
+        </p>
+      </div>
+      <p style="color: #6b7280; font-size: 13px;">
+        This lesson was swapped with "${otherLessonName}".
+      </p>
+    </div>
+  `
+
+  // Send for lesson A participants
+  const aStudentEmails = enrollmentsA.map(e => e.student.user.email).filter(Boolean)
+  const aTeacherEmails = courseTeachersA.map(ct => ct.teacher.user.email).filter(Boolean)
+  if (oldA.teacher?.user?.email && !aTeacherEmails.includes(oldA.teacher.user.email)) {
+    aTeacherEmails.push(oldA.teacher.user.email)
+  }
+  const allAEmails = [...new Set([...aStudentEmails, ...aTeacherEmails])]
+
+  const lessonAName = oldA.title || `${oldA.course.name} - Lesson ${oldA.lessonNumber}`
+  const lessonBName = oldB.title || `${oldB.course.name} - Lesson ${oldB.lessonNumber}`
+
+  if (allAEmails.length > 0) {
+    try {
+      await emailService.sendEmail({
+        to: allAEmails,
+        subject: `Schedule change: ${lessonAName} moved to ${format(newA!.scheduledAt, 'MMM d HH:mm')}`,
+        html: buildSwapEmail(lessonAName, oldA.scheduledAt, newA!.scheduledAt, lessonBName)
+      })
+    } catch (e) {
+      console.error('Swap notification A failed:', e)
+    }
+  }
+
+  // Send for lesson B participants
+  const bStudentEmails = enrollmentsB.map(e => e.student.user.email).filter(Boolean)
+  const bTeacherEmails = courseTeachersB.map(ct => ct.teacher.user.email).filter(Boolean)
+  if (oldB.teacher?.user?.email && !bTeacherEmails.includes(oldB.teacher.user.email)) {
+    bTeacherEmails.push(oldB.teacher.user.email)
+  }
+  const allBEmails = [...new Set([...bStudentEmails, ...bTeacherEmails])]
+
+  if (allBEmails.length > 0) {
+    try {
+      await emailService.sendEmail({
+        to: allBEmails,
+        subject: `Schedule change: ${lessonBName} moved to ${format(newB!.scheduledAt, 'MMM d HH:mm')}`,
+        html: buildSwapEmail(lessonBName, oldB.scheduledAt, newB!.scheduledAt, lessonAName)
+      })
+    } catch (e) {
+      console.error('Swap notification B failed:', e)
+    }
+  }
+}
+
 // ─── iCal EXPORT ──────────────────────────────────
 
 // GET /api/lessons/calendar/ical — Generate .ics calendar feed

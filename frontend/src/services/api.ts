@@ -393,6 +393,11 @@ export const lessonsApi = {
     const response = await api.delete(`/lessons/${lessonId}/meeting`)
     return response.data.data
   },
+
+  async swapLessons(lessonAId: string, lessonBId: string, notifyParticipants: boolean = true): Promise<any> {
+    const response = await api.post('/lessons/swap', { lessonAId, lessonBId, notifyParticipants })
+    return response.data
+  },
 }
 
 // Teachers API
