@@ -31,6 +31,8 @@ import {
   Clock,
   Route,
   Timer,
+  DollarSign,
+  Zap,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -60,10 +62,13 @@ const navigation: NavItem[] = [
   { name: 'Purchase Seats', href: '/org/purchase', icon: CreditCard, roles: [UserRole.ORG_ADMIN] },
   { name: 'Employees', href: '/org/employees', icon: Users, roles: [UserRole.ORG_ADMIN] },
   { name: 'Seat Licenses', href: '/org/seats', icon: Ticket, roles: [UserRole.ORG_ADMIN] },
+  { name: 'Invoices', href: '/org/invoices', icon: FileText, roles: [UserRole.ORG_ADMIN] },
+  { name: 'Reports', href: '/org/reports', icon: BarChart3, roles: [UserRole.ORG_ADMIN] },
   { name: 'Settings', href: '/org/settings', icon: Settings, roles: [UserRole.ORG_ADMIN] },
   // Admin navigation
   { name: 'Organizations', href: '/admin/organizations', icon: Building2, roles: [UserRole.ADMIN] },
   { name: 'My Hours', href: '/my-hours', icon: Timer, roles: [UserRole.TEACHER] },
+  { name: 'My Earnings', href: '/my-earnings', icon: DollarSign, roles: [UserRole.TEACHER] },
   { name: 'My Availability', href: '/availability', icon: Clock, roles: [UserRole.TEACHER] },
   { name: 'Calendar', href: '/admin/calendar', icon: Calendar, roles: [UserRole.ADMIN, UserRole.TEACHER] },
   { name: 'Video Admin', href: '/admin/videos/libraries', icon: Video, roles: [UserRole.ADMIN, UserRole.TEACHER] },
@@ -72,6 +77,7 @@ const navigation: NavItem[] = [
   { name: 'Question Bank', href: '/admin/assessment-questions', icon: ClipboardCheck, roles: [UserRole.ADMIN, UserRole.TEACHER] },
   { name: 'Analytics', href: '/analytics', icon: BarChart3, roles: [UserRole.ADMIN] },
   { name: 'API Keys', href: '/api-keys', icon: Key, roles: [UserRole.ADMIN] },
+  { name: 'Integrations', href: '/admin/integrations', icon: Zap, roles: [UserRole.ADMIN] },
   { name: 'Feedback', href: '/feedback', icon: MessageSquare, roles: [UserRole.TEACHER, UserRole.STUDENT] },
   { name: 'Payments', href: '/payments', icon: CreditCard, roles: [UserRole.ADMIN] },
   { name: 'Reports', href: '/reports', icon: FileText, roles: [UserRole.ADMIN] },

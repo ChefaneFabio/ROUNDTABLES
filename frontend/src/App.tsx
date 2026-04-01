@@ -61,7 +61,10 @@ import OrgEmployeesPage from './pages/org/OrgEmployeesPage'
 import OrgSeatsPage from './pages/org/OrgSeatsPage'
 import OrgSettingsPage from './pages/org/OrgSettingsPage'
 import OrgPurchasePage from './pages/org/OrgPurchasePage'
+import OrgInvoicesPage from './pages/org/OrgInvoicesPage'
+import OrgReportsPage from './pages/org/OrgReportsPage'
 import AdminOrganizationsPage from './pages/admin/OrganizationsPage'
+import IntegrationsPage from './pages/admin/IntegrationsPage'
 import OrganizationDetailPage from './pages/admin/OrganizationDetailPage'
 import SelfPacedCoursePage from './pages/SelfPacedCoursePage'
 import { BusinessPage } from './pages/BusinessPage'
@@ -69,6 +72,7 @@ import { BusinessPage } from './pages/BusinessPage'
 import StudentCalendarPage from './pages/StudentCalendarPage'
 import TeacherAvailabilityPage from './pages/TeacherAvailabilityPage'
 import TeacherHoursPage from './pages/TeacherHoursPage'
+import TeacherEarningsPage from './pages/TeacherEarningsPage'
 // Learning path pages
 import LearningPathsPage from './pages/LearningPathsPage'
 import LearningPathDetailPage from './pages/LearningPathDetailPage'
@@ -319,6 +323,16 @@ function App() {
         }
       />
       <Route
+        path="/my-earnings"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.TEACHER]}>
+            <Layout>
+              <TeacherEarningsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/my-hours"
         element={
           <ProtectedRoute allowedRoles={[UserRole.TEACHER]}>
@@ -494,6 +508,17 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <ApiKeysPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/integrations"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <IntegrationsPage />
             </Layout>
           </ProtectedRoute>
         }
@@ -716,6 +741,27 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ORG_ADMIN]}>
             <Layout>
               <OrgSettingsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/org/invoices"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+            <Layout>
+              <OrgInvoicesPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/org/reports"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+            <Layout>
+              <OrgReportsPage />
             </Layout>
           </ProtectedRoute>
         }

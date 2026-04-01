@@ -463,7 +463,7 @@ router.get('/me/monthly-hours', authenticate, requireTeacher, async (req: Reques
     const teacherId = req.user!.teacherId
     const year = parseInt(req.query.year as string) || new Date().getFullYear()
 
-    const months = []
+    const months: Array<{ month: number; monthName: string; year: number; totalHours: number; totalLessons: number; coursesCount: number }> = []
     for (let month = 0; month < 12; month++) {
       const start = new Date(year, month, 1)
       const end = new Date(year, month + 1, 0, 23, 59, 59)

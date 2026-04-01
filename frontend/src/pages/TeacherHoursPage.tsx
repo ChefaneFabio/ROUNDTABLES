@@ -2,8 +2,7 @@ import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { format } from 'date-fns'
 import {
-  Clock, BookOpen, Calendar, ChevronLeft, ChevronRight,
-  TrendingUp, AlertCircle, CheckCircle, Filter
+  Clock, BookOpen, Calendar, ChevronLeft, ChevronRight, Filter
 } from 'lucide-react'
 import { teachersApi } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
@@ -18,7 +17,7 @@ const STATUS_BADGE: Record<string, string> = {
 }
 
 export default function TeacherHoursPage() {
-  const { isAdmin } = useAuth()
+  useAuth()
   const [activeTab, setActiveTab] = useState<'courses' | 'monthly' | 'history'>('courses')
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
 

@@ -369,4 +369,95 @@ router.get('/:id/dashboard', authenticate, requireOrgAdmin, requireOrgAccess, as
   }
 })
 
+// Get invoices for organization (client view)
+router.get('/:id/invoices', authenticate, requireOrgAdmin, requireOrgAccess, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const invoices = await prisma.invoice.findMany({
+      where: { organizationId: id },
+      orderBy: { invoiceDate: 'desc' },
+      select: {
+        id: true, invoiceNumber: true, invoiceDate: true, dueDate: true,
+        subtotal: true, vatRate: true, vatAmount: true, totalAmount: true,
+        currency: true, status: true, paidAt: true, sdiStatus: true
+      }
+    })
+    res.json(apiResponse.success(invoices))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Get payments for organization (client view)
+router.get('/:id/payments', authenticate, requireOrgAdmin, requireOrgAccess, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const payments = await prisma.payment.findMany({
+      where: { organizationId: id },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true, amount: true, currency: true, status: true,
+        paymentMethod: true, transactionId: true, paidAt: true, createdAt: true,
+        enrollment: {
+          select: { course: { select: { name: true } }, student: { select: { user: { select: { name: true } } } } }
+        }
+      }
+    })
+    res.json(apiResponse.success(payments))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Get employee progress report for organization
+router.get('/:id/reports', authenticate, requireOrgAdmin, requireOrgAccess, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+
+    const employees = await prisma.student.findMany({
+      where: { organizationId: id, deletedAt: null },
+      include: {
+        user: { select: { name: true, email: true } },
+        enrollments: {
+          include: {
+            course: { select: { name: true, status: true } }
+          }
+        },
+        progress: true
+      }
+    })
+
+    const report = employees.map(emp => {
+      const progressMap = new Map(emp.progress.map(p => [p.courseId, p]))
+
+      return {
+        studentId: emp.id,
+        name: emp.user.name,
+        email: emp.user.email,
+        languageLevel: emp.languageLevel,
+        courses: emp.enrollments.map(e => {
+          const prog = progressMap.get(e.courseId)
+          return {
+            courseName: e.course.name,
+            courseStatus: e.course.status,
+            enrollmentStatus: e.status,
+            progress: prog ? Number(prog.percentage) : 0,
+            completedLessons: prog?.completedLessons || 0,
+            totalLessons: prog?.totalLessons || 0
+          }
+        }),
+        totalEnrollments: emp.enrollments.length,
+        activeEnrollments: emp.enrollments.filter(e => e.status === 'ACTIVE').length,
+        avgProgress: emp.progress.length > 0
+          ? Math.round(emp.progress.reduce((sum, p) => sum + Number(p.percentage), 0) / emp.progress.length)
+          : 0
+      }
+    })
+
+    res.json(apiResponse.success(report))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
 export default router

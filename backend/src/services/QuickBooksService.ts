@@ -74,7 +74,7 @@ class QuickBooksService {
 
   async syncCustomer(org: {
     id: string; name: string; email?: string | null; phone?: string | null;
-    vatNumber?: string | null; billingAddress?: string | null;
+    vatNumber?: string | null; billingAddress?: any;
     quickbooksCustomerId?: string | null
   }): Promise<string> {
     const customerData: any = {
@@ -86,7 +86,8 @@ class QuickBooksService {
     }
 
     if (org.billingAddress) {
-      customerData.BillAddr = { Line1: org.billingAddress }
+      const addr = typeof org.billingAddress === 'string' ? org.billingAddress : JSON.stringify(org.billingAddress)
+      customerData.BillAddr = { Line1: addr }
     }
 
     if (org.quickbooksCustomerId) {
