@@ -322,9 +322,14 @@ router.get('/:id/sdi-status', authenticate, requireSchoolAdmin, async (req: Requ
 // Webhook for SDI notifications (to be called by SDI integration service)
 router.post('/sdi-webhook', async (req: Request, res: Response) => {
   try {
-    const { invoiceId, status, message, identifier } = req.body
+    // Verify webhook token
+    const webhookToken = req.headers['x-sdi-webhook-token'] || req.query.token
+    const expectedToken = process.env.SDI_WEBHOOK_TOKEN
+    if (!expectedToken || webhookToken !== expectedToken) {
+      return res.status(401).json({ success: false, error: 'Unauthorized' })
+    }
 
-    // In production, verify webhook signature/authentication
+    const { invoiceId, status, message, identifier } = req.body
 
     await InvoiceService.handleSDINotification(
       invoiceId,

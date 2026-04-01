@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
-import { Settings, Bell, Lock, Eye, EyeOff, Save, Shield, Trash2 } from 'lucide-react'
+import { Settings, Bell, Lock, Eye, EyeOff, Save, Shield, Trash2, CheckCircle, AlertCircle } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import { authApi } from '../services/api'
 
 export const SettingsPage: React.FC = () => {
   useAuth() // Ensure user is authenticated
@@ -9,23 +10,27 @@ export const SettingsPage: React.FC = () => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
   const [showNewPassword, setShowNewPassword] = useState(false)
 
-  const [settings, setSettings] = useState({
-    // General
+  const defaultSettings = {
     language: 'en',
-    timezone: 'UTC',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
     darkMode: false,
-
-    // Notifications
     emailNotifications: true,
     pushNotifications: true,
     lessonReminders: true,
     progressUpdates: true,
     marketingEmails: false,
-
-    // Privacy
     profileVisibility: 'public',
     showProgress: true,
     showCertificates: true
+  }
+
+  const [settings, setSettings] = useState(() => {
+    try {
+      const saved = localStorage.getItem('userSettings')
+      return saved ? { ...defaultSettings, ...JSON.parse(saved) } : defaultSettings
+    } catch {
+      return defaultSettings
+    }
   })
 
   const [passwordForm, setPasswordForm] = useState({
@@ -33,26 +38,45 @@ export const SettingsPage: React.FC = () => {
     newPassword: '',
     confirmPassword: ''
   })
+  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+
+  const showMessage = (type: 'success' | 'error', text: string) => {
+    setMessage({ type, text })
+    setTimeout(() => setMessage(null), 5000)
+  }
 
   const handleSave = async () => {
     setIsSaving(true)
-    setTimeout(() => {
+    try {
+      // Settings are stored locally for now (language, timezone, dark mode are client preferences)
+      localStorage.setItem('userSettings', JSON.stringify(settings))
+      showMessage('success', 'Settings saved')
+    } catch {
+      showMessage('error', 'Failed to save settings')
+    } finally {
       setIsSaving(false)
-      alert('Settings saved successfully!')
-    }, 1000)
+    }
   }
 
   const handlePasswordChange = async () => {
+    if (passwordForm.newPassword.length < 6) {
+      showMessage('error', 'New password must be at least 6 characters')
+      return
+    }
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      alert('Passwords do not match!')
+      showMessage('error', 'Passwords do not match')
       return
     }
     setIsSaving(true)
-    setTimeout(() => {
-      setIsSaving(false)
+    try {
+      await authApi.changePassword(passwordForm.currentPassword, passwordForm.newPassword)
       setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
-      alert('Password changed successfully!')
-    }, 1000)
+      showMessage('success', 'Password changed successfully')
+    } catch (e: any) {
+      showMessage('error', e.response?.data?.error || 'Failed to change password')
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   const tabs = [
@@ -69,6 +93,15 @@ export const SettingsPage: React.FC = () => {
         <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
         <p className="text-gray-600">Manage your account preferences</p>
       </div>
+
+      {message && (
+        <div className={`flex items-center gap-2 px-4 py-3 rounded-lg text-sm font-medium ${
+          message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'
+        }`}>
+          {message.type === 'success' ? <CheckCircle className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+          {message.text}
+        </div>
+      )}
 
       <div className="flex gap-6">
         {/* Sidebar */}

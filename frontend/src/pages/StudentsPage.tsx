@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Plus, Search, Edit, Mail, GraduationCap, ClipboardCheck } from 'lucide-react'
-import { studentsApi } from '../services/api'
+import { Plus, Search, Edit, Mail, GraduationCap, ClipboardCheck, Copy, Check } from 'lucide-react'
+import { studentsApi, authApi } from '../services/api'
 import { assessmentApi } from '../services/assessmentApi'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -59,6 +59,7 @@ export const StudentsPage: React.FC = () => {
   const [assignLanguage, setAssignLanguage] = useState('English')
   const [assignTimeLimit, setAssignTimeLimit] = useState(60)
   const [isAssigning, setIsAssigning] = useState(false)
+  const [editingStudent, setEditingStudent] = useState<Student | null>(null)
 
   useEffect(() => {
     loadStudents()
@@ -321,6 +322,7 @@ export const StudentsPage: React.FC = () => {
                         <ClipboardCheck className="w-4 h-4" />
                       </button>
                       <button
+                        onClick={() => setEditingStudent(student)}
                         className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
                         title="Edit"
                       >
@@ -337,28 +339,10 @@ export const StudentsPage: React.FC = () => {
 
       {/* Add Student Modal */}
       {showAddModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Add New Student</h2>
-            <p className="text-gray-600 mb-4">
-              Students can register using your school's registration link
-              or you can invite them via email.
-            </p>
-            <div className="flex justify-end gap-3">
-              <button
-                onClick={() => setShowAddModal(false)}
-                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                Close
-              </button>
-              <button
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Send Invite
-              </button>
-            </div>
-          </div>
-        </div>
+        <AddStudentModal
+          onClose={() => setShowAddModal(false)}
+          onSuccess={() => { setShowAddModal(false); loadStudents() }}
+        />
       )}
 
       {/* Assign Test Modal */}
@@ -416,6 +400,205 @@ export const StudentsPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Edit Student Modal */}
+      {editingStudent && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
+            <h2 className="text-lg font-bold text-gray-900 mb-4">Edit {editingStudent.user.name}</h2>
+            <EditStudentForm
+              student={editingStudent}
+              onClose={() => setEditingStudent(null)}
+              onSave={async (data) => {
+                try {
+                  await studentsApi.update(editingStudent.id, data)
+                  setEditingStudent(null)
+                  loadStudents()
+                } catch (e) {
+                  console.error('Failed to update:', e)
+                  alert('Failed to update student')
+                }
+              }}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
+function EditStudentForm({ student, onClose, onSave }: {
+  student: Student; onClose: () => void; onSave: (data: any) => Promise<void>
+}) {
+  const [level, setLevel] = useState(student.languageLevel || '')
+  const [bio, setBio] = useState(student.bio || '')
+  const [saving, setSaving] = useState(false)
+
+  return (
+    <form onSubmit={async (e) => { e.preventDefault(); setSaving(true); await onSave({ languageLevel: level || undefined, bio: bio || undefined }); setSaving(false) }} className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Language Level</label>
+        <select value={level} onChange={e => setLevel(e.target.value)}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+          <option value="">Not set</option>
+          {['A1','A2','B1','B2','C1','C2'].map(l => <option key={l} value={l}>{l}</option>)}
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
+        <textarea value={bio} onChange={e => setBio(e.target.value)} rows={3}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div className="flex justify-end gap-3 pt-2">
+        <button type="button" onClick={onClose} className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">Cancel</button>
+        <button type="submit" disabled={saving} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
+          {saving ? 'Saving...' : 'Save'}
+        </button>
+      </div>
+    </form>
+  )
+}
+
+function AddStudentModal({ onClose, onSuccess }: { onClose: () => void; onSuccess: () => void }) {
+  const { user } = useAuth()
+  const [form, setForm] = useState({ name: '', email: '', languageLevel: 'B1' })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [created, setCreated] = useState<{ email: string; password: string } | null>(null)
+  const [copied, setCopied] = useState(false)
+
+  const generatePassword = () => {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
+    let pw = ''
+    for (let i = 0; i < 10; i++) pw += chars[Math.floor(Math.random() * chars.length)]
+    return pw
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    const password = generatePassword()
+    try {
+      await authApi.registerStudent({
+        email: form.email,
+        password,
+        name: form.name,
+        schoolId: (user as any)?.schoolId || '',
+        languageLevel: form.languageLevel
+      })
+      setCreated({ email: form.email, password })
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to create student account')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const copyCredentials = () => {
+    if (!created) return
+    navigator.clipboard.writeText(`Email: ${created.email}\nPassword: ${created.password}`)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          {created ? 'Student Account Created' : 'Create Student Account'}
+        </h2>
+
+        {created ? (
+          <div className="space-y-4">
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <p className="text-sm text-green-800 font-medium mb-2">Account created successfully!</p>
+              <div className="space-y-1 text-sm text-green-700">
+                <p><strong>Email:</strong> {created.email}</p>
+                <p><strong>Password:</strong> {created.password}</p>
+              </div>
+            </div>
+            <p className="text-xs text-gray-500">
+              Share these credentials with the student. They can change their password after logging in.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={copyCredentials}
+                className="flex items-center gap-1.5 px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                {copied ? <Check className="w-4 h-4 text-green-600" /> : <Copy className="w-4 h-4" />}
+                {copied ? 'Copied!' : 'Copy Credentials'}
+              </button>
+              <button
+                onClick={onSuccess}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3 text-sm text-red-700">{error}</div>
+            )}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+              <input
+                type="text"
+                required
+                value={form.name}
+                onChange={e => setForm({ ...form, name: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email *</label>
+              <input
+                type="email"
+                required
+                value={form.email}
+                onChange={e => setForm({ ...form, email: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Language Level</label>
+              <select
+                value={form.languageLevel}
+                onChange={e => setForm({ ...form, languageLevel: e.target.value })}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="A1">A1 - Beginner</option>
+                <option value="A2">A2 - Elementary</option>
+                <option value="B1">B1 - Intermediate</option>
+                <option value="B2">B2 - Upper Intermediate</option>
+                <option value="C1">C1 - Advanced</option>
+                <option value="C2">C2 - Proficiency</option>
+              </select>
+            </div>
+            <p className="text-xs text-gray-500">
+              A password will be generated automatically. You'll be able to copy the credentials after creation.
+            </p>
+            <div className="flex justify-end gap-3">
+              <button
+                type="button"
+                onClick={onClose}
+                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              >
+                {loading ? 'Creating...' : 'Create Account'}
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
     </div>
   )
 }

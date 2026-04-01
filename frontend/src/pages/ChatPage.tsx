@@ -41,7 +41,10 @@ export function ChatPage() {
 
   // Send message
   const sendMessage = useMutation(
-    (text: string) => chatApi.sendMessage(activeSession!.id, text),
+    (text: string) => {
+      if (!activeSession) throw new Error('No active session')
+      return chatApi.sendMessage(activeSession.id, text)
+    },
     {
       onMutate: (text) => {
         setMessages(prev => [...prev, { role: 'user', content: text, timestamp: new Date().toISOString() }])
@@ -49,6 +52,9 @@ export function ChatPage() {
       },
       onSuccess: (data) => {
         setMessages(prev => [...prev, { role: 'assistant', content: data.aiResponse, timestamp: new Date().toISOString() }])
+      },
+      onError: () => {
+        setMessages(prev => prev.slice(0, -1)) // Remove optimistic message on failure
       }
     }
   )

@@ -230,6 +230,9 @@ router.get('/:id', authenticate, async (req: Request, res: Response) => {
 
     // Check access
     const schoolId = payment.schoolId || payment.enrollment?.course?.schoolId
+    if (!schoolId) {
+      return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
+    }
     const canAccess = req.user?.role === 'ADMIN' ||
       req.user?.schoolId === schoolId ||
       (req.user?.studentId && payment.enrollment?.studentId === req.user.studentId)
@@ -326,6 +329,13 @@ router.post('/:id/record', authenticate, requireSchoolAdmin, validateRequest(rec
 
     const paymentAmount = Number(payment.amount)
     const paidAmount = Number(amount)
+
+    if (paidAmount > paymentAmount) {
+      return res.status(400).json(apiResponse.error(
+        `Amount (${paidAmount}) exceeds the payment due (${paymentAmount})`,
+        'AMOUNT_EXCEEDS_DUE'
+      ))
+    }
 
     let newStatus: PaymentStatus = 'PAID'
     if (paidAmount < paymentAmount) {

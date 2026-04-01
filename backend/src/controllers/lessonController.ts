@@ -574,6 +574,11 @@ router.put('/:id', authenticate, requireLessonAccess, validateRequest(updateLess
     // Handle meeting provider changes
     let meetingWarning: string | undefined
     if (providerChanged && lesson.meetingId && lesson.meetingProvider && lesson.meetingProvider !== 'CUSTOM') {
+      // Check new provider is configured before deleting old meeting
+      const newProvider = body.meetingProvider
+      if (newProvider && newProvider !== 'CUSTOM' && !VideoConferencingService.isProviderConfigured(newProvider)) {
+        return res.status(400).json(apiResponse.error(`${newProvider} is not configured`, 'PROVIDER_NOT_CONFIGURED'))
+      }
       // Delete old meeting
       try {
         await VideoConferencingService.deleteMeeting(lesson.meetingProvider as MeetingProvider, lesson.meetingId)

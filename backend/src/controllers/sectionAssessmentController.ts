@@ -8,10 +8,10 @@ import { authenticate } from '../middleware/auth'
 import { requireTeacher, requireAdmin, requireSchoolAdmin } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
 import { sectionAssessmentService } from '../services/SectionAssessmentService'
+import { prisma } from '../config/database'
 import { ttsService } from '../services/TtsService'
 import { aiScoringService } from '../services/AiScoringService'
 import { certificateService } from '../services/CertificateService'
-import { prisma } from '../config/database'
 
 const router = Router()
 
@@ -140,6 +140,16 @@ router.get('/:id/sections/:sectionId/next-question', authenticate, async (req: R
 // Submit answer for a section question
 router.post('/:id/sections/:sectionId/answer', authenticate, validateRequest(submitAnswerSchema), async (req: Request, res: Response) => {
   try {
+    // Verify student owns this assessment
+    if (req.user?.role === 'STUDENT') {
+      const assessment = await prisma.assessment.findFirst({
+        where: { id: req.params.id, studentId: req.user.studentId }
+      })
+      if (!assessment) {
+        return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
+      }
+    }
+
     const result = await sectionAssessmentService.submitSectionAnswer({
       assessmentId: req.params.id,
       sectionId: req.params.sectionId,
@@ -155,6 +165,16 @@ router.post('/:id/sections/:sectionId/answer', authenticate, validateRequest(sub
 // Complete a section
 router.post('/:id/sections/:sectionId/complete', authenticate, async (req: Request, res: Response) => {
   try {
+    // Verify student owns this assessment
+    if (req.user?.role === 'STUDENT') {
+      const assessment = await prisma.assessment.findFirst({
+        where: { id: req.params.id, studentId: req.user.studentId }
+      })
+      if (!assessment) {
+        return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
+      }
+    }
+
     const result = await sectionAssessmentService.completeSection(
       req.params.id,
       req.params.sectionId

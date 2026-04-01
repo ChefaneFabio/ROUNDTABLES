@@ -431,10 +431,13 @@ router.delete('/:id', authenticate, requireSchoolAdmin, async (req: Request, res
     }
 
     await prisma.$transaction(async (tx) => {
-      // Delete related records
+      // Delete all related records
       await tx.progress.deleteMany({ where: { studentId: enrollment.studentId, courseId: enrollment.courseId } })
       await tx.attendance.deleteMany({ where: { studentId: enrollment.studentId, lesson: { courseId: enrollment.courseId } } })
       await tx.topicVote.deleteMany({ where: { studentId: enrollment.studentId, courseId: enrollment.courseId } })
+      await tx.feedback.deleteMany({ where: { studentId: enrollment.studentId, lesson: { courseId: enrollment.courseId } } })
+      await tx.assignmentSubmission.deleteMany({ where: { studentId: enrollment.studentId, assignment: { courseId: enrollment.courseId } } })
+      await tx.seatAllocation.deleteMany({ where: { enrollmentId: id } })
       await tx.enrollment.delete({ where: { id } })
     })
 

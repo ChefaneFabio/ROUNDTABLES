@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FileText, Download, TrendingUp, Users, BookOpen, DollarSign } from 'lucide-react'
+import { Download, TrendingUp, Users, BookOpen, DollarSign } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 
 interface ReportType {
@@ -49,16 +49,48 @@ export const ReportsPage: React.FC = () => {
     end: new Date().toISOString().split('T')[0]
   })
   const [isGenerating, setIsGenerating] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleGenerateReport = async () => {
     if (!selectedReport) return
 
     setIsGenerating(true)
-    // Simulate report generation
-    setTimeout(() => {
+    setError(null)
+    try {
+      // Map report type to API params
+      const reportMap: Record<string, { type: string; id: string }> = {
+        'student-progress': { type: 'corporate', id: 'school' },
+        'course-analytics': { type: 'corporate', id: 'school' },
+        'revenue-report': { type: 'corporate', id: 'school' },
+        'engagement-report': { type: 'corporate', id: 'school' },
+      }
+      const { type, id } = reportMap[selectedReport] || { type: 'corporate', id: 'school' }
+
+      const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+      const token = localStorage.getItem('accessToken')
+      const url = `${baseUrl}/analytics/export/${type}/${id}?format=csv&startDate=${dateRange.start}&endDate=${dateRange.end}`
+
+      const response = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+
+      if (!response.ok) throw new Error('Export failed')
+
+      const blob = await response.blob()
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = downloadUrl
+      a.download = `report-${selectedReport}-${dateRange.start}-to-${dateRange.end}.csv`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      window.URL.revokeObjectURL(downloadUrl)
+    } catch (err) {
+      console.error('Export failed:', err)
+      setError('Failed to generate report. Please try again.')
+    } finally {
       setIsGenerating(false)
-      alert(`Report "${REPORT_TYPES.find(r => r.id === selectedReport)?.name}" generated successfully!`)
-    }, 2000)
+    }
   }
 
   const categories = [...new Set(REPORT_TYPES.map(r => r.category))]
@@ -213,6 +245,9 @@ export const ReportsPage: React.FC = () => {
                     </>
                   )}
                 </button>
+              {error && (
+                <p className="mt-2 text-sm text-red-600">{error}</p>
+              )}
               </div>
             ) : (
               <p className="text-gray-500 text-sm">
@@ -221,33 +256,14 @@ export const ReportsPage: React.FC = () => {
             )}
           </div>
 
-          {/* Recent Reports */}
+          {/* Report Info */}
           <div className="bg-white rounded-lg border border-gray-200 p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Reports</h2>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <FileText className="w-5 h-5 text-gray-500" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">Student Progress</p>
-                    <p className="text-xs text-gray-500">Jan 1 - Jan 15, 2024</p>
-                  </div>
-                </div>
-                <button className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded">
-                  <Download className="w-4 h-4" />
-                </button>
-              </div>
-              <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                <div className="flex items-center gap-3">
-                  <FileText className="w-5 h-5 text-gray-500" />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">Revenue Report</p>
-                    <p className="text-xs text-gray-500">Dec 1 - Dec 31, 2023</p>
-                  </div>
-                </div>
-                <button className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded">
-                  <Download className="w-4 h-4" />
-                </button>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Export Info</h2>
+            <div className="space-y-3 text-sm text-gray-600">
+              <p>Reports are exported as CSV files that you can open in Excel or Google Sheets.</p>
+              <p>Select a report type, choose a date range, and click Generate to download.</p>
+              <div className="mt-4 p-3 bg-blue-50 rounded-lg text-blue-700 text-xs">
+                <strong>Tip:</strong> For a full overview, select "Student Progress" with the widest date range.
               </div>
             </div>
           </div>

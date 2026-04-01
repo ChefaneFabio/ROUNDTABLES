@@ -50,6 +50,19 @@ export default function TeacherAvailabilityPage() {
   }
 
   const addSlot = (dayOfWeek: number) => {
+    if (newSlot.startTime >= newSlot.endTime) {
+      alert('Start time must be before end time')
+      return
+    }
+    // Check for overlapping slots on same day
+    const daySlots = slots.filter(s => s.dayOfWeek === dayOfWeek)
+    const overlap = daySlots.some(s =>
+      newSlot.startTime < s.endTime && newSlot.endTime > s.startTime
+    )
+    if (overlap) {
+      alert('This time slot overlaps with an existing slot')
+      return
+    }
     setSlots(prev => [...prev, { dayOfWeek, ...newSlot }])
     setEditDay(null)
     setSaved(false)
