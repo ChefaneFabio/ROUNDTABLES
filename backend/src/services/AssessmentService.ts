@@ -375,15 +375,6 @@ export class AssessmentService {
       data: { languageLevel: determinedLevel as any }
     })
 
-    // Gamification: award XP for assessment completion
-    try {
-      const { gamificationService } = await import('./GamificationService')
-      await gamificationService.recordActivity(assessment.studentId)
-      await gamificationService.awardXp(assessment.studentId, 'ASSESSMENT_COMPLETE', assessmentId)
-    } catch (e) {
-      console.error('Gamification error (non-blocking):', e)
-    }
-
     // Build breakdown with level names
     const levelBreakdown: Record<string, { correct: number; total: number; name: string }> = {}
     for (const level of CEFR_LEVELS) {

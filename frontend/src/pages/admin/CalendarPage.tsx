@@ -82,6 +82,7 @@ export default function CalendarPage() {
   const [courses, setCourses] = useState<any[]>([])
   const [filterTeacherId, setFilterTeacherId] = useState('')
   const [filterCourseId, setFilterCourseId] = useState('')
+  const [filterProvider, setFilterProvider] = useState('')
 
   // Load filter options
   useEffect(() => {
@@ -126,12 +127,33 @@ export default function CalendarPage() {
       const filtered = dayLessons.filter((l) => {
         if (filterTeacherId && l.teacherId !== filterTeacherId) return false
         if (filterCourseId && l.courseId !== filterCourseId) return false
+        if (filterProvider && (l.meetingProvider || '') !== filterProvider) return false
         return true
       })
       if (filtered.length > 0) result[date] = filtered
     }
     return result
-  }, [lessons, filterTeacherId, filterCourseId])
+  }, [lessons, filterTeacherId, filterCourseId, filterProvider])
+
+  // Stats: lesson counts by platform for the current month
+  const stats = useMemo(() => {
+    let total = 0
+    const byProvider: Record<string, number> = { ZOOM: 0, GOOGLE_MEET: 0, MICROSOFT_TEAMS: 0, CUSTOM: 0, none: 0 }
+    const byDay: Record<string, number> = {}
+    for (const [date, dayLessons] of Object.entries(filteredLessons)) {
+      byDay[date] = dayLessons.length
+      for (const l of dayLessons) {
+        total++
+        const key = l.meetingProvider || 'none'
+        byProvider[key] = (byProvider[key] || 0) + 1
+      }
+    }
+    const daysWithLessons = Object.keys(byDay).length
+    const avgPerDay = daysWithLessons > 0 ? (total / daysWithLessons).toFixed(1) : '0'
+    const weeksInView = viewMode === 'week' ? 1 : Math.ceil(daysWithLessons / 5) || 1
+    const avgPerWeek = (total / weeksInView).toFixed(1)
+    return { total, byProvider, avgPerDay, avgPerWeek }
+  }, [filteredLessons, viewMode])
 
   // Navigation
   const goToToday = () => setCurrentDate(new Date())
@@ -266,16 +288,79 @@ export default function CalendarPage() {
             ))}
           </select>
 
-          {(filterTeacherId || filterCourseId) && (
+          <select
+            value={filterProvider}
+            onChange={(e) => setFilterProvider(e.target.value)}
+            className="rounded-lg border border-gray-300 text-sm py-1.5 px-3 bg-white"
+          >
+            <option value="">All Platforms</option>
+            <option value="ZOOM">Zoom</option>
+            <option value="GOOGLE_MEET">Google Meet</option>
+            <option value="MICROSOFT_TEAMS">Microsoft Teams</option>
+          </select>
+
+          {(filterTeacherId || filterCourseId || filterProvider) && (
             <button
               onClick={() => {
                 setFilterTeacherId('')
                 setFilterCourseId('')
+                setFilterProvider('')
               }}
               className="text-sm text-gray-500 hover:text-gray-700 flex items-center gap-1"
             >
               <X className="h-4 w-4" /> Clear filters
             </button>
+          )}
+        </div>
+      </div>
+
+      {/* Stats Summary */}
+      <div className="bg-white rounded-lg shadow-sm border p-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="text-center">
+            <div className="text-2xl font-bold text-gray-900">{stats.total}</div>
+            <div className="text-xs text-gray-500 uppercase font-medium">Total Lessons</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-gray-900">{stats.avgPerDay}</div>
+            <div className="text-xs text-gray-500 uppercase font-medium">Avg / Day</div>
+          </div>
+          <div className="text-center">
+            <div className="text-2xl font-bold text-gray-900">{stats.avgPerWeek}</div>
+            <div className="text-xs text-gray-500 uppercase font-medium">Avg / Week</div>
+          </div>
+          {stats.byProvider.ZOOM > 0 && (
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-blue-500" />
+                <span className="text-2xl font-bold text-gray-900">{stats.byProvider.ZOOM}</span>
+              </div>
+              <div className="text-xs text-gray-500 uppercase font-medium">Zoom</div>
+            </div>
+          )}
+          {stats.byProvider.GOOGLE_MEET > 0 && (
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-green-500" />
+                <span className="text-2xl font-bold text-gray-900">{stats.byProvider.GOOGLE_MEET}</span>
+              </div>
+              <div className="text-xs text-gray-500 uppercase font-medium">Google Meet</div>
+            </div>
+          )}
+          {stats.byProvider.MICROSOFT_TEAMS > 0 && (
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-purple-500" />
+                <span className="text-2xl font-bold text-gray-900">{stats.byProvider.MICROSOFT_TEAMS}</span>
+              </div>
+              <div className="text-xs text-gray-500 uppercase font-medium">Teams</div>
+            </div>
+          )}
+          {stats.byProvider.none > 0 && (
+            <div className="text-center">
+              <div className="text-2xl font-bold text-orange-500">{stats.byProvider.none}</div>
+              <div className="text-xs text-gray-500 uppercase font-medium">No Platform</div>
+            </div>
           )}
         </div>
       </div>

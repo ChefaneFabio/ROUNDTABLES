@@ -373,6 +373,26 @@ export const lessonsApi = {
     const response = await api.get('/lessons/calendar', { params: { year, month } })
     return response.data.data
   },
+
+  async create(data: any): Promise<any> {
+    const response = await api.post('/lessons', data)
+    return response.data.data
+  },
+
+  async getMeetingProviders(): Promise<any[]> {
+    const response = await api.get('/lessons/meeting-providers')
+    return response.data.data || []
+  },
+
+  async createMeeting(lessonId: string, provider: string, teamsUserId?: string): Promise<any> {
+    const response = await api.post(`/lessons/${lessonId}/meeting`, { provider, teamsUserId })
+    return response.data.data
+  },
+
+  async deleteMeeting(lessonId: string): Promise<any> {
+    const response = await api.delete(`/lessons/${lessonId}/meeting`)
+    return response.data.data
+  },
 }
 
 // Teachers API
@@ -493,6 +513,8 @@ export const modulesApi = {
 export const feedbackApi = {
   async getAll(params?: {
     status?: string
+    courseId?: string
+    lessonId?: string
     page?: number
     limit?: number
   }): Promise<any> {
@@ -612,6 +634,168 @@ export const materialsApi = {
   async reorder(lessonId: string, materialIds: string[]): Promise<void> {
     await api.put(`/lessons/${lessonId}/materials/reorder`, { materialIds })
   },
+}
+
+// =====================================================
+// EXERCISE ASSIGNMENTS API
+// =====================================================
+
+export const assignmentsApi = {
+  async getForCourse(courseId: string): Promise<any[]> {
+    const response = await api.get(`/assignments/course/${courseId}`)
+    return response.data.data
+  },
+
+  async getMyAssignments(): Promise<any[]> {
+    const response = await api.get('/assignments/my/assignments')
+    return response.data.data
+  },
+
+  async create(data: {
+    courseId: string
+    exerciseId: string
+    title?: string
+    instructions?: string
+    dueDate: string
+    isPublished?: boolean
+    allowFileUpload?: boolean
+  }): Promise<any> {
+    const response = await api.post('/assignments', data)
+    return response.data.data
+  },
+
+  async update(id: string, data: any): Promise<any> {
+    const response = await api.put(`/assignments/${id}`, data)
+    return response.data.data
+  },
+
+  async delete(id: string): Promise<void> {
+    await api.delete(`/assignments/${id}`)
+  },
+
+  async getSubmissions(assignmentId: string): Promise<any[]> {
+    const response = await api.get(`/assignments/${assignmentId}/submissions`)
+    return response.data.data
+  },
+
+  async submitFile(assignmentId: string, file: File): Promise<any> {
+    const formData = new FormData()
+    formData.append('file', file)
+    const response = await api.post(`/assignments/${assignmentId}/submit`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    return response.data.data
+  },
+
+  async submit(assignmentId: string): Promise<any> {
+    const response = await api.post(`/assignments/${assignmentId}/submit`, {})
+    return response.data.data
+  },
+
+  async gradeSubmission(submissionId: string, grade: number, teacherNotes?: string): Promise<any> {
+    const response = await api.put(`/assignments/submissions/${submissionId}/grade`, { grade, teacherNotes })
+    return response.data.data
+  },
+
+  getDownloadUrl(assignmentId: string): string {
+    return `${BASE_URL}/assignments/${assignmentId}/submission/download`
+  },
+
+  getSubmissionDownloadUrl(submissionId: string): string {
+    return `${BASE_URL}/assignments/submissions/${submissionId}/download`
+  }
+}
+
+// =====================================================
+// MATERIAL CODES API
+// =====================================================
+
+export const materialCodesApi = {
+  async getForCourse(courseId: string): Promise<any[]> {
+    const response = await api.get(`/material-codes/course/${courseId}`)
+    return response.data.data
+  },
+
+  async create(data: {
+    courseId: string
+    codeType: string
+    materialName: string
+    code: string
+    studentId?: string
+    isGroupCode?: boolean
+  }): Promise<any> {
+    const response = await api.post('/material-codes', data)
+    return response.data.data
+  },
+
+  async bulkCreate(data: {
+    courseId: string
+    codeType: string
+    materialName: string
+    codes: Array<{ code: string; studentEmail?: string; isGroupCode?: boolean }>
+  }): Promise<any> {
+    const response = await api.post('/material-codes/bulk', data)
+    return response.data.data
+  },
+
+  async autoAssign(courseId: string): Promise<any> {
+    const response = await api.post(`/material-codes/course/${courseId}/auto-assign`)
+    return response.data.data
+  },
+
+  async sendAll(courseId: string): Promise<any> {
+    const response = await api.post(`/material-codes/course/${courseId}/send`)
+    return response.data.data
+  },
+
+  async delete(id: string): Promise<void> {
+    await api.delete(`/material-codes/${id}`)
+  }
+}
+
+// =====================================================
+// ORGANIZATION CONTACTS API
+// =====================================================
+
+export const organizationContactsApi = {
+  async getForOrg(orgId: string): Promise<any[]> {
+    const response = await api.get(`/organizations/${orgId}/contacts`)
+    return response.data.data
+  },
+
+  async create(orgId: string, data: {
+    name: string
+    email: string
+    phone?: string
+    role?: string
+    branch?: string
+  }): Promise<any> {
+    const response = await api.post(`/organizations/${orgId}/contacts`, data)
+    return response.data.data
+  },
+
+  async update(orgId: string, contactId: string, data: any): Promise<any> {
+    const response = await api.put(`/organizations/${orgId}/contacts/${contactId}`, data)
+    return response.data.data
+  },
+
+  async delete(orgId: string, contactId: string): Promise<void> {
+    await api.delete(`/organizations/${orgId}/contacts/${contactId}`)
+  },
+
+  async linkToCourses(orgId: string, contactId: string, courseIds: string[]): Promise<any> {
+    const response = await api.post(`/organizations/${orgId}/contacts/${contactId}/courses`, { courseIds })
+    return response.data.data
+  },
+
+  async unlinkFromCourse(orgId: string, contactId: string, courseId: string): Promise<void> {
+    await api.delete(`/organizations/${orgId}/contacts/${contactId}/courses/${courseId}`)
+  },
+
+  async getForCourse(courseId: string): Promise<any[]> {
+    const response = await api.get(`/organizations/courses/${courseId}/contacts`)
+    return response.data.data
+  }
 }
 
 export default api

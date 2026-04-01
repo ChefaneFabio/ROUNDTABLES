@@ -390,6 +390,29 @@ export class VideoConferencingService {
     }
   }
 
+  static async updateMeeting(
+    provider: MeetingProvider,
+    meetingId: string,
+    config: Partial<MeetingConfig>,
+    options?: { teamsUserId?: string }
+  ): Promise<MeetingDetails | null> {
+    // Most providers require delete + recreate for time changes
+    // Zoom supports PATCH, but for consistency we recreate
+    try {
+      await this.deleteMeeting(provider, meetingId, options);
+    } catch (e) {
+      console.error('Failed to delete old meeting during update:', e);
+    }
+
+    if (config.provider && config.startTime && config.duration && config.topic) {
+      return this.createMeeting(
+        { provider: config.provider, topic: config.topic, startTime: config.startTime, duration: config.duration, hostEmail: config.hostEmail, agenda: config.agenda },
+        options
+      );
+    }
+    return null;
+  }
+
   static async deleteMeeting(
     provider: MeetingProvider,
     meetingId: string,

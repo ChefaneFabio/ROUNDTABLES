@@ -184,30 +184,76 @@ export function LessonDetailPage() {
         </CardBody>
       </Card>
 
-      {/* Meeting Link */}
-      {lesson.meetingLink && (
+      {/* Meeting Section */}
+      {(lesson.meetingLink || lesson.meetingProvider) && (
         <Card>
           <CardBody>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                  <Video className="h-5 w-5 text-blue-600" />
+                <div className={`h-12 w-12 rounded-full flex items-center justify-center ${
+                  lesson.meetingProvider === 'ZOOM' ? 'bg-blue-100' :
+                  lesson.meetingProvider === 'GOOGLE_MEET' ? 'bg-green-100' :
+                  lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'bg-purple-100' : 'bg-gray-100'
+                }`}>
+                  <Video className={`h-6 w-6 ${
+                    lesson.meetingProvider === 'ZOOM' ? 'text-blue-600' :
+                    lesson.meetingProvider === 'GOOGLE_MEET' ? 'text-green-600' :
+                    lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'text-purple-600' : 'text-gray-600'
+                  }`} />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-900">Meeting Link</p>
-                  <p className="text-xs text-gray-500 truncate max-w-md">
-                    {lesson.meetingLink}
+                  <p className="text-sm font-semibold text-gray-900">
+                    {lesson.meetingProvider === 'ZOOM' ? 'Zoom Meeting' :
+                     lesson.meetingProvider === 'GOOGLE_MEET' ? 'Google Meet' :
+                     lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'Microsoft Teams' : 'Meeting'}
                   </p>
+                  {lesson.meetingLink && (
+                    <p className="text-xs text-gray-500 truncate max-w-md">{lesson.meetingLink}</p>
+                  )}
+                  {lesson.meetingPassword && (
+                    <p className="text-xs text-gray-400 mt-0.5">Password: {lesson.meetingPassword}</p>
+                  )}
                 </div>
               </div>
-              <Button
-                size="sm"
-                leftIcon={<ExternalLink className="h-4 w-4" />}
-                onClick={() => window.open(lesson.meetingLink, '_blank')}
-              >
-                Join Meeting
-              </Button>
+              <div className="flex items-center gap-2">
+                {lesson.meetingLink && (
+                  <Button
+                    leftIcon={<ExternalLink className="h-4 w-4" />}
+                    onClick={() => window.open(lesson.meetingLink, '_blank')}
+                    className={
+                      lesson.meetingProvider === 'ZOOM' ? 'bg-blue-600 hover:bg-blue-700 text-white' :
+                      lesson.meetingProvider === 'GOOGLE_MEET' ? 'bg-green-600 hover:bg-green-700 text-white' :
+                      lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'bg-purple-600 hover:bg-purple-700 text-white' : ''
+                    }
+                  >
+                    Join Meeting
+                  </Button>
+                )}
+                {lesson.meetingHostUrl && (isAdmin || isTeacher) && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    leftIcon={<ExternalLink className="h-4 w-4" />}
+                    onClick={() => window.open(lesson.meetingHostUrl, '_blank')}
+                  >
+                    Host Link
+                  </Button>
+                )}
+              </div>
             </div>
+            {lesson.meetingRecordingUrl && (
+              <div className="mt-3 pt-3 border-t">
+                <a
+                  href={lesson.meetingRecordingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-sm text-primary-600 hover:text-primary-700 font-medium"
+                >
+                  <Download className="h-4 w-4" />
+                  View Recording
+                </a>
+              </div>
+            )}
           </CardBody>
         </Card>
       )}

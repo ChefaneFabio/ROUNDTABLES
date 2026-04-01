@@ -62,14 +62,15 @@ import OrgSeatsPage from './pages/org/OrgSeatsPage'
 import OrgSettingsPage from './pages/org/OrgSettingsPage'
 import OrgPurchasePage from './pages/org/OrgPurchasePage'
 import AdminOrganizationsPage from './pages/admin/OrganizationsPage'
+import OrganizationDetailPage from './pages/admin/OrganizationDetailPage'
 import SelfPacedCoursePage from './pages/SelfPacedCoursePage'
 import { BusinessPage } from './pages/BusinessPage'
-// Gamification pages
-import LeaderboardPage from './pages/LeaderboardPage'
-import BadgesPage from './pages/BadgesPage'
 // Calendar & availability pages
 import StudentCalendarPage from './pages/StudentCalendarPage'
 import TeacherAvailabilityPage from './pages/TeacherAvailabilityPage'
+// Learning path pages
+import LearningPathsPage from './pages/LearningPathsPage'
+import LearningPathDetailPage from './pages/LearningPathDetailPage'
 // Detail & form pages
 import { CourseDetailPage } from './pages/CourseDetailPage'
 import { CreateCoursePage } from './pages/CreateCoursePage'
@@ -294,27 +295,6 @@ function App() {
         }
       />
 
-      {/* Gamification Routes */}
-      <Route
-        path="/leaderboard"
-        element={
-          <ProtectedRoute>
-            <Layout>
-              <LeaderboardPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/badges"
-        element={
-          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
-            <Layout>
-              <BadgesPage />
-            </Layout>
-          </ProtectedRoute>
-        }
-      />
 
       {/* Calendar & Availability Routes */}
       <Route
@@ -333,6 +313,28 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.TEACHER]}>
             <Layout>
               <TeacherAvailabilityPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Learning Path Routes */}
+      <Route
+        path="/learning-paths"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <LearningPathsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/learning-paths/:id"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <LearningPathDetailPage />
             </Layout>
           </ProtectedRoute>
         }
@@ -641,6 +643,16 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <AdminOrganizationsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/organizations/:id"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <OrganizationDetailPage />
             </Layout>
           </ProtectedRoute>
         }

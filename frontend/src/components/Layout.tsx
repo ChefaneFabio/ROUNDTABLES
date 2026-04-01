@@ -28,9 +28,8 @@ import {
   Mic,
   Building2,
   Ticket,
-  Trophy,
-  Flame,
   Clock,
+  Route,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -53,9 +52,8 @@ const navigation: NavItem[] = [
   { name: 'Speaking', href: '/speaking', icon: Mic, roles: [UserRole.STUDENT] },
   { name: 'Certificates', href: '/certificates', icon: Award, roles: [UserRole.STUDENT] },
   { name: 'AI Chat', href: '/chat', icon: Bot, roles: [UserRole.STUDENT] },
+  { name: 'Learning Paths', href: '/learning-paths', icon: Route, roles: [UserRole.STUDENT, UserRole.ADMIN] },
   { name: 'My Calendar', href: '/my-calendar', icon: Calendar, roles: [UserRole.STUDENT] },
-  { name: 'Leaderboard', href: '/leaderboard', icon: Trophy, roles: [UserRole.STUDENT] },
-  { name: 'Badges', href: '/badges', icon: Flame, roles: [UserRole.STUDENT] },
   // ORG_ADMIN navigation
   { name: 'Dashboard', href: '/org/dashboard', icon: Home, roles: [UserRole.ORG_ADMIN] },
   { name: 'Purchase Seats', href: '/org/purchase', icon: CreditCard, roles: [UserRole.ORG_ADMIN] },

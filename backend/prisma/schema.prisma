@@ -39,6 +39,9 @@ model User {
   // Exercises created by this user
   createdExercises Exercise[]
 
+  // Exercise assignments created by this user
+  exerciseAssignments ExerciseAssignment[]
+
   @@index([email])
   @@index([role])
   @@map("users")
@@ -97,7 +100,8 @@ model School {
   videoLibraries VideoLibrary[]
   exercises      Exercise[]
   organizations  Organization[]
-  leaderboardSnapshots LeaderboardSnapshot[]
+  learningPaths  LearningPath[]
+  materialCodes  MaterialCode[]
 
   @@index([email])
   @@index([userId])
@@ -187,11 +191,12 @@ model Student {
   exerciseAttempts ExerciseAttempt[]
   seatAllocations  SeatAllocation[]
 
-  // Gamification
-  badges               UserBadge[]
-  streak               Streak?
-  xpTransactions       XpTransaction[]
-  leaderboardSnapshots LeaderboardSnapshot[]
+  // Learning paths
+  pathEnrollments PathEnrollment[]
+
+  // Assignments & submissions
+  assignmentSubmissions AssignmentSubmission[]
+  materialCodes         MaterialCode[]
 
   @@index([userId])
   @@index([schoolId])
@@ -234,6 +239,10 @@ model Course {
   schoolId String
   school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
+  // Automation & category controls
+  automationsEnabled Boolean  @default(false) // Must be explicitly enabled to send notifications
+  courseCategory      String?  // "regular", "workshop", "intensive", "one-to-one", etc.
+
   // Relations
   enrollments    Enrollment[]
   lessons        Lesson[]
@@ -244,11 +253,16 @@ model Course {
   certificates   Certificate[]
   seatLicenses   SeatLicense[]
   courseContents CourseContent[]
+  learningPathCourses LearningPathCourse[]
+  exerciseAssignments ExerciseAssignment[]
+  materialCodes       MaterialCode[]
+  courseContacts       CourseContact[]
 
   @@index([schoolId])
   @@index([status])
   @@index([courseType])
   @@index([isPublic])
+  @@index([automationsEnabled])
   @@map("courses")
 }
 
@@ -1501,6 +1515,7 @@ model Exercise {
   items          ExerciseItem[]
   attempts       ExerciseAttempt[]
   courseContents CourseContent[]
+  assignments    ExerciseAssignment[]
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
 
@@ -1555,6 +1570,8 @@ model ExerciseAttempt {
   completedAt DateTime?
   timeSpent   Int? // Time spent in seconds
 
+  assignmentSubmission AssignmentSubmission?
+
   @@index([studentId])
   @@index([exerciseId])
   @@map("exercise_attempts")
@@ -1604,6 +1621,7 @@ model Organization {
   employees    Student[]
   invoices     Invoice[]
   payments     Payment[]
+  contacts     OrganizationContact[]
 
   @@index([schoolId])
   @@index([email])
@@ -1696,136 +1714,76 @@ model SeatAllocation {
 }
 
 // =====================================================
-// GAMIFICATION
+// LEARNING PATHS
 // =====================================================
 
-model Badge {
-  id          String    @id @default(cuid())
-  slug        String    @unique // e.g. "first-lesson", "streak-7"
+model LearningPath {
+  id          String   @id @default(cuid())
   name        String
-  description String
-  icon        String    @default("star") // icon name or emoji
-  category    BadgeCategory
-  criteria    Json      // { type: "exercise_count", threshold: 10 }
-  xpReward    Int       @default(0)
-  rarity      BadgeRarity @default(COMMON)
-  isActive    Boolean   @default(true)
-  createdAt   DateTime  @default(now())
-
-  userBadges UserBadge[]
-
-  @@index([category])
-  @@index([slug])
-  @@map("badges")
-}
-
-model UserBadge {
-  id        String   @id @default(cuid())
-  earnedAt  DateTime @default(now())
-
-  studentId String
-  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-
-  badgeId String
-  badge   Badge  @relation(fields: [badgeId], references: [id], onDelete: Cascade)
-
-  @@unique([studentId, badgeId])
-  @@index([studentId])
-  @@index([badgeId])
-  @@map("user_badges")
-}
-
-model Streak {
-  id            String   @id @default(cuid())
-  currentStreak Int      @default(0)
-  longestStreak Int      @default(0)
-  lastActivityDate DateTime?
-  streakFreezeUsed Boolean @default(false)
-  freezesRemaining Int    @default(1)
-  updatedAt     DateTime @updatedAt
-
-  studentId String @unique
-  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-
-  @@map("streaks")
-}
-
-model XpTransaction {
-  id        String       @id @default(cuid())
-  amount    Int
-  source    XpSource
-  sourceId  String?      // ID of the exercise/lesson/assessment that triggered it
-  note      String?
-  createdAt DateTime     @default(now())
-
-  studentId String
-  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
-
-  @@index([studentId])
-  @@index([createdAt])
-  @@index([source])
-  @@map("xp_transactions")
-}
-
-model LeaderboardSnapshot {
-  id        String   @id @default(cuid())
-  period    LeaderboardPeriod
-  weekStart DateTime?
-  monthStart DateTime?
-  rank      Int
-  totalXp   Int
-
-  studentId String
-  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  description String?
+  language    String?
+  targetLevel String?  // Target CEFR level (e.g. "B2")
+  difficulty  String?  @default("beginner") // beginner, intermediate, advanced
+  thumbnailUrl String?
+  estimatedHours Int?
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   schoolId String
-  school   School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime @default(now())
+  courses     LearningPathCourse[]
+  enrollments PathEnrollment[]
 
-  @@unique([studentId, period, weekStart])
-  @@unique([studentId, period, monthStart])
-  @@index([schoolId, period, createdAt])
-  @@index([period, rank])
-  @@map("leaderboard_snapshots")
+  @@index([schoolId])
+  @@index([isPublished])
+  @@map("learning_paths")
 }
 
-enum BadgeCategory {
-  MILESTONE      // Completion-based (first lesson, 100 exercises)
-  STREAK         // Streak-based (7-day, 30-day)
-  SKILL          // Skill mastery (reach B2 reading)
-  SOCIAL         // Community (help others, feedback)
-  SPEED          // Performance (fast completion)
-  PERFECTION     // Accuracy (100% score)
-  EXPLORER       // Variety (try all exercise types)
+model LearningPathCourse {
+  id         String  @id @default(cuid())
+  orderIndex Int     @default(0)
+  isRequired Boolean @default(true)
+  minScore   Int?    @default(70) // Minimum % to unlock next course
+
+  pathId String
+  path   LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+
+  courseId String
+  course  Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@unique([pathId, courseId])
+  @@unique([pathId, orderIndex])
+  @@index([pathId])
+  @@index([courseId])
+  @@map("learning_path_courses")
 }
 
-enum BadgeRarity {
-  COMMON
-  UNCOMMON
-  RARE
-  EPIC
-  LEGENDARY
+model PathEnrollment {
+  id          String             @id @default(cuid())
+  status      PathEnrollmentStatus @default(ACTIVE)
+  progress    Int                @default(0) // Overall % complete
+  startedAt   DateTime           @default(now())
+  completedAt DateTime?
+  currentCourseIndex Int         @default(0) // Which course they're on
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  pathId String
+  path   LearningPath @relation(fields: [pathId], references: [id], onDelete: Cascade)
+
+  @@unique([studentId, pathId])
+  @@index([studentId])
+  @@index([pathId])
+  @@map("path_enrollments")
 }
 
-enum XpSource {
-  EXERCISE_COMPLETE
-  ASSESSMENT_COMPLETE
-  LESSON_ATTENDED
-  STREAK_BONUS
-  BADGE_EARNED
-  COURSE_COMPLETE
-  VIDEO_WATCHED
-  CHAT_SESSION
-  SPEAKING_PRACTICE
-  DAILY_LOGIN
-  PERFECT_SCORE
-}
-
-enum LeaderboardPeriod {
-  WEEKLY
-  MONTHLY
-  ALL_TIME
+enum PathEnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  PAUSED
 }
 
 // =====================================================
@@ -1853,4 +1811,147 @@ model CourseContent {
   @@index([videoId])
   @@index([exerciseId])
   @@map("course_contents")
+}
+
+// =====================================================
+// EXERCISE ASSIGNMENTS (Trainer assigns to course with deadline)
+// =====================================================
+
+model ExerciseAssignment {
+  id              String    @id @default(cuid())
+  title           String?   // Optional override title
+  instructions    String?   // Assignment-specific instructions
+  dueDate         DateTime  // Deadline for completion
+  isPublished     Boolean   @default(false)
+  allowFileUpload Boolean   @default(false) // Whether students can upload files
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  exerciseId String
+  exercise   Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  assignedById String
+  assignedBy   User @relation(fields: [assignedById], references: [id])
+
+  submissions AssignmentSubmission[]
+
+  @@index([courseId])
+  @@index([exerciseId])
+  @@index([dueDate])
+  @@map("exercise_assignments")
+}
+
+model AssignmentSubmission {
+  id           String           @id @default(cuid())
+  status       SubmissionStatus @default(PENDING)
+  fileUrl      String?          // Uploaded file path
+  fileName     String?
+  fileSize     Int?
+  submittedAt  DateTime?
+  grade        Int?             // Teacher grade (0-100)
+  teacherNotes String?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  assignmentId String
+  assignment   ExerciseAssignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  attemptId String?        @unique
+  attempt   ExerciseAttempt? @relation(fields: [attemptId], references: [id])
+
+  @@unique([assignmentId, studentId])
+  @@index([assignmentId])
+  @@index([studentId])
+  @@index([status])
+  @@map("assignment_submissions")
+}
+
+enum SubmissionStatus {
+  PENDING    // Not yet submitted
+  SUBMITTED  // Student submitted
+  LATE       // Submitted after deadline
+  GRADED     // Teacher graded
+  RETURNED   // Returned for revision
+}
+
+// =====================================================
+// B2B: ORGANIZATION CONTACTS (Multiple HR contacts per org)
+// =====================================================
+
+model OrganizationContact {
+  id             String   @id @default(cuid())
+  name           String
+  email          String
+  phone          String?
+  role           String?  // "HR Manager", "Training Coordinator", etc.
+  branch         String?  // Location/sede name (e.g., "Milano", "Roma")
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  // Which courses this contact manages (notifications go to them)
+  courseContacts CourseContact[]
+
+  @@index([organizationId])
+  @@index([email])
+  @@map("organization_contacts")
+}
+
+// Join table: which HR contact(s) receive notifications for which course
+model CourseContact {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  contactId String
+  contact   OrganizationContact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, contactId])
+  @@index([courseId])
+  @@index([contactId])
+  @@map("course_contacts")
+}
+
+// =====================================================
+// MATERIAL CODES (Book codes, My English Lab codes, etc.)
+// =====================================================
+
+model MaterialCode {
+  id           String    @id @default(cuid())
+  codeType     String    // "BOOK", "MEL", "PLATFORM_ACCESS", etc.
+  materialName String    // e.g., "English File Upper-Intermediate"
+  code         String    // The actual code value
+  isGroupCode  Boolean   @default(false) // Group codes shared by all students (e.g., MEL group code)
+  sentToStudent Boolean  @default(false)
+  sentToTeacher Boolean  @default(false)
+  sentAt       DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  // null = unassigned (or group code shared by all)
+  studentId String?
+  student   Student? @relation(fields: [studentId], references: [id])
+
+  @@index([courseId])
+  @@index([schoolId])
+  @@index([studentId])
+  @@index([codeType])
+  @@map("material_codes")
 }

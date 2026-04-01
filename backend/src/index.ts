@@ -43,8 +43,12 @@ import seatLicenseRoutes from './controllers/seatLicenseController'
 import catalogRoutes from './controllers/catalogController'
 // Stripe payment routes
 import stripeRoutes from './controllers/stripeController'
-// Gamification routes
-import gamificationRoutes from './controllers/gamificationController'
+// Learning path routes
+import learningPathRoutes from './controllers/learningPathController'
+// Organization contacts, exercise assignments, material codes
+import organizationContactRoutes from './controllers/organizationContactController'
+import assignmentRoutes from './controllers/assignmentController'
+import materialCodeRoutes from './controllers/materialCodeController'
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler'
@@ -105,6 +109,7 @@ app.use(requestLogger)
 // Static file serving for TTS audio and speaking uploads
 app.use('/audio', express.static(path.join(__dirname, '../public/audio')))
 app.use('/uploads/speaking', express.static(path.join(__dirname, '../uploads/speaking')))
+app.use('/uploads/assignments', express.static(path.join(__dirname, '../uploads/assignments')))
 
 // Apply rate limiting to all routes
 app.use(standardLimiter)
@@ -169,8 +174,11 @@ app.use('/api/seat-licenses', seatLicenseRoutes)
 app.use('/api/catalog', catalogRoutes)
 // Stripe payment routes
 app.use('/api/stripe', stripeRoutes)
-// Gamification routes
-app.use('/api/gamification', gamificationRoutes)
+// Learning path routes
+app.use('/api/learning-paths', learningPathRoutes)
+app.use('/api/organizations', organizationContactRoutes)
+app.use('/api/assignments', assignmentRoutes)
+app.use('/api/material-codes', materialCodeRoutes)
 
 // Error handling
 app.use(errorHandler)
@@ -195,9 +203,10 @@ const gracefulShutdown = async (signal: string) => {
 process.on('SIGTERM', () => gracefulShutdown('SIGTERM'))
 process.on('SIGINT', () => gracefulShutdown('SIGINT'))
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`
+// Start server (skip in test to avoid port conflicts)
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(`
 ╔═══════════════════════════════════════════════════════════╗
 ║         Maka LMC API Server                               ║
 ╠═══════════════════════════════════════════════════════════╣
@@ -205,8 +214,9 @@ app.listen(PORT, () => {
 ║  Environment: ${(process.env.NODE_ENV || 'development').padEnd(40)}║
 ║  Health:      http://localhost:${PORT}/health                 ║
 ╚═══════════════════════════════════════════════════════════╝
-  `)
-})
+    `)
+  })
+}
 
 export { prisma }
 export default app

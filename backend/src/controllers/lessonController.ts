@@ -9,8 +9,96 @@ import { PAGINATION, VALID_STATUS_TRANSITIONS } from '../utils/constants'
 import { LessonStatus, MeetingProvider } from '@prisma/client'
 import { addDays, startOfMonth, endOfMonth, format } from 'date-fns'
 import { VideoConferencingService } from '../services/VideoConferencingService'
+import { emailService } from '../services/EmailService'
 
 const router = Router()
+
+// Helper: send meeting link emails to all enrolled students + course teachers
+async function sendMeetingLinks(lesson: any) {
+  if (!lesson.meetingLink || !emailService.isConfigured()) return
+
+  const providerName = lesson.meetingProvider === 'ZOOM' ? 'Zoom' :
+    lesson.meetingProvider === 'GOOGLE_MEET' ? 'Google Meet' :
+    lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'Microsoft Teams' : 'Video'
+
+  const courseName = lesson.course?.name || 'Course'
+  const lessonTitle = lesson.title || `Lesson ${lesson.lessonNumber}`
+  const scheduledAt = lesson.scheduledAt ? format(new Date(lesson.scheduledAt), 'EEEE, MMMM d yyyy · HH:mm') : ''
+  const duration = lesson.duration || 60
+
+  // Collect all recipients: enrolled students + course teachers
+  const [enrollments, courseTeachers] = await Promise.all([
+    prisma.enrollment.findMany({
+      where: { courseId: lesson.course?.id || lesson.courseId, status: { in: ['ACTIVE', 'PENDING'] } },
+      include: { student: { include: { user: { select: { email: true, name: true } } } } }
+    }),
+    prisma.courseTeacher.findMany({
+      where: { courseId: lesson.course?.id || lesson.courseId },
+      include: { teacher: { include: { user: { select: { email: true, name: true } } } } }
+    })
+  ])
+
+  const studentEmails = enrollments.map(e => e.student.user.email).filter(Boolean)
+  const teacherEmails = courseTeachers.map(ct => ct.teacher.user.email).filter(Boolean)
+
+  // Also include the specific lesson teacher if not already in courseTeachers
+  if (lesson.teacher?.user?.email && !teacherEmails.includes(lesson.teacher.user.email)) {
+    teacherEmails.push(lesson.teacher.user.email)
+  }
+
+  const meetingLinkHtml = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+      <h2 style="color: #2563eb;">📅 ${courseName} — ${lessonTitle}</h2>
+      <p><strong>Date:</strong> ${scheduledAt}</p>
+      <p><strong>Duration:</strong> ${duration} minutes</p>
+      <p><strong>Platform:</strong> ${providerName}</p>
+      ${lesson.meetingPassword ? `<p><strong>Password:</strong> ${lesson.meetingPassword}</p>` : ''}
+      <div style="margin: 24px 0;">
+        <a href="${lesson.meetingLink}"
+           style="display: inline-block; background: #2563eb; color: white; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+          Join ${providerName} Meeting
+        </a>
+      </div>
+      <p style="color: #6b7280; font-size: 13px;">
+        If the button doesn't work, copy this link: ${lesson.meetingLink}
+      </p>
+    </div>
+  `
+
+  // Send to students
+  if (studentEmails.length > 0) {
+    try {
+      await emailService.sendEmail({
+        to: studentEmails,
+        subject: `${courseName} — ${lessonTitle} · ${providerName} link`,
+        html: meetingLinkHtml
+      })
+    } catch (e) {
+      console.error('Failed to send meeting link to students:', e)
+    }
+  }
+
+  // Send to teachers (with host URL if available)
+  if (teacherEmails.length > 0) {
+    const teacherHtml = lesson.meetingHostUrl && lesson.meetingHostUrl !== lesson.meetingLink
+      ? meetingLinkHtml.replace(
+          `Join ${providerName} Meeting`,
+          `Start ${providerName} Meeting (Host)`
+        ).replace(lesson.meetingLink, lesson.meetingHostUrl) +
+        `<p style="margin-top: 8px; font-size: 13px; color: #6b7280;">Student join link: ${lesson.meetingLink}</p>`
+      : meetingLinkHtml
+
+    try {
+      await emailService.sendEmail({
+        to: teacherEmails,
+        subject: `[Teacher] ${courseName} — ${lessonTitle} · ${providerName} link`,
+        html: teacherHtml
+      })
+    } catch (e) {
+      console.error('Failed to send meeting link to teachers:', e)
+    }
+  }
+}
 
 // Validation schemas
 const createLessonSchema = Joi.object({
@@ -334,17 +422,85 @@ router.post('/', authenticate, requireSchoolAdmin, validateRequest(createLessonS
     const availWarning = data._availabilityWarning
     delete data._availabilityWarning
 
+    // Extract meeting fields before creating lesson
+    const wantsMeeting = data.meetingProvider && data.meetingProvider !== 'CUSTOM' && data.scheduledAt
+    const customLink = data.meetingProvider === 'CUSTOM' ? data.meetingLink : null
+    const chosenProvider = data.meetingProvider
+    delete data.createMeeting // Not a DB field
+
+    // For CUSTOM provider, store the manual link directly
+    if (data.meetingProvider === 'CUSTOM' && data.meetingLink) {
+      data.meetingProvider = 'CUSTOM'
+      // meetingLink is already in data
+    } else if (!wantsMeeting) {
+      // No meeting requested — strip meeting fields so they don't get saved as empty
+      delete data.meetingProvider
+      delete data.meetingLink
+    } else {
+      // Will auto-create below — don't store provider yet (set after API call)
+      delete data.meetingProvider
+      delete data.meetingLink
+    }
+
     const lesson = await prisma.lesson.create({
       data,
       include: {
-        course: { select: { name: true } },
-        teacher: { include: { user: { select: { name: true } } } },
+        course: { select: { id: true, name: true, schoolId: true } },
+        teacher: { include: { user: { select: { name: true, email: true } } } },
         module: { select: { title: true } }
       }
     })
 
-    const message = availWarning
-      ? `Lesson created (warning: ${availWarning})`
+    // Auto-create meeting via provider API
+    let meetingWarning: string | undefined
+    if (wantsMeeting && chosenProvider) {
+      try {
+        if (!VideoConferencingService.isProviderConfigured(chosenProvider)) {
+          meetingWarning = `${chosenProvider} is not configured — lesson created without meeting`
+        } else {
+          const meetingDetails = await VideoConferencingService.createMeeting(
+            {
+              provider: chosenProvider,
+              topic: lesson.title || `${lesson.course.name} - Lesson ${lesson.lessonNumber}`,
+              startTime: lesson.scheduledAt,
+              duration: lesson.duration,
+              hostEmail: lesson.teacher?.user?.email,
+              agenda: lesson.description || undefined
+            }
+          )
+
+          await prisma.lesson.update({
+            where: { id: lesson.id },
+            data: {
+              meetingProvider: meetingDetails.provider,
+              meetingId: meetingDetails.meetingId,
+              meetingLink: meetingDetails.joinUrl,
+              meetingHostUrl: meetingDetails.hostUrl,
+              meetingPassword: meetingDetails.password
+            }
+          })
+
+          // Merge meeting info into response
+          Object.assign(lesson, {
+            meetingProvider: meetingDetails.provider,
+            meetingId: meetingDetails.meetingId,
+            meetingLink: meetingDetails.joinUrl,
+            meetingHostUrl: meetingDetails.hostUrl,
+            meetingPassword: meetingDetails.password
+          })
+
+          // Send meeting links to all enrolled students + all course teachers
+          sendMeetingLinks(lesson).catch(e => console.error('Failed to send meeting links:', e))
+        }
+      } catch (e) {
+        console.error('Meeting creation failed (non-blocking):', e)
+        meetingWarning = 'Lesson created but meeting creation failed — you can create one manually'
+      }
+    }
+
+    const warnings = [availWarning, meetingWarning].filter(Boolean).join('; ')
+    const message = warnings
+      ? `Lesson created (${warnings})`
       : 'Lesson created successfully'
     res.status(201).json(apiResponse.success(lesson, message))
   } catch (error) {
@@ -359,7 +515,10 @@ router.put('/:id', authenticate, requireLessonAccess, validateRequest(updateLess
 
     const lesson = await prisma.lesson.findFirst({
       where: { id, deletedAt: null },
-      include: { course: true }
+      include: {
+        course: true,
+        teacher: { include: { user: { select: { email: true, name: true } } } }
+      }
     })
 
     if (!lesson) {
@@ -374,17 +533,134 @@ router.put('/:id', authenticate, requireLessonAccess, validateRequest(updateLess
       return res.status(403).json(apiResponse.error('Not authorized to edit this lesson', 'FORBIDDEN'))
     }
 
+    const body = { ...req.body }
+    const timeChanged = body.scheduledAt && new Date(body.scheduledAt).getTime() !== lesson.scheduledAt.getTime()
+    const durationChanged = body.duration && body.duration !== lesson.duration
+    const providerChanged = body.meetingProvider !== undefined && body.meetingProvider !== lesson.meetingProvider
+
+    // Conflict detection on reschedule
+    const checkTeacherId = body.teacherId || lesson.teacherId
+    const checkScheduledAt = body.scheduledAt ? new Date(body.scheduledAt) : lesson.scheduledAt
+    const checkDuration = body.duration || lesson.duration
+
+    if (checkTeacherId && (timeChanged || durationChanged || body.teacherId)) {
+      const lessonEnd = new Date(checkScheduledAt.getTime() + checkDuration * 60000)
+
+      const conflicting = await prisma.lesson.findMany({
+        where: {
+          teacherId: checkTeacherId,
+          deletedAt: null,
+          id: { not: id },
+          status: { notIn: ['CANCELLED'] },
+          scheduledAt: { lt: lessonEnd, gte: new Date(checkScheduledAt.getTime() - 180 * 60000) },
+        },
+        select: { id: true, scheduledAt: true, duration: true, title: true, course: { select: { name: true } } },
+      })
+
+      const realConflicts = conflicting.filter(l => {
+        const existEnd = new Date(l.scheduledAt.getTime() + l.duration * 60000)
+        return l.scheduledAt < lessonEnd && existEnd > checkScheduledAt
+      })
+
+      if (realConflicts.length > 0) {
+        const c = realConflicts[0]
+        return res.status(409).json(apiResponse.error(
+          `Teacher has a conflicting lesson "${c.title || c.course?.name}" at ${format(c.scheduledAt, 'HH:mm')}`,
+          'TEACHER_CONFLICT'
+        ))
+      }
+    }
+
+    // Handle meeting provider changes
+    let meetingWarning: string | undefined
+    if (providerChanged && lesson.meetingId && lesson.meetingProvider && lesson.meetingProvider !== 'CUSTOM') {
+      // Delete old meeting
+      try {
+        await VideoConferencingService.deleteMeeting(lesson.meetingProvider as MeetingProvider, lesson.meetingId)
+      } catch (e) {
+        console.error('Failed to delete old meeting:', e)
+      }
+      // Clear old meeting data
+      body.meetingId = null
+      body.meetingLink = null
+      body.meetingHostUrl = null
+      body.meetingPassword = null
+    }
+
+    // Auto-create/update meeting if needed
+    const needsNewMeeting = providerChanged && body.meetingProvider && body.meetingProvider !== 'CUSTOM'
+    const needsMeetingUpdate = !providerChanged && (timeChanged || durationChanged) && lesson.meetingId && lesson.meetingProvider && lesson.meetingProvider !== 'CUSTOM'
+
+    if (needsNewMeeting || needsMeetingUpdate) {
+      const provider = body.meetingProvider || lesson.meetingProvider
+      try {
+        if (!VideoConferencingService.isProviderConfigured(provider)) {
+          meetingWarning = `${provider} is not configured`
+        } else {
+          // If updating existing, delete first
+          if (needsMeetingUpdate && lesson.meetingId) {
+            try { await VideoConferencingService.deleteMeeting(lesson.meetingProvider as MeetingProvider, lesson.meetingId) } catch {}
+          }
+
+          const teacherUser = lesson.teacher?.user || (await prisma.teacher.findUnique({
+            where: { id: checkTeacherId },
+            include: { user: { select: { email: true } } }
+          }))?.user
+
+          const meetingDetails = await VideoConferencingService.createMeeting({
+            provider,
+            topic: body.title || lesson.title || `Lesson ${lesson.lessonNumber}`,
+            startTime: checkScheduledAt,
+            duration: checkDuration,
+            hostEmail: teacherUser?.email
+          })
+
+          body.meetingProvider = meetingDetails.provider
+          body.meetingId = meetingDetails.meetingId
+          body.meetingLink = meetingDetails.joinUrl
+          body.meetingHostUrl = meetingDetails.hostUrl
+          body.meetingPassword = meetingDetails.password
+        }
+      } catch (e) {
+        console.error('Meeting update failed:', e)
+        meetingWarning = 'Meeting update failed'
+      }
+    }
+
+    // For CUSTOM provider with manual link
+    if (body.meetingProvider === 'CUSTOM' && body.meetingLink) {
+      body.meetingId = null
+      body.meetingHostUrl = null
+      body.meetingPassword = null
+    }
+
+    // Clear meeting if provider set to null
+    if (body.meetingProvider === null) {
+      body.meetingId = null
+      body.meetingLink = null
+      body.meetingHostUrl = null
+      body.meetingPassword = null
+    }
+
     const updated = await prisma.lesson.update({
       where: { id },
-      data: req.body,
+      data: body,
       include: {
-        course: { select: { name: true } },
-        teacher: { include: { user: { select: { name: true } } } },
+        course: { select: { id: true, name: true, schoolId: true } },
+        teacher: { include: { user: { select: { name: true, email: true } } } },
         module: { select: { title: true } }
       }
     })
 
-    res.json(apiResponse.success(updated, 'Lesson updated successfully'))
+    // Resend meeting links if meeting was created/changed
+    if ((needsNewMeeting || needsMeetingUpdate) && updated.meetingLink) {
+      sendMeetingLinks(updated).catch(e => console.error('Failed to send meeting links:', e))
+    }
+
+    const message = meetingWarning
+      ? `Lesson updated (${meetingWarning})`
+      : 'Lesson updated successfully'
+    res.json(apiResponse.success(updated, message))
   } catch (error) {
     handleError(res, error)
   }
