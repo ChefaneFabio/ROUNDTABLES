@@ -111,6 +111,19 @@ router.post('/quickbooks/sync/customers', authenticate, requireAdmin, async (req
   }
 })
 
+// Sync only vendors (teachers)
+router.post('/quickbooks/sync/vendors', authenticate, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    if (!quickBooksService.isConfigured()) {
+      return res.status(400).json(apiResponse.error('QuickBooks not configured', 'NOT_CONFIGURED'))
+    }
+    const result = await quickBooksService.syncAllVendors()
+    res.json(apiResponse.success(result, `Synced ${result.synced} vendors (teachers)`))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
 // Sync only invoices
 router.post('/quickbooks/sync/invoices', authenticate, requireAdmin, async (req: Request, res: Response) => {
   try {

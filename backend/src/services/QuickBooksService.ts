@@ -268,6 +268,85 @@ class QuickBooksService {
   }
 
   // ============================================
+  // VENDORS (Teachers — Maka pays them)
+  // ============================================
+
+  async syncVendor(teacher: {
+    id: string; userId: string; hourlyRate?: number | null;
+    user: { name: string; email: string; phone?: string | null }
+  }): Promise<string> {
+    const vendorData: any = {
+      DisplayName: teacher.user.name,
+      PrimaryEmailAddr: { Address: teacher.user.email },
+      PrimaryPhone: teacher.user.phone ? { FreeFormNumber: teacher.user.phone } : undefined,
+      Notes: teacher.hourlyRate ? `Rate: €${teacher.hourlyRate}/h` : undefined
+    }
+
+    // Search by name
+    const query = await this.api('get',
+      `/query?query=SELECT * FROM Vendor WHERE DisplayName = '${teacher.user.name.replace(/'/g, "\\'")}'`
+    )
+
+    if (query.QueryResponse?.Vendor?.length > 0) {
+      const existing = query.QueryResponse.Vendor[0]
+      vendorData.Id = existing.Id
+      vendorData.SyncToken = existing.SyncToken
+      const result = await this.api('post', '/vendor', { Vendor: vendorData })
+      return result.Vendor.Id
+    }
+
+    const result = await this.api('post', '/vendor', { Vendor: vendorData })
+    return result.Vendor.Id
+  }
+
+  // ============================================
+  // BILLS (Teacher Payroll — what Maka owes teachers)
+  // ============================================
+
+  async syncPayrollAsBill(payroll: {
+    id: string; teacherId: string; periodStart: Date; periodEnd: Date;
+    totalHours: number; hourlyRate: number; grossAmount: number;
+    netAmount: number; currency?: string; status: string
+  }): Promise<string> {
+    // Find or create the vendor
+    const teacher = await prisma.teacher.findUnique({
+      where: { id: payroll.teacherId },
+      include: { user: { select: { name: true, email: true, phone: true } } }
+    })
+    if (!teacher) throw new Error('Teacher not found')
+
+    const vendorId = await this.syncVendor({
+      id: teacher.id,
+      userId: teacher.userId,
+      hourlyRate: teacher.hourlyRate ? Number(teacher.hourlyRate) : null,
+      user: teacher.user
+    })
+
+    const periodLabel = `${payroll.periodStart.toISOString().split('T')[0]} to ${payroll.periodEnd.toISOString().split('T')[0]}`
+
+    const billData: any = {
+      VendorRef: { value: vendorId },
+      TxnDate: payroll.periodEnd.toISOString().split('T')[0],
+      DueDate: payroll.periodEnd.toISOString().split('T')[0],
+      Line: [
+        {
+          Amount: Number(payroll.grossAmount),
+          DetailType: 'AccountBasedExpenseLineDetail',
+          AccountBasedExpenseLineDetail: {
+            AccountRef: { value: '1' } // Configure to your expense account
+          },
+          Description: `Teaching hours: ${payroll.totalHours}h @ €${payroll.hourlyRate}/h (${periodLabel})`
+        }
+      ],
+      PrivateNote: `Payroll ${payroll.id} — ${teacher.user.name} — ${periodLabel}`,
+      CurrencyRef: { value: payroll.currency || 'EUR' }
+    }
+
+    const result = await this.api('post', '/bill', { Bill: billData })
+    return result.Bill.Id
+  }
+
+  // ============================================
   // FULL SYNC
   // ============================================
 
@@ -329,15 +408,36 @@ class QuickBooksService {
     return { synced, errors }
   }
 
+  async syncAllVendors(): Promise<{ synced: number; errors: number }> {
+    let synced = 0, errors = 0
+    const teachers = await prisma.teacher.findMany({
+      where: { isActive: true, deletedAt: null },
+      include: { user: { select: { name: true, email: true, phone: true } } }
+    })
+    for (const t of teachers) {
+      try {
+        await this.syncVendor({
+          id: t.id, userId: t.userId,
+          hourlyRate: t.hourlyRate ? Number(t.hourlyRate) : null,
+          user: t.user
+        })
+        synced++
+      } catch (e) { console.error(`QB vendor sync failed for ${t.user.name}:`, e); errors++ }
+    }
+    return { synced, errors }
+  }
+
   async fullSync(): Promise<{
     customers: { synced: number; errors: number }
+    vendors: { synced: number; errors: number }
     invoices: { synced: number; errors: number }
     payments: { synced: number; errors: number }
   }> {
     const customers = await this.syncAllCustomers()
+    const vendors = await this.syncAllVendors()
     const invoices = await this.syncAllInvoices()
     const payments = await this.syncAllPayments()
-    return { customers, invoices, payments }
+    return { customers, vendors, invoices, payments }
   }
 }
 
