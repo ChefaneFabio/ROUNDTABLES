@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Plus, Search, Edit, Trash2, Mail, BookOpen, Copy, Check } from 'lucide-react'
 import { teachersApi, authApi } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
+import { ConfirmDialog } from '../components/common/ConfirmDialog'
+import { useToast } from '../components/common/Toast'
 
 interface Teacher {
   id: string
@@ -28,6 +30,8 @@ export const TeachersPage: React.FC = () => {
   const [showAddModal, setShowAddModal] = useState(false)
   const [editingTeacher, setEditingTeacher] = useState<Teacher | null>(null)
   const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [confirmDelete, setConfirmDelete] = useState<Teacher | null>(null)
+  const toast = useToast()
 
   useEffect(() => {
     loadTeachers()
@@ -46,16 +50,16 @@ export const TeachersPage: React.FC = () => {
   }
 
   const handleDelete = async (teacher: Teacher) => {
-    if (!window.confirm(`Remove ${teacher.user.name}? This will deactivate their account.`)) return
     setDeletingId(teacher.id)
     try {
       await teachersApi.update(teacher.id, { isActive: false })
+      toast.success(`${teacher.user.name} deactivated`)
       loadTeachers()
     } catch (e) {
-      console.error('Failed to deactivate teacher:', e)
-      alert('Failed to deactivate teacher')
+      toast.error('Failed to deactivate teacher')
     } finally {
       setDeletingId(null)
+      setConfirmDelete(null)
     }
   }
 
@@ -63,10 +67,10 @@ export const TeachersPage: React.FC = () => {
     try {
       await teachersApi.update(id, data)
       setEditingTeacher(null)
+      toast.success('Teacher updated')
       loadTeachers()
     } catch (e) {
-      console.error('Failed to update teacher:', e)
-      alert('Failed to update teacher')
+      toast.error('Failed to update teacher')
     }
   }
 
@@ -203,7 +207,7 @@ export const TeachersPage: React.FC = () => {
                   <Edit className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => handleDelete(teacher)}
+                  onClick={() => setConfirmDelete(teacher)}
                   disabled={deletingId === teacher.id}
                   className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50"
                 >
@@ -222,6 +226,18 @@ export const TeachersPage: React.FC = () => {
           onSuccess={() => { setShowAddModal(false); loadTeachers() }}
         />
       )}
+
+      {/* Confirm Delete Dialog */}
+      <ConfirmDialog
+        open={!!confirmDelete}
+        title="Deactivate Teacher"
+        message={`Are you sure you want to deactivate ${confirmDelete?.user?.name}? They will no longer be able to access the platform.`}
+        confirmLabel="Deactivate"
+        variant="danger"
+        loading={!!deletingId}
+        onConfirm={() => confirmDelete && handleDelete(confirmDelete)}
+        onCancel={() => setConfirmDelete(null)}
+      />
 
       {/* Edit Teacher Modal */}
       {editingTeacher && (

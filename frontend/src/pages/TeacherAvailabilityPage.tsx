@@ -27,6 +27,7 @@ export default function TeacherAvailabilityPage() {
   const [saved, setSaved] = useState(false)
   const [editDay, setEditDay] = useState<number | null>(null)
   const [newSlot, setNewSlot] = useState({ startTime: '09:00', endTime: '17:00', status: 'AVAILABLE' })
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     loadSlots()
@@ -51,7 +52,7 @@ export default function TeacherAvailabilityPage() {
 
   const addSlot = (dayOfWeek: number) => {
     if (newSlot.startTime >= newSlot.endTime) {
-      alert('Start time must be before end time')
+      setError('Start time must be before end time')
       return
     }
     // Check for overlapping slots on same day
@@ -60,9 +61,10 @@ export default function TeacherAvailabilityPage() {
       newSlot.startTime < s.endTime && newSlot.endTime > s.startTime
     )
     if (overlap) {
-      alert('This time slot overlaps with an existing slot')
+      setError('This time slot overlaps with an existing slot')
       return
     }
+    setError(null)
     setSlots(prev => [...prev, { dayOfWeek, ...newSlot }])
     setEditDay(null)
     setSaved(false)
@@ -93,7 +95,7 @@ export default function TeacherAvailabilityPage() {
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch (err: any) {
-      alert(err.response?.data?.error || 'Failed to save')
+      setError(err.response?.data?.error || 'Failed to save')
     } finally {
       setSaving(false)
     }
@@ -116,6 +118,12 @@ export default function TeacherAvailabilityPage() {
 
   return (
     <div className="max-w-5xl mx-auto">
+      {error && (
+        <div className="mb-4 flex items-center justify-between px-4 py-3 bg-red-50 text-red-700 rounded-lg text-sm">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="text-red-500 hover:text-red-700 ml-4">✕</button>
+        </div>
+      )}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <Clock className="w-7 h-7 text-primary-600" />
