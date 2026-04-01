@@ -49,6 +49,8 @@ import learningPathRoutes from './controllers/learningPathController'
 import organizationContactRoutes from './controllers/organizationContactController'
 import assignmentRoutes from './controllers/assignmentController'
 import materialCodeRoutes from './controllers/materialCodeController'
+// Integration routes (HubSpot, QuickBooks)
+import integrationsRoutes from './controllers/integrationsController'
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler'
@@ -179,6 +181,7 @@ app.use('/api/learning-paths', learningPathRoutes)
 app.use('/api/organizations', organizationContactRoutes)
 app.use('/api/assignments', assignmentRoutes)
 app.use('/api/material-codes', materialCodeRoutes)
+app.use('/api/integrations', integrationsRoutes)
 
 // Error handling
 app.use(errorHandler)

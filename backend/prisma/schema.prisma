@@ -42,6 +42,9 @@ model User {
   // Exercise assignments created by this user
   exerciseAssignments ExerciseAssignment[]
 
+  // External integrations
+  hubspotContactId String?
+
   @@index([email])
   @@index([role])
   @@map("users")
@@ -258,6 +261,10 @@ model Course {
   materialCodes       MaterialCode[]
   courseContacts       CourseContact[]
 
+  // External integrations
+  hubspotProductId     String?
+  quickbooksItemId     String?
+
   @@index([schoolId])
   @@index([status])
   @@index([courseType])
@@ -424,6 +431,9 @@ model Enrollment {
   payments        Payment[]
   installmentPlan InstallmentPlan?
   seatAllocation  SeatAllocation?
+
+  // External integrations
+  hubspotDealId String?
 
   @@unique([studentId, courseId])
   @@index([status])
@@ -660,6 +670,9 @@ model Payment {
 
   // If payment is for an installment
   installments Installment[]
+
+  // External integrations
+  quickbooksPaymentId String?
 
   @@index([status])
   @@index([invoiceId])
@@ -1001,6 +1014,9 @@ model Invoice {
 
   payments       Payment[]
   payrollRecords TeacherPayroll[]
+
+  // External integrations
+  quickbooksInvoiceId String?
 
   @@index([invoiceNumber])
   @@index([status])
@@ -1622,6 +1638,10 @@ model Organization {
   invoices     Invoice[]
   payments     Payment[]
   contacts     OrganizationContact[]
+
+  // External integrations
+  hubspotCompanyId   String?
+  quickbooksCustomerId String?
 
   @@index([schoolId])
   @@index([email])
