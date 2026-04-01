@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { organizationApi } from '../../services/organizationApi'
+import { ConfirmDialog } from '../../components/common/ConfirmDialog'
 import { LanguageLevel } from '../../types'
 
 interface Employee {
@@ -26,6 +27,7 @@ export default function OrgEmployeesPage() {
   const [inviteLoading, setInviteLoading] = useState(false)
   const [inviteError, setInviteError] = useState('')
   const [inviteSuccess, setInviteSuccess] = useState('')
+  const [removeTarget, setRemoveTarget] = useState<{ id: string; name: string } | null>(null)
 
   const fetchEmployees = async (p: number = page) => {
     if (!organizationId) return
@@ -75,14 +77,15 @@ export default function OrgEmployeesPage() {
     }
   }
 
-  const handleRemove = async (studentId: string, name: string) => {
+  const handleRemove = async (studentId: string) => {
     if (!organizationId) return
-    if (!window.confirm(`Are you sure you want to remove ${name}?`)) return
     try {
       await organizationApi.removeEmployee(organizationId, studentId)
       fetchEmployees(page)
     } catch (err: any) {
       setError(err.response?.data?.error || 'Failed to remove employee')
+    } finally {
+      setRemoveTarget(null)
     }
   }
 
@@ -269,7 +272,7 @@ export default function OrgEmployeesPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                         <button
                           onClick={() =>
-                            handleRemove(emp.id, emp.user?.name || 'this employee')
+                            setRemoveTarget({ id: emp.id, name: emp.user?.name || 'this employee' })
                           }
                           className="text-red-600 hover:text-red-800 font-medium"
                         >
@@ -309,6 +312,16 @@ export default function OrgEmployeesPage() {
           </>
         )}
       </div>
+
+      <ConfirmDialog
+        open={!!removeTarget}
+        title="Remove Employee"
+        message={`Are you sure you want to remove ${removeTarget?.name}?`}
+        confirmLabel="Remove"
+        variant="danger"
+        onConfirm={() => removeTarget && handleRemove(removeTarget.id)}
+        onCancel={() => setRemoveTarget(null)}
+      />
     </div>
   )
 }

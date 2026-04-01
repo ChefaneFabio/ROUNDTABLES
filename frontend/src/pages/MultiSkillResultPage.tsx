@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { assessmentApi } from '../services/assessmentApi'
+import { useToast } from '../components/common/Toast'
 
 const SKILL_META: Record<string, { icon: string; label: string; color: string; bg: string }> = {
   GRAMMAR: { icon: '📝', label: 'Grammar', color: 'text-indigo-700', bg: 'bg-indigo-100' },
@@ -21,6 +22,7 @@ const LEVEL_NAMES: Record<string, string> = {
 export function MultiSkillResultPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const toast = useToast()
   const [results, setResults] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -146,7 +148,7 @@ export function MultiSkillResultPage() {
               a.click()
               URL.revokeObjectURL(url)
             } catch {
-              alert('PDF download not available yet.')
+              toast.info('PDF download not available yet.')
             }
           }}
           className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useToast } from '../components/common/Toast'
 import { useQuery } from 'react-query'
 import {
   Users,
@@ -42,6 +43,7 @@ const CEFR_COLORS: Record<string, string> = {
 
 export function AnalyticsPage() {
   const { isAdmin } = useAuth()
+  const toast = useToast()
   const [dateRange] = useState<{ start?: string; end?: string }>({})
 
   const { data, isLoading, error } = useQuery<CorporateAnalytics>(
@@ -83,7 +85,25 @@ export function AnalyticsPage() {
         </div>
         <button
           className="flex items-center gap-2 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
-          onClick={() => {/* Export functionality */}}
+          onClick={async () => {
+            try {
+              const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+              const token = localStorage.getItem('accessToken')
+              const res = await fetch(`${baseUrl}/analytics/export/corporate/school?format=csv`, {
+                headers: { Authorization: `Bearer ${token}` },
+              })
+              if (!res.ok) throw new Error('Export failed')
+              const blob = await res.blob()
+              const url = window.URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url
+              a.download = `analytics-${new Date().toISOString().slice(0, 10)}.csv`
+              document.body.appendChild(a)
+              a.click()
+              a.remove()
+              window.URL.revokeObjectURL(url)
+            } catch { toast.error('Export failed') }
+          }}
         >
           <Download className="w-4 h-4" />
           Export Report

@@ -4,6 +4,7 @@ import { Plus, Search, Edit, Mail, GraduationCap, ClipboardCheck, Copy, Check } 
 import { studentsApi, authApi } from '../services/api'
 import { assessmentApi } from '../services/assessmentApi'
 import { useAuth } from '../contexts/AuthContext'
+import { useToast } from '../components/common/Toast'
 
 interface Student {
   id: string
@@ -49,6 +50,7 @@ const TIME_OPTIONS = [
 export const StudentsPage: React.FC = () => {
   useAuth() // Ensure user is authenticated
   const navigate = useNavigate()
+  const toast = useToast()
   const [students, setStudents] = useState<Student[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState('')
@@ -416,7 +418,7 @@ export const StudentsPage: React.FC = () => {
                   loadStudents()
                 } catch (e) {
                   console.error('Failed to update:', e)
-                  alert('Failed to update student')
+                  toast.error('Failed to update student')
                 }
               }}
             />

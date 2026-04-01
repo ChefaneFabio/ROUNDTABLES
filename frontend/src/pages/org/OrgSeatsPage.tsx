@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { organizationApi, seatLicenseApi } from '../../services/organizationApi'
+import { ConfirmDialog } from '../../components/common/ConfirmDialog'
 // Types used inline via any
 
 interface EmployeeOption {
@@ -20,6 +21,7 @@ export default function OrgSeatsPage() {
   const [actionLoading, setActionLoading] = useState(false)
   const [actionError, setActionError] = useState('')
   const [actionSuccess, setActionSuccess] = useState('')
+  const [revokeTarget, setRevokeTarget] = useState<{ licenseId: string; studentId: string; name: string } | null>(null)
 
   const fetchLicenses = async () => {
     try {
@@ -72,8 +74,7 @@ export default function OrgSeatsPage() {
     }
   }
 
-  const handleRevoke = async (licenseId: string, studentId: string, name: string) => {
-    if (!window.confirm(`Revoke seat from ${name}?`)) return
+  const handleRevoke = async (licenseId: string, studentId: string) => {
     setActionLoading(true)
     setActionError('')
     setActionSuccess('')
@@ -85,6 +86,7 @@ export default function OrgSeatsPage() {
       setActionError(err.response?.data?.error || 'Failed to revoke seat')
     } finally {
       setActionLoading(false)
+      setRevokeTarget(null)
     }
   }
 
@@ -299,12 +301,11 @@ export default function OrgSeatsPage() {
                                         </div>
                                         <button
                                           onClick={() =>
-                                            handleRevoke(
-                                              license.id,
-                                              allocation.studentId,
-                                              allocation.student?.user?.name ||
-                                                'this employee'
-                                            )
+                                            setRevokeTarget({
+                                              licenseId: license.id,
+                                              studentId: allocation.studentId,
+                                              name: allocation.student?.user?.name || 'this employee'
+                                            })
                                           }
                                           disabled={actionLoading}
                                           className="text-red-600 hover:text-red-800 text-sm font-medium disabled:opacity-50"
@@ -331,6 +332,17 @@ export default function OrgSeatsPage() {
           </div>
         )}
       </div>
+
+      <ConfirmDialog
+        open={!!revokeTarget}
+        title="Revoke Seat"
+        message={`Revoke seat from ${revokeTarget?.name}?`}
+        confirmLabel="Revoke"
+        variant="danger"
+        loading={actionLoading}
+        onConfirm={() => revokeTarget && handleRevoke(revokeTarget.licenseId, revokeTarget.studentId)}
+        onCancel={() => setRevokeTarget(null)}
+      />
     </div>
   )
 }
