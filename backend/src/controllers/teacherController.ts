@@ -367,4 +367,267 @@ router.delete('/:id', authenticate, requireSchoolAdmin, async (req: Request, res
   }
 })
 
+// ============================================
+// TEACHER HOURS TRACKING
+// ============================================
+
+// Get per-course hours summary (remaining + completed) for a teacher
+router.get('/me/course-hours', authenticate, requireTeacher, async (req: Request, res: Response) => {
+  try {
+    const teacherId = req.user!.teacherId
+
+    // Get all courses assigned to this teacher (including completed ones for history)
+    const courseTeachers = await prisma.courseTeacher.findMany({
+      where: { teacherId },
+      include: {
+        course: {
+          select: {
+            id: true, name: true, status: true, startDate: true, endDate: true,
+            courseCategory: true
+          }
+        }
+      }
+    })
+
+    const courseHours = await Promise.all(
+      courseTeachers.map(async (ct) => {
+        const courseId = ct.courseId
+
+        // All lessons for this teacher in this course
+        const lessons = await prisma.lesson.findMany({
+          where: { courseId, teacherId, deletedAt: null },
+          select: { id: true, duration: true, status: true, scheduledAt: true }
+        })
+
+        const totalScheduledMinutes = lessons.reduce((sum, l) => sum + l.duration, 0)
+        const completedMinutes = lessons
+          .filter(l => ['COMPLETED', 'FEEDBACK_PENDING', 'FEEDBACK_SENT'].includes(l.status))
+          .reduce((sum, l) => sum + l.duration, 0)
+        const remainingMinutes = totalScheduledMinutes - completedMinutes
+        const cancelledMinutes = lessons
+          .filter(l => l.status === 'CANCELLED')
+          .reduce((sum, l) => sum + l.duration, 0)
+
+        const totalLessons = lessons.filter(l => l.status !== 'CANCELLED').length
+        const completedLessons = lessons.filter(l => ['COMPLETED', 'FEEDBACK_PENDING', 'FEEDBACK_SENT'].includes(l.status)).length
+        const upcomingLessons = lessons.filter(l => ['SCHEDULED', 'REMINDER_SENT'].includes(l.status)).length
+
+        // Find next and last lesson dates
+        const upcoming = lessons
+          .filter(l => ['SCHEDULED', 'REMINDER_SENT'].includes(l.status))
+          .sort((a, b) => a.scheduledAt.getTime() - b.scheduledAt.getTime())
+
+        const nextLesson = upcoming[0]?.scheduledAt || null
+        const lastLesson = upcoming[upcoming.length - 1]?.scheduledAt || null
+
+        return {
+          courseId,
+          courseName: ct.course.name,
+          courseStatus: ct.course.status,
+          courseCategory: ct.course.courseCategory,
+          startDate: ct.course.startDate,
+          endDate: ct.course.endDate,
+          isPrimary: ct.isPrimary,
+          totalScheduledHours: +(totalScheduledMinutes / 60).toFixed(1),
+          completedHours: +(completedMinutes / 60).toFixed(1),
+          remainingHours: +(remainingMinutes / 60).toFixed(1),
+          cancelledHours: +(cancelledMinutes / 60).toFixed(1),
+          totalLessons,
+          completedLessons,
+          upcomingLessons,
+          nextLessonDate: nextLesson,
+          lastScheduledDate: lastLesson,
+          progress: totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0
+        }
+      })
+    )
+
+    // Sort: active courses first, then by next lesson date
+    courseHours.sort((a, b) => {
+      const aActive = ['SCHEDULED', 'IN_PROGRESS'].includes(a.courseStatus)
+      const bActive = ['SCHEDULED', 'IN_PROGRESS'].includes(b.courseStatus)
+      if (aActive && !bActive) return -1
+      if (!aActive && bActive) return 1
+      return (a.nextLessonDate?.getTime() || Infinity) - (b.nextLessonDate?.getTime() || Infinity)
+    })
+
+    res.json(apiResponse.success(courseHours))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Get monthly hours summary for a teacher
+router.get('/me/monthly-hours', authenticate, requireTeacher, async (req: Request, res: Response) => {
+  try {
+    const teacherId = req.user!.teacherId
+    const year = parseInt(req.query.year as string) || new Date().getFullYear()
+
+    const months = []
+    for (let month = 0; month < 12; month++) {
+      const start = new Date(year, month, 1)
+      const end = new Date(year, month + 1, 0, 23, 59, 59)
+
+      const lessons = await prisma.lesson.findMany({
+        where: {
+          teacherId,
+          deletedAt: null,
+          scheduledAt: { gte: start, lte: end },
+          status: { in: ['COMPLETED', 'FEEDBACK_PENDING', 'FEEDBACK_SENT'] }
+        },
+        select: { duration: true, courseId: true },
+        orderBy: { scheduledAt: 'asc' }
+      })
+
+      const totalMinutes = lessons.reduce((sum, l) => sum + l.duration, 0)
+      const uniqueCourses = new Set(lessons.map(l => l.courseId)).size
+
+      months.push({
+        month: month + 1,
+        monthName: start.toLocaleString('en', { month: 'long' }),
+        year,
+        totalHours: +(totalMinutes / 60).toFixed(1),
+        totalLessons: lessons.length,
+        coursesCount: uniqueCourses
+      })
+    }
+
+    const yearTotal = months.reduce((sum, m) => sum + m.totalHours, 0)
+
+    res.json(apiResponse.success({
+      year,
+      months,
+      yearTotalHours: +yearTotal.toFixed(1),
+      yearTotalLessons: months.reduce((sum, m) => sum + m.totalLessons, 0)
+    }))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Get lesson history archive with filters (daily/weekly/monthly grouping)
+router.get('/me/hours-history', authenticate, requireTeacher, async (req: Request, res: Response) => {
+  try {
+    const teacherId = req.user!.teacherId
+    const {
+      courseId,
+      fromDate,
+      toDate,
+      page: pageStr = '1',
+      limit: limitStr = '50'
+    } = req.query
+
+    const page = Math.max(1, parseInt(pageStr as string))
+    const limit = Math.min(100, Math.max(1, parseInt(limitStr as string)))
+
+    const where: any = {
+      teacherId,
+      deletedAt: null,
+      status: { in: ['COMPLETED', 'FEEDBACK_PENDING', 'FEEDBACK_SENT'] }
+    }
+
+    if (courseId) where.courseId = courseId as string
+    if (fromDate || toDate) {
+      where.scheduledAt = {}
+      if (fromDate) where.scheduledAt.gte = new Date(fromDate as string)
+      if (toDate) where.scheduledAt.lte = new Date(toDate as string + 'T23:59:59Z')
+    }
+
+    const [lessons, total] = await Promise.all([
+      prisma.lesson.findMany({
+        where,
+        select: {
+          id: true, lessonNumber: true, title: true, scheduledAt: true,
+          duration: true, status: true,
+          course: { select: { id: true, name: true, courseCategory: true } }
+        },
+        orderBy: { scheduledAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit
+      }),
+      prisma.lesson.count({ where })
+    ])
+
+    const totalMinutes = await prisma.lesson.aggregate({
+      where,
+      _sum: { duration: true },
+      _count: true
+    })
+
+    res.json(apiResponse.success({
+      lessons: lessons.map(l => ({
+        ...l,
+        hours: +(l.duration / 60).toFixed(1)
+      })),
+      summary: {
+        totalHours: +((totalMinutes._sum.duration || 0) / 60).toFixed(1),
+        totalLessons: totalMinutes._count
+      },
+      meta: {
+        page, limit, total,
+        totalPages: Math.ceil(total / limit)
+      }
+    }))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Admin: Get hours summary for any teacher (Maka admin view)
+router.get('/:id/hours-summary', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const teacherId = req.params.id
+    const year = parseInt(req.query.year as string) || new Date().getFullYear()
+    const month = req.query.month ? parseInt(req.query.month as string) : undefined
+
+    let start: Date, end: Date
+    if (month) {
+      start = new Date(year, month - 1, 1)
+      end = new Date(year, month, 0, 23, 59, 59)
+    } else {
+      start = new Date(year, 0, 1)
+      end = new Date(year, 11, 31, 23, 59, 59)
+    }
+
+    const lessons = await prisma.lesson.findMany({
+      where: {
+        teacherId,
+        deletedAt: null,
+        scheduledAt: { gte: start, lte: end },
+        status: { in: ['COMPLETED', 'FEEDBACK_PENDING', 'FEEDBACK_SENT'] }
+      },
+      select: {
+        id: true, duration: true, scheduledAt: true, status: true,
+        course: { select: { id: true, name: true } }
+      },
+      orderBy: { scheduledAt: 'desc' }
+    })
+
+    const totalMinutes = lessons.reduce((sum, l) => sum + l.duration, 0)
+
+    // Group by course
+    const byCourse: Record<string, { courseName: string; hours: number; lessons: number }> = {}
+    for (const l of lessons) {
+      const key = l.course.id
+      if (!byCourse[key]) byCourse[key] = { courseName: l.course.name, hours: 0, lessons: 0 }
+      byCourse[key].hours += l.duration / 60
+      byCourse[key].lessons++
+    }
+
+    res.json(apiResponse.success({
+      teacherId, year, month,
+      totalHours: +(totalMinutes / 60).toFixed(1),
+      totalLessons: lessons.length,
+      byCourse: Object.entries(byCourse).map(([courseId, data]) => ({
+        courseId,
+        courseName: data.courseName,
+        hours: +data.hours.toFixed(1),
+        lessons: data.lessons
+      }))
+    }))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
 export default router

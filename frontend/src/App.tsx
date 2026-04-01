@@ -68,6 +68,7 @@ import { BusinessPage } from './pages/BusinessPage'
 // Calendar & availability pages
 import StudentCalendarPage from './pages/StudentCalendarPage'
 import TeacherAvailabilityPage from './pages/TeacherAvailabilityPage'
+import TeacherHoursPage from './pages/TeacherHoursPage'
 // Learning path pages
 import LearningPathsPage from './pages/LearningPathsPage'
 import LearningPathDetailPage from './pages/LearningPathDetailPage'
@@ -313,6 +314,16 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.TEACHER]}>
             <Layout>
               <TeacherAvailabilityPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/my-hours"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.TEACHER]}>
+            <Layout>
+              <TeacherHoursPage />
             </Layout>
           </ProtectedRoute>
         }

@@ -421,6 +421,28 @@ export const teachersApi = {
     const response = await api.get(`/teachers/${id}/lessons`)
     return response.data.data || []
   },
+
+  async getMyCourseHours(): Promise<any[]> {
+    const response = await api.get('/teachers/me/course-hours')
+    return response.data.data || []
+  },
+
+  async getMyMonthlyHours(year?: number): Promise<any> {
+    const response = await api.get('/teachers/me/monthly-hours', { params: { year } })
+    return response.data.data
+  },
+
+  async getMyHoursHistory(params?: {
+    courseId?: string; fromDate?: string; toDate?: string; page?: number; limit?: number
+  }): Promise<any> {
+    const response = await api.get('/teachers/me/hours-history', { params })
+    return response.data.data
+  },
+
+  async getTeacherHoursSummary(id: string, year?: number, month?: number): Promise<any> {
+    const response = await api.get(`/teachers/${id}/hours-summary`, { params: { year, month } })
+    return response.data.data
+  },
 }
 
 // Students API

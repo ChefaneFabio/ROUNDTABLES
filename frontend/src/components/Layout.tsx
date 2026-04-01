@@ -30,6 +30,7 @@ import {
   Ticket,
   Clock,
   Route,
+  Timer,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -62,6 +63,7 @@ const navigation: NavItem[] = [
   { name: 'Settings', href: '/org/settings', icon: Settings, roles: [UserRole.ORG_ADMIN] },
   // Admin navigation
   { name: 'Organizations', href: '/admin/organizations', icon: Building2, roles: [UserRole.ADMIN] },
+  { name: 'My Hours', href: '/my-hours', icon: Timer, roles: [UserRole.TEACHER] },
   { name: 'My Availability', href: '/availability', icon: Clock, roles: [UserRole.TEACHER] },
   { name: 'Calendar', href: '/admin/calendar', icon: Calendar, roles: [UserRole.ADMIN, UserRole.TEACHER] },
   { name: 'Video Admin', href: '/admin/videos/libraries', icon: Video, roles: [UserRole.ADMIN, UserRole.TEACHER] },
