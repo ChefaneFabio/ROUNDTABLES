@@ -281,7 +281,7 @@ router.post('/bulk', authenticate, requireTeacher, validateRequest(bulkSubmitSch
     // Update lesson status
     await prisma.lesson.update({
       where: { id: lessonId },
-      data: { status: 'QUESTIONS_REQUESTED' }
+      data: { questionsStatus: 'QUESTIONS_REQUESTED' }
     })
 
     res.status(201).json(apiResponse.success({ count: created.count }, `${created.count} questions submitted`))
@@ -362,7 +362,7 @@ router.post('/:id/review', authenticate, requireSchoolAdmin, validateRequest(rev
     if (allApproved && lessonQuestions.length > 0) {
       await prisma.lesson.update({
         where: { id: question.lessonId },
-        data: { status: 'QUESTIONS_READY' }
+        data: { questionsStatus: 'QUESTIONS_PENDING' }
       })
     }
 
@@ -399,7 +399,7 @@ router.post('/lesson/:lessonId/approve-all', authenticate, requireSchoolAdmin, a
     if (result.count > 0) {
       await prisma.lesson.update({
         where: { id: lessonId },
-        data: { status: 'QUESTIONS_READY' }
+        data: { questionsStatus: 'QUESTIONS_PENDING' }
       })
     }
 

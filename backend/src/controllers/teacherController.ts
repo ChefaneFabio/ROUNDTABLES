@@ -401,7 +401,7 @@ router.get('/me/course-hours', authenticate, requireTeacher, async (req: Request
 
         const totalScheduledMinutes = lessons.reduce((sum, l) => sum + l.duration, 0)
         const completedMinutes = lessons
-          .filter(l => ['COMPLETED', 'FEEDBACK_PENDING', 'FEEDBACK_SENT'].includes(l.status))
+          .filter(l => ['COMPLETED'].includes(l.status))
           .reduce((sum, l) => sum + l.duration, 0)
         const remainingMinutes = totalScheduledMinutes - completedMinutes
         const cancelledMinutes = lessons
@@ -409,7 +409,7 @@ router.get('/me/course-hours', authenticate, requireTeacher, async (req: Request
           .reduce((sum, l) => sum + l.duration, 0)
 
         const totalLessons = lessons.filter(l => l.status !== 'CANCELLED').length
-        const completedLessons = lessons.filter(l => ['COMPLETED', 'FEEDBACK_PENDING', 'FEEDBACK_SENT'].includes(l.status)).length
+        const completedLessons = lessons.filter(l => ['COMPLETED'].includes(l.status)).length
         const upcomingLessons = lessons.filter(l => ['SCHEDULED', 'REMINDER_SENT'].includes(l.status)).length
 
         // Find next and last lesson dates
@@ -473,7 +473,7 @@ router.get('/me/monthly-hours', authenticate, requireTeacher, async (req: Reques
           teacherId,
           deletedAt: null,
           scheduledAt: { gte: start, lte: end },
-          status: { in: ['COMPLETED', 'FEEDBACK_PENDING', 'FEEDBACK_SENT'] }
+          status: { in: ['COMPLETED'] }
         },
         select: { duration: true, courseId: true },
         orderBy: { scheduledAt: 'asc' }
@@ -523,7 +523,7 @@ router.get('/me/hours-history', authenticate, requireTeacher, async (req: Reques
     const where: any = {
       teacherId,
       deletedAt: null,
-      status: { in: ['COMPLETED', 'FEEDBACK_PENDING', 'FEEDBACK_SENT'] }
+      status: { in: ['COMPLETED'] }
     }
 
     if (courseId) where.courseId = courseId as string
@@ -594,7 +594,7 @@ router.get('/:id/hours-summary', authenticate, requireSchoolAdmin, async (req: R
         teacherId,
         deletedAt: null,
         scheduledAt: { gte: start, lte: end },
-        status: { in: ['COMPLETED', 'FEEDBACK_PENDING', 'FEEDBACK_SENT'] }
+        status: { in: ['COMPLETED'] }
       },
       select: {
         id: true, duration: true, scheduledAt: true, status: true,

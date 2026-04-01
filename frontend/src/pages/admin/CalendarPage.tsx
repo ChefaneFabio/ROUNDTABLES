@@ -38,6 +38,8 @@ interface Lesson {
   scheduledAt: string
   duration: number
   status: string
+  questionsStatus?: string
+  feedbackStatus?: string
   meetingProvider?: string
   meetingLink?: string
   meetingHostUrl?: string
@@ -814,6 +816,42 @@ function LessonDetail({ lesson, onClose, onSwap }: { lesson: Lesson; onClose: ()
           </div>
         )}
       </div>
+
+      {/* 3-column status: Questions + Feedback */}
+      {(lesson.questionsStatus || lesson.feedbackStatus) && (
+        <div className="mt-4 pt-4 border-t grid grid-cols-2 gap-4">
+          <div>
+            <p className="text-xs font-medium text-gray-500 uppercase mb-1">Questions</p>
+            <span className={clsx('inline-flex items-center px-2 py-0.5 rounded text-xs font-medium', {
+              'bg-gray-100 text-gray-500': lesson.questionsStatus === 'NOT_REQUESTED',
+              'bg-orange-100 text-orange-700': lesson.questionsStatus === 'QUESTIONS_REQUESTED',
+              'bg-yellow-100 text-yellow-700': lesson.questionsStatus === 'QUESTIONS_PENDING',
+              'bg-green-100 text-green-700': lesson.questionsStatus === 'QUESTIONS_SENT',
+            })}>
+              {lesson.questionsStatus === 'NOT_REQUESTED' ? 'Not requested' :
+               lesson.questionsStatus === 'QUESTIONS_REQUESTED' ? 'Requested from trainer' :
+               lesson.questionsStatus === 'QUESTIONS_PENDING' ? 'Pending review' :
+               lesson.questionsStatus === 'QUESTIONS_SENT' ? 'Sent to learners' :
+               lesson.questionsStatus || '—'}
+            </span>
+          </div>
+          <div>
+            <p className="text-xs font-medium text-gray-500 uppercase mb-1">Feedback</p>
+            <span className={clsx('inline-flex items-center px-2 py-0.5 rounded text-xs font-medium', {
+              'bg-gray-100 text-gray-500': lesson.feedbackStatus === 'NOT_REQUESTED',
+              'bg-orange-100 text-orange-700': lesson.feedbackStatus === 'FEEDBACK_REQUESTED',
+              'bg-yellow-100 text-yellow-700': lesson.feedbackStatus === 'FEEDBACK_PENDING',
+              'bg-green-100 text-green-700': lesson.feedbackStatus === 'FEEDBACK_SENT',
+            })}>
+              {lesson.feedbackStatus === 'NOT_REQUESTED' ? 'Not requested' :
+               lesson.feedbackStatus === 'FEEDBACK_REQUESTED' ? 'Requested from trainer' :
+               lesson.feedbackStatus === 'FEEDBACK_PENDING' ? 'Pending review' :
+               lesson.feedbackStatus === 'FEEDBACK_SENT' ? 'Sent to learners' :
+               lesson.feedbackStatus || '—'}
+            </span>
+          </div>
+        </div>
+      )}
 
       {/* Meeting join button */}
       {lesson.meetingLink && lesson.status !== 'CANCELLED' && (

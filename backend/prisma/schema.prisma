@@ -339,8 +339,10 @@ model Lesson {
   description  String?
   scheduledAt  DateTime
   duration     Int          @default(60) // Duration in minutes
-  status       LessonStatus @default(SCHEDULED)
-  notes        String?
+  status           LessonStatus     @default(SCHEDULED)
+  questionsStatus  LessonQuestionsStatus  @default(NOT_REQUESTED)
+  feedbackStatus   LessonFeedbackStatus   @default(NOT_REQUESTED)
+  notes            String?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   deletedAt    DateTime? // Soft delete
@@ -397,13 +399,23 @@ enum MeetingProvider {
 enum LessonStatus {
   SCHEDULED
   REMINDER_SENT
-  QUESTIONS_REQUESTED
-  QUESTIONS_READY
   IN_PROGRESS
   COMPLETED
-  FEEDBACK_PENDING
-  FEEDBACK_SENT
   CANCELLED
+}
+
+enum LessonQuestionsStatus {
+  NOT_REQUESTED
+  QUESTIONS_REQUESTED  // Auto: 1 week before session — coordinator asks trainer
+  QUESTIONS_PENDING    // Auto: trainer saved questions — coordinator reviews
+  QUESTIONS_SENT       // Manual: coordinator sent questions to learners by email
+}
+
+enum LessonFeedbackStatus {
+  NOT_REQUESTED
+  FEEDBACK_REQUESTED   // Auto: after lesson completed — coordinator asks trainer
+  FEEDBACK_PENDING     // Auto: trainer saved feedback — coordinator reviews
+  FEEDBACK_SENT        // Manual: coordinator sent feedback to learners by email
 }
 
 // =====================================================

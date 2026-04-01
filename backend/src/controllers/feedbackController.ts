@@ -435,11 +435,11 @@ router.post('/lesson/:lessonId/send-all', authenticate, requireSchoolAdmin, asyn
       data: { status: 'SENT', sentAt: new Date() }
     })
 
-    // Update lesson status
+    // Update lesson feedback status
     if (result.count > 0) {
       await prisma.lesson.update({
         where: { id: lessonId },
-        data: { status: 'FEEDBACK_SENT' }
+        data: { feedbackStatus: 'FEEDBACK_SENT' }
       })
     }
 

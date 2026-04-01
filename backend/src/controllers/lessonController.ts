@@ -696,12 +696,101 @@ router.patch('/:id/status', authenticate, requireTeacher, validateRequest(update
       )
     }
 
+    const updateData: any = { status: status as LessonStatus }
+
+    // Auto-transition: when lesson is COMPLETED, auto-request feedback
+    if (status === 'COMPLETED' && lesson.feedbackStatus === 'NOT_REQUESTED') {
+      updateData.feedbackStatus = 'FEEDBACK_REQUESTED'
+    }
+
     const updated = await prisma.lesson.update({
       where: { id },
-      data: { status: status as LessonStatus }
+      data: updateData
     })
 
     res.json(apiResponse.success(updated, `Lesson status updated to ${status}`))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Update questions status (trainer saves questions → coordinator reviews → coordinator sends)
+router.patch('/:id/questions-status', authenticate, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { questionsStatus } = req.body
+
+    const lesson = await prisma.lesson.findFirst({
+      where: { id, deletedAt: null }
+    })
+
+    if (!lesson) {
+      return res.status(404).json(apiResponse.error('Lesson not found', 'NOT_FOUND'))
+    }
+
+    // Trainers can only set QUESTIONS_PENDING (they saved questions)
+    // Coordinators (ADMIN) can set QUESTIONS_SENT
+    if (req.user?.role === 'TEACHER' && questionsStatus !== 'QUESTIONS_PENDING') {
+      return res.status(403).json(apiResponse.error('Teachers can only save questions (QUESTIONS_PENDING)', 'FORBIDDEN'))
+    }
+
+    const validTransitions = VALID_STATUS_TRANSITIONS.questionsStatus[
+      lesson.questionsStatus as keyof typeof VALID_STATUS_TRANSITIONS.questionsStatus
+    ]
+    if (!(validTransitions as readonly string[])?.includes(questionsStatus)) {
+      return res.status(400).json(apiResponse.error(
+        `Cannot transition questions from ${lesson.questionsStatus} to ${questionsStatus}`,
+        'INVALID_STATUS_TRANSITION'
+      ))
+    }
+
+    const updated = await prisma.lesson.update({
+      where: { id },
+      data: { questionsStatus }
+    })
+
+    res.json(apiResponse.success(updated, `Questions status updated to ${questionsStatus}`))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Update feedback status (trainer saves feedback → coordinator reviews → coordinator sends)
+router.patch('/:id/feedback-status', authenticate, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { feedbackStatus } = req.body
+
+    const lesson = await prisma.lesson.findFirst({
+      where: { id, deletedAt: null }
+    })
+
+    if (!lesson) {
+      return res.status(404).json(apiResponse.error('Lesson not found', 'NOT_FOUND'))
+    }
+
+    // Trainers can only set FEEDBACK_PENDING (they saved feedback)
+    // Coordinators (ADMIN) can set FEEDBACK_SENT
+    if (req.user?.role === 'TEACHER' && feedbackStatus !== 'FEEDBACK_PENDING') {
+      return res.status(403).json(apiResponse.error('Teachers can only save feedback (FEEDBACK_PENDING)', 'FORBIDDEN'))
+    }
+
+    const validTransitions = VALID_STATUS_TRANSITIONS.feedbackStatus[
+      lesson.feedbackStatus as keyof typeof VALID_STATUS_TRANSITIONS.feedbackStatus
+    ]
+    if (!(validTransitions as readonly string[])?.includes(feedbackStatus)) {
+      return res.status(400).json(apiResponse.error(
+        `Cannot transition feedback from ${lesson.feedbackStatus} to ${feedbackStatus}`,
+        'INVALID_STATUS_TRANSITION'
+      ))
+    }
+
+    const updated = await prisma.lesson.update({
+      where: { id },
+      data: { feedbackStatus }
+    })
+
+    res.json(apiResponse.success(updated, `Feedback status updated to ${feedbackStatus}`))
   } catch (error) {
     handleError(res, error)
   }

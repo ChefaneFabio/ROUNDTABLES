@@ -394,6 +394,16 @@ export const lessonsApi = {
     return response.data.data
   },
 
+  async updateQuestionsStatus(id: string, questionsStatus: string): Promise<any> {
+    const response = await api.patch(`/lessons/${id}/questions-status`, { questionsStatus })
+    return response.data.data
+  },
+
+  async updateFeedbackStatus(id: string, feedbackStatus: string): Promise<any> {
+    const response = await api.patch(`/lessons/${id}/feedback-status`, { feedbackStatus })
+    return response.data.data
+  },
+
   async swapLessons(lessonAId: string, lessonBId: string, notifyParticipants: boolean = true): Promise<any> {
     const response = await api.post('/lessons/swap', { lessonAId, lessonBId, notifyParticipants })
     return response.data
