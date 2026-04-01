@@ -4,6 +4,7 @@ import { validateRequest } from '../middleware/validateRequest'
 import { authenticate } from '../middleware/auth'
 import { requireAdmin, requireSchoolAdmin } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
+import { prisma } from '../config/database'
 import { assessmentService } from '../services/AssessmentService'
 import { certificateService } from '../services/CertificateService'
 import { emailService } from '../services/EmailService'
@@ -390,6 +391,58 @@ router.post('/admin/seed-all-questions', authenticate, requireAdmin, async (req:
   try {
     const result = await assessmentService.seedAllQuestions()
     return res.json(apiResponse.success(result, 'All question banks seeded'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// List all assessments (admin)
+router.get('/admin/list', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const { page = 1, limit = 20, status, language } = req.query
+    const where: any = {}
+    if (status) where.status = status
+    if (language) where.language = language
+
+    const [assessments, total] = await Promise.all([
+      prisma.assessment.findMany({
+        where,
+        include: {
+          student: { include: { user: { select: { name: true, email: true } } } }
+        },
+        orderBy: { startedAt: 'desc' },
+        skip: (Number(page) - 1) * Number(limit),
+        take: Number(limit)
+      }),
+      prisma.assessment.count({ where })
+    ])
+
+    return res.json(apiResponse.success({
+      data: assessments,
+      meta: { page: Number(page), limit: Number(limit), total, totalPages: Math.ceil(total / Number(limit)) }
+    }))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// Delete assessment (admin)
+router.delete('/:id', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const assessment = await prisma.assessment.findUnique({ where: { id: req.params.id } })
+    if (!assessment) {
+      return res.status(404).json(apiResponse.error('Assessment not found', 'NOT_FOUND'))
+    }
+
+    // Delete related sections and responses
+    await prisma.$transaction([
+      prisma.writingResponse.deleteMany({ where: { section: { assessmentId: req.params.id } } }),
+      prisma.speakingResponse.deleteMany({ where: { section: { assessmentId: req.params.id } } }),
+      prisma.assessmentSection.deleteMany({ where: { assessmentId: req.params.id } }),
+      prisma.assessment.delete({ where: { id: req.params.id } })
+    ])
+
+    return res.json(apiResponse.success(null, 'Assessment deleted'))
   } catch (error) {
     return handleError(res, error)
   }

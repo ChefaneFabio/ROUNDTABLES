@@ -29,10 +29,46 @@ const updateOrgSchema = Joi.object({
   legalAddress: Joi.object().optional().allow(null)
 })
 
+const createOrgSchema = Joi.object({
+  name: Joi.string().min(2).max(200).required(),
+  email: Joi.string().email().optional(),
+  phone: Joi.string().max(50).optional().allow(null),
+  website: Joi.string().uri().optional().allow(null),
+  description: Joi.string().max(1000).optional().allow(null),
+  industry: Joi.string().max(100).optional().allow(null),
+  size: Joi.string().max(50).optional().allow(null),
+  vatNumber: Joi.string().max(50).optional().allow(null),
+  fiscalCode: Joi.string().max(50).optional().allow(null),
+  sdiCode: Joi.string().max(10).optional().allow(null),
+  pecEmail: Joi.string().email().optional().allow(null)
+})
+
+const updateEmployeeSchema = Joi.object({
+  languageLevel: Joi.string().valid('A1', 'A2', 'B1', 'B2', 'C1', 'C2').optional(),
+  bio: Joi.string().max(2000).optional().allow(null),
+  isActive: Joi.boolean().optional()
+})
+
 const inviteEmployeeSchema = Joi.object({
   email: Joi.string().email().required(),
   name: Joi.string().min(2).max(200).required(),
   languageLevel: Joi.string().valid('A1', 'A2', 'B1', 'B2', 'C1', 'C2').optional()
+})
+
+// POST / - Create organization (admin only)
+router.post('/', authenticate, requireAdmin, validateRequest(createOrgSchema), async (req: Request, res: Response) => {
+  try {
+    const schoolId = req.user?.schoolId
+    if (!schoolId) return res.status(400).json(apiResponse.error('School context required', 'NO_SCHOOL'))
+
+    const org = await prisma.organization.create({
+      data: { ...req.body, schoolId }
+    })
+
+    res.status(201).json(apiResponse.success(org, 'Organization created'))
+  } catch (error) {
+    handleError(res, error)
+  }
 })
 
 // GET / - List organizations
@@ -287,6 +323,30 @@ router.post('/:id/employees/invite', authenticate, requireOrgAdmin, requireOrgAc
 
     // In production would send invite email
     res.status(201).json(apiResponse.success(result, 'Employee invited successfully'))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// PUT /:id/employees/:studentId - Update employee details
+router.put('/:id/employees/:studentId', authenticate, requireOrgAdmin, requireOrgAccess, validateRequest(updateEmployeeSchema), async (req: Request, res: Response) => {
+  try {
+    const { studentId } = req.params
+
+    const student = await prisma.student.findFirst({
+      where: { id: studentId, organizationId: req.params.id }
+    })
+    if (!student) {
+      return res.status(404).json(apiResponse.error('Employee not found in this organization', 'NOT_FOUND'))
+    }
+
+    const updated = await prisma.student.update({
+      where: { id: studentId },
+      data: req.body,
+      include: { user: { select: { name: true, email: true } } }
+    })
+
+    res.json(apiResponse.success(updated, 'Employee updated'))
   } catch (error) {
     handleError(res, error)
   }
