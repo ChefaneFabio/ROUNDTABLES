@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import {
   ArrowLeft, Building2, Users, Mail, Phone, MapPin, Plus,
-  Trash2, Edit2, Link2, Unlink, X, Check, Globe
+  Trash2, Edit2, Link2, X, Globe
 } from 'lucide-react'
 import { organizationContactsApi, coursesApi } from '../../services/api'
 import { organizationApi } from '../../services/organizationApi'
