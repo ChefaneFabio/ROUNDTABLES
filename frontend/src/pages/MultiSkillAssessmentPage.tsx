@@ -4,47 +4,33 @@ import { Pause, Play, RotateCcw } from 'lucide-react'
 import { assessmentApi, AssessmentSection } from '../services/assessmentApi'
 import { SectionNav } from '../components/assessment/SectionNav'
 
+// Versant-style 4 sections — Reading includes grammar, vocabulary, and error correction questions
 const SKILL_INFO: Record<string, { icon: string; title: string; description: string; color: string }> = {
-  GRAMMAR: {
-    icon: '📝', title: 'Grammar',
-    description: 'Multiple choice grammar questions testing your knowledge of English structures.',
-    color: 'border-indigo-300 bg-indigo-50'
-  },
-  VOCABULARY: {
-    icon: '📚', title: 'Vocabulary',
-    description: 'Choose the word that best fits the context in each sentence.',
-    color: 'border-teal-300 bg-teal-50'
-  },
   READING: {
-    icon: '📖', title: 'Reading',
-    description: 'Read passages and answer comprehension questions.',
+    icon: '📖', title: 'Reading & Language Use',
+    description: 'Reading comprehension, grammar, vocabulary, and language structure questions.',
     color: 'border-blue-300 bg-blue-50'
-  },
-  ERROR_CORRECTION: {
-    icon: '✏️', title: 'Error Correction',
-    description: 'Find and correct the error in each sentence.',
-    color: 'border-red-300 bg-red-50'
-  },
-  SENTENCE_TRANSFORMATION: {
-    icon: '🔄', title: 'Sentence Transformation',
-    description: 'Rewrite sentences according to the given instruction.',
-    color: 'border-orange-300 bg-orange-50'
-  },
-  WRITING: {
-    icon: '✍️', title: 'Writing',
-    description: 'Write responses to prompts. Your writing will be evaluated by AI and reviewed by a teacher.',
-    color: 'border-amber-300 bg-amber-50'
   },
   LISTENING: {
     icon: '🎧', title: 'Listening',
     description: 'Listen to audio clips and answer questions. You can play each audio up to 2 times.',
     color: 'border-green-300 bg-green-50'
   },
+  WRITING: {
+    icon: '✍️', title: 'Writing',
+    description: 'Write responses to prompts. Your writing will be evaluated by AI and reviewed by a teacher.',
+    color: 'border-amber-300 bg-amber-50'
+  },
   SPEAKING: {
     icon: '🎤', title: 'Speaking',
     description: 'Record spoken responses. You will need microphone access. You get up to 2 attempts per question.',
     color: 'border-purple-300 bg-purple-50'
-  }
+  },
+  // Legacy section types — kept for viewing old 8-section assessments
+  GRAMMAR: { icon: '📝', title: 'Grammar', description: 'Grammar questions.', color: 'border-indigo-300 bg-indigo-50' },
+  VOCABULARY: { icon: '📚', title: 'Vocabulary', description: 'Vocabulary questions.', color: 'border-teal-300 bg-teal-50' },
+  ERROR_CORRECTION: { icon: '✏️', title: 'Error Correction', description: 'Error correction questions.', color: 'border-red-300 bg-red-50' },
+  SENTENCE_TRANSFORMATION: { icon: '🔄', title: 'Sentence Transformation', description: 'Sentence transformation questions.', color: 'border-orange-300 bg-orange-50' },
 }
 
 export function MultiSkillAssessmentPage() {

@@ -275,62 +275,35 @@ export function SectionTakePage() {
         </div>
       )}
 
-      {/* Question rendering by section type */}
-      {currentQuestion && section?.skill === 'READING' && (
-        <ReadingQuestion
-          question={currentQuestion}
-          onSubmit={handleReadingListeningAnswer}
-          disabled={submitting}
-        />
-      )}
+      {/* Question rendering — routes by questionType so the Reading section
+          can serve grammar, vocabulary, error-correction, and sentence-transformation questions */}
+      {currentQuestion && (() => {
+        const qType = currentQuestion.questionType
+        const skill = section?.skill
 
-      {currentQuestion && section?.skill === 'LISTENING' && (
-        <ListeningQuestion
-          question={{ ...currentQuestion, language: 'English' }}
-          onSubmit={handleReadingListeningAnswer}
-          disabled={submitting}
-        />
-      )}
-
-      {currentQuestion && section?.skill === 'WRITING' && (
-        <WritingQuestion
-          question={currentQuestion}
-          onSubmit={handleWritingSubmit}
-          disabled={submitting}
-        />
-      )}
-
-      {currentQuestion && section?.skill === 'SPEAKING' && (
-        <SpeakingQuestion
-          question={currentQuestion}
-          onSubmit={handleSpeakingSubmit}
-          disabled={submitting}
-        />
-      )}
-
-      {currentQuestion && (section?.skill === 'GRAMMAR' || section?.skill === 'VOCABULARY') && (
-        <ReadingQuestion
-          question={currentQuestion}
-          onSubmit={handleReadingListeningAnswer}
-          disabled={submitting}
-        />
-      )}
-
-      {currentQuestion && section?.skill === 'ERROR_CORRECTION' && (
-        <ErrorCorrectionQuestion
-          question={currentQuestion}
-          onSubmit={handleReadingListeningAnswer}
-          disabled={submitting}
-        />
-      )}
-
-      {currentQuestion && section?.skill === 'SENTENCE_TRANSFORMATION' && (
-        <SentenceTransformationQuestion
-          question={currentQuestion}
-          onSubmit={handleReadingListeningAnswer}
-          disabled={submitting}
-        />
-      )}
+        // Writing section
+        if (skill === 'WRITING' || qType === 'WRITING' || qType === 'ESSAY') {
+          return <WritingQuestion question={currentQuestion} onSubmit={handleWritingSubmit} disabled={submitting} />
+        }
+        // Speaking section
+        if (skill === 'SPEAKING' || qType === 'SPEAKING_PROMPT') {
+          return <SpeakingQuestion question={currentQuestion} onSubmit={handleSpeakingSubmit} disabled={submitting} />
+        }
+        // Listening section
+        if (skill === 'LISTENING' || qType === 'LISTENING' || qType === 'DICTATION') {
+          return <ListeningQuestion question={{ ...currentQuestion, language: 'English' }} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
+        }
+        // Error correction (can appear in Reading section)
+        if (qType === 'ERROR_CORRECTION') {
+          return <ErrorCorrectionQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
+        }
+        // Sentence transformation (can appear in Reading section)
+        if (qType === 'SENTENCE_TRANSFORMATION') {
+          return <SentenceTransformationQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
+        }
+        // Default: Reading / MC / Fill-blank / Grammar / Vocabulary
+        return <ReadingQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
+      })()}
 
       {submitting && !feedback && (
         <div className="flex items-center gap-2 mt-4 text-gray-500">

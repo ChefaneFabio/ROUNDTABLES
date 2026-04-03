@@ -22,7 +22,7 @@ const SECTION_CONFIG_V1: Record<string, { timeLimitMin: number; questionsLimit: 
   SPEAKING: { timeLimitMin: 15, questionsLimit: 3, orderIndex: 3 }
 }
 
-// 8-section granular placement test configuration
+// 8-section granular placement test configuration (legacy, kept for old assessments)
 const SECTION_CONFIG_V2: Record<string, { timeLimitMin: number; questionsLimit: number; orderIndex: number }> = {
   GRAMMAR:                 { timeLimitMin: 20, questionsLimit: 40, orderIndex: 0 },
   VOCABULARY:              { timeLimitMin: 8,  questionsLimit: 15, orderIndex: 1 },
@@ -34,8 +34,16 @@ const SECTION_CONFIG_V2: Record<string, { timeLimitMin: number; questionsLimit: 
   SPEAKING:                { timeLimitMin: 15, questionsLimit: 3,  orderIndex: 7 },
 }
 
-// Default to V2 for new assessments
-const SECTION_CONFIG = SECTION_CONFIG_V2
+// Versant-style 4-section configuration — Reading absorbs grammar/vocab/error-correction questions
+const SECTION_CONFIG_V3: Record<string, { timeLimitMin: number; questionsLimit: number; orderIndex: number }> = {
+  READING:   { timeLimitMin: 25, questionsLimit: 20, orderIndex: 0 },
+  LISTENING: { timeLimitMin: 15, questionsLimit: 8,  orderIndex: 1 },
+  WRITING:   { timeLimitMin: 15, questionsLimit: 3,  orderIndex: 2 },
+  SPEAKING:  { timeLimitMin: 15, questionsLimit: 3,  orderIndex: 3 },
+}
+
+// Default to V3 (Versant-style) for new assessments
+const SECTION_CONFIG = SECTION_CONFIG_V3
 
 // Jean's scoring grid: total raw score -> CEFR level (for 8-section assessments)
 const RAW_SCORE_TO_CEFR: [number, string][] = [
@@ -330,8 +338,9 @@ export class SectionAssessmentService {
       }
     }
 
-    // Map skill to question types for querying
+    // Map skill to question types and allowed skill tags for querying
     const skillQuestionTypes = this.getQuestionTypesForSkill(section.skill)
+    const allowedSkills = this.getSkillsForSection(section.skill)
 
     // Get a question from the target level that hasn't been answered
     let question = await prisma.assessmentQuestion.findFirst({
@@ -341,7 +350,7 @@ export class SectionAssessmentService {
         isActive: true,
         id: { notIn: answeredIds },
         OR: [
-          { skill: section.skill },
+          { skill: { in: allowedSkills } },
           ...(skillQuestionTypes.length > 0
             ? [{ questionType: { in: skillQuestionTypes }, skill: null }]
             : [])
@@ -358,7 +367,7 @@ export class SectionAssessmentService {
           isActive: true,
           id: { notIn: answeredIds },
           OR: [
-            { skill: section.skill },
+            { skill: { in: allowedSkills } },
             ...(skillQuestionTypes.length > 0
               ? [{ questionType: { in: skillQuestionTypes }, skill: null }]
               : [])
@@ -986,10 +995,13 @@ export class SectionAssessmentService {
     }
   }
 
+  // Maps a section skill to the question types it can pull from the question bank.
+  // Reading absorbs grammar, vocabulary, error-correction, and sentence-transformation
+  // question types so the 4-section Versant-style test covers all language competencies.
   private getQuestionTypesForSkill(skill: string): AssessmentQuestionType[] {
     switch (skill) {
       case 'READING':
-        return ['READING', 'MULTIPLE_CHOICE', 'FILL_BLANK', 'SHORT_ANSWER'] as AssessmentQuestionType[]
+        return ['READING', 'MULTIPLE_CHOICE', 'FILL_BLANK', 'SHORT_ANSWER', 'ERROR_CORRECTION', 'SENTENCE_TRANSFORMATION'] as AssessmentQuestionType[]
       case 'LISTENING':
         return ['LISTENING', 'DICTATION'] as AssessmentQuestionType[]
       case 'WRITING':
@@ -1007,6 +1019,14 @@ export class SectionAssessmentService {
       default:
         return []
     }
+  }
+
+  // For the Reading section, also pull questions tagged with grammar/vocab/etc. skills
+  private getSkillsForSection(sectionSkill: string): string[] {
+    if (sectionSkill === 'READING') {
+      return ['READING', 'GRAMMAR', 'VOCABULARY', 'ERROR_CORRECTION', 'SENTENCE_TRANSFORMATION']
+    }
+    return [sectionSkill]
   }
 }
 
