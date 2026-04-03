@@ -41,6 +41,7 @@ export function MultiSkillAssessmentPage() {
   const [error, setError] = useState<string | null>(null)
   const [isPaused, setIsPaused] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
+  const [showIntro, setShowIntro] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -52,6 +53,9 @@ export function MultiSkillAssessmentPage() {
       setLoading(true)
       const data = await assessmentApi.getSections(id!)
       setSections(data)
+      // Show intro if no sections have been started yet
+      const anyStarted = data.some((s: AssessmentSection) => s.status !== 'PENDING')
+      if (!anyStarted) setShowIntro(true)
     } catch (err: any) {
       setError(err.response?.data?.error || err.message)
     } finally {
@@ -129,6 +133,70 @@ export function MultiSkillAssessmentPage() {
       <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg">
         <p className="font-medium">Error</p>
         <p className="text-sm">{error}</p>
+      </div>
+    )
+  }
+
+  if (showIntro) {
+    return (
+      <div className="max-w-3xl mx-auto">
+        <div className="bg-white rounded-xl shadow-lg p-8 space-y-6">
+          <div className="text-center">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Placement Test</h1>
+            <p className="text-lg text-gray-500">Test di Posizionamento</p>
+          </div>
+
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 space-y-3">
+            <h2 className="font-semibold text-blue-900">Before you begin / Prima di iniziare</h2>
+            <ul className="space-y-2 text-sm text-blue-800">
+              <li>
+                <strong>Make sure you have a stable internet connection.</strong><br />
+                <span className="text-blue-600">Assicurati di avere una connessione internet stabile.</span>
+              </li>
+              <li>
+                <strong>Find a quiet place with no distractions.</strong><br />
+                <span className="text-blue-600">Trova un luogo tranquillo senza distrazioni.</span>
+              </li>
+              <li>
+                <strong>You will need a microphone for the Speaking section.</strong><br />
+                <span className="text-blue-600">Avrai bisogno di un microfono per la sezione Speaking.</span>
+              </li>
+              <li>
+                <strong>You can pause and resume the test at any time.</strong><br />
+                <span className="text-blue-600">Puoi mettere in pausa e riprendere il test in qualsiasi momento.</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="bg-gray-50 rounded-lg p-5">
+            <h2 className="font-semibold text-gray-900 mb-3">Test Structure / Struttura del Test</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {['READING', 'LISTENING', 'WRITING', 'SPEAKING'].map(skill => {
+                const info = SKILL_INFO[skill]
+                return (
+                  <div key={skill} className={`border rounded-lg p-3 ${info.color}`}>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xl">{info.icon}</span>
+                      <span className="font-medium text-gray-900">{info.title}</span>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+            <p className="text-sm text-gray-500 mt-3">
+              Estimated time: ~70 minutes / Tempo stimato: ~70 minuti
+            </p>
+          </div>
+
+          <div className="text-center pt-2">
+            <button
+              onClick={() => setShowIntro(false)}
+              className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors"
+            >
+              Begin Test / Inizia il Test
+            </button>
+          </div>
+        </div>
       </div>
     )
   }
