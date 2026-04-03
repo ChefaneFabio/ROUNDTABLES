@@ -11,9 +11,10 @@ import {
   Clock,
   CheckCircle,
   AlertCircle,
+  Download,
 } from 'lucide-react'
 import { assessmentApi } from '../../services/assessmentApi'
-import { studentsApi } from '../../services/api'
+import api, { studentsApi } from '../../services/api'
 import { LoadingPage } from '../../components/common/LoadingSpinner'
 import { Alert } from '../../components/common/Alert'
 import { Button } from '../../components/common/Button'
@@ -58,6 +59,8 @@ export default function AssessmentManagementPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [error, setError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
+  const [exporting, setExporting] = useState(false)
 
   const { data: assessments, isLoading } = useQuery(
     ['adminAssessments', filterLanguage, filterStatus],
@@ -77,6 +80,50 @@ export default function AssessmentManagementPage() {
     return name.includes(term) || email.includes(term)
   })
 
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const toggleSelectAll = () => {
+    if (!filtered) return
+    const completedIds = filtered.filter((a: any) => a.status === 'COMPLETED').map((a: any) => a.id)
+    if (selectedIds.size === completedIds.length && completedIds.every((id: string) => selectedIds.has(id))) {
+      setSelectedIds(new Set())
+    } else {
+      setSelectedIds(new Set(completedIds))
+    }
+  }
+
+  const handleExportXlsx = async () => {
+    if (selectedIds.size === 0) return
+    try {
+      setExporting(true)
+      const response = await api.post('/analytics/export/assessments/xlsx', {
+        assessmentIds: Array.from(selectedIds),
+      }, { responseType: 'blob' })
+
+      // Trigger download
+      const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `assessment-results-${new Date().toISOString().slice(0, 10)}.xlsx`
+      a.click()
+      window.URL.revokeObjectURL(url)
+      setSuccessMsg(`Exported ${selectedIds.size} assessment(s)`)
+      setTimeout(() => setSuccessMsg(''), 3000)
+    } catch (err: any) {
+      setError('Failed to export. Make sure selected assessments are completed.')
+    } finally {
+      setExporting(false)
+    }
+  }
+
   if (isLoading) return <LoadingPage />
 
   return (
@@ -90,10 +137,23 @@ export default function AssessmentManagementPage() {
             <p className="text-sm text-gray-500">Assign and track 4-skill assessments</p>
           </div>
         </div>
-        <Button onClick={() => setShowAssignModal(true)} className="flex items-center gap-2">
-          <Plus className="w-4 h-4" />
-          Assign New Test
-        </Button>
+        <div className="flex items-center gap-2">
+          {selectedIds.size > 0 && (
+            <Button
+              onClick={handleExportXlsx}
+              disabled={exporting}
+              variant="secondary"
+              className="flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              {exporting ? 'Exporting...' : `Export ${selectedIds.size} to XLSX`}
+            </Button>
+          )}
+          <Button onClick={() => setShowAssignModal(true)} className="flex items-center gap-2">
+            <Plus className="w-4 h-4" />
+            Assign New Test
+          </Button>
+        </div>
       </div>
 
       {error && <Alert type="error" message={error} />}
@@ -151,6 +211,14 @@ export default function AssessmentManagementPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200">
+                  <th className="py-3 px-2 w-8">
+                    <input
+                      type="checkbox"
+                      onChange={toggleSelectAll}
+                      checked={filtered?.filter((a: any) => a.status === 'COMPLETED').length > 0 && filtered?.filter((a: any) => a.status === 'COMPLETED').every((a: any) => selectedIds.has(a.id))}
+                      className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                    />
+                  </th>
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Student</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Language</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Status</th>
@@ -163,6 +231,16 @@ export default function AssessmentManagementPage() {
               <tbody>
                 {filtered.map((a: any) => (
                   <tr key={a.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <td className="py-3 px-2">
+                      {a.status === 'COMPLETED' && (
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.has(a.id)}
+                          onChange={() => toggleSelect(a.id)}
+                          className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
+                        />
+                      )}
+                    </td>
                     <td className="py-3 px-4">
                       <p className="font-medium text-gray-900">{a.student?.user?.name || 'Unknown'}</p>
                       <p className="text-xs text-gray-500">{a.student?.user?.email}</p>

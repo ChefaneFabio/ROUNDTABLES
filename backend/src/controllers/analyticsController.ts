@@ -1,10 +1,12 @@
 import { Router, Request, Response } from 'express'
 import Joi from 'joi'
+import * as XLSX from 'xlsx'
 import { validateRequest } from '../middleware/validateRequest'
 import { authenticate } from '../middleware/auth'
 import { requireSchoolAdmin, requireAdmin } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
 import { analyticsService } from '../services/AnalyticsService'
+import { prisma } from '../config/database'
 
 const router = Router()
 
@@ -272,5 +274,111 @@ function generateCsv(type: string, data: any): string {
 
   return lines.join('\r\n')
 }
+
+// Export assessment results as XLSX for selected students
+const exportAssessmentsSchema = Joi.object({
+  studentIds: Joi.array().items(Joi.string()).optional(),
+  assessmentIds: Joi.array().items(Joi.string()).optional(),
+  language: Joi.string().optional(),
+})
+
+router.post('/export/assessments/xlsx', authenticate, requireSchoolAdmin, validateRequest(exportAssessmentsSchema), async (req: Request, res: Response) => {
+  try {
+    const { studentIds, assessmentIds, language } = req.body
+
+    // Build query filter
+    const where: any = {
+      isMultiSkill: true,
+      status: 'COMPLETED',
+    }
+    if (assessmentIds?.length) {
+      where.id = { in: assessmentIds }
+    }
+    if (studentIds?.length) {
+      where.studentId = { in: studentIds }
+    }
+    if (language) {
+      where.language = language
+    }
+
+    const assessments = await prisma.assessment.findMany({
+      where,
+      include: {
+        student: { include: { user: { select: { name: true, email: true } } } },
+        sections: { orderBy: { orderIndex: 'asc' } },
+      },
+      orderBy: { completedAt: 'desc' },
+    })
+
+    if (assessments.length === 0) {
+      return res.status(404).json(apiResponse.error('No completed assessments found', 'NOT_FOUND'))
+    }
+
+    // Build Summary sheet
+    const summaryRows = assessments.map(a => ({
+      'Name': a.student.user.name,
+      'Email': a.student.user.email,
+      'Language': a.language,
+      'Overall CEFR': a.cefrLevel || '',
+      'Overall Score (%)': a.score ?? '',
+      'Reading': a.readingLevel || '',
+      'Listening': a.listeningLevel || '',
+      'Writing': a.writingLevel || '',
+      'Speaking': a.speakingLevel || '',
+      'Started': a.startedAt ? new Date(a.startedAt).toISOString().slice(0, 16).replace('T', ' ') : '',
+      'Completed': a.completedAt ? new Date(a.completedAt).toISOString().slice(0, 16).replace('T', ' ') : '',
+    }))
+
+    // Build Details sheet — one row per section
+    const detailRows: any[] = []
+    for (const a of assessments) {
+      for (const s of a.sections) {
+        detailRows.push({
+          'Name': a.student.user.name,
+          'Email': a.student.user.email,
+          'Language': a.language,
+          'Section': s.skill,
+          'Status': s.status,
+          'CEFR Level': s.cefrLevel || '',
+          'Score (%)': s.percentageScore ?? '',
+          'Raw Score': s.rawScore ?? '',
+          'Max Score': s.maxScore ?? '',
+          'Questions Answered': ((s.answers as any[]) || []).length,
+          'Questions Total': s.questionsLimit,
+          'AI Score': s.aiScore ?? '',
+          'Teacher Score': s.teacherScore ?? '',
+        })
+      }
+    }
+
+    // Create workbook
+    const wb = XLSX.utils.book_new()
+    const summaryWs = XLSX.utils.json_to_sheet(summaryRows)
+    const detailsWs = XLSX.utils.json_to_sheet(detailRows)
+
+    // Set column widths for readability
+    summaryWs['!cols'] = [
+      { wch: 25 }, { wch: 30 }, { wch: 10 }, { wch: 12 }, { wch: 14 },
+      { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 18 }, { wch: 18 },
+    ]
+    detailsWs['!cols'] = [
+      { wch: 25 }, { wch: 30 }, { wch: 10 }, { wch: 22 }, { wch: 12 },
+      { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 10 }, { wch: 16 }, { wch: 14 },
+      { wch: 10 }, { wch: 12 },
+    ]
+
+    XLSX.utils.book_append_sheet(wb, summaryWs, 'Summary')
+    XLSX.utils.book_append_sheet(wb, detailsWs, 'Details')
+
+    const buf = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' })
+    const filename = `assessment-results-${new Date().toISOString().slice(0, 10)}.xlsx`
+
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
+    return res.send(buf)
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
 
 export default router
