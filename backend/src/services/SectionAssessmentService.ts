@@ -92,7 +92,7 @@ export class SectionAssessmentService {
         studentId,
         language,
         isMultiSkill: true,
-        status: { in: ['IN_PROGRESS', 'ASSIGNED'] }
+        status: { in: ['IN_PROGRESS', 'ASSIGNED', 'PAUSED'] }
       },
       include: { sections: true }
     })
@@ -153,6 +153,74 @@ export class SectionAssessmentService {
       orderBy: { orderIndex: 'asc' }
     })
     return sections
+  }
+
+  // Pause an in-progress assessment
+  async pauseAssessment(assessmentId: string, studentId: string) {
+    const assessment = await prisma.assessment.findUnique({
+      where: { id: assessmentId },
+      include: { sections: true }
+    })
+    if (!assessment) throw new Error('Assessment not found')
+    if (assessment.studentId !== studentId) throw new Error('Access denied')
+    if (assessment.status !== 'IN_PROGRESS') throw new Error('Only in-progress assessments can be paused')
+
+    // Pause any in-progress section (stop its timer)
+    const activeSection = assessment.sections.find(s => s.status === 'IN_PROGRESS')
+    if (activeSection && activeSection.expiresAt) {
+      const remainingMs = Math.max(0, activeSection.expiresAt.getTime() - Date.now())
+      await prisma.assessmentSection.update({
+        where: { id: activeSection.id },
+        data: {
+          status: 'PENDING',
+          expiresAt: null,
+          // Store remaining time so we can resume later
+          timeLimitMin: Math.ceil(remainingMs / 60000) || 1
+        }
+      })
+    }
+
+    return prisma.assessment.update({
+      where: { id: assessmentId },
+      data: { status: 'PAUSED' },
+      include: { sections: { orderBy: { orderIndex: 'asc' } } }
+    })
+  }
+
+  // Resume a paused assessment
+  async resumeAssessment(assessmentId: string, studentId: string) {
+    const assessment = await prisma.assessment.findUnique({ where: { id: assessmentId } })
+    if (!assessment) throw new Error('Assessment not found')
+    if (assessment.studentId !== studentId) throw new Error('Access denied')
+    if (assessment.status !== 'PAUSED') throw new Error('Only paused assessments can be resumed')
+
+    return prisma.assessment.update({
+      where: { id: assessmentId },
+      data: { status: 'IN_PROGRESS' },
+      include: { sections: { orderBy: { orderIndex: 'asc' } } }
+    })
+  }
+
+  // Restart: abandon current assessment and create a fresh one
+  async restartAssessment(assessmentId: string, studentId: string) {
+    const assessment = await prisma.assessment.findUnique({ where: { id: assessmentId } })
+    if (!assessment) throw new Error('Assessment not found')
+    if (assessment.studentId !== studentId) throw new Error('Access denied')
+    if (!['IN_PROGRESS', 'PAUSED', 'COMPLETED'].includes(assessment.status)) {
+      throw new Error('Assessment cannot be restarted')
+    }
+
+    // Mark old assessment as completed
+    await prisma.assessment.update({
+      where: { id: assessmentId },
+      data: { status: 'COMPLETED', completedAt: assessment.completedAt || new Date() }
+    })
+
+    // Create a fresh assessment
+    return this.createMultiSkillAssessment({
+      studentId,
+      language: assessment.language,
+    })
   }
 
   // Start a section (set timer)

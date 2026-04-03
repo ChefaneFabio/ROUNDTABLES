@@ -96,7 +96,7 @@ export function AssessmentPage() {
   const uniqueAssigned = Array.from(assignedMap.values())
 
   const inProgressQuick = assessments?.find(a => a.status === 'IN_PROGRESS' && !a.isMultiSkill)
-  const inProgressMultiSkill = assessments?.find(a => a.status === 'IN_PROGRESS' && a.isMultiSkill)
+  const inProgressMultiSkill = assessments?.find(a => (a.status === 'IN_PROGRESS' || a.status === 'PAUSED') && a.isMultiSkill)
   const completedAssessments = assessments?.filter(a => a.status === 'COMPLETED') || []
 
   // Build a map of completed results by language+type for the catalog

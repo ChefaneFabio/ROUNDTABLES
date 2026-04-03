@@ -255,6 +255,24 @@ export const assessmentApi = {
     return response.data.data
   },
 
+  // Pause an in-progress assessment
+  async pauseAssessment(assessmentId: string): Promise<any> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/pause`)
+    return response.data.data
+  },
+
+  // Resume a paused assessment
+  async resumeAssessment(assessmentId: string): Promise<any> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/resume`)
+    return response.data.data
+  },
+
+  // Restart an assessment (abandon and create fresh)
+  async restartAssessment(assessmentId: string): Promise<any> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/restart`)
+    return response.data.data
+  },
+
   // Get next question for a section
   async getSectionNextQuestion(assessmentId: string, sectionId: string): Promise<{
     isComplete: boolean

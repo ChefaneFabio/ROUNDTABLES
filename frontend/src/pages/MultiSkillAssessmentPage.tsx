@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
+import { Pause, Play, RotateCcw } from 'lucide-react'
 import { assessmentApi, AssessmentSection } from '../services/assessmentApi'
 import { SectionNav } from '../components/assessment/SectionNav'
 
@@ -52,6 +53,8 @@ export function MultiSkillAssessmentPage() {
   const [sections, setSections] = useState<AssessmentSection[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isPaused, setIsPaused] = useState(false)
+  const [actionLoading, setActionLoading] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -67,6 +70,44 @@ export function MultiSkillAssessmentPage() {
       setError(err.response?.data?.error || err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handlePause = async () => {
+    try {
+      setActionLoading(true)
+      await assessmentApi.pauseAssessment(id!)
+      setIsPaused(true)
+    } catch (err: any) {
+      setError(err.response?.data?.error || err.message)
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  const handleResume = async () => {
+    try {
+      setActionLoading(true)
+      await assessmentApi.resumeAssessment(id!)
+      setIsPaused(false)
+      await loadSections()
+    } catch (err: any) {
+      setError(err.response?.data?.error || err.message)
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  const handleRestart = async () => {
+    if (!confirm('This will abandon your current progress and start a fresh test. Continue?')) return
+    try {
+      setActionLoading(true)
+      const newAssessment = await assessmentApi.restartAssessment(id!)
+      navigate(`/assessment/multi-skill/${newAssessment.id}`, { replace: true })
+    } catch (err: any) {
+      setError(err.response?.data?.error || err.message)
+    } finally {
+      setActionLoading(false)
     }
   }
 
@@ -111,6 +152,32 @@ export function MultiSkillAssessmentPage() {
       <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-gray-900 mb-2">Placement Test</h1>
         <p className="text-gray-600">Complete all sections to determine your CEFR level across all language skills.</p>
+        <div className="flex justify-center gap-3 mt-4">
+          {!isPaused ? (
+            <button
+              onClick={handlePause}
+              disabled={actionLoading || allCompleted}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+            >
+              <Pause className="w-4 h-4" /> Pause Test
+            </button>
+          ) : (
+            <button
+              onClick={handleResume}
+              disabled={actionLoading}
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            >
+              <Play className="w-4 h-4" /> Resume Test
+            </button>
+          )}
+          <button
+            onClick={handleRestart}
+            disabled={actionLoading}
+            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-700 bg-white border border-red-300 rounded-lg hover:bg-red-50 disabled:opacity-50"
+          >
+            <RotateCcw className="w-4 h-4" /> Restart Test
+          </button>
+        </div>
       </div>
 
       {/* Section progress nav */}

@@ -249,6 +249,45 @@ router.get('/:id/results', authenticate, async (req: Request, res: Response) => 
   }
 })
 
+// Pause an in-progress assessment
+router.post('/:id/pause', authenticate, async (req: Request, res: Response) => {
+  try {
+    if (!req.user?.studentId) {
+      return res.status(403).json(apiResponse.error('Only students can pause assessments', 'NOT_STUDENT'))
+    }
+    const result = await sectionAssessmentService.pauseAssessment(req.params.id, req.user.studentId)
+    return res.json(apiResponse.success(result, 'Assessment paused'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// Resume a paused assessment
+router.post('/:id/resume', authenticate, async (req: Request, res: Response) => {
+  try {
+    if (!req.user?.studentId) {
+      return res.status(403).json(apiResponse.error('Only students can resume assessments', 'NOT_STUDENT'))
+    }
+    const result = await sectionAssessmentService.resumeAssessment(req.params.id, req.user.studentId)
+    return res.json(apiResponse.success(result, 'Assessment resumed'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// Restart an assessment (abandon current, create fresh)
+router.post('/:id/restart', authenticate, async (req: Request, res: Response) => {
+  try {
+    if (!req.user?.studentId) {
+      return res.status(403).json(apiResponse.error('Only students can restart assessments', 'NOT_STUDENT'))
+    }
+    const result = await sectionAssessmentService.restartAssessment(req.params.id, req.user.studentId)
+    return res.json(apiResponse.success(result, 'Assessment restarted'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // ==================== Teacher/Admin Routes ====================
 
 // Get sections pending teacher review

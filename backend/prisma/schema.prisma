@@ -1308,6 +1308,7 @@ enum AssessmentType {
 enum AssessmentStatus {
   ASSIGNED
   IN_PROGRESS
+  PAUSED
   COMPLETED
   EXPIRED
 }
