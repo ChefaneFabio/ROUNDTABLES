@@ -563,14 +563,10 @@ router.post('/admin/seed-multi-skill', authenticate, requireAdmin, async (req: R
       ...grammarQs, ...vocabularyQs, ...errorCorrectionQs, ...sentenceTransformationQs
     ]
 
-    // Check if already seeded
-    const existingCount = await prisma.assessmentQuestion.count({
+    // Delete existing and reseed to ensure all skills are covered
+    await prisma.assessmentQuestion.deleteMany({
       where: { language, skill: { not: null } }
     })
-
-    if (existingCount > 0) {
-      return res.json(apiResponse.success({ message: `Multi-skill ${language} questions already exist`, count: existingCount }))
-    }
 
     await prisma.assessmentQuestion.createMany({
       data: allQuestions.map(q => ({
