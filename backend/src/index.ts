@@ -3,7 +3,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import path from 'path'
 import dotenv from 'dotenv'
-import { prisma, disconnectPrisma } from './config/database'
+import { prisma, disconnectPrisma, startKeepAlive } from './config/database'
 import { standardLimiter } from './middleware/rateLimit'
 
 // Import routes
@@ -208,6 +208,16 @@ process.on('SIGINT', () => gracefulShutdown('SIGINT'))
 
 // Start server (skip in test to avoid port conflicts)
 if (process.env.NODE_ENV !== 'test') {
+  // Connect to DB and start keepalive before listening
+  prisma.$connect()
+    .then(() => {
+      console.log('[DB] Connected successfully')
+      startKeepAlive()
+    })
+    .catch((err: unknown) => {
+      console.error('[DB] Initial connection failed:', err)
+    })
+
   app.listen(PORT, () => {
     console.log(`
 ╔═══════════════════════════════════════════════════════════╗
