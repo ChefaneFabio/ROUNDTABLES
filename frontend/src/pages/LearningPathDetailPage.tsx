@@ -150,7 +150,7 @@ export default function LearningPathDetailPage() {
       {/* Course roadmap */}
       <h2 className="text-lg font-semibold text-gray-900 mb-4">Course Roadmap</h2>
       <div className="space-y-3">
-        {path.courses.map((pc, idx) => {
+        {path.courses.map((pc: any, idx: number) => {
           const progress = courseProgress[pc.courseId] ?? 0
           const isComplete = progress >= 100
           const isCurrent = idx === currentIndex
