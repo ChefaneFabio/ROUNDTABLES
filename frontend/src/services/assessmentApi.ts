@@ -7,7 +7,7 @@ export interface Assessment {
   type: 'PLACEMENT' | 'PROGRESS' | 'FINAL'
   score?: number
   cefrLevel?: string
-  status: 'ASSIGNED' | 'IN_PROGRESS' | 'COMPLETED' | 'EXPIRED'
+  status: 'ASSIGNED' | 'IN_PROGRESS' | 'PAUSED' | 'COMPLETED' | 'EXPIRED'
   answers?: any[]
   targetLevel?: string
   questionsLimit?: number
