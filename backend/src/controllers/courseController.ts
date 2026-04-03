@@ -22,6 +22,9 @@ const createCourseSchema = Joi.object({
   maxStudents: Joi.number().integer().min(1).max(100).optional(),
   price: Joi.number().precision(2).min(0).optional(),
   currency: Joi.string().length(3).optional(),
+  automationsEnabled: Joi.boolean().optional(),
+  courseCategory: Joi.string().max(50).optional().allow(null),
+  schoolId: Joi.string().optional(), // Admin can specify school
   modules: Joi.array().items(
     Joi.object({
       title: Joi.string().min(2).max(200).required(),
@@ -41,7 +44,9 @@ const updateCourseSchema = Joi.object({
   maxStudents: Joi.number().integer().min(1).max(100).optional(),
   price: Joi.number().precision(2).min(0).optional().allow(null),
   currency: Joi.string().length(3).optional(),
-  thumbnailUrl: Joi.string().uri().optional().allow(null)
+  thumbnailUrl: Joi.string().uri().optional().allow(null),
+  automationsEnabled: Joi.boolean().optional(),
+  courseCategory: Joi.string().max(50).optional().allow(null)
 })
 
 const updateStatusSchema = Joi.object({
@@ -181,9 +186,9 @@ router.post('/', authenticate, requireSchoolAdmin, validateRequest(createCourseS
       return res.status(403).json(apiResponse.error('School profile required', 'NO_SCHOOL_PROFILE'))
     }
 
-    // For admin, require schoolId in body
+    // For admin, use body schoolId or fall back to user's school
     const schoolId = req.user.role === 'ADMIN'
-      ? req.body.schoolId
+      ? (req.body.schoolId || req.user.schoolId)
       : req.user.schoolId
 
     if (!schoolId) {

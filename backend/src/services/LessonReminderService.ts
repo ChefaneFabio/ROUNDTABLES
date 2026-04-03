@@ -59,7 +59,7 @@ class LessonReminderService {
             deletedAt: null,
             status: { in: ['SCHEDULED', 'REMINDER_SENT'] },
             scheduledAt: { gte: windowStart, lte: windowEnd },
-            course: { schoolId: school.id }
+            course: { schoolId: school.id, automationsEnabled: true }
           },
           include: {
             course: {
@@ -207,6 +207,41 @@ class LessonReminderService {
                 })
               } catch (_) { /* best effort */ }
               failed++
+            }
+          }
+
+          // Send notifications to linked HR contacts for this course
+          const courseContacts = await prisma.courseContact.findMany({
+            where: { courseId: lesson.courseId },
+            include: { contact: true }
+          })
+          for (const cc of courseContacts) {
+            if (!cc.contact.isActive || !cc.contact.email) continue
+            try {
+              const existing = await prisma.notification.findFirst({
+                where: {
+                  lessonId: lesson.id,
+                  type: 'LESSON_REMINDER' as NotificationType,
+                  metadata: { path: ['hrContactId'], equals: cc.contact.id }
+                }
+              })
+              if (existing) continue
+
+              const subject = `Lesson Reminder: ${courseName} starts in ${timeLabel}`
+              const html = this.buildStudentEmailHtml({
+                studentName: cc.contact.name,
+                courseName,
+                teacherName,
+                lessonTitle: lesson.title || `Lesson ${lesson.lessonNumber}`,
+                lessonDate,
+                duration,
+                meetingProvider: lesson.meetingProvider,
+                meetingLink: null,
+                timeLabel
+              })
+              await emailService.sendEmail({ to: cc.contact.email, subject, html })
+            } catch (error) {
+              console.error(`[LessonReminder] Failed to send HR contact reminder to ${cc.contact.email}:`, error)
             }
           }
 
