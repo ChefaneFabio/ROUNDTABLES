@@ -57,6 +57,16 @@ export const organizationApi = {
     const response = await api.get(`/organizations/${orgId}/dashboard`)
     return response.data.data
   },
+
+  async getAssessments(orgId: string, params?: { status?: string; language?: string }): Promise<any[]> {
+    const response = await api.get(`/organizations/${orgId}/assessments`, { params })
+    return response.data.data || []
+  },
+
+  async getAssessmentDetail(orgId: string, assessmentId: string): Promise<any> {
+    const response = await api.get(`/organizations/${orgId}/assessments/${assessmentId}`)
+    return response.data.data
+  },
 }
 
 // Seat License API

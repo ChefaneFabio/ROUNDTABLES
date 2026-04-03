@@ -520,4 +520,135 @@ router.get('/:id/reports', authenticate, requireOrgAdmin, requireOrgAccess, asyn
   }
 })
 
+// GET /:id/assessments — List all employee assessments (HR real-time monitoring)
+router.get('/:id/assessments', authenticate, requireOrgAdmin, requireOrgAccess, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const { status, language } = req.query
+
+    // Get all students in this org
+    const students = await prisma.student.findMany({
+      where: { organizationId: id, deletedAt: null as any },
+      select: { id: true }
+    })
+    const studentIds = students.map(s => s.id)
+
+    if (studentIds.length === 0) {
+      return res.json(apiResponse.success([]))
+    }
+
+    const where: any = { studentId: { in: studentIds } }
+    if (status) where.status = status as string
+    if (language) where.language = language as string
+
+    const assessments = await prisma.assessment.findMany({
+      where,
+      include: {
+        student: { include: { user: { select: { name: true, email: true } } } },
+        sections: { orderBy: { orderIndex: 'asc' } },
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    const result = assessments.map(a => ({
+      id: a.id,
+      language: a.language,
+      type: a.type,
+      status: a.status,
+      isMultiSkill: a.isMultiSkill,
+      score: a.score,
+      cefrLevel: a.cefrLevel,
+      readingLevel: a.readingLevel,
+      listeningLevel: a.listeningLevel,
+      writingLevel: a.writingLevel,
+      speakingLevel: a.speakingLevel,
+      startedAt: a.startedAt,
+      completedAt: a.completedAt,
+      assignedAt: a.assignedAt,
+      student: {
+        id: a.student.id,
+        name: a.student.user.name,
+        email: a.student.user.email,
+      },
+      sections: a.sections.map(s => ({
+        id: s.id,
+        skill: s.skill,
+        status: s.status,
+        cefrLevel: s.cefrLevel,
+        percentageScore: s.percentageScore,
+        questionsAnswered: ((s.answers as any[]) || []).length,
+        questionsTotal: s.questionsLimit,
+      })),
+    }))
+
+    res.json(apiResponse.success(result))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// GET /:id/assessments/:assessmentId — Full assessment results for HR
+router.get('/:id/assessments/:assessmentId', authenticate, requireOrgAdmin, requireOrgAccess, async (req: Request, res: Response) => {
+  try {
+    const { id, assessmentId } = req.params
+
+    const assessment = await prisma.assessment.findUnique({
+      where: { id: assessmentId },
+      include: {
+        student: { include: { user: { select: { name: true, email: true } } } },
+        sections: { orderBy: { orderIndex: 'asc' } },
+      }
+    })
+
+    if (!assessment) {
+      return res.status(404).json(apiResponse.error('Assessment not found', 'NOT_FOUND'))
+    }
+
+    // Verify student belongs to this org
+    const student = await prisma.student.findFirst({
+      where: { id: assessment.studentId, organizationId: id }
+    })
+    if (!student) {
+      return res.status(403).json(apiResponse.error('Student does not belong to this organization', 'FORBIDDEN'))
+    }
+
+    res.json(apiResponse.success({
+      id: assessment.id,
+      language: assessment.language,
+      type: assessment.type,
+      status: assessment.status,
+      score: assessment.score,
+      cefrLevel: assessment.cefrLevel,
+      readingLevel: assessment.readingLevel,
+      listeningLevel: assessment.listeningLevel,
+      writingLevel: assessment.writingLevel,
+      speakingLevel: assessment.speakingLevel,
+      startedAt: assessment.startedAt,
+      completedAt: assessment.completedAt,
+      student: {
+        id: assessment.student.id,
+        name: assessment.student.user.name,
+        email: assessment.student.user.email,
+      },
+      sections: assessment.sections.map(s => ({
+        id: s.id,
+        skill: s.skill,
+        status: s.status,
+        cefrLevel: s.cefrLevel,
+        percentageScore: s.percentageScore,
+        rawScore: s.rawScore,
+        maxScore: s.maxScore,
+        aiScore: s.aiScore,
+        teacherScore: s.teacherScore,
+        questionsAnswered: ((s.answers as any[]) || []).length,
+        questionsTotal: s.questionsLimit,
+        startedAt: s.startedAt,
+        completedAt: s.completedAt,
+      })),
+    }))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
 export default router

@@ -162,6 +162,7 @@ const navGroups: NavGroup[] = [
     items: [
       { name: 'Dashboard', href: '/org/dashboard', icon: Home, roles: [UserRole.ORG_ADMIN] },
       { name: 'Employees', href: '/org/employees', icon: Users, roles: [UserRole.ORG_ADMIN] },
+      { name: 'Assessments', href: '/org/assessments', icon: ClipboardCheck, roles: [UserRole.ORG_ADMIN] },
       { name: 'Seat Licenses', href: '/org/seats', icon: Ticket, roles: [UserRole.ORG_ADMIN] },
       { name: 'Purchase Seats', href: '/org/purchase', icon: CreditCard, roles: [UserRole.ORG_ADMIN] },
     ]

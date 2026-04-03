@@ -63,6 +63,7 @@ import OrgSettingsPage from './pages/org/OrgSettingsPage'
 import OrgPurchasePage from './pages/org/OrgPurchasePage'
 import OrgInvoicesPage from './pages/org/OrgInvoicesPage'
 import OrgReportsPage from './pages/org/OrgReportsPage'
+import OrgAssessmentsPage from './pages/org/OrgAssessmentsPage'
 import AdminOrganizationsPage from './pages/admin/OrganizationsPage'
 import IntegrationsPage from './pages/admin/IntegrationsPage'
 import OrganizationDetailPage from './pages/admin/OrganizationDetailPage'
@@ -762,6 +763,17 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ORG_ADMIN]}>
             <Layout>
               <OrgReportsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/org/assessments"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ORG_ADMIN]}>
+            <Layout>
+              <OrgAssessmentsPage />
             </Layout>
           </ProtectedRoute>
         }
