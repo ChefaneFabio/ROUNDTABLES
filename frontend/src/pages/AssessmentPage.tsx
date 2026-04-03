@@ -33,6 +33,7 @@ export function AssessmentPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [error, setError] = useState('')
+  const [filterLanguage, setFilterLanguage] = useState('')
 
   const { data: assessments, isLoading } = useQuery(
     'myAssessments',
@@ -109,6 +110,20 @@ export function AssessmentPage() {
     }
   })
 
+  // Derive languages the student has interacted with (taken or assigned)
+  const allStudentAssessments = [...(assessments || []), ...uniqueAssigned]
+  const studentLanguages = [...new Set(allStudentAssessments.map(a => a.language))].sort()
+
+  // Filter catalog languages — show all if no filter, or only the selected language
+  const visibleLanguages = filterLanguage
+    ? LANGUAGES.filter(l => l.code === filterLanguage)
+    : LANGUAGES
+
+  // Filter completed results by language
+  const filteredCompleted = filterLanguage
+    ? completedAssessments.filter(a => a.language === filterLanguage)
+    : completedAssessments
+
   if (isLoading || loadingAssigned) return <LoadingPage />
 
   return (
@@ -125,6 +140,23 @@ export function AssessmentPage() {
       </div>
 
       {error && <Alert type="error" message={error} />}
+
+      {/* Language filter */}
+      {studentLanguages.length > 0 && (
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-gray-500">Filter by language:</span>
+          <select
+            value={filterLanguage}
+            onChange={e => setFilterLanguage(e.target.value)}
+            className="px-3 py-1.5 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500"
+          >
+            <option value="">All Languages</option>
+            {studentLanguages.map(lang => (
+              <option key={lang} value={lang}>{lang}</option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {/* Assigned Tests */}
       {uniqueAssigned.length > 0 && (
@@ -234,7 +266,7 @@ export function AssessmentPage() {
       <div>
         <h2 className="text-lg font-semibold text-gray-900 mb-4">Available Tests</h2>
         <div className="grid gap-4">
-          {LANGUAGES.map(lang => {
+          {visibleLanguages.map(lang => {
             const quickResult = completedMap.get(`${lang.code}-quick`)
             const multiResult = completedMap.get(`${lang.code}-4skill`)
             const hasQuickInProgress = inProgressQuick?.language === lang.code
@@ -302,7 +334,7 @@ export function AssessmentPage() {
                           <SkillBadge icon={Mic} label="Speak" result={multiResult?.speakingLevel} />
                         </div>
                         <p className="text-xs text-gray-500 mb-3">
-                          Comprehensive assessment (~90 min). Grammar, Vocabulary, Reading, Error Correction, Sentence Transformation, Writing, Listening, Speaking.
+                          Comprehensive placement test (~70 min). Reading, Listening, Writing, Speaking.
                         </p>
                         <button
                           onClick={() => {
@@ -329,11 +361,11 @@ export function AssessmentPage() {
       </div>
 
       {/* Previous Results */}
-      {completedAssessments.length > 0 && (
+      {filteredCompleted.length > 0 && (
         <Card>
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Previous Results</h2>
           <div className="space-y-3">
-            {completedAssessments.map(assessment => (
+            {filteredCompleted.map(assessment => (
               <AssessmentCard
                 key={assessment.id}
                 assessment={assessment}
