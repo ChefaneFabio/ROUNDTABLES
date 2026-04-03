@@ -41,13 +41,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const userData = await authApi.getMe()
-      setUser(userData)
-      // Set the appropriate profile based on role
-      if (userData.schoolProfile) setProfile(userData.schoolProfile)
-      else if (userData.teacherProfile) setProfile(userData.teacherProfile)
-      else if (userData.studentProfile) setProfile(userData.studentProfile)
-      else if (userData.orgAdminProfile) setProfile(userData.orgAdminProfile)
+      const result = await authApi.getProfile()
+      setUser(result.user)
+      if (result.profile) setProfile(result.profile)
+      else if (result.user.schoolProfile) setProfile(result.user.schoolProfile)
+      else if (result.user.teacherProfile) setProfile(result.user.teacherProfile)
+      else if (result.user.studentProfile) setProfile(result.user.studentProfile)
+      else if (result.user.orgAdminProfile) setProfile(result.user.orgAdminProfile)
     } catch (error) {
       console.error('Failed to fetch user:', error)
       clearTokens()
