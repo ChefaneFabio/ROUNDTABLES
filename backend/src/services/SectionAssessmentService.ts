@@ -93,9 +93,23 @@ export class SectionAssessmentService {
         language,
         isMultiSkill: true,
         status: { in: ['IN_PROGRESS', 'ASSIGNED'] }
-      }
+      },
+      include: { sections: true }
     })
-    if (existing) return existing
+    if (existing) {
+      // If the assessment is older than 24 hours, abandon it so student can start fresh
+      const ageMs = Date.now() - (existing.startedAt?.getTime() || existing.createdAt.getTime())
+      const maxAgeMs = 24 * 60 * 60 * 1000
+      if (ageMs > maxAgeMs) {
+        await prisma.assessment.update({
+          where: { id: existing.id },
+          data: { status: 'COMPLETED', completedAt: new Date() }
+        })
+        // Fall through to create a new assessment
+      } else {
+        return existing
+      }
+    }
 
     const sectionSkills = Object.keys(SECTION_CONFIG_V2) as Array<keyof typeof SECTION_CONFIG_V2>
     const totalQuestions = sectionSkills.reduce((sum, skill) => sum + SECTION_CONFIG_V2[skill].questionsLimit, 0)
