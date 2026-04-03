@@ -288,6 +288,42 @@ router.post('/:id/restart', authenticate, async (req: Request, res: Response) =>
   }
 })
 
+// Reset an in-progress section (student can redo it)
+router.post('/:id/sections/:sectionId/reset', authenticate, async (req: Request, res: Response) => {
+  try {
+    if (!req.user?.studentId) {
+      return res.status(403).json(apiResponse.error('Only students can reset sections', 'NOT_STUDENT'))
+    }
+    const result = await sectionAssessmentService.resetSection(req.params.id, req.params.sectionId, req.user.studentId)
+    return res.json(apiResponse.success(result, 'Section reset'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// Request retry on a completed section (sends notification to admin)
+router.post('/:id/sections/:sectionId/request-retry', authenticate, async (req: Request, res: Response) => {
+  try {
+    if (!req.user?.studentId) {
+      return res.status(403).json(apiResponse.error('Only students can request retries', 'NOT_STUDENT'))
+    }
+    const result = await sectionAssessmentService.requestSectionRetry(req.params.id, req.params.sectionId, req.user.studentId)
+    return res.json(apiResponse.success(result))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// Admin approves a section retry
+router.post('/:id/sections/:sectionId/approve-retry', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const result = await sectionAssessmentService.approveSectionRetry(req.params.id, req.params.sectionId)
+    return res.json(apiResponse.success(result))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // ==================== Teacher/Admin Routes ====================
 
 // Get sections pending teacher review

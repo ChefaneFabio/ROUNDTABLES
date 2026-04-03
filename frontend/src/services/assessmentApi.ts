@@ -273,6 +273,18 @@ export const assessmentApi = {
     return response.data.data
   },
 
+  // Reset an in-progress section
+  async resetSection(assessmentId: string, sectionId: string): Promise<any> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/reset`)
+    return response.data.data
+  },
+
+  // Request retry on a completed section
+  async requestSectionRetry(assessmentId: string, sectionId: string): Promise<any> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/request-retry`)
+    return response.data.data
+  },
+
   // Get next question for a section
   async getSectionNextQuestion(assessmentId: string, sectionId: string): Promise<{
     isComplete: boolean

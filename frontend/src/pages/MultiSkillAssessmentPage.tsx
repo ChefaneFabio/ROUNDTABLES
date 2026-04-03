@@ -42,6 +42,7 @@ export function MultiSkillAssessmentPage() {
   const [isPaused, setIsPaused] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
   const [showIntro, setShowIntro] = useState(false)
+  const [retryMessage, setRetryMessage] = useState<string | null>(null)
 
   useEffect(() => {
     if (!id) return
@@ -94,6 +95,32 @@ export function MultiSkillAssessmentPage() {
       setActionLoading(true)
       const newAssessment = await assessmentApi.restartAssessment(id!)
       navigate(`/assessment/multi-skill/${newAssessment.id}`, { replace: true })
+    } catch (err: any) {
+      setError(err.response?.data?.error || err.message)
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  const handleResetSection = async (sectionId: string) => {
+    if (!confirm('This will clear your progress on this section. Continue?')) return
+    try {
+      setActionLoading(true)
+      await assessmentApi.resetSection(id!, sectionId)
+      await loadSections()
+    } catch (err: any) {
+      setError(err.response?.data?.error || err.message)
+    } finally {
+      setActionLoading(false)
+    }
+  }
+
+  const handleRequestRetry = async (sectionId: string) => {
+    try {
+      setActionLoading(true)
+      await assessmentApi.requestSectionRetry(id!, sectionId)
+      setRetryMessage('Retry request sent to your administrator / Richiesta di ripetizione inviata al tuo amministratore')
+      setTimeout(() => setRetryMessage(null), 5000)
     } catch (err: any) {
       setError(err.response?.data?.error || err.message)
     } finally {
@@ -234,6 +261,12 @@ export function MultiSkillAssessmentPage() {
         </div>
       </div>
 
+      {retryMessage && (
+        <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg text-sm">
+          {retryMessage}
+        </div>
+      )}
+
       {/* Section progress nav */}
       <SectionNav
         sections={sections}
@@ -268,23 +301,39 @@ export function MultiSkillAssessmentPage() {
 
                 <div className="text-right">
                   {section.status === 'COMPLETED' && (
-                    <div>
+                    <div className="space-y-2">
                       <span className="inline-block px-3 py-1 bg-green-500 text-white text-sm font-bold rounded-full">
                         {section.cefrLevel || 'Done'}
                       </span>
                       {section.percentageScore != null && (
-                        <p className="text-xs text-gray-500 mt-1">{section.percentageScore}%</p>
+                        <p className="text-xs text-gray-500">{section.percentageScore}%</p>
                       )}
+                      <button
+                        onClick={() => handleRequestRetry(section.id)}
+                        disabled={actionLoading}
+                        className="block text-xs text-amber-700 hover:text-amber-900 underline disabled:opacity-50"
+                      >
+                        Request Retry
+                      </button>
                     </div>
                   )}
 
                   {section.status === 'IN_PROGRESS' && (
-                    <button
-                      onClick={() => handleStartSection(section)}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
-                    >
-                      Continue
-                    </button>
+                    <div className="space-y-2 text-right">
+                      <button
+                        onClick={() => handleStartSection(section)}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                      >
+                        Continue
+                      </button>
+                      <button
+                        onClick={() => handleResetSection(section.id)}
+                        disabled={actionLoading}
+                        className="block text-xs text-gray-500 hover:text-gray-700 underline disabled:opacity-50 ml-auto"
+                      >
+                        Reset Section
+                      </button>
+                    </div>
                   )}
 
                   {section.status === 'PENDING' && canStart && (

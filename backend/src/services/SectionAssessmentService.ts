@@ -231,6 +231,131 @@ export class SectionAssessmentService {
     })
   }
 
+  // Reset an in-progress section so student can redo it
+  async resetSection(assessmentId: string, sectionId: string, studentId: string) {
+    const section = await prisma.assessmentSection.findUnique({
+      where: { id: sectionId },
+      include: { assessment: true }
+    })
+    if (!section) throw new Error('Section not found')
+    if (section.assessment.studentId !== studentId) throw new Error('Access denied')
+    if (section.status === 'COMPLETED') {
+      throw new Error('Completed sections cannot be reset. Please request a retry from your administrator.')
+    }
+    if (section.status !== 'IN_PROGRESS' && section.status !== 'PENDING') {
+      throw new Error('Section cannot be reset in its current state')
+    }
+
+    return prisma.assessmentSection.update({
+      where: { id: sectionId },
+      data: {
+        status: 'PENDING',
+        answers: [],
+        targetLevel: 'B1',
+        startedAt: null,
+        expiresAt: null,
+        completedAt: null,
+        rawScore: null,
+        maxScore: null,
+        percentageScore: null,
+        cefrLevel: null,
+        aiScore: null,
+        teacherScore: null,
+        finalScore: null,
+      }
+    })
+  }
+
+  // Student requests a retry on a completed section — notifies admin
+  async requestSectionRetry(assessmentId: string, sectionId: string, studentId: string) {
+    const section = await prisma.assessmentSection.findUnique({
+      where: { id: sectionId },
+      include: { assessment: { include: { student: { include: { user: true } } } } }
+    })
+    if (!section) throw new Error('Section not found')
+    if (section.assessment.studentId !== studentId) throw new Error('Access denied')
+    if (section.status !== 'COMPLETED') throw new Error('Only completed sections can be retried')
+
+    const studentName = section.assessment.student.user.name
+    const skill = section.skill
+    const language = section.assessment.language
+
+    // Find admins to notify
+    const admins = await prisma.user.findMany({
+      where: { role: 'ADMIN', isActive: true, deletedAt: null }
+    })
+
+    for (const admin of admins) {
+      await prisma.notification.create({
+        data: {
+          type: 'SYSTEM',
+          subject: `Section Retry Request: ${studentName} — ${skill} (${language})`,
+          content: `${studentName} is requesting to retry the ${skill} section of their ${language} placement test. Assessment ID: ${assessmentId}, Section ID: ${sectionId}`,
+          status: 'SENT',
+          sentAt: new Date(),
+          userId: admin.id,
+          metadata: { assessmentId, sectionId, studentId, skill, language, type: 'SECTION_RETRY_REQUEST' }
+        }
+      })
+    }
+
+    return { message: 'Retry request sent to your administrator' }
+  }
+
+  // Admin approves a section retry — resets the completed section
+  async approveSectionRetry(assessmentId: string, sectionId: string) {
+    const section = await prisma.assessmentSection.findUnique({
+      where: { id: sectionId },
+      include: { assessment: { include: { student: { include: { user: true } } } } }
+    })
+    if (!section) throw new Error('Section not found')
+    if (section.status !== 'COMPLETED') throw new Error('Section is not completed')
+
+    // Reset the section
+    await prisma.assessmentSection.update({
+      where: { id: sectionId },
+      data: {
+        status: 'PENDING',
+        answers: [],
+        targetLevel: 'B1',
+        startedAt: null,
+        expiresAt: null,
+        completedAt: null,
+        rawScore: null,
+        maxScore: null,
+        percentageScore: null,
+        cefrLevel: null,
+        aiScore: null,
+        teacherScore: null,
+        finalScore: null,
+      }
+    })
+
+    // Reopen the assessment if it was completed
+    const assessment = section.assessment
+    if (assessment.status === 'COMPLETED') {
+      await prisma.assessment.update({
+        where: { id: assessmentId },
+        data: { status: 'IN_PROGRESS', completedAt: null, score: null, cefrLevel: null }
+      })
+    }
+
+    // Notify the student
+    await prisma.notification.create({
+      data: {
+        type: 'SYSTEM',
+        subject: `Retry Approved: ${section.skill} section`,
+        content: `Your request to retry the ${section.skill} section has been approved. You can now retake it.`,
+        status: 'SENT',
+        sentAt: new Date(),
+        userId: section.assessment.student.user.id,
+        metadata: { assessmentId, sectionId, skill: section.skill, type: 'SECTION_RETRY_APPROVED' }
+      }
+    })
+
+    return { message: 'Section retry approved' }
+  }
+
   // Start a section (set timer)
   async startSection(assessmentId: string, sectionId: string, studentId: string) {
     const section = await prisma.assessmentSection.findUnique({
