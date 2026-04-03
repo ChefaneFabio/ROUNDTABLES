@@ -287,12 +287,12 @@ export class SectionAssessmentService {
     }
 
     if (!question) {
-      // If no questions were answered at all, questions are missing from the database
-      if (answers.length === 0) {
-        throw new Error(`No ${section.skill} questions available for language "${section.assessment.language}". Please ask an admin to seed the question bank.`)
+      // No questions available for this skill — auto-complete the section
+      console.warn(`[Assessment] No ${section.skill} questions available for "${section.assessment.language}" (answered: ${answers.length}). Auto-completing section.`)
+      if (section.status === 'IN_PROGRESS') {
+        await this.completeSection(assessmentId, sectionId)
       }
-      // Otherwise the student has exhausted all available questions — complete normally
-      return { isComplete: true, totalAnswered: answers.length }
+      return { isComplete: true, totalAnswered: answers.length, noQuestions: true }
     }
 
     // Return question without the correct answer
