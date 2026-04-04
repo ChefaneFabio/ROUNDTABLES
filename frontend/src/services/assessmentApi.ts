@@ -285,6 +285,12 @@ export const assessmentApi = {
     return response.data.data
   },
 
+  // Admin: Approve a section retry request
+  async approveSectionRetry(assessmentId: string, sectionId: string): Promise<any> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/approve-retry`)
+    return response.data.data
+  },
+
   // Get next question for a section
   async getSectionNextQuestion(assessmentId: string, sectionId: string): Promise<{
     isComplete: boolean

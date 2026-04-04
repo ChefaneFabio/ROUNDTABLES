@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { useNavigate } from 'react-router-dom'
-import { ClipboardCheck, Search, Eye, RefreshCw } from 'lucide-react'
+import { ClipboardCheck, Search, Eye, RefreshCw, Plus, Download, X, Check } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import { organizationApi } from '../../services/organizationApi'
+import { assessmentApi } from '../../services/assessmentApi'
+import api from '../../services/api'
 import { LoadingPage } from '../../components/common/LoadingSpinner'
 import { Card } from '../../components/common/Card'
 
@@ -26,12 +28,27 @@ const SKILL_SHORT: Record<string, string> = {
   SENTENCE_TRANSFORMATION: 'ST',
 }
 
+const LANGUAGES = ['English', 'Spanish', 'French', 'German', 'Italian']
+const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+
 export default function OrgAssessmentsPage() {
   const { organizationId } = useAuth()
   const navigate = useNavigate()
   const [filterStatus, setFilterStatus] = useState('')
   const [filterLanguage, setFilterLanguage] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+
+  // Assign modal state
+  const [showAssignModal, setShowAssignModal] = useState(false)
+  const [assignLanguage, setAssignLanguage] = useState('English')
+  const [testType, setTestType] = useState<'placement' | 'level'>('placement')
+  const [fixedLevel, setFixedLevel] = useState('B1')
+  const [selectedEmployees, setSelectedEmployees] = useState<Set<string>>(new Set())
+  const [assigning, setAssigning] = useState(false)
+  const [assignError, setAssignError] = useState('')
+
+  // Export state
+  const [exporting, setExporting] = useState(false)
 
   const { data: assessments, isLoading, refetch, isFetching } = useQuery(
     ['orgAssessments', organizationId, filterStatus, filterLanguage],
@@ -44,6 +61,16 @@ export default function OrgAssessmentsPage() {
       refetchInterval: 30000, // Real-time: refresh every 30s
     }
   )
+
+  // Load employees when modal is open
+  const { data: employeesData } = useQuery(
+    ['orgEmployees', organizationId],
+    () => organizationApi.getEmployees(organizationId!),
+    {
+      enabled: !!organizationId && showAssignModal,
+    }
+  )
+  const employees = employeesData?.data || employeesData || []
 
   const filtered = assessments?.filter((a: any) => {
     if (!searchTerm) return true
@@ -63,6 +90,68 @@ export default function OrgAssessmentsPage() {
   const inProgress = assessments?.filter((a: any) => a.status === 'IN_PROGRESS' || a.status === 'PAUSED').length || 0
   const assigned = assessments?.filter((a: any) => a.status === 'ASSIGNED').length || 0
 
+  // Assign test handler
+  const handleAssign = async () => {
+    if (selectedEmployees.size === 0) return
+    try {
+      setAssigning(true)
+      setAssignError('')
+      await assessmentApi.assignMultiSkillAssessment({
+        studentIds: Array.from(selectedEmployees),
+        language: assignLanguage,
+        fixedLevel: testType === 'level' ? fixedLevel : undefined,
+      })
+      setShowAssignModal(false)
+      setSelectedEmployees(new Set())
+      refetch()
+    } catch (err: any) {
+      setAssignError(err?.response?.data?.message || 'Failed to assign assessment')
+    } finally {
+      setAssigning(false)
+    }
+  }
+
+  // Export XLSX handler
+  const handleExportXlsx = async () => {
+    const completedAssessments = (assessments || []).filter((a: any) => a.status === 'COMPLETED')
+    if (completedAssessments.length === 0) return
+    try {
+      setExporting(true)
+      const response = await api.post('/analytics/export/assessments/xlsx', {
+        assessmentIds: completedAssessments.map((a: any) => a.id),
+      }, { responseType: 'blob' })
+
+      const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `assessment-results-${new Date().toISOString().slice(0, 10)}.xlsx`
+      a.click()
+      window.URL.revokeObjectURL(url)
+    } catch {
+      // silent fail - could add toast here
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const toggleEmployee = (id: string) => {
+    setSelectedEmployees(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+
+  const toggleSelectAll = () => {
+    if (selectedEmployees.size === employees.length) {
+      setSelectedEmployees(new Set())
+    } else {
+      setSelectedEmployees(new Set(employees.map((e: any) => e.studentId || e.id)))
+    }
+  }
+
   if (isLoading) return <LoadingPage />
 
   return (
@@ -76,14 +165,32 @@ export default function OrgAssessmentsPage() {
             <p className="text-sm text-gray-500">Monitor placement test progress in real-time</p>
           </div>
         </div>
-        <button
-          onClick={() => refetch()}
-          disabled={isFetching}
-          className="inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
-        >
-          <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
-          Refresh
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowAssignModal(true)}
+            className="inline-flex items-center gap-2 px-3 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700"
+          >
+            <Plus className="w-4 h-4" />
+            Assign Test
+          </button>
+          <button
+            onClick={handleExportXlsx}
+            disabled={exporting || completed === 0}
+            className="inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+            title={completed === 0 ? 'No completed assessments to export' : `Export ${completed} completed assessment(s)`}
+          >
+            <Download className={`w-4 h-4 ${exporting ? 'animate-pulse' : ''}`} />
+            Export
+          </button>
+          <button
+            onClick={() => refetch()}
+            disabled={isFetching}
+            className="inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
+            Refresh
+          </button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -247,6 +354,183 @@ export default function OrgAssessmentsPage() {
           </div>
         )}
       </Card>
+
+      {/* Assign Test Modal */}
+      {showAssignModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg mx-4 max-h-[90vh] flex flex-col">
+            {/* Modal header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b">
+              <h2 className="text-lg font-semibold text-gray-900">Assign Assessment</h2>
+              <button
+                onClick={() => { setShowAssignModal(false); setAssignError('') }}
+                className="p-1 text-gray-400 hover:text-gray-600 rounded"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Modal body */}
+            <div className="px-6 py-4 space-y-4 overflow-y-auto flex-1">
+              {/* Language */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
+                <select
+                  value={assignLanguage}
+                  onChange={e => setAssignLanguage(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                >
+                  {LANGUAGES.map(l => (
+                    <option key={l} value={l}>{l}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Test type toggle */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Test Type</label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setTestType('placement')}
+                    className={`flex-1 px-3 py-2 text-sm rounded-lg border transition-colors ${
+                      testType === 'placement'
+                        ? 'bg-primary-600 text-white border-primary-600'
+                        : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    Placement Test
+                  </button>
+                  <button
+                    onClick={() => setTestType('level')}
+                    className={`flex-1 px-3 py-2 text-sm rounded-lg border transition-colors ${
+                      testType === 'level'
+                        ? 'bg-primary-600 text-white border-primary-600'
+                        : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                    }`}
+                  >
+                    Level Test
+                  </button>
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  {testType === 'placement'
+                    ? 'Adaptive test that determines the student\'s CEFR level automatically.'
+                    : 'Fixed-level test at a specific CEFR level.'}
+                </p>
+              </div>
+
+              {/* CEFR level buttons (only for level test) */}
+              {testType === 'level' && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">CEFR Level</label>
+                  <div className="flex gap-2 flex-wrap">
+                    {CEFR_LEVELS.map(level => (
+                      <button
+                        key={level}
+                        onClick={() => setFixedLevel(level)}
+                        className={`px-3 py-1.5 text-sm rounded-lg border font-medium transition-colors ${
+                          fixedLevel === level
+                            ? 'bg-primary-600 text-white border-primary-600'
+                            : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
+                        }`}
+                      >
+                        {level}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Employee list */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-sm font-medium text-gray-700">
+                    Employees ({selectedEmployees.size} selected)
+                  </label>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={toggleSelectAll}
+                      className="text-xs text-primary-600 hover:text-primary-700 font-medium"
+                    >
+                      {selectedEmployees.size === employees.length && employees.length > 0 ? 'Clear' : 'Select All'}
+                    </button>
+                  </div>
+                </div>
+                <div className="border border-gray-200 rounded-lg max-h-48 overflow-y-auto divide-y divide-gray-100">
+                  {employees.length === 0 ? (
+                    <p className="text-sm text-gray-500 text-center py-4">No employees found</p>
+                  ) : (
+                    employees.map((emp: any) => {
+                      const empId = emp.studentId || emp.id
+                      const isSelected = selectedEmployees.has(empId)
+                      return (
+                        <label
+                          key={empId}
+                          className="flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-gray-50"
+                        >
+                          <div
+                            className={`w-4 h-4 rounded border flex items-center justify-center flex-shrink-0 ${
+                              isSelected
+                                ? 'bg-primary-600 border-primary-600'
+                                : 'border-gray-300'
+                            }`}
+                          >
+                            {isSelected && <Check className="w-3 h-3 text-white" />}
+                          </div>
+                          <input
+                            type="checkbox"
+                            className="sr-only"
+                            checked={isSelected}
+                            onChange={() => toggleEmployee(empId)}
+                          />
+                          <div className="min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">
+                              {emp.student?.name || emp.name || emp.email}
+                            </p>
+                            <p className="text-xs text-gray-500 truncate">
+                              {emp.student?.email || emp.email}
+                            </p>
+                          </div>
+                        </label>
+                      )
+                    })
+                  )}
+                </div>
+              </div>
+
+              {assignError && (
+                <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">{assignError}</p>
+              )}
+            </div>
+
+            {/* Modal footer */}
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t">
+              <button
+                onClick={() => { setShowAssignModal(false); setAssignError('') }}
+                className="px-4 py-2 text-sm text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleAssign}
+                disabled={assigning || selectedEmployees.size === 0}
+                className="px-4 py-2 text-sm text-white bg-primary-600 rounded-lg hover:bg-primary-700 disabled:opacity-50 inline-flex items-center gap-2"
+              >
+                {assigning ? (
+                  <>
+                    <RefreshCw className="w-4 h-4 animate-spin" />
+                    Assigning...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-4 h-4" />
+                    Assign to {selectedEmployees.size} employee{selectedEmployees.size !== 1 ? 's' : ''}
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

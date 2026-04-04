@@ -3,6 +3,7 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { Bell, Check, CheckCheck, Calendar, Award, BookOpen, MessageSquare, AlertCircle } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { notificationsApi } from '../services/api'
+import { assessmentApi } from '../services/assessmentApi'
 import { LoadingSpinner } from '../components/common/LoadingSpinner'
 
 const NOTIFICATION_ICONS: Record<string, React.ElementType> = {
@@ -61,6 +62,21 @@ export const NotificationsPage: React.FC = () => {
     () => notificationsApi.markAllAsRead(),
     { onSuccess: () => queryClient.invalidateQueries('notifications') }
   )
+
+  const [approveStatus, setApproveStatus] = useState<Record<string, 'idle' | 'loading' | 'success' | 'error'>>({})
+
+  const handleApproveRetry = async (notificationId: string, metadata: any) => {
+    setApproveStatus(prev => ({ ...prev, [notificationId]: 'loading' }))
+    try {
+      await assessmentApi.approveSectionRetry(metadata.assessmentId, metadata.sectionId)
+      setApproveStatus(prev => ({ ...prev, [notificationId]: 'success' }))
+      // Mark notification as read after approval
+      await notificationsApi.markAsRead(notificationId)
+      queryClient.invalidateQueries('notifications')
+    } catch (err) {
+      setApproveStatus(prev => ({ ...prev, [notificationId]: 'error' }))
+    }
+  }
 
   const unreadCount = notifications.filter((n: any) => !n.readAt).length
 
@@ -163,7 +179,37 @@ export const NotificationsPage: React.FC = () => {
                         {formatTime(notification.sentAt || notification.createdAt)}
                       </span>
                     </div>
-                    {isUnread && (
+                    {notification.metadata?.type === 'SECTION_RETRY_REQUEST' && approveStatus[notification.id] !== 'success' && (
+                      <div className="flex items-center gap-2 mt-3">
+                        <button
+                          onClick={() => handleApproveRetry(notification.id, notification.metadata)}
+                          disabled={approveStatus[notification.id] === 'loading'}
+                          className="flex items-center gap-1 px-3 py-1.5 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+                        >
+                          {approveStatus[notification.id] === 'loading' ? (
+                            <>Processing...</>
+                          ) : (
+                            <><Check className="w-4 h-4" /> Approve Retry</>
+                          )}
+                        </button>
+                        <button
+                          onClick={() => markReadMutation.mutate(notification.id)}
+                          disabled={markReadMutation.isLoading}
+                          className="flex items-center gap-1 px-3 py-1.5 bg-gray-100 text-gray-600 text-sm rounded-lg hover:bg-gray-200 transition-colors disabled:opacity-50"
+                        >
+                          Dismiss
+                        </button>
+                        {approveStatus[notification.id] === 'error' && (
+                          <span className="text-sm text-red-500">Failed to approve. Try again.</span>
+                        )}
+                      </div>
+                    )}
+                    {approveStatus[notification.id] === 'success' && (
+                      <div className="flex items-center gap-1 mt-3 text-sm text-green-600">
+                        <CheckCheck className="w-4 h-4" /> Retry approved successfully
+                      </div>
+                    )}
+                    {isUnread && notification.metadata?.type !== 'SECTION_RETRY_REQUEST' && (
                       <button
                         onClick={() => markReadMutation.mutate(notification.id)}
                         className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 mt-2"

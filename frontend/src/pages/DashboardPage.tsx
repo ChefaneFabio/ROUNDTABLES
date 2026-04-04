@@ -1,5 +1,5 @@
 import { useQuery } from 'react-query'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import {
   Users,
   BookOpen,
@@ -11,9 +11,14 @@ import {
   MessageSquare,
   TrendingUp,
   ClipboardCheck,
+  Headphones,
+  PenTool,
+  Mic,
+  AlertCircle,
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { dashboardApi } from '../services/api'
+import { assessmentApi, Assessment } from '../services/assessmentApi'
 import { LoadingPage } from '../components/common/LoadingSpinner'
 import { Alert } from '../components/common/Alert'
 import { StatCard } from '../components/dashboard/StatCard'
@@ -359,6 +364,54 @@ function StudentDashboard({ data }: { data: any }) {
   const navigate = useNavigate()
   const assignedAssessments = data?.assignedAssessments || []
 
+  const { data: myAssessments } = useQuery(
+    'my-assessments',
+    assessmentApi.getMyAssessments,
+    { staleTime: 5 * 60 * 1000 }
+  )
+
+  // Get latest completed multi-skill assessment per language
+  const completedByLanguage = (myAssessments || [])
+    .filter((a: Assessment) => a.status === 'COMPLETED' && a.isMultiSkill)
+    .sort((a: Assessment, b: Assessment) =>
+      new Date(b.completedAt || 0).getTime() - new Date(a.completedAt || 0).getTime()
+    )
+    .reduce((acc: Record<string, Assessment>, a: Assessment) => {
+      if (!acc[a.language]) acc[a.language] = a
+      return acc
+    }, {} as Record<string, Assessment>)
+
+  const completedAssessments = Object.values(completedByLanguage)
+
+  // Check for in-progress or assigned tests
+  const pendingAssessments = (myAssessments || []).filter(
+    (a: Assessment) => a.status === 'IN_PROGRESS' || a.status === 'PAUSED'
+  )
+
+  const cefrColors: Record<string, string> = {
+    A1: 'bg-red-100 text-red-800',
+    A2: 'bg-orange-100 text-orange-800',
+    B1: 'bg-yellow-100 text-yellow-800',
+    B2: 'bg-blue-100 text-blue-800',
+    C1: 'bg-indigo-100 text-indigo-800',
+    C2: 'bg-purple-100 text-purple-800',
+  }
+
+  const getCefrColor = (level?: string) => cefrColors[level || ''] || 'bg-gray-100 text-gray-800'
+
+  const skillBarWidth: Record<string, number> = {
+    A1: 16, A2: 33, B1: 50, B2: 66, C1: 83, C2: 100,
+  }
+
+  const getSkillWidth = (level?: string) => skillBarWidth[level || ''] || 0
+
+  const skillBarColor: Record<string, string> = {
+    A1: 'bg-red-500', A2: 'bg-orange-500', B1: 'bg-yellow-500',
+    B2: 'bg-blue-500', C1: 'bg-indigo-500', C2: 'bg-purple-500',
+  }
+
+  const getSkillBarColor = (level?: string) => skillBarColor[level || ''] || 'bg-gray-400'
+
   return (
     <>
       {/* Pending assigned tests */}
@@ -383,6 +436,37 @@ function StudentDashboard({ data }: { data: any }) {
                   className="flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors font-medium"
                 >
                   Take Test
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* In-progress assessment alert */}
+      {pendingAssessments.length > 0 && (
+        <div className="bg-blue-50 border-2 border-blue-300 rounded-lg shadow-md p-6">
+          <div className="flex items-center gap-3 mb-3">
+            <AlertCircle className="w-6 h-6 text-blue-600" />
+            <h3 className="text-lg font-semibold text-blue-800">
+              You have {pendingAssessments.length === 1 ? 'an' : pendingAssessments.length} assessment{pendingAssessments.length > 1 ? 's' : ''} in progress
+            </h3>
+          </div>
+          <div className="space-y-3">
+            {pendingAssessments.map((a: Assessment) => (
+              <div key={a.id} className="flex items-center justify-between bg-white rounded-lg p-4 border border-blue-200">
+                <div>
+                  <p className="font-medium text-gray-900">{a.language} Placement Test</p>
+                  <p className="text-sm text-gray-500">
+                    Status: {a.status === 'PAUSED' ? 'Paused' : 'In Progress'}
+                    {a.startedAt && ` | Started: ${new Date(a.startedAt).toLocaleDateString()}`}
+                  </p>
+                </div>
+                <button
+                  onClick={() => navigate(a.isMultiSkill ? `/assessment/multi-skill/${a.id}` : '/assessment')}
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                >
+                  Continue
                 </button>
               </div>
             ))}
@@ -436,6 +520,117 @@ function StudentDashboard({ data }: { data: any }) {
           icon={Clock}
           color="red"
         />
+      </div>
+
+      {/* Assessment Summary - Your Language Levels */}
+      <div className="bg-white rounded-lg shadow-md p-6">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          Your Language Levels
+        </h3>
+        {completedAssessments.length > 0 ? (
+          <div className="space-y-6">
+            {completedAssessments.map((assessment: Assessment) => (
+              <div key={assessment.id} className="border border-gray-200 rounded-lg p-5">
+                {/* Language header with overall CEFR badge */}
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <h4 className="text-base font-semibold text-gray-900">{assessment.language}</h4>
+                    <span className={`px-3 py-1 rounded-full text-sm font-bold ${getCefrColor(assessment.cefrLevel)}`}>
+                      {assessment.cefrLevel}
+                    </span>
+                  </div>
+                  <Link
+                    to={`/assessment/multi-skill/${assessment.id}/results`}
+                    className="text-sm font-medium text-primary-600 hover:text-primary-800 hover:underline"
+                  >
+                    View Details
+                  </Link>
+                </div>
+
+                {/* 4 Skill bars */}
+                <div className="space-y-3">
+                  {/* Reading */}
+                  <div className="flex items-center gap-3">
+                    <BookOpen className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                    <span className="text-sm text-gray-600 w-20 flex-shrink-0">Reading</span>
+                    <div className="flex-1 bg-gray-200 rounded-full h-2.5">
+                      <div
+                        className={`h-2.5 rounded-full transition-all ${getSkillBarColor(assessment.readingLevel)}`}
+                        style={{ width: `${getSkillWidth(assessment.readingLevel)}%` }}
+                      />
+                    </div>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded ${getCefrColor(assessment.readingLevel)}`}>
+                      {assessment.readingLevel || '--'}
+                    </span>
+                  </div>
+
+                  {/* Listening */}
+                  <div className="flex items-center gap-3">
+                    <Headphones className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                    <span className="text-sm text-gray-600 w-20 flex-shrink-0">Listening</span>
+                    <div className="flex-1 bg-gray-200 rounded-full h-2.5">
+                      <div
+                        className={`h-2.5 rounded-full transition-all ${getSkillBarColor(assessment.listeningLevel)}`}
+                        style={{ width: `${getSkillWidth(assessment.listeningLevel)}%` }}
+                      />
+                    </div>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded ${getCefrColor(assessment.listeningLevel)}`}>
+                      {assessment.listeningLevel || '--'}
+                    </span>
+                  </div>
+
+                  {/* Writing */}
+                  <div className="flex items-center gap-3">
+                    <PenTool className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                    <span className="text-sm text-gray-600 w-20 flex-shrink-0">Writing</span>
+                    <div className="flex-1 bg-gray-200 rounded-full h-2.5">
+                      <div
+                        className={`h-2.5 rounded-full transition-all ${getSkillBarColor(assessment.writingLevel)}`}
+                        style={{ width: `${getSkillWidth(assessment.writingLevel)}%` }}
+                      />
+                    </div>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded ${getCefrColor(assessment.writingLevel)}`}>
+                      {assessment.writingLevel || '--'}
+                    </span>
+                  </div>
+
+                  {/* Speaking */}
+                  <div className="flex items-center gap-3">
+                    <Mic className="w-4 h-4 text-gray-500 flex-shrink-0" />
+                    <span className="text-sm text-gray-600 w-20 flex-shrink-0">Speaking</span>
+                    <div className="flex-1 bg-gray-200 rounded-full h-2.5">
+                      <div
+                        className={`h-2.5 rounded-full transition-all ${getSkillBarColor(assessment.speakingLevel)}`}
+                        style={{ width: `${getSkillWidth(assessment.speakingLevel)}%` }}
+                      />
+                    </div>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded ${getCefrColor(assessment.speakingLevel)}`}>
+                      {assessment.speakingLevel || '--'}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Completion date */}
+                {assessment.completedAt && (
+                  <p className="text-xs text-gray-400 mt-3">
+                    Completed {new Date(assessment.completedAt).toLocaleDateString()}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <ClipboardCheck className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+            <p className="text-gray-500 mb-4">No assessments completed yet</p>
+            <button
+              onClick={() => navigate('/assessment')}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+            >
+              Take Placement Test
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Course Progress */}
