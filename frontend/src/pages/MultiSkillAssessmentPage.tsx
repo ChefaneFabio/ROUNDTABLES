@@ -204,6 +204,9 @@ export function MultiSkillAssessmentPage() {
       <div className="max-w-3xl mx-auto">
         <div className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/40 rounded-xl shadow-lg p-10 space-y-8">
           <div className="text-center space-y-2">
+            <div className="flex justify-center mb-3">
+              <img src="/favicon.webp" alt="Maka" className="h-12 w-12 rounded-full shadow-md" />
+            </div>
             <h1 className="text-3xl font-bold text-gray-900">
               <span className="mr-2">{LANGUAGE_FLAGS[assessmentInfo?.language || ''] || ''}</span>
               {assessmentInfo?.language || ''} {assessmentInfo?.type === 'PROGRESS' ? `Level ${assessmentInfo.targetLevel} Test` : 'Placement Test'}

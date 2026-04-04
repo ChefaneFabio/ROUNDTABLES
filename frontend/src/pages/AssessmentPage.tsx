@@ -96,6 +96,7 @@ export function AssessmentPage() {
 
         <div className="relative">
           <div className="flex items-center gap-3 mb-3">
+            <img src="/favicon.webp" alt="Maka" className="h-8 w-8 rounded-full ring-2 ring-white/10" />
             <div className="p-2.5 bg-white/10 backdrop-blur-sm rounded-xl border border-white/10">
               <ClipboardCheck className="w-6 h-6" />
             </div>

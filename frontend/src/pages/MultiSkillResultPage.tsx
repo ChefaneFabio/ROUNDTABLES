@@ -266,6 +266,7 @@ export function MultiSkillResultPage() {
           {/* Header ribbon */}
           <div className="bg-gradient-to-r from-slate-800 to-slate-900 px-8 py-5 flex items-center justify-between">
             <div className="flex items-center gap-3">
+              <img src="/favicon.webp" alt="Maka" className="h-8 w-8 rounded-full ring-2 ring-white/20" />
               <CheckCircle className="w-6 h-6 text-emerald-400" />
               <h1 className="text-xl font-bold text-white tracking-wide">
                 Test Complete

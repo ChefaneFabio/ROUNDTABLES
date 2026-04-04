@@ -285,9 +285,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <>
       <div className="flex h-16 items-center px-4 border-b border-gray-700 bg-gradient-to-r from-gray-900 to-gray-800">
         <Link to="/dashboard" className="flex items-center gap-3">
-          <div className="h-9 w-9 rounded-xl bg-primary-500 flex items-center justify-center shadow-lg shadow-primary-500/30">
-            <span className="text-white font-bold text-base">M</span>
-          </div>
+          <img src="/favicon.webp" alt="Maka" className="h-9 w-9 rounded-xl shadow-lg shadow-primary-500/30" />
           <div>
             <span className="text-sm font-bold text-white block leading-tight">MAKA LMC</span>
             <span className="text-[10px] text-gray-400 leading-tight">Language Consulting</span>
@@ -316,9 +314,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white shadow-xl">
           <div className="flex items-center justify-between px-4 h-16 border-b border-gray-700 bg-gradient-to-r from-gray-900 to-gray-800">
             <Link to="/dashboard" className="flex items-center gap-3">
-              <div className="h-9 w-9 rounded-xl bg-primary-500 flex items-center justify-center shadow-lg shadow-primary-500/30">
-                <span className="text-white font-bold text-base">M</span>
-              </div>
+              <img src="/favicon.webp" alt="Maka" className="h-9 w-9 rounded-xl shadow-lg shadow-primary-500/30" />
               <span className="text-sm font-bold text-white">MAKA LMC</span>
             </Link>
             <button onClick={() => setSidebarOpen(false)} className="p-1 rounded-lg hover:bg-gray-700">
