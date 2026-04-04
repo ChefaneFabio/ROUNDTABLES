@@ -16,6 +16,7 @@ import {
   Mic,
   AlertCircle,
 } from 'lucide-react'
+import clsx from 'clsx'
 import { useAuth } from '../contexts/AuthContext'
 import { dashboardApi } from '../services/api'
 import { assessmentApi, Assessment } from '../services/assessmentApi'
@@ -49,11 +50,16 @@ export function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* Welcome header */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold text-gray-900">
+      <div className={clsx(
+        'rounded-lg shadow-md p-6',
+        isStudent
+          ? 'bg-gradient-to-r from-primary-600 to-indigo-600 text-white'
+          : 'bg-white'
+      )}>
+        <h1 className={clsx('text-2xl font-bold', isStudent ? 'text-white' : 'text-gray-900')}>
           Welcome back, {user?.name}!
         </h1>
-        <p className="text-gray-600 mt-1">
+        <p className={clsx('mt-1', isStudent ? 'text-white/80' : 'text-gray-600')}>
           {isAdmin && (data?.school ? `Here's an overview of ${data.school.name || 'your school'}.` : "Here's an overview of your platform.")}
           {isTeacher && "Here's your teaching schedule and tasks."}
           {isStudent && "Here's your learning progress."}
@@ -412,6 +418,14 @@ function StudentDashboard({ data }: { data: any }) {
 
   const getSkillBarColor = (level?: string) => skillBarColor[level || ''] || 'bg-gray-400'
 
+  // Gradient fills per skill type
+  const skillGradients: Record<string, string> = {
+    reading: 'bg-gradient-to-r from-blue-400 to-blue-600',
+    listening: 'bg-gradient-to-r from-green-400 to-green-600',
+    writing: 'bg-gradient-to-r from-amber-400 to-amber-600',
+    speaking: 'bg-gradient-to-r from-purple-400 to-purple-600',
+  }
+
   return (
     <>
       {/* Pending assigned tests */}
@@ -464,7 +478,7 @@ function StudentDashboard({ data }: { data: any }) {
                 </div>
                 <button
                   onClick={() => navigate(a.isMultiSkill ? `/assessment/multi-skill/${a.id}` : '/assessment')}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
+                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-medium animate-pulse shadow-lg shadow-blue-300"
                 >
                   Continue
                 </button>
@@ -479,47 +493,59 @@ function StudentDashboard({ data }: { data: any }) {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard
-          title="Enrolled Courses"
-          value={data?.stats?.enrolledCourses || 0}
-          icon={BookOpen}
-          color="primary"
-          href="/courses"
-        />
-        <StatCard
-          title="Completed Courses"
-          value={data?.stats?.completedCourses || 0}
-          icon={CheckCircle}
-          color="green"
-        />
-        <StatCard
-          title="Average Progress"
-          value={`${data?.stats?.averageProgress || 0}%`}
-          icon={TrendingUp}
-          color="blue"
-        />
-        <StatCard
-          title="Attendance Rate"
-          value={`${data?.stats?.attendanceRate || 0}%`}
-          icon={Calendar}
-          color="purple"
-        />
+        <div className="border-l-4 border-primary-500 rounded-lg hover:shadow-md transition-all">
+          <StatCard
+            title="Enrolled Courses"
+            value={data?.stats?.enrolledCourses || 0}
+            icon={BookOpen}
+            color="primary"
+            href="/courses"
+          />
+        </div>
+        <div className="border-l-4 border-green-500 rounded-lg hover:shadow-md transition-all">
+          <StatCard
+            title="Completed Courses"
+            value={data?.stats?.completedCourses || 0}
+            icon={CheckCircle}
+            color="green"
+          />
+        </div>
+        <div className="border-l-4 border-blue-500 rounded-lg hover:shadow-md transition-all">
+          <StatCard
+            title="Average Progress"
+            value={`${data?.stats?.averageProgress || 0}%`}
+            icon={TrendingUp}
+            color="blue"
+          />
+        </div>
+        <div className="border-l-4 border-purple-500 rounded-lg hover:shadow-md transition-all">
+          <StatCard
+            title="Attendance Rate"
+            value={`${data?.stats?.attendanceRate || 0}%`}
+            icon={Calendar}
+            color="purple"
+          />
+        </div>
       </div>
 
       {/* Attendance Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <StatCard
-          title="Lessons Attended"
-          value={data?.stats?.lessonsAttended || 0}
-          icon={CheckCircle}
-          color="green"
-        />
-        <StatCard
-          title="Lessons Missed"
-          value={data?.stats?.lessonsMissed || 0}
-          icon={Clock}
-          color="red"
-        />
+        <div className="border-l-4 border-green-500 rounded-lg hover:shadow-md transition-all">
+          <StatCard
+            title="Lessons Attended"
+            value={data?.stats?.lessonsAttended || 0}
+            icon={CheckCircle}
+            color="green"
+          />
+        </div>
+        <div className="border-l-4 border-red-500 rounded-lg hover:shadow-md transition-all">
+          <StatCard
+            title="Lessons Missed"
+            value={data?.stats?.lessonsMissed || 0}
+            icon={Clock}
+            color="red"
+          />
+        </div>
       </div>
 
       {/* Assessment Summary - Your Language Levels */}
@@ -551,11 +577,11 @@ function StudentDashboard({ data }: { data: any }) {
                 <div className="space-y-3">
                   {/* Reading */}
                   <div className="flex items-center gap-3">
-                    <BookOpen className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                    <span className="text-sm text-gray-600 w-20 flex-shrink-0">Reading</span>
-                    <div className="flex-1 bg-gray-200 rounded-full h-2.5">
+                    <BookOpen className="w-4 h-4 text-blue-500 flex-shrink-0" />
+                    <span className="text-sm font-medium text-gray-700 w-20 flex-shrink-0">Reading</span>
+                    <div className="flex-1 bg-gray-100 rounded-full h-3">
                       <div
-                        className={`h-2.5 rounded-full transition-all ${getSkillBarColor(assessment.readingLevel)}`}
+                        className={`h-3 rounded-full transition-all duration-500 ${skillGradients.reading}`}
                         style={{ width: `${getSkillWidth(assessment.readingLevel)}%` }}
                       />
                     </div>
@@ -566,11 +592,11 @@ function StudentDashboard({ data }: { data: any }) {
 
                   {/* Listening */}
                   <div className="flex items-center gap-3">
-                    <Headphones className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                    <span className="text-sm text-gray-600 w-20 flex-shrink-0">Listening</span>
-                    <div className="flex-1 bg-gray-200 rounded-full h-2.5">
+                    <Headphones className="w-4 h-4 text-green-500 flex-shrink-0" />
+                    <span className="text-sm font-medium text-gray-700 w-20 flex-shrink-0">Listening</span>
+                    <div className="flex-1 bg-gray-100 rounded-full h-3">
                       <div
-                        className={`h-2.5 rounded-full transition-all ${getSkillBarColor(assessment.listeningLevel)}`}
+                        className={`h-3 rounded-full transition-all duration-500 ${skillGradients.listening}`}
                         style={{ width: `${getSkillWidth(assessment.listeningLevel)}%` }}
                       />
                     </div>
@@ -581,11 +607,11 @@ function StudentDashboard({ data }: { data: any }) {
 
                   {/* Writing */}
                   <div className="flex items-center gap-3">
-                    <PenTool className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                    <span className="text-sm text-gray-600 w-20 flex-shrink-0">Writing</span>
-                    <div className="flex-1 bg-gray-200 rounded-full h-2.5">
+                    <PenTool className="w-4 h-4 text-amber-500 flex-shrink-0" />
+                    <span className="text-sm font-medium text-gray-700 w-20 flex-shrink-0">Writing</span>
+                    <div className="flex-1 bg-gray-100 rounded-full h-3">
                       <div
-                        className={`h-2.5 rounded-full transition-all ${getSkillBarColor(assessment.writingLevel)}`}
+                        className={`h-3 rounded-full transition-all duration-500 ${skillGradients.writing}`}
                         style={{ width: `${getSkillWidth(assessment.writingLevel)}%` }}
                       />
                     </div>
@@ -596,11 +622,11 @@ function StudentDashboard({ data }: { data: any }) {
 
                   {/* Speaking */}
                   <div className="flex items-center gap-3">
-                    <Mic className="w-4 h-4 text-gray-500 flex-shrink-0" />
-                    <span className="text-sm text-gray-600 w-20 flex-shrink-0">Speaking</span>
-                    <div className="flex-1 bg-gray-200 rounded-full h-2.5">
+                    <Mic className="w-4 h-4 text-purple-500 flex-shrink-0" />
+                    <span className="text-sm font-medium text-gray-700 w-20 flex-shrink-0">Speaking</span>
+                    <div className="flex-1 bg-gray-100 rounded-full h-3">
                       <div
-                        className={`h-2.5 rounded-full transition-all ${getSkillBarColor(assessment.speakingLevel)}`}
+                        className={`h-3 rounded-full transition-all duration-500 ${skillGradients.speaking}`}
                         style={{ width: `${getSkillWidth(assessment.speakingLevel)}%` }}
                       />
                     </div>
@@ -625,7 +651,7 @@ function StudentDashboard({ data }: { data: any }) {
             <p className="text-gray-500 mb-4">No assessments completed yet</p>
             <button
               onClick={() => navigate('/assessment')}
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-primary-600 to-indigo-600 text-white rounded-lg hover:from-primary-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-medium"
             >
               Take Placement Test
             </button>

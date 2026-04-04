@@ -198,8 +198,8 @@ function NavSection({ group, isActive, isTestInProgress, onNavigate }: {
       <button
         onClick={() => setOpen(!open)}
         className={clsx(
-          'w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-colors',
-          hasActiveItem ? 'text-primary-700 bg-primary-50/50' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+          'w-full flex items-center justify-between px-3 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-colors',
+          hasActiveItem ? 'text-primary-700 bg-primary-50/50' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-50'
         )}
       >
         <div className="flex items-center gap-2">
@@ -223,12 +223,12 @@ function NavSection({ group, isActive, isTestInProgress, onNavigate }: {
                   onNavigate?.()
                 }}
                 className={clsx(
-                  'flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+                  'flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 relative',
                   disabled
                     ? 'text-gray-300 cursor-not-allowed'
                     : active
-                    ? 'bg-primary-50 text-primary-700 border-l-2 border-primary-600'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                    ? 'bg-primary-50 text-primary-700 border-l-[3px] border-primary-500 shadow-sm'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border-l-[3px] border-transparent hover:border-gray-300'
                 )}
               >
                 <item.icon className="h-4 w-4 flex-shrink-0" />
@@ -283,14 +283,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
   const sidebarContent = (
     <>
-      <div className="flex h-14 items-center px-4 border-b bg-gray-50">
-        <Link to="/dashboard" className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-lg bg-primary-600 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">M</span>
+      <div className="flex h-16 items-center px-4 border-b border-gray-700 bg-gradient-to-r from-gray-900 to-gray-800">
+        <Link to="/dashboard" className="flex items-center gap-3">
+          <div className="h-9 w-9 rounded-xl bg-primary-500 flex items-center justify-center shadow-lg shadow-primary-500/30">
+            <span className="text-white font-bold text-base">M</span>
           </div>
           <div>
-            <span className="text-sm font-bold text-gray-900 block leading-tight">MAKA LMC</span>
-            <span className="text-[10px] text-gray-500 leading-tight">Language Consulting</span>
+            <span className="text-sm font-bold text-white block leading-tight">MAKA LMC</span>
+            <span className="text-[10px] text-gray-400 leading-tight">Language Consulting</span>
           </div>
         </Link>
       </div>
@@ -314,15 +314,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <div className={clsx('fixed inset-0 z-40 lg:hidden', sidebarOpen ? 'block' : 'hidden')}>
         <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
         <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white shadow-xl">
-          <div className="flex items-center justify-between px-4 h-14 border-b bg-gray-50">
-            <Link to="/dashboard" className="flex items-center gap-2">
-              <div className="h-7 w-7 rounded-lg bg-primary-600 flex items-center justify-center">
-                <span className="text-white font-bold text-xs">M</span>
+          <div className="flex items-center justify-between px-4 h-16 border-b border-gray-700 bg-gradient-to-r from-gray-900 to-gray-800">
+            <Link to="/dashboard" className="flex items-center gap-3">
+              <div className="h-9 w-9 rounded-xl bg-primary-500 flex items-center justify-center shadow-lg shadow-primary-500/30">
+                <span className="text-white font-bold text-base">M</span>
               </div>
-              <span className="text-sm font-bold text-gray-900">MAKA LMC</span>
+              <span className="text-sm font-bold text-white">MAKA LMC</span>
             </Link>
-            <button onClick={() => setSidebarOpen(false)} className="p-1 rounded-lg hover:bg-gray-200">
-              <X className="h-5 w-5 text-gray-500" />
+            <button onClick={() => setSidebarOpen(false)} className="p-1 rounded-lg hover:bg-gray-700">
+              <X className="h-5 w-5 text-gray-300" />
             </button>
           </div>
           <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
@@ -349,7 +349,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       {/* Main content */}
       <div className="lg:pl-60">
         {/* Top header */}
-        <header className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-200">
+        <header className="sticky top-0 z-30 bg-white/95 backdrop-blur border-b border-gray-200 shadow-sm">
           <div className="flex h-14 items-center justify-between px-4 sm:px-6">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100">
               <Menu className="h-5 w-5 text-gray-600" />
@@ -391,7 +391,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
                 {userMenuOpen && (
                   <>
                     <div className="fixed inset-0" onClick={() => setUserMenuOpen(false)} />
-                    <div className="absolute right-0 mt-1 w-48 bg-white rounded-lg shadow-lg border py-1 z-50">
+                    <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1.5 z-50">
                       <Link to="/profile" onClick={() => setUserMenuOpen(false)}
                         className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
                         <User className="h-4 w-4 mr-2.5 text-gray-400" /> Profile

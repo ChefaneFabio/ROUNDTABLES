@@ -87,29 +87,39 @@ export function AssessmentPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Hero */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 rounded-2xl p-8 text-white">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+      <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-indigo-950 to-indigo-900 rounded-2xl p-8 text-white">
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-56 h-56 bg-purple-500/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-primary-500/5 rounded-full" />
+        <div className="absolute -bottom-4 right-12 w-24 h-24 border border-white/5 rounded-full" />
+        <div className="absolute top-8 right-1/3 w-16 h-16 border border-white/5 rounded-full" />
+        {/* Subtle dot pattern overlay */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+
         <div className="relative">
           <div className="flex items-center gap-3 mb-3">
-            <div className="p-2 bg-white/10 backdrop-blur rounded-xl">
+            <div className="p-2.5 bg-white/10 backdrop-blur-sm rounded-xl border border-white/10">
               <ClipboardCheck className="w-6 h-6" />
             </div>
-            <h1 className="text-2xl font-bold">Placement Test</h1>
+            <h1 className="text-2xl font-bold tracking-tight">Placement Test</h1>
           </div>
-          <p className="text-gray-300 max-w-xl">
+          <p className="text-gray-300 max-w-xl leading-relaxed">
             Determine your CEFR level (A1-C2) with a comprehensive placement test covering all four language skills.
           </p>
-          <div className="flex flex-wrap gap-3 mt-5">
+          <div className="flex flex-wrap gap-2.5 mt-5">
             {SKILL_SECTIONS.map(s => (
-              <div key={s.label} className="flex items-center gap-2 px-3 py-1.5 bg-white/10 backdrop-blur rounded-lg text-sm">
-                <s.icon className="w-4 h-4" />
-                <span>{s.label}</span>
-                <span className="text-gray-400">{s.time}</span>
+              <div key={s.label} className="flex items-center gap-2 px-3 py-1.5 bg-white/[0.07] backdrop-blur-sm rounded-lg text-sm border border-white/[0.06]">
+                <s.icon className="w-4 h-4 text-indigo-300" />
+                <span className="text-gray-200">{s.label}</span>
+                <span className="text-gray-400 text-xs">{s.time}</span>
               </div>
             ))}
           </div>
-          <p className="text-xs text-gray-400 mt-3">Total estimated time: ~70 minutes</p>
+          <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-500/20 backdrop-blur-sm rounded-full border border-indigo-400/20 text-sm">
+            <Clock className="w-3.5 h-3.5 text-indigo-300" />
+            <span className="text-indigo-200 font-medium">Total: ~70 min &middot; 4 sections</span>
+          </div>
         </div>
       </div>
 
@@ -188,7 +198,7 @@ export function AssessmentPage() {
             return (
               <div
                 key={lang.code}
-                className="bg-white border border-gray-200 rounded-xl p-5 hover:border-primary-300 hover:shadow-md transition-all group"
+                className="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group hover:border-primary-300"
               >
                 <div className="flex items-center gap-3 mb-4">
                   <span className="text-3xl">{lang.flag}</span>
@@ -225,7 +235,7 @@ export function AssessmentPage() {
                     }
                   }}
                   disabled={startMultiSkillMutation.isLoading}
-                  className="w-full py-2.5 px-4 text-sm font-semibold rounded-lg bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-50 transition-colors group-hover:bg-primary-600"
+                  className="w-full py-2.5 px-4 text-sm font-semibold rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-gray-800 hover:to-primary-600 disabled:opacity-50 transition-all duration-300 shadow-sm hover:shadow-md"
                 >
                   {hasInProgress ? 'Continue' : result ? 'Retake Test' : 'Start Test'}
                 </button>
@@ -239,48 +249,48 @@ export function AssessmentPage() {
       {completedAssessments.length > 0 && (
         <div>
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Previous Results</h2>
-          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b bg-gray-50">
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Language</th>
-                  <th className="text-center py-3 px-4 font-medium text-gray-500">Level</th>
-                  <th className="text-center py-3 px-4 font-medium text-gray-500">Score</th>
-                  <th className="text-center py-3 px-4 font-medium text-gray-500">R</th>
-                  <th className="text-center py-3 px-4 font-medium text-gray-500">L</th>
-                  <th className="text-center py-3 px-4 font-medium text-gray-500">W</th>
-                  <th className="text-center py-3 px-4 font-medium text-gray-500">S</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Date</th>
+                <tr className="border-b bg-gray-50/80">
+                  <th className="text-left py-3.5 px-4 font-medium text-gray-500">Language</th>
+                  <th className="text-center py-3.5 px-4 font-medium text-gray-500">Level</th>
+                  <th className="text-center py-3.5 px-4 font-medium text-gray-500">Score</th>
+                  <th className="text-center py-3.5 px-4 font-medium text-gray-500">R</th>
+                  <th className="text-center py-3.5 px-4 font-medium text-gray-500">L</th>
+                  <th className="text-center py-3.5 px-4 font-medium text-gray-500">W</th>
+                  <th className="text-center py-3.5 px-4 font-medium text-gray-500">S</th>
+                  <th className="text-left py-3.5 px-4 font-medium text-gray-500">Date</th>
                   <th></th>
                 </tr>
               </thead>
               <tbody>
                 {completedAssessments.map(a => (
-                  <tr key={a.id} className="border-b border-gray-100 hover:bg-gray-50 cursor-pointer" onClick={() => navigate(`/assessment/multi-skill/${a.id}/results`)}>
-                    <td className="py-3 px-4">
+                  <tr key={a.id} className="border-b border-gray-100 even:bg-gray-50/50 hover:bg-primary-50/40 cursor-pointer transition-colors" onClick={() => navigate(`/assessment/multi-skill/${a.id}/results`)}>
+                    <td className="py-3.5 px-4">
                       <div className="flex items-center gap-2">
                         <span>{LANGUAGES.find(l => l.code === a.language)?.flag}</span>
                         <span className="font-medium text-gray-900">{a.language}</span>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-center">
+                    <td className="py-3.5 px-4 text-center">
                       {a.cefrLevel && (
-                        <span className="px-2 py-0.5 bg-primary-100 text-primary-700 rounded font-bold text-xs">
+                        <span className="px-2.5 py-1 bg-primary-100 text-primary-700 rounded-md font-bold text-xs">
                           {a.cefrLevel}
                         </span>
                       )}
                     </td>
-                    <td className="py-3 px-4 text-center font-semibold text-gray-900">
+                    <td className="py-3.5 px-4 text-center font-semibold text-gray-900">
                       {a.score != null ? `${a.score}%` : '--'}
                     </td>
-                    <td className="py-3 px-4 text-center text-xs">{a.readingLevel || '--'}</td>
-                    <td className="py-3 px-4 text-center text-xs">{a.listeningLevel || '--'}</td>
-                    <td className="py-3 px-4 text-center text-xs">{a.writingLevel || '--'}</td>
-                    <td className="py-3 px-4 text-center text-xs">{a.speakingLevel || '--'}</td>
-                    <td className="py-3 px-4 text-xs text-gray-500">
+                    <td className="py-3.5 px-4 text-center text-xs">{a.readingLevel || '--'}</td>
+                    <td className="py-3.5 px-4 text-center text-xs">{a.listeningLevel || '--'}</td>
+                    <td className="py-3.5 px-4 text-center text-xs">{a.writingLevel || '--'}</td>
+                    <td className="py-3.5 px-4 text-center text-xs">{a.speakingLevel || '--'}</td>
+                    <td className="py-3.5 px-4 text-xs text-gray-500">
                       {a.completedAt ? new Date(a.completedAt).toLocaleDateString() : '--'}
                     </td>
-                    <td className="py-3 px-4"><ChevronRight className="w-4 h-4 text-gray-400" /></td>
+                    <td className="py-3.5 px-4"><ChevronRight className="w-4 h-4 text-gray-400" /></td>
                   </tr>
                 ))}
               </tbody>
@@ -290,19 +300,19 @@ export function AssessmentPage() {
       )}
 
       {/* CEFR Guide */}
-      <div className="bg-gray-50 rounded-xl p-6">
+      <div className="bg-gradient-to-r from-gray-50 via-indigo-50/30 to-purple-50/30 rounded-xl p-6 border border-gray-100">
         <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">CEFR Scale</h2>
         <div className="flex flex-wrap gap-3">
           {[
-            { level: 'A1', name: 'Beginner', color: 'bg-emerald-100 text-emerald-800' },
-            { level: 'A2', name: 'Elementary', color: 'bg-emerald-200 text-emerald-900' },
-            { level: 'B1', name: 'Intermediate', color: 'bg-blue-100 text-blue-800' },
-            { level: 'B2', name: 'Upper Int.', color: 'bg-blue-200 text-blue-900' },
-            { level: 'C1', name: 'Advanced', color: 'bg-purple-100 text-purple-800' },
-            { level: 'C2', name: 'Proficiency', color: 'bg-purple-200 text-purple-900' },
+            { level: 'A1', name: 'Beginner', color: 'bg-emerald-100 text-emerald-800 border-emerald-200' },
+            { level: 'A2', name: 'Elementary', color: 'bg-emerald-200 text-emerald-900 border-emerald-300' },
+            { level: 'B1', name: 'Intermediate', color: 'bg-blue-100 text-blue-800 border-blue-200' },
+            { level: 'B2', name: 'Upper Int.', color: 'bg-blue-200 text-blue-900 border-blue-300' },
+            { level: 'C1', name: 'Advanced', color: 'bg-purple-100 text-purple-800 border-purple-200' },
+            { level: 'C2', name: 'Proficiency', color: 'bg-purple-200 text-purple-900 border-purple-300' },
           ].map(l => (
-            <div key={l.level} className={`px-3 py-1.5 rounded-lg text-sm font-medium ${l.color}`}>
-              {l.level} {l.name}
+            <div key={l.level} className={`px-4 py-2 rounded-xl text-sm font-semibold border ${l.color} shadow-sm`}>
+              <span className="font-bold">{l.level}</span> {l.name}
             </div>
           ))}
         </div>

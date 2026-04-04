@@ -8,12 +8,38 @@ import { WritingQuestion } from '../components/assessment/WritingQuestion'
 import { SpeakingQuestion } from '../components/assessment/SpeakingQuestion'
 import { ErrorCorrectionQuestion } from '../components/assessment/ErrorCorrectionQuestion'
 import { SentenceTransformationQuestion } from '../components/assessment/SentenceTransformationQuestion'
+import {
+  BookOpen,
+  Headphones,
+  PenTool,
+  Mic,
+  FileText,
+  AlertCircle,
+  CheckCircle,
+  XCircle,
+  ArrowRight,
+  ArrowLeft,
+  Flag,
+  Clock,
+  Info,
+  Shield,
+  Sparkles,
+  Award,
+} from 'lucide-react'
 
 const SKILL_LABELS: Record<string, string> = {
   GRAMMAR: 'Grammar', VOCABULARY: 'Vocabulary', READING: 'Reading & Language Use',
   ERROR_CORRECTION: 'Error Correction', SENTENCE_TRANSFORMATION: 'Sentence Transformation',
   WRITING: 'Writing', LISTENING: 'Listening', SPEAKING: 'Speaking'
 }
+
+const SKILL_ICONS: Record<string, React.ElementType> = {
+  GRAMMAR: FileText, VOCABULARY: BookOpen, READING: BookOpen,
+  ERROR_CORRECTION: PenTool, SENTENCE_TRANSFORMATION: PenTool,
+  WRITING: PenTool, LISTENING: Headphones, SPEAKING: Mic,
+}
+
+const INSTRUCTION_ICONS = [BookOpen, Info, Shield, AlertCircle]
 
 const SECTION_INSTRUCTIONS: Record<string, { en: string[]; it: string[] }> = {
   READING: {
@@ -285,49 +311,74 @@ export function SectionTakePage() {
   if (showSectionIntro && sectionMeta) {
     const instructions = SECTION_INSTRUCTIONS[sectionMeta.skill] || SECTION_INSTRUCTIONS['READING']
     const label = SKILL_LABELS[sectionMeta.skill] || sectionMeta.skill
+    const SkillIcon = SKILL_ICONS[sectionMeta.skill] || BookOpen
     return (
       <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-xl shadow-lg p-8 space-y-6">
+        <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/60 p-8 space-y-6">
           <div className="text-center">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100 mb-4">
+              <SkillIcon className="w-7 h-7 text-indigo-600" />
+            </div>
             <h1 className="text-2xl font-bold text-gray-900">{label} Section</h1>
-            <p className="text-sm text-gray-500 mt-1">
-              {sectionMeta.questionsLimit} questions &middot; {sectionMeta.timeLimitMin} minutes
-            </p>
-          </div>
-
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-5">
-            <h2 className="font-semibold text-amber-900 mb-3">Instructions / Istruzioni</h2>
-            <div className="space-y-3">
-              {instructions.en.map((line, i) => (
-                <div key={i} className="text-sm">
-                  <p className="text-gray-800">{line}</p>
-                  <p className="text-amber-700">{instructions.it[i]}</p>
-                </div>
-              ))}
+            <div className="flex items-center justify-center gap-3 mt-2">
+              <span className="inline-flex items-center gap-1.5 text-sm text-gray-500">
+                <FileText className="w-3.5 h-3.5" />
+                {sectionMeta.questionsLimit} questions
+              </span>
+              <span className="text-gray-300">&middot;</span>
+              <span className="inline-flex items-center gap-1.5 text-sm text-gray-500">
+                <Clock className="w-3.5 h-3.5" />
+                {sectionMeta.timeLimitMin} minutes
+              </span>
             </div>
           </div>
 
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <p className="text-sm text-red-800 font-medium">
-              The timer will start when you click "Start Section".
-            </p>
-            <p className="text-sm text-red-600">
-              Il timer partira quando clicchi "Inizia Sezione".
-            </p>
+          <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-5">
+            <h2 className="font-semibold text-amber-900 mb-3">Instructions / Istruzioni</h2>
+            <div className="space-y-3">
+              {instructions.en.map((line, i) => {
+                const InstrIcon = INSTRUCTION_ICONS[i] || Info
+                return (
+                  <div key={i} className="flex gap-3 text-sm">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <InstrIcon className="w-4 h-4 text-amber-600" />
+                    </div>
+                    <div>
+                      <p className="text-gray-800">{line}</p>
+                      <p className="text-amber-700">{instructions.it[i]}</p>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          <div className="bg-red-50/80 border border-red-200 rounded-xl p-4 flex gap-3 items-start">
+            <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm text-red-800 font-medium">
+                The timer will start when you click "Start Section".
+              </p>
+              <p className="text-sm text-red-600">
+                Il timer partira quando clicchi "Inizia Sezione".
+              </p>
+            </div>
           </div>
 
           <div className="flex justify-center gap-3 pt-2">
             <button
               onClick={() => navigate(`/assessment/multi-skill/${assessmentId}`)}
-              className="px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-lg font-medium hover:bg-gray-50"
+              className="inline-flex items-center gap-2 px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-xl font-medium hover:bg-gray-50 transition-colors"
             >
+              <ArrowLeft className="w-4 h-4" />
               Back / Indietro
             </button>
             <button
               onClick={handleStartSection}
-              className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/25"
             >
               Start Section / Inizia Sezione
+              <ArrowRight className="w-5 h-5" />
             </button>
           </div>
         </div>
@@ -336,27 +387,39 @@ export function SectionTakePage() {
   }
 
   if (isComplete) {
+    const SkillIcon = SKILL_ICONS[section?.skill || ''] || CheckCircle
     return (
       <div className="max-w-2xl mx-auto text-center py-12">
-        <div className="text-6xl mb-4">
-          {({ GRAMMAR: '📝', VOCABULARY: '📚', READING: '📖', ERROR_CORRECTION: '✏️', SENTENCE_TRANSFORMATION: '🔄', WRITING: '✍️', LISTENING: '🎧', SPEAKING: '🎤' } as Record<string, string>)[section?.skill || ''] || '✅'}
+        {/* Subtle gradient background */}
+        <div className="relative">
+          <div className="absolute inset-0 -top-12 bg-gradient-to-b from-green-50/50 via-blue-50/30 to-transparent rounded-3xl -z-10" />
+
+          <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 border-4 border-white shadow-lg mb-5">
+            <SkillIcon className="w-9 h-9 text-green-600" />
+          </div>
+
+          <div className="inline-flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-amber-100 to-yellow-100 border-2 border-white shadow-sm -ml-4 -mt-8 mb-2">
+            <Award className="w-4 h-4 text-amber-600" />
+          </div>
+
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            {SKILL_LABELS[section?.skill || '']} Section Complete
+          </h2>
+          <p className="text-gray-600 mb-8">
+            {answeredCount === 0
+              ? 'This section has been completed.'
+              : section?.skill === 'WRITING' || section?.skill === 'SPEAKING'
+                ? 'Your responses will be evaluated by AI and may be reviewed by a teacher.'
+                : `Your ${answeredCount} answer${answeredCount !== 1 ? 's have' : ' has'} been scored.`}
+          </p>
+          <button
+            onClick={handleContinue}
+            className="inline-flex items-center gap-2 px-10 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/25"
+          >
+            Continue to Next Section
+            <ArrowRight className="w-5 h-5" />
+          </button>
         </div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          {SKILL_LABELS[section?.skill || '']} Section Complete
-        </h2>
-        <p className="text-gray-600 mb-6">
-          {answeredCount === 0
-            ? 'This section has been completed.'
-            : section?.skill === 'WRITING' || section?.skill === 'SPEAKING'
-              ? 'Your responses will be evaluated by AI and may be reviewed by a teacher.'
-              : `Your ${answeredCount} answer${answeredCount !== 1 ? 's have' : ' has'} been scored.`}
-        </p>
-        <button
-          onClick={handleContinue}
-          className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-        >
-          Continue to Next Section
-        </button>
       </div>
     )
   }
@@ -364,7 +427,7 @@ export function SectionTakePage() {
   return (
     <div className="max-w-3xl mx-auto">
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-2">
         <div>
           <h2 className="text-xl font-bold text-gray-900">
             {SKILL_LABELS[section?.skill || '']} Section
@@ -376,7 +439,7 @@ export function SectionTakePage() {
           )}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {section?.expiresAt && (
             <SectionTimer
               expiresAt={section.expiresAt}
@@ -385,24 +448,29 @@ export function SectionTakePage() {
           )}
           <button
             onClick={() => navigate(`/assessment/multi-skill/${assessmentId}`)}
-            className="px-4 py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm text-gray-500 hover:text-gray-700 rounded-xl hover:bg-gray-100 transition-all"
           >
+            <ArrowLeft className="w-3.5 h-3.5" />
             Back to Sections
           </button>
           <button
             onClick={handleCompleteSection}
-            className="px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all"
           >
+            <Flag className="w-3.5 h-3.5" />
             Finish Section
           </button>
         </div>
       </div>
 
+      {/* Gradient separator */}
+      <div className="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent mb-4" />
+
       {/* Progress bar */}
       {progress && (
-        <div className="w-full bg-gray-200 rounded-full h-2 mb-6">
+        <div className="w-full bg-gray-200 rounded-full h-3 mb-6 overflow-hidden">
           <div
-            className="bg-blue-600 rounded-full h-2 transition-all duration-300"
+            className="bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full h-3 transition-all duration-500 ease-out"
             style={{ width: `${(progress.answered / progress.total) * 100}%` }}
           />
         </div>
@@ -410,10 +478,18 @@ export function SectionTakePage() {
 
       {/* Feedback overlay */}
       {feedback && (
-        <div className={`mb-4 p-3 rounded-lg text-sm font-medium ${
-          feedback.isCorrect ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+        <div className={`mb-4 p-4 rounded-xl text-sm font-medium flex items-center gap-3 shadow-sm ${
+          feedback.isCorrect
+            ? 'bg-green-50 text-green-800 border border-green-200'
+            : 'bg-red-50 text-red-800 border border-red-200'
         }`}>
-          {feedback.isCorrect ? 'Correct!' : `Incorrect. The correct answer is: ${feedback.correctAnswer}`}
+          {feedback.isCorrect
+            ? <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
+            : <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+          }
+          <span>
+            {feedback.isCorrect ? 'Correct!' : `Incorrect. The correct answer is: ${feedback.correctAnswer}`}
+          </span>
         </div>
       )}
 
