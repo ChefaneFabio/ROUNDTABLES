@@ -24,6 +24,7 @@ import {
   Info,
   Shield,
   Award,
+  Pause,
 } from 'lucide-react'
 
 const SKILL_LABELS: Record<string, string> = {
@@ -278,6 +279,16 @@ export function SectionTakePage() {
     handleCompleteSection()
   }, [handleCompleteSection])
 
+  const handlePauseAndSave = async () => {
+    try {
+      await assessmentApi.pauseAssessment(assessmentId!)
+      navigate(`/assessment`)
+    } catch {
+      // If pause fails, still navigate back
+      navigate(`/assessment/multi-skill/${assessmentId}`)
+    }
+  }
+
   const handleContinue = () => {
     navigate(`/assessment/multi-skill/${assessmentId}`)
   }
@@ -446,11 +457,11 @@ export function SectionTakePage() {
             />
           )}
           <button
-            onClick={() => navigate(`/assessment/multi-skill/${assessmentId}`)}
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm text-gray-500 hover:text-gray-700 rounded-xl hover:bg-gray-100 transition-all"
+            onClick={handlePauseAndSave}
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-xl hover:bg-amber-100 transition-all"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
-            Back to Sections
+            <Pause className="w-3.5 h-3.5" />
+            Pause & Save
           </button>
           <button
             onClick={handleCompleteSection}
