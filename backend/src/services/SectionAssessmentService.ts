@@ -288,7 +288,7 @@ export class SectionAssessmentService {
     for (const admin of admins) {
       await prisma.notification.create({
         data: {
-          type: 'SYSTEM',
+          type: 'GENERAL',
           subject: `Section Retry Request: ${studentName} — ${skill} (${language})`,
           content: `${studentName} is requesting to retry the ${skill} section of their ${language} placement test. Assessment ID: ${assessmentId}, Section ID: ${sectionId}`,
           status: 'SENT',
@@ -343,7 +343,7 @@ export class SectionAssessmentService {
     // Notify the student
     await prisma.notification.create({
       data: {
-        type: 'SYSTEM',
+        type: 'GENERAL',
         subject: `Retry Approved: ${section.skill} section`,
         content: `Your request to retry the ${section.skill} section has been approved. You can now retake it.`,
         status: 'SENT',
