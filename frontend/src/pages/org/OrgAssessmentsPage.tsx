@@ -16,16 +16,6 @@ const STATUS_STYLES: Record<string, string> = {
   EXPIRED: 'bg-red-100 text-red-800',
 }
 
-const SKILL_SHORT: Record<string, string> = {
-  READING: 'R',
-  LISTENING: 'L',
-  WRITING: 'W',
-  SPEAKING: 'S',
-  GRAMMAR: 'G',
-  VOCABULARY: 'V',
-  ERROR_CORRECTION: 'EC',
-  SENTENCE_TRANSFORMATION: 'ST',
-}
 
 export default function OrgAssessmentsPage() {
   const { organizationId } = useAuth()

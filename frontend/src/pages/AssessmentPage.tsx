@@ -4,9 +4,7 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 import {
   ClipboardCheck,
   Clock,
-  Award,
   ChevronRight,
-  AlertTriangle,
   Timer,
   BookOpen,
   Headphones,
@@ -14,7 +12,6 @@ import {
   Mic,
   CheckCircle,
   Play,
-  Pause,
 } from 'lucide-react'
 import { assessmentApi, Assessment } from '../services/assessmentApi'
 import { LoadingPage } from '../components/common/LoadingSpinner'
