@@ -119,8 +119,8 @@ export class SectionAssessmentService {
       }
     }
 
-    const sectionSkills = Object.keys(SECTION_CONFIG_V2) as Array<keyof typeof SECTION_CONFIG_V2>
-    const totalQuestions = sectionSkills.reduce((sum, skill) => sum + SECTION_CONFIG_V2[skill].questionsLimit, 0)
+    const sectionSkills = Object.keys(SECTION_CONFIG) as Array<keyof typeof SECTION_CONFIG>
+    const totalQuestions = sectionSkills.reduce((sum, skill) => sum + SECTION_CONFIG[skill].questionsLimit, 0)
 
     const assessment = await prisma.assessment.create({
       data: {
@@ -139,10 +139,10 @@ export class SectionAssessmentService {
         sections: {
           create: sectionSkills.map(skill => ({
             skill: skill as any,
-            orderIndex: SECTION_CONFIG_V2[skill].orderIndex,
+            orderIndex: SECTION_CONFIG[skill].orderIndex,
             status: 'PENDING',
-            timeLimitMin: SECTION_CONFIG_V2[skill].timeLimitMin,
-            questionsLimit: SECTION_CONFIG_V2[skill].questionsLimit,
+            timeLimitMin: SECTION_CONFIG[skill].timeLimitMin,
+            questionsLimit: SECTION_CONFIG[skill].questionsLimit,
             targetLevel: 'B1',
             answers: []
           }))

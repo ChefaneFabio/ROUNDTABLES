@@ -56,7 +56,7 @@ export function MultiSkillAssessmentPage() {
       setSections(data)
       // Show intro if no sections have been started yet
       const anyStarted = data.some((s: AssessmentSection) => s.status !== 'PENDING')
-      if (!anyStarted) setShowIntro(true)
+      setShowIntro(!anyStarted)
     } catch (err: any) {
       setError(err.response?.data?.error || err.message)
     } finally {
