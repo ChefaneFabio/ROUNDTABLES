@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import { assessmentApi } from '../../services/assessmentApi'
 import api, { studentsApi } from '../../services/api'
+import { organizationApi } from '../../services/organizationApi'
 import { LoadingPage } from '../../components/common/LoadingSpinner'
 import { Alert } from '../../components/common/Alert'
 import { Button } from '../../components/common/Button'
@@ -397,17 +398,25 @@ function AssignModal({
 }) {
   const [selectedStudents, setSelectedStudents] = useState<string[]>([])
   const [language, setLanguage] = useState('')
-  const [testType, setTestType] = useState<'quick' | '4skill'>('4skill')
-  const [timeLimitMin, setTimeLimitMin] = useState(30)
-  const [questionsLimit, setQuestionsLimit] = useState(25)
+  const [selectedOrg, setSelectedOrg] = useState('')
   const [studentSearch, setStudentSearch] = useState('')
 
-  const { data: studentsData, isLoading: loadingStudents } = useQuery(
-    'allStudents',
-    () => studentsApi.getAll({ page: 1, limit: 500 }),
+  // Load organizations
+  const { data: orgsData } = useQuery(
+    'allOrganizations',
+    () => organizationApi.getOrganizations({ page: 1, limit: 100 }),
     { staleTime: 60000 }
   )
+  const orgs = orgsData?.data || []
 
+  // Load students — from org if selected, otherwise all
+  const { data: studentsData, isLoading: loadingStudents } = useQuery(
+    ['assignStudents', selectedOrg],
+    () => selectedOrg
+      ? organizationApi.getEmployees(selectedOrg, { page: 1, limit: 500 })
+      : studentsApi.getAll({ page: 1, limit: 500 }),
+    { staleTime: 60000 }
+  )
   const students = studentsData?.data || []
 
   const filteredStudents = students.filter((s: any) => {
@@ -418,17 +427,7 @@ function AssignModal({
     return name.includes(term) || email.includes(term)
   })
 
-  const assignQuickMutation = useMutation(
-    (data: any) => assessmentApi.assignAssessment(data),
-    {
-      onSuccess: (results) => {
-        onSuccess(results.length)
-      },
-      onError: (err: Error) => onError(err.message),
-    }
-  )
-
-  const assignMultiSkillMutation = useMutation(
+  const assignMutation = useMutation(
     (data: any) => assessmentApi.assignMultiSkillAssessment(data),
     {
       onSuccess: (results) => {
@@ -448,23 +447,8 @@ function AssignModal({
       onError('Please select a language')
       return
     }
-
-    if (testType === 'quick') {
-      assignQuickMutation.mutate({
-        studentIds: selectedStudents,
-        language,
-        timeLimitMin,
-        questionsLimit,
-      })
-    } else {
-      assignMultiSkillMutation.mutate({
-        studentIds: selectedStudents,
-        language,
-      })
-    }
+    assignMutation.mutate({ studentIds: selectedStudents, language })
   }
-
-  const isSubmitting = assignQuickMutation.isLoading || assignMultiSkillMutation.isLoading
 
   const toggleStudent = (id: string) => {
     setSelectedStudents((prev) =>
@@ -472,47 +456,23 @@ function AssignModal({
     )
   }
 
+  const selectAll = () => {
+    const allIds = filteredStudents.map((s: any) => s.id)
+    setSelectedStudents(allIds)
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div className="fixed inset-0 bg-black/50" onClick={onClose} />
       <div className="relative bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[90vh] overflow-y-auto mx-4">
-        <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold text-gray-900">Assign New Test</h2>
+        <div className="sticky top-0 bg-white border-b px-6 py-4 flex items-center justify-between z-10">
+          <h2 className="text-lg font-semibold text-gray-900">Assign Placement Test</h2>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="p-6 space-y-5">
-          {/* Test Type */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Test Type</label>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => setTestType('quick')}
-                className={`p-3 rounded-lg border-2 text-left transition-all ${
-                  testType === 'quick'
-                    ? 'border-primary-500 bg-primary-50'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                <p className="font-medium text-sm">Quick Placement</p>
-                <p className="text-xs text-gray-500 mt-1">Grammar & Vocabulary</p>
-              </button>
-              <button
-                onClick={() => setTestType('4skill')}
-                className={`p-3 rounded-lg border-2 text-left transition-all ${
-                  testType === '4skill'
-                    ? 'border-purple-500 bg-purple-50'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                <p className="font-medium text-sm">4-Skills Assessment</p>
-                <p className="text-xs text-gray-500 mt-1">R / L / W / S</p>
-              </button>
-            </div>
-          </div>
-
           {/* Language */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Language</label>
@@ -523,63 +483,56 @@ function AssignModal({
             >
               <option value="">Select language...</option>
               {LANGUAGES.map((l) => (
-                <option key={l.code} value={l.code}>
-                  {l.name}
-                </option>
+                <option key={l.code} value={l.code}>{l.name}</option>
               ))}
             </select>
           </div>
 
-          {/* Quick placement options */}
-          {testType === 'quick' && (
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Time Limit (min)
-                </label>
-                <input
-                  type="number"
-                  value={timeLimitMin}
-                  onChange={(e) => setTimeLimitMin(Number(e.target.value))}
-                  min={10}
-                  max={120}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Questions
-                </label>
-                <input
-                  type="number"
-                  value={questionsLimit}
-                  onChange={(e) => setQuestionsLimit(Number(e.target.value))}
-                  min={10}
-                  max={60}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500"
-                />
-              </div>
-            </div>
-          )}
+          {/* Organization filter */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Organization (optional)</label>
+            <select
+              value={selectedOrg}
+              onChange={(e) => { setSelectedOrg(e.target.value); setSelectedStudents([]) }}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500"
+            >
+              <option value="">All Students</option>
+              {orgs.map((o: any) => (
+                <option key={o.id} value={o.id}>{o.name}</option>
+              ))}
+            </select>
+          </div>
 
           {/* Student Selection */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Students ({selectedStudents.length} selected)
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-sm font-medium text-gray-700">
+                Students ({selectedStudents.length} selected)
+              </label>
+              <div className="flex gap-2">
+                <button onClick={selectAll} className="text-xs text-primary-600 hover:text-primary-700">
+                  Select all
+                </button>
+                {selectedStudents.length > 0 && (
+                  <button onClick={() => setSelectedStudents([])} className="text-xs text-gray-500 hover:text-gray-700">
+                    Clear
+                  </button>
+                )}
+              </div>
+            </div>
             <div className="relative mb-2">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <input
                 type="text"
-                placeholder="Search students..."
+                placeholder="Search by name or email..."
                 value={studentSearch}
                 onChange={(e) => setStudentSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500"
               />
             </div>
-            <div className="border border-gray-200 rounded-lg max-h-48 overflow-y-auto">
+            <div className="border border-gray-200 rounded-lg max-h-52 overflow-y-auto">
               {loadingStudents ? (
-                <p className="p-3 text-sm text-gray-500">Loading students...</p>
+                <p className="p-3 text-sm text-gray-500">Loading...</p>
               ) : filteredStudents.length === 0 ? (
                 <p className="p-3 text-sm text-gray-500">No students found</p>
               ) : (
@@ -594,7 +547,7 @@ function AssignModal({
                       onChange={() => toggleStudent(s.id)}
                       className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                     />
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <p className="text-sm font-medium text-gray-900 truncate">
                         {s.user?.name || 'Unknown'}
                       </p>
@@ -604,26 +557,23 @@ function AssignModal({
                 ))
               )}
             </div>
-            {selectedStudents.length > 0 && (
-              <button
-                onClick={() => setSelectedStudents([])}
-                className="text-xs text-primary-600 hover:text-primary-700 mt-1"
-              >
-                Clear selection
-              </button>
-            )}
+          </div>
+
+          {/* Info box */}
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700">
+            Placement Test: Reading, Listening, Writing, Speaking (~70 min). Students will receive a notification and can start when ready.
           </div>
         </div>
 
-        <div className="sticky bottom-0 bg-white border-t px-6 py-4 flex justify-end gap-3">
+        <div className="sticky bottom-0 bg-white border-t px-6 py-4 flex justify-end gap-3 z-10">
           <button
             onClick={onClose}
             className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg"
           >
             Cancel
           </button>
-          <Button onClick={handleAssign} disabled={isSubmitting}>
-            {isSubmitting ? 'Assigning...' : `Assign to ${selectedStudents.length} Student(s)`}
+          <Button onClick={handleAssign} disabled={assignMutation.isLoading}>
+            {assignMutation.isLoading ? 'Assigning...' : `Assign to ${selectedStudents.length} Student(s)`}
           </Button>
         </div>
       </div>
