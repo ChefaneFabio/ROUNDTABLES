@@ -52,8 +52,13 @@ export function MultiSkillAssessmentPage() {
   const loadSections = async () => {
     try {
       setLoading(true)
-      const data = await assessmentApi.getSections(id!)
+      const [data, assessment] = await Promise.all([
+        assessmentApi.getSections(id!),
+        assessmentApi.getById(id!).catch(() => null),
+      ])
       setSections(data)
+      // Check if assessment is paused
+      setIsPaused(assessment?.status === 'PAUSED')
       // Show intro if no sections have been started yet
       const anyStarted = data.some((s: AssessmentSection) => s.status !== 'PENDING')
       setShowIntro(!anyStarted)
@@ -130,8 +135,12 @@ export function MultiSkillAssessmentPage() {
 
   const handleStartSection = async (section: AssessmentSection) => {
     try {
+      if (isPaused) {
+        // Must resume first
+        await handleResume()
+      }
+
       if (section.status === 'COMPLETED') {
-        // Already done, skip
         return
       }
 
