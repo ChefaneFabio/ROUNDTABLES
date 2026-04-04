@@ -138,6 +138,62 @@ const LEVEL_COLORS: Record<string, { from: string; to: string; text: string }> =
   C2: { from: 'from-amber-400', to: 'to-amber-600', text: 'text-amber-700' }
 }
 
+const LANGUAGE_FLAGS: Record<string, string> = {
+  English: '\u{1F1EC}\u{1F1E7}',
+  Spanish: '\u{1F1EA}\u{1F1F8}',
+  French: '\u{1F1EB}\u{1F1F7}',
+  German: '\u{1F1E9}\u{1F1EA}',
+  Italian: '\u{1F1EE}\u{1F1F9}',
+}
+
+const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+
+const CEFR_BAR_COLORS: Record<string, string> = {
+  A1: 'bg-emerald-400',
+  A2: 'bg-green-500',
+  B1: 'bg-blue-500',
+  B2: 'bg-indigo-500',
+  C1: 'bg-purple-500',
+  C2: 'bg-amber-500',
+}
+
+function CefrLevelBar({ level }: { level: string }) {
+  const idx = CEFR_LEVELS.indexOf(level)
+  if (idx === -1) return null
+  const pct = ((idx + 0.5) / CEFR_LEVELS.length) * 100
+  return (
+    <div className="w-full mt-6 mb-2">
+      <div className="flex justify-between text-xs text-gray-400 mb-1.5 px-0.5">
+        <span>A1</span>
+        <span>A2</span>
+        <span>B1</span>
+        <span>B2</span>
+        <span>C1</span>
+        <span>C2</span>
+      </div>
+      <div className="relative w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+        {/* Gradient track */}
+        <div className="absolute inset-0 flex">
+          {CEFR_LEVELS.map((l, i) => (
+            <div key={l} className={`flex-1 ${i <= idx ? (CEFR_BAR_COLORS[l] || 'bg-gray-300') : 'bg-gray-100'} ${i === 0 ? 'rounded-l-full' : ''} ${i === CEFR_LEVELS.length - 1 ? 'rounded-r-full' : ''}`} />
+          ))}
+        </div>
+        {/* Level dividers */}
+        {[1, 2, 3, 4, 5].map(i => (
+          <div key={i} className="absolute top-0 bottom-0 w-px bg-white/60" style={{ left: `${(i / 6) * 100}%` }} />
+        ))}
+      </div>
+      {/* Indicator arrow */}
+      <div className="relative w-full h-4 mt-0.5">
+        <div className="absolute flex flex-col items-center" style={{ left: `${pct}%`, transform: 'translateX(-50%)' }}>
+          <div className="w-0 h-0 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-b-[6px] border-b-gray-700 rotate-180" />
+          <span className="text-xs font-bold text-gray-700">{level}</span>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function formatDate(dateStr: string | undefined): string {
   if (!dateStr) return ''
   try {
@@ -216,6 +272,7 @@ export function MultiSkillResultPage() {
               </h1>
             </div>
             <div className="flex items-center gap-2">
+              <span className="text-lg">{LANGUAGE_FLAGS[assessment.language] || ''}</span>
               <Award className="w-5 h-5 text-amber-400" />
               <span className="text-sm text-slate-300 font-medium">
                 {assessment.language} Placement Test
@@ -251,6 +308,13 @@ export function MultiSkillResultPage() {
                 <div className="mt-3 px-5 py-2 bg-gray-50 border border-gray-100 rounded-full">
                   <span className="text-lg font-bold text-gray-700">{assessment.score}%</span>
                   <span className="text-gray-400 ml-1.5 text-sm">average score</span>
+                </div>
+              )}
+
+              {/* CEFR Level Comparison Bar */}
+              {overallLevel !== 'N/A' && (
+                <div className="w-full max-w-md mt-4">
+                  <CefrLevelBar level={overallLevel} />
                 </div>
               )}
             </div>

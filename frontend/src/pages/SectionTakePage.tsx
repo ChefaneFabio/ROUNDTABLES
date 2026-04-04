@@ -39,6 +39,14 @@ const SKILL_ICONS: Record<string, React.ElementType> = {
   WRITING: PenTool, LISTENING: Headphones, SPEAKING: Mic,
 }
 
+const LANGUAGE_FLAGS: Record<string, string> = {
+  English: '\u{1F1EC}\u{1F1E7}',
+  Spanish: '\u{1F1EA}\u{1F1F8}',
+  French: '\u{1F1EB}\u{1F1F7}',
+  German: '\u{1F1E9}\u{1F1EA}',
+  Italian: '\u{1F1EE}\u{1F1F9}',
+}
+
 const INSTRUCTION_ICONS = [BookOpen, Info, Shield, AlertCircle]
 
 const SECTION_INSTRUCTIONS: Record<string, { en: string[]; it: string[] }> = {
@@ -115,6 +123,7 @@ export function SectionTakePage() {
   const [error, setError] = useState<string | null>(null)
   const [showSectionIntro, setShowSectionIntro] = useState(true)
   const [sectionMeta, setSectionMeta] = useState<{ skill: string; timeLimitMin: number; questionsLimit: number } | null>(null)
+  const [assessmentLanguage, setAssessmentLanguage] = useState<string>('')
 
   useEffect(() => {
     // Fetch section metadata without starting the timer
@@ -124,7 +133,11 @@ export function SectionTakePage() {
   const loadSectionMeta = async () => {
     try {
       setLoading(true)
-      const sections = await assessmentApi.getSections(assessmentId!)
+      const [sections, assessment] = await Promise.all([
+        assessmentApi.getSections(assessmentId!),
+        assessmentApi.getById(assessmentId!).catch(() => null),
+      ])
+      if (assessment) setAssessmentLanguage(assessment.language || '')
       const current = sections.find((s: AssessmentSection) => s.id === sectionId)
       if (current) {
         setSectionMeta({ skill: current.skill, timeLimitMin: current.timeLimitMin, questionsLimit: current.questionsLimit })
@@ -326,10 +339,16 @@ export function SectionTakePage() {
       <div className="max-w-3xl mx-auto">
         <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/60 p-8 space-y-6">
           <div className="text-center">
+            {assessmentLanguage && (
+              <span className="text-3xl mb-2 block">{LANGUAGE_FLAGS[assessmentLanguage] || ''}</span>
+            )}
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100 mb-4">
               <SkillIcon className="w-7 h-7 text-indigo-600" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">{label} Section</h1>
+            <h1 className="text-2xl font-bold text-gray-900">
+              {assessmentLanguage && <span className="mr-1">{LANGUAGE_FLAGS[assessmentLanguage]}</span>}
+              {label} Section
+            </h1>
             <div className="flex items-center justify-center gap-3 mt-2">
               <span className="inline-flex items-center gap-1.5 text-sm text-gray-500">
                 <FileText className="w-3.5 h-3.5" />
@@ -438,7 +457,13 @@ export function SectionTakePage() {
     <div className="max-w-3xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
-        <div>
+        <div className="flex items-center gap-3">
+          {assessmentLanguage && <span className="text-2xl">{LANGUAGE_FLAGS[assessmentLanguage]}</span>}
+          {(() => {
+            const HeaderIcon = SKILL_ICONS[section?.skill || ''] || BookOpen
+            return <HeaderIcon className="w-5 h-5 text-indigo-500" />
+          })()}
+          <div>
           <h2 className="text-xl font-bold text-gray-900">
             {SKILL_LABELS[section?.skill || '']} Section
           </h2>
@@ -447,6 +472,7 @@ export function SectionTakePage() {
               Question {progress.answered + 1} of {progress.total} &middot; Level: {progress.currentLevel}
             </p>
           )}
+          </div>
         </div>
 
         <div className="flex items-center gap-3">

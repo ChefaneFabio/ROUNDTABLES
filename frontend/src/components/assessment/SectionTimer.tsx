@@ -39,15 +39,15 @@ export function SectionTimer({ expiresAt, onExpired }: SectionTimerProps) {
   const isCritical = remainingSeconds < 30 && remainingSeconds > 0
 
   return (
-    <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-lg font-mono text-sm font-bold
-      ${isCritical ? 'bg-red-100 text-red-700 animate-pulse' :
-        isWarning ? 'bg-amber-100 text-amber-700' :
-        'bg-gray-100 text-gray-700'}
+    <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl font-mono text-sm font-bold shadow-sm transition-all duration-300
+      ${isCritical ? 'bg-red-500 text-white animate-pulse shadow-red-200' :
+        isWarning ? 'bg-amber-400 text-amber-900 shadow-amber-200' :
+        'bg-emerald-100 text-emerald-700 shadow-emerald-100'}
     `}>
       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
-      <span>{String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}</span>
+      <span className="tabular-nums">{String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}</span>
     </div>
   )
 }

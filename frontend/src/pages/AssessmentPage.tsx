@@ -19,11 +19,11 @@ import { Alert } from '../components/common/Alert'
 import { Button } from '../components/common/Button'
 
 const LANGUAGES = [
-  { code: 'English', name: 'English', flag: '\u{1F1EC}\u{1F1E7}' },
-  { code: 'Spanish', name: 'Spanish', flag: '\u{1F1EA}\u{1F1F8}' },
-  { code: 'French', name: 'French', flag: '\u{1F1EB}\u{1F1F7}' },
-  { code: 'German', name: 'German', flag: '\u{1F1E9}\u{1F1EA}' },
-  { code: 'Italian', name: 'Italian', flag: '\u{1F1EE}\u{1F1F9}' },
+  { code: 'English', name: 'English', flag: '\u{1F1EC}\u{1F1E7}', accent: 'from-blue-500 to-red-500' },
+  { code: 'Spanish', name: 'Spanish', flag: '\u{1F1EA}\u{1F1F8}', accent: 'from-red-500 to-yellow-500' },
+  { code: 'French', name: 'French', flag: '\u{1F1EB}\u{1F1F7}', accent: 'from-blue-500 to-red-500' },
+  { code: 'German', name: 'German', flag: '\u{1F1E9}\u{1F1EA}', accent: 'from-gray-900 to-yellow-500' },
+  { code: 'Italian', name: 'Italian', flag: '\u{1F1EE}\u{1F1F9}', accent: 'from-green-500 to-red-500' },
 ]
 
 const SKILL_SECTIONS = [
@@ -195,47 +195,53 @@ export function AssessmentPage() {
             return (
               <div
                 key={lang.code}
-                className="bg-white border border-gray-200 rounded-2xl p-5 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group hover:border-primary-300"
+                className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group hover:border-primary-300"
               >
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="text-3xl">{lang.flag}</span>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{lang.name}</h3>
-                    {result ? (
-                      <div className="flex items-center gap-1 text-xs text-green-600">
-                        <CheckCircle className="w-3 h-3" />
-                        <span>Last result: {result.cefrLevel}</span>
-                      </div>
-                    ) : (
-                      <p className="text-xs text-gray-400">Not taken yet</p>
-                    )}
-                  </div>
-                </div>
+                {/* Flag-colored accent stripe */}
+                <div className={`h-1.5 bg-gradient-to-r ${lang.accent}`} />
 
-                {/* Skill levels if completed */}
-                {result && (
+                <div className="p-5">
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="text-3xl">{lang.flag}</span>
+                    <div>
+                      <h3 className="font-semibold text-gray-900">{lang.name}</h3>
+                      {result ? (
+                        <div className="flex items-center gap-1 text-xs text-green-600">
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          <span className="font-medium">Level: {result.cefrLevel}</span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-1 text-xs text-gray-400">
+                          <Clock className="w-3 h-3" />
+                          <span>Not taken yet</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Skill levels — always shown */}
                   <div className="grid grid-cols-2 gap-1.5 mb-4">
-                    <SkillLevel icon={BookOpen} label="Reading" level={result.readingLevel} />
-                    <SkillLevel icon={Headphones} label="Listening" level={result.listeningLevel} />
-                    <SkillLevel icon={PenTool} label="Writing" level={result.writingLevel} />
-                    <SkillLevel icon={Mic} label="Speaking" level={result.speakingLevel} />
+                    <SkillLevel icon={BookOpen} label="Reading" level={result?.readingLevel} />
+                    <SkillLevel icon={Headphones} label="Listening" level={result?.listeningLevel} />
+                    <SkillLevel icon={PenTool} label="Writing" level={result?.writingLevel} />
+                    <SkillLevel icon={Mic} label="Speaking" level={result?.speakingLevel} />
                   </div>
-                )}
 
-                <button
-                  onClick={() => {
-                    setError('')
-                    if (hasInProgress) {
-                      navigate(`/assessment/multi-skill/${inProgressMultiSkill!.id}`)
-                    } else {
-                      startMultiSkillMutation.mutate(lang.code)
-                    }
-                  }}
-                  disabled={startMultiSkillMutation.isLoading}
-                  className="w-full py-2.5 px-4 text-sm font-semibold rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-gray-800 hover:to-primary-600 disabled:opacity-50 transition-all duration-300 shadow-sm hover:shadow-md"
-                >
-                  {hasInProgress ? 'Continue' : result ? 'Retake Test' : 'Start Test'}
-                </button>
+                  <button
+                    onClick={() => {
+                      setError('')
+                      if (hasInProgress) {
+                        navigate(`/assessment/multi-skill/${inProgressMultiSkill!.id}`)
+                      } else {
+                        startMultiSkillMutation.mutate(lang.code)
+                      }
+                    }}
+                    disabled={startMultiSkillMutation.isLoading}
+                    className="w-full py-2.5 px-4 text-sm font-semibold rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-gray-800 hover:to-primary-600 disabled:opacity-50 transition-all duration-300 shadow-sm hover:shadow-md"
+                  >
+                    {hasInProgress ? 'Continue' : result ? 'Retake Test' : 'Start Test'}
+                  </button>
+                </div>
               </div>
             )
           })}
@@ -320,10 +326,10 @@ export function AssessmentPage() {
 
 function SkillLevel({ icon: Icon, label, level }: { icon: React.ElementType; label: string; level?: string | null }) {
   return (
-    <div className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs ${level ? 'bg-green-50 text-green-700' : 'bg-gray-50 text-gray-400'}`}>
-      <Icon className="w-3 h-3" />
+    <div className={`flex items-center gap-1.5 px-2 py-1.5 rounded-lg text-xs ${level ? 'bg-green-50 text-green-700 border border-green-100' : 'bg-gray-50 text-gray-400 border border-gray-100'}`}>
+      <Icon className={`w-3.5 h-3.5 ${level ? 'text-green-500' : 'text-gray-300'}`} />
       <span>{label}</span>
-      {level && <span className="font-bold ml-auto">{level}</span>}
+      <span className="font-bold ml-auto">{level || '--'}</span>
     </div>
   )
 }

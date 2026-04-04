@@ -8,6 +8,14 @@ import api from '../../services/api'
 import { LoadingPage } from '../../components/common/LoadingSpinner'
 import { Card } from '../../components/common/Card'
 
+const LANGUAGE_FLAGS: Record<string, string> = {
+  English: '\u{1F1EC}\u{1F1E7}',
+  Spanish: '\u{1F1EA}\u{1F1F8}',
+  French: '\u{1F1EB}\u{1F1F7}',
+  German: '\u{1F1E9}\u{1F1EA}',
+  Italian: '\u{1F1EE}\u{1F1F9}',
+}
+
 const STATUS_STYLES: Record<string, string> = {
   ASSIGNED: 'bg-amber-100 text-amber-800',
   IN_PROGRESS: 'bg-blue-100 text-blue-800',
@@ -155,7 +163,7 @@ export default function OrgAssessmentsPage() {
           >
             <option value="">All Languages</option>
             {languages.map(l => (
-              <option key={l} value={l}>{l}</option>
+              <option key={l} value={l}>{LANGUAGE_FLAGS[l] ? `${LANGUAGE_FLAGS[l]} ` : ''}{l}</option>
             ))}
           </select>
           <select
@@ -213,21 +221,35 @@ export default function OrgAssessmentsPage() {
                         <p className="font-medium text-gray-900">{a.student?.name || 'Unknown'}</p>
                         <p className="text-xs text-gray-500">{a.student?.email}</p>
                       </td>
-                      <td className="py-3 px-4 text-gray-700">{a.language}</td>
+                      <td className="py-3 px-4">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-base">{LANGUAGE_FLAGS[a.language] || ''}</span>
+                          <span className="text-gray-700">{a.language}</span>
+                        </div>
+                      </td>
                       <td className="py-3 px-4">
                         <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_STYLES[a.status] || 'bg-gray-100 text-gray-800'}`}>
                           {a.status === 'IN_PROGRESS' ? 'In Progress' : a.status}
                         </span>
                       </td>
                       <td className="py-3 px-4">
-                        <div className="flex items-center gap-2">
-                          <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden max-w-[80px]">
+                        <div className="flex items-center gap-1.5">
+                          {(a.sections || []).map((s: any, i: number) => (
                             <div
-                              className="h-full bg-green-500 rounded-full transition-all"
-                              style={{ width: `${totalSections > 0 ? (completedSections / totalSections) * 100 : 0}%` }}
+                              key={i}
+                              title={`${s.skill}: ${s.status}`}
+                              className={`w-3 h-3 rounded-full border transition-all ${
+                                s.status === 'COMPLETED'
+                                  ? 'bg-green-500 border-green-600'
+                                  : s.status === 'IN_PROGRESS'
+                                    ? 'bg-blue-400 border-blue-500 animate-pulse'
+                                    : s.status === 'SKIPPED'
+                                      ? 'bg-gray-300 border-gray-400'
+                                      : 'bg-gray-100 border-gray-300'
+                              }`}
                             />
-                          </div>
-                          <span className="text-xs text-gray-500">{completedSections}/{totalSections}</span>
+                          ))}
+                          <span className="text-xs text-gray-500 ml-1">{completedSections}/{totalSections}</span>
                         </div>
                       </td>
                       <td className="py-3 px-4 text-center">
@@ -285,7 +307,8 @@ function SectionCell({ section }: { section?: any }) {
   if (!section) return <span className="text-gray-300">--</span>
   if (section.status === 'COMPLETED' && section.cefrLevel) {
     return (
-      <span className="px-1.5 py-0.5 bg-green-100 text-green-700 rounded text-xs font-medium">
+      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 bg-green-100 text-green-700 rounded text-xs font-medium">
+        <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
         {section.cefrLevel}
       </span>
     )
@@ -294,7 +317,19 @@ function SectionCell({ section }: { section?: any }) {
     const pct = section.questionsTotal > 0
       ? Math.round((section.questionsAnswered / section.questionsTotal) * 100)
       : 0
-    return <span className="text-xs text-blue-600 font-medium">{pct}%</span>
+    return (
+      <div className="inline-flex items-center gap-1.5" title={`${pct}% complete`}>
+        <svg className="w-4 h-4 -rotate-90" viewBox="0 0 20 20">
+          <circle cx="10" cy="10" r="8" fill="none" stroke="#E5E7EB" strokeWidth="3" />
+          <circle cx="10" cy="10" r="8" fill="none" stroke="#3B82F6" strokeWidth="3"
+            strokeDasharray={`${pct * 0.5} 50`} strokeLinecap="round" />
+        </svg>
+        <span className="text-xs text-blue-600 font-medium">{pct}%</span>
+      </div>
+    )
+  }
+  if (section.status === 'PENDING') {
+    return <span className="inline-block w-2 h-2 rounded-full bg-gray-200" title="Pending" />
   }
   return <span className="text-gray-300 text-xs">--</span>
 }

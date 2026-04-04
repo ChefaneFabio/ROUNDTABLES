@@ -1,8 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Pause, Play, RotateCcw, BookOpen, Headphones, PenTool, Mic, CheckCircle, Lock, Wifi, Volume2, Clock } from 'lucide-react'
+import { Pause, Play, RotateCcw, BookOpen, Headphones, PenTool, Mic, CheckCircle, Lock, Wifi, Volume2, Clock, Circle } from 'lucide-react'
 import { assessmentApi, AssessmentSection } from '../services/assessmentApi'
 import { SectionNav } from '../components/assessment/SectionNav'
+
+const LANGUAGE_FLAGS: Record<string, string> = {
+  English: '\u{1F1EC}\u{1F1E7}',
+  Spanish: '\u{1F1EA}\u{1F1F8}',
+  French: '\u{1F1EB}\u{1F1F7}',
+  German: '\u{1F1E9}\u{1F1EA}',
+  Italian: '\u{1F1EE}\u{1F1F9}',
+}
 
 // Versant-style 4 sections — Reading includes grammar, vocabulary, and error correction questions
 const SKILL_INFO: Record<string, { icon: string; title: string; description: string; color: string }> = {
@@ -197,6 +205,7 @@ export function MultiSkillAssessmentPage() {
         <div className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/40 rounded-xl shadow-lg p-10 space-y-8">
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold text-gray-900">
+              <span className="mr-2">{LANGUAGE_FLAGS[assessmentInfo?.language || ''] || ''}</span>
               {assessmentInfo?.language || ''} {assessmentInfo?.type === 'PROGRESS' ? `Level ${assessmentInfo.targetLevel} Test` : 'Placement Test'}
             </h1>
             <p className="text-lg text-gray-500">Test di Posizionamento</p>
@@ -283,6 +292,7 @@ export function MultiSkillAssessmentPage() {
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-2">
+          <span className="text-3xl">{LANGUAGE_FLAGS[assessmentInfo?.language || ''] || ''}</span>
           <h1 className="text-2xl font-bold text-gray-900">
             {assessmentInfo?.language || ''} {assessmentInfo?.type === 'PROGRESS' ? `Level ${assessmentInfo.targetLevel} Test` : 'Placement Test'}
           </h1>
@@ -292,6 +302,39 @@ export function MultiSkillAssessmentPage() {
             ? `All questions at ${assessmentInfo.targetLevel} level. Complete all sections to verify your competency.`
             : 'Complete all sections to determine your CEFR level across all language skills.'}
         </p>
+
+        {/* Step progress indicator */}
+        {sections.length > 0 && (
+          <div className="flex items-center justify-center gap-2 mt-4">
+            {sections.map((s, i) => {
+              const done = s.status === 'COMPLETED' || s.status === 'SKIPPED'
+              const active = s.status === 'IN_PROGRESS'
+              const iconData = SKILL_ICONS[s.skill]
+              const SkillIcon = iconData?.Icon || Circle
+              return (
+                <div key={s.id} className="flex items-center gap-2">
+                  <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+                    done
+                      ? 'bg-green-100 border-green-300 text-green-700'
+                      : active
+                        ? 'bg-blue-100 border-blue-300 text-blue-700 ring-2 ring-blue-200'
+                        : 'bg-gray-50 border-gray-200 text-gray-400'
+                  }`}>
+                    {done ? (
+                      <CheckCircle className="w-3.5 h-3.5" />
+                    ) : (
+                      <SkillIcon className="w-3.5 h-3.5" />
+                    )}
+                    <span>{i + 1}/{sections.length}</span>
+                  </div>
+                  {i < sections.length - 1 && (
+                    <div className={`w-6 h-0.5 rounded-full ${done ? 'bg-green-300' : 'bg-gray-200'}`} />
+                  )}
+                </div>
+              )
+            })}
+          </div>
+        )}
         <div className="flex justify-center gap-3 mt-4">
           {!isPaused ? (
             <button
