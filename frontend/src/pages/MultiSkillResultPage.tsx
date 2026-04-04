@@ -2,21 +2,153 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { assessmentApi } from '../services/assessmentApi'
 import { useToast } from '../components/common/Toast'
+import {
+  BookOpen,
+  Headphones,
+  PenTool,
+  Mic,
+  Award,
+  Download,
+  ArrowLeft,
+  CheckCircle,
+  BookType,
+  Shuffle,
+  Eraser,
+  FileText
+} from 'lucide-react'
 
-const SKILL_META: Record<string, { icon: string; label: string; color: string; bg: string }> = {
-  GRAMMAR: { icon: '📝', label: 'Grammar', color: 'text-indigo-700', bg: 'bg-indigo-100' },
-  VOCABULARY: { icon: '📚', label: 'Vocabulary', color: 'text-teal-700', bg: 'bg-teal-100' },
-  READING: { icon: '📖', label: 'Reading', color: 'text-blue-700', bg: 'bg-blue-100' },
-  ERROR_CORRECTION: { icon: '✏️', label: 'Error Correction', color: 'text-red-700', bg: 'bg-red-100' },
-  SENTENCE_TRANSFORMATION: { icon: '🔄', label: 'Transformation', color: 'text-orange-700', bg: 'bg-orange-100' },
-  WRITING: { icon: '✍️', label: 'Writing', color: 'text-amber-700', bg: 'bg-amber-100' },
-  LISTENING: { icon: '🎧', label: 'Listening', color: 'text-green-700', bg: 'bg-green-100' },
-  SPEAKING: { icon: '🎤', label: 'Speaking', color: 'text-purple-700', bg: 'bg-purple-100' }
+interface SkillMeta {
+  icon: React.ElementType
+  label: string
+  color: string
+  barColor: string
+  gradientFrom: string
+  gradientTo: string
+  bg: string
+  border: string
+  badgeBg: string
+}
+
+const SKILL_META: Record<string, SkillMeta> = {
+  READING: {
+    icon: BookOpen,
+    label: 'Reading',
+    color: 'text-blue-700',
+    barColor: 'bg-blue-500',
+    gradientFrom: 'from-blue-500',
+    gradientTo: 'to-blue-600',
+    bg: 'bg-blue-50',
+    border: 'border-blue-200',
+    badgeBg: 'bg-blue-100'
+  },
+  LISTENING: {
+    icon: Headphones,
+    label: 'Listening',
+    color: 'text-green-700',
+    barColor: 'bg-green-500',
+    gradientFrom: 'from-green-500',
+    gradientTo: 'to-green-600',
+    bg: 'bg-green-50',
+    border: 'border-green-200',
+    badgeBg: 'bg-green-100'
+  },
+  WRITING: {
+    icon: PenTool,
+    label: 'Writing',
+    color: 'text-amber-700',
+    barColor: 'bg-amber-500',
+    gradientFrom: 'from-amber-500',
+    gradientTo: 'to-amber-600',
+    bg: 'bg-amber-50',
+    border: 'border-amber-200',
+    badgeBg: 'bg-amber-100'
+  },
+  SPEAKING: {
+    icon: Mic,
+    label: 'Speaking',
+    color: 'text-purple-700',
+    barColor: 'bg-purple-500',
+    gradientFrom: 'from-purple-500',
+    gradientTo: 'to-purple-600',
+    bg: 'bg-purple-50',
+    border: 'border-purple-200',
+    badgeBg: 'bg-purple-100'
+  },
+  GRAMMAR: {
+    icon: BookType,
+    label: 'Grammar',
+    color: 'text-indigo-700',
+    barColor: 'bg-indigo-500',
+    gradientFrom: 'from-indigo-500',
+    gradientTo: 'to-indigo-600',
+    bg: 'bg-indigo-50',
+    border: 'border-indigo-200',
+    badgeBg: 'bg-indigo-100'
+  },
+  VOCABULARY: {
+    icon: FileText,
+    label: 'Vocabulary',
+    color: 'text-teal-700',
+    barColor: 'bg-teal-500',
+    gradientFrom: 'from-teal-500',
+    gradientTo: 'to-teal-600',
+    bg: 'bg-teal-50',
+    border: 'border-teal-200',
+    badgeBg: 'bg-teal-100'
+  },
+  ERROR_CORRECTION: {
+    icon: Eraser,
+    label: 'Error Correction',
+    color: 'text-red-700',
+    barColor: 'bg-red-500',
+    gradientFrom: 'from-red-500',
+    gradientTo: 'to-red-600',
+    bg: 'bg-red-50',
+    border: 'border-red-200',
+    badgeBg: 'bg-red-100'
+  },
+  SENTENCE_TRANSFORMATION: {
+    icon: Shuffle,
+    label: 'Transformation',
+    color: 'text-orange-700',
+    barColor: 'bg-orange-500',
+    gradientFrom: 'from-orange-500',
+    gradientTo: 'to-orange-600',
+    bg: 'bg-orange-50',
+    border: 'border-orange-200',
+    badgeBg: 'bg-orange-100'
+  }
 }
 
 const LEVEL_NAMES: Record<string, string> = {
-  A1: 'Beginner', A2: 'Elementary', B1: 'Intermediate',
-  B2: 'Upper Intermediate', C1: 'Advanced', C2: 'Proficiency'
+  A1: 'Beginner',
+  A2: 'Elementary',
+  B1: 'Intermediate',
+  B2: 'Upper Intermediate',
+  C1: 'Advanced',
+  C2: 'Proficiency'
+}
+
+const LEVEL_COLORS: Record<string, { from: string; to: string; text: string }> = {
+  A1: { from: 'from-gray-400', to: 'to-gray-500', text: 'text-gray-700' },
+  A2: { from: 'from-green-400', to: 'to-green-600', text: 'text-green-700' },
+  B1: { from: 'from-blue-400', to: 'to-blue-600', text: 'text-blue-700' },
+  B2: { from: 'from-indigo-400', to: 'to-indigo-600', text: 'text-indigo-700' },
+  C1: { from: 'from-purple-400', to: 'to-purple-600', text: 'text-purple-700' },
+  C2: { from: 'from-amber-400', to: 'to-amber-600', text: 'text-amber-700' }
+}
+
+function formatDate(dateStr: string | undefined): string {
+  if (!dateStr) return ''
+  try {
+    return new Date(dateStr).toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    })
+  } catch {
+    return ''
+  }
 }
 
 export function MultiSkillResultPage() {
@@ -29,112 +161,178 @@ export function MultiSkillResultPage() {
 
   useEffect(() => {
     if (!id) return
-    assessmentApi.getMultiSkillResults(id).then(data => {
-      setResults(data)
-      setLoading(false)
-    }).catch(err => {
-      setError(err.response?.data?.error || err.message)
-      setLoading(false)
-    })
+    assessmentApi
+      .getMultiSkillResults(id)
+      .then((data) => {
+        setResults(data)
+        setLoading(false)
+      })
+      .catch((err) => {
+        setError(err.response?.data?.error || err.message)
+        setLoading(false)
+      })
   }, [id])
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-12">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="flex items-center justify-center p-20">
+        <div className="flex flex-col items-center gap-4">
+          <div className="animate-spin rounded-full h-10 w-10 border-[3px] border-blue-200 border-t-blue-600" />
+          <p className="text-sm text-gray-500 font-medium">Loading results...</p>
+        </div>
       </div>
     )
   }
 
   if (error || !results) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg">
-        <p>{error || 'Results not available'}</p>
+      <div className="max-w-lg mx-auto mt-12">
+        <div className="bg-red-50 border border-red-200 text-red-700 p-6 rounded-xl shadow-sm">
+          <p className="font-medium">{error || 'Results not available'}</p>
+        </div>
       </div>
     )
   }
 
   const { assessment, sections } = results
+  const overallLevel = assessment.cefrLevel || 'N/A'
+  const levelStyle = LEVEL_COLORS[overallLevel] || LEVEL_COLORS.B1
+  const studentName = assessment.student?.name || 'Student'
+  const completedDate = formatDate(assessment.completedAt || assessment.updatedAt)
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      {/* Overall result */}
-      <div className="text-center bg-white rounded-xl shadow-lg p-8 border">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Placement Test Results</h1>
-        <p className="text-gray-500 mb-6">{assessment.language} &middot; {assessment.student?.name}</p>
-
-        <div className="flex items-center justify-center gap-4 mb-4">
-          <div className="text-6xl font-bold text-blue-600">{assessment.cefrLevel || 'N/A'}</div>
-          <div className="text-left">
-            <p className="text-xl font-semibold text-gray-800">
-              {LEVEL_NAMES[assessment.cefrLevel] || 'Pending'}
-            </p>
-            <p className="text-gray-500">Overall Level</p>
+    <div className="max-w-5xl mx-auto space-y-8 pb-12">
+      {/* Certificate-style result card */}
+      <div className="relative rounded-2xl overflow-hidden shadow-xl">
+        {/* Gradient border effect */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-amber-500 rounded-2xl" />
+        <div className="relative m-[2px] bg-white rounded-2xl">
+          {/* Header ribbon */}
+          <div className="bg-gradient-to-r from-slate-800 to-slate-900 px-8 py-5 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="w-6 h-6 text-emerald-400" />
+              <h1 className="text-xl font-bold text-white tracking-wide">
+                Test Complete
+              </h1>
+            </div>
+            <div className="flex items-center gap-2">
+              <Award className="w-5 h-5 text-amber-400" />
+              <span className="text-sm text-slate-300 font-medium">
+                {assessment.language} Placement Test
+              </span>
+            </div>
           </div>
-        </div>
 
-        {assessment.score != null && (
-          <div className="inline-block px-4 py-2 bg-gray-100 rounded-lg">
-            <span className="text-lg font-bold text-gray-700">{assessment.score}%</span>
-            <span className="text-gray-500 ml-1 text-sm">average score</span>
-          </div>
-        )}
-      </div>
-
-      {/* Per-skill breakdown */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {sections.map((section: any) => {
-          const meta = SKILL_META[section.skill]
-          const score = section.finalScore || section.aiScore
-          const level = score?.cefrLevel || section.cefrLevel
-
-          return (
-            <div key={section.id} className={`${meta.bg} rounded-xl p-6 border`}>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-2xl">{meta.icon}</span>
-                <div>
-                  <h3 className={`text-lg font-bold ${meta.color}`}>{meta.label}</h3>
-                  <p className="text-xs text-gray-500">
-                    {section.questionsAnswered}/{section.questionsTotal} questions
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-baseline gap-2">
-                <span className={`text-3xl font-bold ${meta.color}`}>{level || '...'}</span>
-                <span className="text-sm text-gray-500">{LEVEL_NAMES[level] || 'Evaluating...'}</span>
-              </div>
-
-              {section.percentageScore != null && (
-                <div className="mt-3">
-                  <div className="w-full bg-white/50 rounded-full h-2">
-                    <div
-                      className="bg-current rounded-full h-2 transition-all"
-                      style={{ width: `${section.percentageScore}%`, color: meta.color.replace('text-', '') }}
-                    />
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">{section.percentageScore}%</p>
-                </div>
-              )}
-
-              {section.status === 'COMPLETED' && !level && (
-                <p className="mt-2 text-xs text-gray-500 italic">AI evaluation pending...</p>
-              )}
-
-              {section.teacherScore && (
-                <p className="mt-2 text-xs text-green-700 font-medium">Teacher reviewed</p>
+          {/* Main content */}
+          <div className="px-8 py-10">
+            {/* Student info and date */}
+            <div className="text-center mb-8">
+              <p className="text-lg text-gray-500 mb-1">Congratulations</p>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">{studentName}</h2>
+              {completedDate && (
+                <p className="text-sm text-gray-400">{completedDate}</p>
               )}
             </div>
-          )
-        })}
+
+            {/* Overall CEFR level badge */}
+            <div className="flex flex-col items-center mb-10">
+              <div
+                className={`w-32 h-32 rounded-full bg-gradient-to-br ${levelStyle.from} ${levelStyle.to} flex items-center justify-center shadow-lg mb-4`}
+              >
+                <span className="text-5xl font-extrabold text-white tracking-tight">
+                  {overallLevel}
+                </span>
+              </div>
+              <p className="text-xl font-semibold text-gray-800">
+                {LEVEL_NAMES[overallLevel] || 'Pending'}
+              </p>
+              <p className="text-sm text-gray-400 mt-1">Overall Level</p>
+              {assessment.score != null && (
+                <div className="mt-3 px-5 py-2 bg-gray-50 border border-gray-100 rounded-full">
+                  <span className="text-lg font-bold text-gray-700">{assessment.score}%</span>
+                  <span className="text-gray-400 ml-1.5 text-sm">average score</span>
+                </div>
+              )}
+            </div>
+
+            {/* Skill breakdown cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+              {sections.map((section: any) => {
+                const meta = SKILL_META[section.skill] || SKILL_META.READING
+                const Icon = meta.icon
+                const score = section.finalScore || section.aiScore
+                const level = score?.cefrLevel || section.cefrLevel
+                const pct = section.percentageScore
+
+                return (
+                  <div
+                    key={section.id}
+                    className={`${meta.bg} border ${meta.border} rounded-xl p-5 shadow-sm hover:shadow-md transition-shadow`}
+                  >
+                    {/* Skill header */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div
+                        className={`w-10 h-10 rounded-lg bg-gradient-to-br ${meta.gradientFrom} ${meta.gradientTo} flex items-center justify-center shadow-sm`}
+                      >
+                        <Icon className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className={`text-sm font-bold ${meta.color}`}>{meta.label}</h3>
+                        <p className="text-xs text-gray-400">
+                          {section.questionsAnswered}/{section.questionsTotal} questions
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Level display */}
+                    <div className="flex items-baseline gap-2 mb-3">
+                      <span className={`text-3xl font-extrabold ${meta.color}`}>
+                        {level || '...'}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {LEVEL_NAMES[level] || 'Evaluating...'}
+                      </span>
+                    </div>
+
+                    {/* Progress bar */}
+                    {pct != null && (
+                      <div className="relative w-full bg-white/70 rounded-full h-6 overflow-hidden border border-white/50">
+                        <div
+                          className={`${meta.barColor} h-full rounded-full transition-all duration-700 ease-out flex items-center justify-end`}
+                          style={{ width: `${Math.max(pct, 12)}%` }}
+                        >
+                          <span className="text-xs font-bold text-white pr-2 drop-shadow-sm">
+                            {pct}%
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Status labels */}
+                    {section.status === 'COMPLETED' && !level && (
+                      <p className="mt-3 text-xs text-gray-400 italic">AI evaluation pending...</p>
+                    )}
+                    {section.teacherScore && (
+                      <div className="mt-3 flex items-center gap-1.5">
+                        <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                        <p className="text-xs text-emerald-600 font-medium">Teacher reviewed</p>
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Actions */}
+      {/* Action buttons */}
       <div className="flex items-center justify-center gap-4">
         <button
           onClick={() => navigate('/assessment')}
-          className="px-6 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="flex items-center gap-2 px-6 py-2.5 text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm font-medium"
         >
+          <ArrowLeft className="w-4 h-4" />
           Back to Assessments
         </button>
         <button
@@ -151,8 +349,9 @@ export function MultiSkillResultPage() {
               toast.info('PDF download not available yet.')
             }
           }}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+          className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-medium hover:from-blue-700 hover:to-blue-800 transition-all shadow-sm shadow-blue-200"
         >
+          <Download className="w-4 h-4" />
           Download PDF
         </button>
       </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Pause, Play, RotateCcw } from 'lucide-react'
+import { Pause, Play, RotateCcw, BookOpen, Headphones, PenTool, Mic, CheckCircle, Lock, Wifi, Volume2, Clock } from 'lucide-react'
 import { assessmentApi, AssessmentSection } from '../services/assessmentApi'
 import { SectionNav } from '../components/assessment/SectionNav'
 
@@ -31,6 +31,13 @@ const SKILL_INFO: Record<string, { icon: string; title: string; description: str
   VOCABULARY: { icon: '📚', title: 'Vocabulary', description: 'Vocabulary questions.', color: 'border-teal-300 bg-teal-50' },
   ERROR_CORRECTION: { icon: '✏️', title: 'Error Correction', description: 'Error correction questions.', color: 'border-red-300 bg-red-50' },
   SENTENCE_TRANSFORMATION: { icon: '🔄', title: 'Sentence Transformation', description: 'Sentence transformation questions.', color: 'border-orange-300 bg-orange-50' },
+}
+
+const SKILL_ICONS: Record<string, { Icon: React.ComponentType<any>; bg: string; fg: string }> = {
+  READING: { Icon: BookOpen, bg: 'bg-blue-100', fg: 'text-blue-600' },
+  LISTENING: { Icon: Headphones, bg: 'bg-green-100', fg: 'text-green-600' },
+  WRITING: { Icon: PenTool, bg: 'bg-amber-100', fg: 'text-amber-600' },
+  SPEAKING: { Icon: Mic, bg: 'bg-purple-100', fg: 'text-purple-600' },
 }
 
 export function MultiSkillAssessmentPage() {
@@ -183,58 +190,80 @@ export function MultiSkillAssessmentPage() {
   if (showIntro) {
     return (
       <div className="max-w-3xl mx-auto">
-        <div className="bg-white rounded-xl shadow-lg p-8 space-y-6">
-          <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Placement Test</h1>
+        <div className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/40 rounded-xl shadow-lg p-10 space-y-8">
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-bold text-gray-900">Placement Test</h1>
             <p className="text-lg text-gray-500">Test di Posizionamento</p>
+            <div className="mx-auto mt-3 w-16 h-1 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500" />
           </div>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-5 space-y-3">
-            <h2 className="font-semibold text-blue-900">Before you begin / Prima di iniziare</h2>
-            <ul className="space-y-2 text-sm text-blue-800">
-              <li>
-                <strong>Make sure you have a stable internet connection.</strong><br />
-                <span className="text-blue-600">Assicurati di avere una connessione internet stabile.</span>
+          <div className="bg-white/80 backdrop-blur border border-blue-200 rounded-xl p-6 space-y-4">
+            <h2 className="font-semibold text-blue-900 text-base">Before you begin / Prima di iniziare</h2>
+            <ul className="space-y-3 text-sm text-blue-800">
+              <li className="flex items-start gap-3">
+                <Wifi className="w-4 h-4 mt-0.5 text-blue-500 shrink-0" />
+                <div>
+                  <strong>Make sure you have a stable internet connection.</strong><br />
+                  <span className="text-blue-600">Assicurati di avere una connessione internet stabile.</span>
+                </div>
               </li>
-              <li>
-                <strong>Find a quiet place with no distractions.</strong><br />
-                <span className="text-blue-600">Trova un luogo tranquillo senza distrazioni.</span>
+              <li className="flex items-start gap-3">
+                <Volume2 className="w-4 h-4 mt-0.5 text-blue-500 shrink-0" />
+                <div>
+                  <strong>Find a quiet place with no distractions.</strong><br />
+                  <span className="text-blue-600">Trova un luogo tranquillo senza distrazioni.</span>
+                </div>
               </li>
-              <li>
-                <strong>You will need a microphone for the Speaking section.</strong><br />
-                <span className="text-blue-600">Avrai bisogno di un microfono per la sezione Speaking.</span>
+              <li className="flex items-start gap-3">
+                <Mic className="w-4 h-4 mt-0.5 text-blue-500 shrink-0" />
+                <div>
+                  <strong>You will need a microphone for the Speaking section.</strong><br />
+                  <span className="text-blue-600">Avrai bisogno di un microfono per la sezione Speaking.</span>
+                </div>
               </li>
-              <li>
-                <strong>You can pause and resume the test at any time.</strong><br />
-                <span className="text-blue-600">Puoi mettere in pausa e riprendere il test in qualsiasi momento.</span>
+              <li className="flex items-start gap-3">
+                <Pause className="w-4 h-4 mt-0.5 text-blue-500 shrink-0" />
+                <div>
+                  <strong>You can pause and resume the test at any time.</strong><br />
+                  <span className="text-blue-600">Puoi mettere in pausa e riprendere il test in qualsiasi momento.</span>
+                </div>
               </li>
             </ul>
           </div>
 
-          <div className="bg-gray-50 rounded-lg p-5">
-            <h2 className="font-semibold text-gray-900 mb-3">Test Structure / Struttura del Test</h2>
+          <div className="bg-white/60 backdrop-blur rounded-xl p-6">
+            <h2 className="font-semibold text-gray-900 mb-4">Test Structure / Struttura del Test</h2>
             <div className="grid grid-cols-2 gap-3">
               {['READING', 'LISTENING', 'WRITING', 'SPEAKING'].map(skill => {
                 const info = SKILL_INFO[skill]
+                const iconData = SKILL_ICONS[skill]
+                const SkillIcon = iconData?.Icon
                 return (
-                  <div key={skill} className={`border rounded-lg p-3 ${info.color}`}>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xl">{info.icon}</span>
+                  <div key={skill} className={`border rounded-xl p-4 ${info.color} hover:shadow-md hover:-translate-y-0.5 transition-all`}>
+                    <div className="flex items-center gap-3">
+                      {SkillIcon ? (
+                        <div className={`w-9 h-9 rounded-full ${iconData.bg} flex items-center justify-center`}>
+                          <SkillIcon className={`w-4.5 h-4.5 ${iconData.fg}`} />
+                        </div>
+                      ) : (
+                        <span className="text-xl">{info.icon}</span>
+                      )}
                       <span className="font-medium text-gray-900">{info.title}</span>
                     </div>
                   </div>
                 )
               })}
             </div>
-            <p className="text-sm text-gray-500 mt-3">
-              Estimated time: ~70 minutes / Tempo stimato: ~70 minuti
-            </p>
+            <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
+              <Clock className="w-4 h-4" />
+              <span>Estimated time: ~70 minutes / Tempo stimato: ~70 minuti</span>
+            </div>
           </div>
 
           <div className="text-center pt-2">
             <button
               onClick={() => setShowIntro(false)}
-              className="px-8 py-3 bg-blue-600 text-white rounded-lg font-semibold text-lg hover:bg-blue-700 transition-colors"
+              className="px-10 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all"
             >
               Begin Test / Inizia il Test
             </button>
@@ -254,7 +283,7 @@ export function MultiSkillAssessmentPage() {
             <button
               onClick={handlePause}
               disabled={actionLoading || allCompleted}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl shadow-sm hover:bg-gray-50 hover:shadow-md transition-all disabled:opacity-50"
             >
               <Pause className="w-4 h-4" /> Pause Test
             </button>
@@ -262,7 +291,7 @@ export function MultiSkillAssessmentPage() {
             <button
               onClick={handleResume}
               disabled={actionLoading}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-sm hover:shadow-md transition-all disabled:opacity-50"
             >
               <Play className="w-4 h-4" /> Resume Test
             </button>
@@ -270,7 +299,7 @@ export function MultiSkillAssessmentPage() {
           <button
             onClick={handleRestart}
             disabled={actionLoading}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-red-700 bg-white border border-red-300 rounded-lg hover:bg-red-50 disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-xl shadow-sm hover:bg-red-50 hover:border-red-300 hover:shadow-md transition-all disabled:opacity-50"
           >
             <RotateCcw className="w-4 h-4" /> Restart Test
           </button>
@@ -298,27 +327,39 @@ export function MultiSkillAssessmentPage() {
           return (
             <div
               key={section.id}
-              className={`border-2 rounded-lg p-6 transition-all ${info.color} ${
-                section.status === 'COMPLETED' ? 'opacity-75' : ''
+              className={`border-2 rounded-xl p-6 hover:shadow-md hover:-translate-y-0.5 transition-all ${info.color} ${
+                section.status === 'COMPLETED' ? 'opacity-80' : ''
               }`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-start gap-4">
-                  <span className="text-3xl">{info.icon}</span>
+                  {(() => {
+                    const iconData = SKILL_ICONS[section.skill]
+                    if (iconData) {
+                      const SkillIcon = iconData.Icon
+                      return (
+                        <div className={`w-12 h-12 rounded-full ${iconData.bg} flex items-center justify-center shrink-0`}>
+                          <SkillIcon className={`w-6 h-6 ${iconData.fg}`} />
+                        </div>
+                      )
+                    }
+                    return <span className="text-3xl">{info.icon}</span>
+                  })()}
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">{info.title}</h3>
                     <p className="text-sm text-gray-600 mt-1">{info.description}</p>
                     <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                      <span>{section.timeLimitMin} minutes</span>
+                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{section.timeLimitMin} minutes</span>
                       <span>{section.questionsLimit} questions</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="text-right">
+                <div className="text-right shrink-0 ml-4">
                   {section.status === 'COMPLETED' && (
                     <div className="space-y-2">
-                      <span className="inline-block px-3 py-1 bg-green-500 text-white text-sm font-bold rounded-full">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-500 text-white text-sm font-bold rounded-full shadow-sm">
+                        <CheckCircle className="w-4 h-4" />
                         {section.cefrLevel || 'Done'}
                       </span>
                       {section.percentageScore != null && (
@@ -338,7 +379,7 @@ export function MultiSkillAssessmentPage() {
                     <div className="space-y-2 text-right">
                       <button
                         onClick={() => handleStartSection(section)}
-                        className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                        className="px-5 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 shadow-sm hover:shadow-md transition-all"
                       >
                         Continue
                       </button>
@@ -355,14 +396,16 @@ export function MultiSkillAssessmentPage() {
                   {section.status === 'PENDING' && canStart && (
                     <button
                       onClick={() => handleStartSection(section)}
-                      className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors"
+                      className="px-5 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 shadow-sm hover:shadow-md transition-all"
                     >
                       Start
                     </button>
                   )}
 
                   {section.status === 'PENDING' && !canStart && (
-                    <span className="text-sm text-gray-400">Locked</span>
+                    <span className="inline-flex items-center gap-1.5 text-sm text-gray-400">
+                      <Lock className="w-4 h-4" /> Locked
+                    </span>
                   )}
                 </div>
               </div>
