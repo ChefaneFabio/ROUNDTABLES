@@ -155,7 +155,6 @@ export function MultiSkillAssessmentPage() {
   const handleStartSection = async (section: AssessmentSection) => {
     try {
       if (isPaused) {
-        // Must resume first
         await handleResume()
       }
 
@@ -163,10 +162,8 @@ export function MultiSkillAssessmentPage() {
         return
       }
 
-      if (section.status === 'PENDING') {
-        await assessmentApi.startSection(id!, section.id)
-      }
-
+      // Navigate to the section page — it will show the intro screen
+      // and only start the timer when the student clicks "Start Section"
       navigate(`/assessment/multi-skill/${id}/section/${section.id}`)
     } catch (err: any) {
       setError(err.response?.data?.error || err.message)
