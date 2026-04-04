@@ -385,6 +385,7 @@ export const assessmentApi = {
     studentIds: string[]
     language: string
     timeLimitMin?: number
+    fixedLevel?: string
   }): Promise<any[]> {
     const response = await api.post('/assessments/multi-skill/admin/assign', data)
     return response.data.data

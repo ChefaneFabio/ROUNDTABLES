@@ -77,6 +77,7 @@ interface CreateMultiSkillInput {
   language: string
   assignedById?: string
   timeLimitMin?: number
+  fixedLevel?: string // If set, all questions come from this CEFR level (no adaptation)
 }
 
 // Normalize language to title case (e.g. "english" -> "English") to match question bank format
@@ -88,7 +89,7 @@ function normalizeLanguage(lang: string): string {
 export class SectionAssessmentService {
   // Create a 4-skills assessment with all sections
   async createMultiSkillAssessment(input: CreateMultiSkillInput) {
-    const { studentId, assignedById } = input
+    const { studentId, assignedById, fixedLevel } = input
     const language = normalizeLanguage(input.language)
 
     const student = await prisma.student.findUnique({ where: { id: studentId } })
@@ -122,16 +123,21 @@ export class SectionAssessmentService {
     const sectionSkills = Object.keys(SECTION_CONFIG) as Array<keyof typeof SECTION_CONFIG>
     const totalQuestions = sectionSkills.reduce((sum, skill) => sum + SECTION_CONFIG[skill].questionsLimit, 0)
 
+    // PLACEMENT = adaptive (starts B1, adapts up/down like Versant)
+    // PROGRESS = fixed level (all questions from one CEFR level)
+    const testType = fixedLevel ? 'PROGRESS' : 'PLACEMENT'
+    const startLevel = fixedLevel || 'B1'
+
     const assessment = await prisma.assessment.create({
       data: {
         studentId,
         language,
-        type: 'PLACEMENT',
+        type: testType,
         status: assignedById ? 'ASSIGNED' : 'IN_PROGRESS',
         isMultiSkill: true,
         currentSection: 0,
         answers: [],
-        targetLevel: 'B1',
+        targetLevel: startLevel,
         questionsLimit: totalQuestions,
         startedAt: assignedById ? undefined : new Date(),
         assignedById,
@@ -143,7 +149,7 @@ export class SectionAssessmentService {
             status: 'PENDING',
             timeLimitMin: SECTION_CONFIG[skill].timeLimitMin,
             questionsLimit: SECTION_CONFIG[skill].questionsLimit,
-            targetLevel: 'B1',
+            targetLevel: startLevel,
             answers: []
           }))
         }
@@ -441,10 +447,12 @@ export class SectionAssessmentService {
       return { isComplete: true, totalAnswered: answers.length }
     }
 
-    // Adaptive level adjustment (same algorithm as main assessment)
+    // Level selection: adaptive for PLACEMENT, fixed for PROGRESS (level-specific test)
     let targetLevel = section.targetLevel || 'B1'
+    const isAdaptive = section.assessment.type === 'PLACEMENT'
 
-    if (answers.length >= 3) {
+    if (isAdaptive && answers.length >= 3) {
+      // Adaptive level adjustment — move up if doing well, down if struggling
       const recentAnswers = answers.slice(-3)
       const correctCount = recentAnswers.filter(a => a.isCorrect).length
       const currentLevelIndex = CEFR_LEVELS.indexOf(targetLevel)
@@ -462,6 +470,7 @@ export class SectionAssessmentService {
         })
       }
     }
+    // For PROGRESS (fixed level) tests, targetLevel stays as set at creation
 
     // Map skill to question types and allowed skill tags for querying
     const skillQuestionTypes = this.getQuestionTypesForSkill(section.skill)

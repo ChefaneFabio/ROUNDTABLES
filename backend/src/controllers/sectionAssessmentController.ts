@@ -438,12 +438,13 @@ router.delete('/admin/question-bank/:id', authenticate, requireTeacher, async (r
 const assignMultiSkillSchema = Joi.object({
   studentIds: Joi.array().items(Joi.string()).min(1).required(),
   language: Joi.string().required(),
-  timeLimitMin: Joi.number().integer().min(10).max(300).optional()
+  timeLimitMin: Joi.number().integer().min(10).max(300).optional(),
+  fixedLevel: Joi.string().valid('A1', 'A2', 'B1', 'B2', 'C1', 'C2').optional(),
 })
 
 router.post('/admin/assign', authenticate, requireSchoolAdmin, validateRequest(assignMultiSkillSchema), async (req: Request, res: Response) => {
   try {
-    const { studentIds, language, timeLimitMin } = req.body
+    const { studentIds, language, timeLimitMin, fixedLevel } = req.body
     const assignedById = req.user!.id
 
     const results: any[] = []
@@ -453,7 +454,8 @@ router.post('/admin/assign', authenticate, requireSchoolAdmin, validateRequest(a
           studentId,
           language,
           assignedById,
-          timeLimitMin
+          timeLimitMin,
+          fixedLevel,
         })
         results.push(assessment)
       } catch (err: any) {

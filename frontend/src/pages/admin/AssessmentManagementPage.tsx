@@ -246,7 +246,14 @@ export default function AssessmentManagementPage() {
                       <p className="font-medium text-gray-900">{a.student?.user?.name || 'Unknown'}</p>
                       <p className="text-xs text-gray-500">{a.student?.user?.email}</p>
                     </td>
-                    <td className="py-3 px-4 text-gray-700">{a.language}</td>
+                    <td className="py-3 px-4">
+                      <span className="text-gray-700">{a.language}</span>
+                      {a.type === 'PROGRESS' && a.targetLevel && (
+                        <span className="ml-1.5 px-1.5 py-0.5 bg-purple-100 text-purple-700 rounded text-xs font-medium">
+                          {a.targetLevel}
+                        </span>
+                      )}
+                    </td>
                     <td className="py-3 px-4">
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadge(a.status)}`}>
                         {a.status}
@@ -398,6 +405,8 @@ function AssignModal({
 }) {
   const [selectedStudents, setSelectedStudents] = useState<string[]>([])
   const [language, setLanguage] = useState('')
+  const [testMode, setTestMode] = useState<'placement' | 'level'>('placement')
+  const [fixedLevel, setFixedLevel] = useState('')
   const [selectedOrg, setSelectedOrg] = useState('')
   const [studentSearch, setStudentSearch] = useState('')
 
@@ -447,7 +456,15 @@ function AssignModal({
       onError('Please select a language')
       return
     }
-    assignMutation.mutate({ studentIds: selectedStudents, language })
+    if (testMode === 'level' && !fixedLevel) {
+      onError('Please select a CEFR level')
+      return
+    }
+    assignMutation.mutate({
+      studentIds: selectedStudents,
+      language,
+      ...(testMode === 'level' && fixedLevel ? { fixedLevel } : {}),
+    })
   }
 
   const toggleStudent = (id: string) => {
@@ -486,6 +503,51 @@ function AssignModal({
                 <option key={l.code} value={l.code}>{l.name}</option>
               ))}
             </select>
+          </div>
+
+          {/* Test Type */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Test Type</label>
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                onClick={() => { setTestMode('placement'); setFixedLevel('') }}
+                className={`p-3 rounded-lg border-2 text-left transition-all ${
+                  testMode === 'placement' ? 'border-primary-500 bg-primary-50' : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <p className="font-medium text-sm">Placement Test</p>
+                <p className="text-xs text-gray-500 mt-1">Adaptive difficulty (like Versant)</p>
+              </button>
+              <button
+                onClick={() => setTestMode('level')}
+                className={`p-3 rounded-lg border-2 text-left transition-all ${
+                  testMode === 'level' ? 'border-purple-500 bg-purple-50' : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <p className="font-medium text-sm">Level Test</p>
+                <p className="text-xs text-gray-500 mt-1">All questions at one CEFR level</p>
+              </button>
+            </div>
+            {testMode === 'level' && (
+              <div className="mt-3">
+                <label className="block text-xs font-medium text-gray-600 mb-1">CEFR Level</label>
+                <div className="flex gap-2">
+                  {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(level => (
+                    <button
+                      key={level}
+                      onClick={() => setFixedLevel(level)}
+                      className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
+                        fixedLevel === level
+                          ? 'bg-purple-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {level}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Organization filter */}
@@ -561,7 +623,11 @@ function AssignModal({
 
           {/* Info box */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700">
-            Placement Test: Reading, Listening, Writing, Speaking (~70 min). Students will receive a notification and can start when ready.
+            {testMode === 'placement'
+              ? 'Placement Test: Adaptive difficulty across Reading, Listening, Writing, Speaking (~70 min). Determines CEFR level (A1-C2).'
+              : `Level ${fixedLevel || '...'} Test: All questions at ${fixedLevel || 'selected'} level across Reading, Listening, Writing, Speaking (~70 min). Verifies competency at this level.`
+            }
+            {' '}Students will receive a notification and can start when ready.
           </div>
         </div>
 
