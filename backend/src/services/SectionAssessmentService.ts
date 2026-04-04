@@ -157,6 +157,45 @@ export class SectionAssessmentService {
       include: { sections: { orderBy: { orderIndex: 'asc' } } }
     })
 
+    // Notify student when test is assigned by admin
+    if (assignedById) {
+      const studentUser = await prisma.user.findFirst({ where: { studentProfile: { id: studentId } } })
+      if (studentUser) {
+        const levelInfo = fixedLevel ? ` (Level ${fixedLevel})` : ''
+        await prisma.notification.create({
+          data: {
+            type: 'ASSESSMENT_ASSIGNED',
+            subject: `New ${language} Placement Test Assigned${levelInfo}`,
+            content: `You have been assigned a ${language} placement test${levelInfo}. Go to your Assessment page to start.`,
+            status: 'SENT',
+            sentAt: new Date(),
+            userId: studentUser.id,
+            metadata: { assessmentId: assessment.id, language, type: 'TEST_ASSIGNED' }
+          }
+        })
+
+        // Send email if SMTP is configured
+        try {
+          if (emailService.isConfigured()) {
+            await emailService.sendEmail({
+              to: studentUser.email,
+              subject: `New ${language} Placement Test Assigned${levelInfo}`,
+              html: `
+                <h2>Placement Test Assigned</h2>
+                <p>Hi ${studentUser.name},</p>
+                <p>You have been assigned a <strong>${language}</strong> placement test${levelInfo}.</p>
+                <p>The test covers 4 sections: Reading & Language Use, Listening, Writing, and Speaking (~70 minutes total).</p>
+                <p>You can pause and resume the test at any time.</p>
+                <p>Log in to your account to start the test.</p>
+              `
+            })
+          }
+        } catch (e) {
+          console.error('Failed to send test assignment email:', e)
+        }
+      }
+    }
+
     return assessment
   }
 

@@ -154,7 +154,14 @@ export function MultiSkillAssessmentPage() {
     }
   }
 
-  const allCompleted = sections.every(s => s.status === 'COMPLETED' || s.status === 'SKIPPED')
+  const allCompleted = sections.length > 0 && sections.every(s => s.status === 'COMPLETED' || s.status === 'SKIPPED')
+
+  // Auto-redirect to results when all sections are done
+  useEffect(() => {
+    if (allCompleted && !showIntro) {
+      navigate(`/assessment/multi-skill/${id}/results`, { replace: true })
+    }
+  }, [allCompleted, showIntro])
 
   if (loading) {
     return (
