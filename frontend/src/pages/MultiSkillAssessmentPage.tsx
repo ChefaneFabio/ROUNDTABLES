@@ -50,6 +50,7 @@ export function MultiSkillAssessmentPage() {
   const [actionLoading, setActionLoading] = useState(false)
   const [showIntro, setShowIntro] = useState(false)
   const [retryMessage, setRetryMessage] = useState<string | null>(null)
+  const [assessmentInfo, setAssessmentInfo] = useState<{ language: string; type: string; targetLevel?: string } | null>(null)
 
   useEffect(() => {
     if (!id) return
@@ -64,8 +65,11 @@ export function MultiSkillAssessmentPage() {
         assessmentApi.getById(id!).catch(() => null),
       ])
       setSections(data)
-      // Check if assessment is paused
-      setIsPaused(assessment?.status === 'PAUSED')
+      // Store assessment info
+      if (assessment) {
+        setAssessmentInfo({ language: assessment.language, type: assessment.type, targetLevel: assessment.targetLevel })
+        setIsPaused(assessment.status === 'PAUSED')
+      }
       // Show intro if no sections have been started yet
       const anyStarted = data.some((s: AssessmentSection) => s.status !== 'PENDING')
       setShowIntro(!anyStarted)
@@ -192,7 +196,9 @@ export function MultiSkillAssessmentPage() {
       <div className="max-w-3xl mx-auto">
         <div className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/40 rounded-xl shadow-lg p-10 space-y-8">
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-gray-900">Placement Test</h1>
+            <h1 className="text-3xl font-bold text-gray-900">
+              {assessmentInfo?.language || ''} {assessmentInfo?.type === 'PROGRESS' ? `Level ${assessmentInfo.targetLevel} Test` : 'Placement Test'}
+            </h1>
             <p className="text-lg text-gray-500">Test di Posizionamento</p>
             <div className="mx-auto mt-3 w-16 h-1 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500" />
           </div>
@@ -276,8 +282,16 @@ export function MultiSkillAssessmentPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 mb-2">Placement Test</h1>
-        <p className="text-gray-600">Complete all sections to determine your CEFR level across all language skills.</p>
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <h1 className="text-2xl font-bold text-gray-900">
+            {assessmentInfo?.language || ''} {assessmentInfo?.type === 'PROGRESS' ? `Level ${assessmentInfo.targetLevel} Test` : 'Placement Test'}
+          </h1>
+        </div>
+        <p className="text-gray-600">
+          {assessmentInfo?.type === 'PROGRESS'
+            ? `All questions at ${assessmentInfo.targetLevel} level. Complete all sections to verify your competency.`
+            : 'Complete all sections to determine your CEFR level across all language skills.'}
+        </p>
         <div className="flex justify-center gap-3 mt-4">
           {!isPaused ? (
             <button
