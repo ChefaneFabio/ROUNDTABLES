@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
+
 interface ReadingQuestionProps {
   question: {
     id: string
@@ -30,10 +32,10 @@ export function ReadingQuestion({ question, onSubmit, disabled }: ReadingQuestio
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Passage */}
       {question.passage && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+        <div className="bg-blue-50 border border-blue-200 rounded-xl p-5">
           {question.passageTitle && (
             <h3 className="font-semibold text-blue-900 mb-2">{question.passageTitle}</h3>
           )}
@@ -42,26 +44,38 @@ export function ReadingQuestion({ question, onSubmit, disabled }: ReadingQuestio
       )}
 
       {/* Question */}
-      <p className="text-lg font-medium text-gray-900">{question.questionText}</p>
+      <p className="text-lg font-semibold text-gray-900">{question.questionText}</p>
 
       {/* Answer options */}
       {isMC && question.options && (
-        <div className="space-y-2">
-          {question.options.map((option) => (
-            <button
-              key={option.value}
-              onClick={() => !disabled && setSelectedAnswer(option.value)}
-              disabled={disabled}
-              className={`w-full text-left p-3 rounded-lg border-2 transition-all
-                ${selectedAnswer === option.value
-                  ? 'border-blue-500 bg-blue-50 text-blue-900'
-                  : 'border-gray-200 hover:border-gray-300 bg-white'}
-                ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-              `}
-            >
-              {option.label}
-            </button>
-          ))}
+        <div className="space-y-2.5">
+          {question.options.map((option, idx) => {
+            const isSelected = selectedAnswer === option.value
+            return (
+              <button
+                key={option.value}
+                onClick={() => !disabled && setSelectedAnswer(option.value)}
+                disabled={disabled}
+                className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center gap-3
+                  ${isSelected
+                    ? 'border-blue-500 bg-blue-50 shadow-sm'
+                    : 'border-gray-200 hover:border-blue-300 hover:bg-gray-50 bg-white'}
+                  ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
+                `}
+              >
+                <span className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold flex-shrink-0
+                  ${isSelected
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-100 text-gray-600'}
+                `}>
+                  {OPTION_LETTERS[idx] || idx + 1}
+                </span>
+                <span className={`text-base ${isSelected ? 'text-blue-900 font-medium' : 'text-gray-800'}`}>
+                  {option.label}
+                </span>
+              </button>
+            )
+          })}
         </div>
       )}
 
@@ -73,14 +87,14 @@ export function ReadingQuestion({ question, onSubmit, disabled }: ReadingQuestio
           onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           disabled={disabled}
           placeholder="Type your answer..."
-          className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+          className="w-full p-4 border-2 border-gray-200 rounded-xl text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
         />
       )}
 
       <button
         onClick={handleSubmit}
         disabled={disabled || (!selectedAnswer && !fillAnswer.trim())}
-        className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
       >
         Submit Answer
       </button>

@@ -21,17 +21,17 @@ export function ErrorCorrectionQuestion({ question, onSubmit, disabled }: ErrorC
   }
 
   return (
-    <div className="space-y-4">
-      <p className="text-sm text-gray-500 font-medium">{question.questionText}</p>
+    <div className="space-y-5">
+      <p className="text-lg font-semibold text-gray-900">{question.questionText}</p>
 
       {question.passage && (
-        <div className="bg-red-50 border-2 border-red-200 rounded-lg p-4">
-          <p className="text-lg text-red-900 font-medium">{question.passage}</p>
+        <div className="bg-red-50 border-2 border-red-200 rounded-xl p-5">
+          <p className="text-lg text-red-900 font-medium leading-relaxed">{question.passage}</p>
         </div>
       )}
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
           Write the corrected sentence:
         </label>
         <input
@@ -41,14 +41,14 @@ export function ErrorCorrectionQuestion({ question, onSubmit, disabled }: ErrorC
           onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
           disabled={disabled}
           placeholder="Type the corrected sentence..."
-          className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+          className="w-full p-4 border-2 border-gray-200 rounded-xl text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
         />
       </div>
 
       <button
         onClick={handleSubmit}
         disabled={disabled || !answer.trim()}
-        className="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-sm hover:shadow-md"
       >
         Submit Answer
       </button>
