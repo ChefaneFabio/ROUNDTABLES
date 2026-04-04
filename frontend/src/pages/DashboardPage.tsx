@@ -411,13 +411,6 @@ function StudentDashboard({ data }: { data: any }) {
 
   const getSkillWidth = (level?: string) => skillBarWidth[level || ''] || 0
 
-  const skillBarColor: Record<string, string> = {
-    A1: 'bg-red-500', A2: 'bg-orange-500', B1: 'bg-yellow-500',
-    B2: 'bg-blue-500', C1: 'bg-indigo-500', C2: 'bg-purple-500',
-  }
-
-  const getSkillBarColor = (level?: string) => skillBarColor[level || ''] || 'bg-gray-400'
-
   // Gradient fills per skill type
   const skillGradients: Record<string, string> = {
     reading: 'bg-gradient-to-r from-blue-400 to-blue-600',

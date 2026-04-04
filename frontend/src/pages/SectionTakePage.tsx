@@ -23,7 +23,6 @@ import {
   Clock,
   Info,
   Shield,
-  Sparkles,
   Award,
 } from 'lucide-react'
 
