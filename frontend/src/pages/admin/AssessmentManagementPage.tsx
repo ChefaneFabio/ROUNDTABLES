@@ -12,6 +12,7 @@ import {
   CheckCircle,
   AlertCircle,
   Download,
+  FileText,
 } from 'lucide-react'
 import { assessmentApi } from '../../services/assessmentApi'
 import api, { studentsApi } from '../../services/api'
@@ -62,6 +63,7 @@ export default function AssessmentManagementPage() {
   const [successMsg, setSuccessMsg] = useState('')
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [exporting, setExporting] = useState(false)
+  const [showTestPdfMenu, setShowTestPdfMenu] = useState(false)
 
   const { data: assessments, isLoading } = useQuery(
     ['adminAssessments', filterLanguage, filterStatus],
@@ -125,6 +127,21 @@ export default function AssessmentManagementPage() {
     }
   }
 
+  const handleDownloadTestPdf = async (language: string, skill?: string) => {
+    try {
+      const blob = await assessmentApi.downloadTestPdf(language, skill)
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${language}-test${skill ? `-${skill}` : ''}-questions.pdf`
+      a.click()
+      URL.revokeObjectURL(url)
+      setShowTestPdfMenu(false)
+    } catch {
+      setError('Failed to generate PDF')
+    }
+  }
+
   if (isLoading) return <LoadingPage />
 
   return (
@@ -150,6 +167,42 @@ export default function AssessmentManagementPage() {
               {exporting ? 'Exporting...' : `Export ${selectedIds.size} to XLSX`}
             </Button>
           )}
+          <div className="relative">
+            <Button variant="outline" onClick={() => setShowTestPdfMenu(!showTestPdfMenu)} className="flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              Test PDF
+            </Button>
+            {showTestPdfMenu && (
+              <>
+                <div className="fixed inset-0 z-40" onClick={() => setShowTestPdfMenu(false)} />
+                <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-gray-200 py-2 z-50">
+                  <p className="px-4 py-1 text-xs font-semibold text-gray-400 uppercase">Download Questions</p>
+                  {LANGUAGES.map(l => (
+                    <button
+                      key={l.code}
+                      onClick={() => handleDownloadTestPdf(l.code)}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    >
+                      <FileText className="w-3.5 h-3.5 text-gray-400" />
+                      {l.name} — Full Test
+                    </button>
+                  ))}
+                  <hr className="my-1" />
+                  <p className="px-4 py-1 text-xs font-semibold text-gray-400 uppercase">By Section</p>
+                  {['READING', 'LISTENING', 'WRITING', 'SPEAKING'].map(skill => (
+                    <button
+                      key={skill}
+                      onClick={() => handleDownloadTestPdf('English', skill)}
+                      className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                    >
+                      <FileText className="w-3.5 h-3.5 text-gray-400" />
+                      English — {skill.charAt(0) + skill.slice(1).toLowerCase()}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
           <Button onClick={() => setShowAssignModal(true)} className="flex items-center gap-2">
             <Plus className="w-4 h-4" />
             Assign New Test

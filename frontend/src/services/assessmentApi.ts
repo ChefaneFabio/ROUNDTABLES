@@ -397,6 +397,17 @@ export const assessmentApi = {
     return response.data.data
   },
 
+  // Admin: Download test questions as PDF
+  async downloadTestPdf(language: string, skill?: string): Promise<Blob> {
+    const params: any = { language }
+    if (skill) params.skill = skill
+    const response = await api.get('/assessments/multi-skill/admin/test-pdf', {
+      params,
+      responseType: 'blob',
+    })
+    return response.data
+  },
+
   // Admin: Get all multi-skill assessments with filters
   async getAdminAssessments(filters?: {
     language?: string

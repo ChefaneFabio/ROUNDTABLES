@@ -686,6 +686,149 @@ router.post('/admin/seed-multi-skill', authenticate, requireAdmin, async (req: R
   }
 })
 
+// Admin: Download test questions as PDF (full language or specific skill)
+router.get('/admin/test-pdf', authenticate, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const { language, skill } = req.query
+    if (!language) {
+      return res.status(400).json(apiResponse.error('Language is required', 'VALIDATION_ERROR'))
+    }
+
+    const where: any = {
+      language: language as string,
+      isActive: true,
+      skill: { not: null },
+    }
+    if (skill) {
+      where.skill = skill as string
+    }
+
+    const questions = await prisma.assessmentQuestion.findMany({
+      where,
+      orderBy: [{ skill: 'asc' }, { cefrLevel: 'asc' }, { orderIndex: 'asc' }],
+    })
+
+    if (questions.length === 0) {
+      return res.status(404).json(apiResponse.error('No questions found', 'NOT_FOUND'))
+    }
+
+    const PDFDocument = (await import('pdfkit')).default
+    const doc = new PDFDocument({ size: 'A4', margin: 50 })
+
+    const chunks: Buffer[] = []
+    doc.on('data', (chunk: Buffer) => chunks.push(chunk))
+    doc.on('end', () => {
+      const buf = Buffer.concat(chunks)
+      const skillLabel = skill ? ` - ${skill}` : ''
+      const filename = `${language}-test-questions${skillLabel}.pdf`.replace(/\s+/g, '-')
+      res.setHeader('Content-Type', 'application/pdf')
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
+      res.send(buf)
+    })
+
+    // Title page
+    doc.fontSize(24).font('Helvetica-Bold').text(`${language} Placement Test`, { align: 'center' })
+    doc.moveDown(0.5)
+    if (skill) {
+      doc.fontSize(16).font('Helvetica').text(`${skill} Section`, { align: 'center' })
+    } else {
+      doc.fontSize(14).font('Helvetica').text('All Sections', { align: 'center' })
+    }
+    doc.moveDown(0.3)
+    doc.fontSize(10).fillColor('#888888').text(`${questions.length} questions`, { align: 'center' })
+    doc.moveDown(0.3)
+    doc.fontSize(10).text(`Generated: ${new Date().toLocaleDateString('en-GB')}`, { align: 'center' })
+    doc.fillColor('#000000')
+    doc.moveDown(2)
+
+    // Group by skill
+    const grouped: Record<string, typeof questions> = {}
+    for (const q of questions) {
+      const s = q.skill || 'OTHER'
+      if (!grouped[s]) grouped[s] = []
+      grouped[s].push(q)
+    }
+
+    const skillOrder = ['READING', 'GRAMMAR', 'VOCABULARY', 'ERROR_CORRECTION', 'SENTENCE_TRANSFORMATION', 'LISTENING', 'WRITING', 'SPEAKING']
+    const orderedSkills = skillOrder.filter(s => grouped[s])
+
+    for (const currentSkill of orderedSkills) {
+      const skillQuestions = grouped[currentSkill]
+
+      // Section header
+      doc.addPage()
+      doc.fontSize(18).font('Helvetica-Bold').text(currentSkill.replace(/_/g, ' '), { align: 'left' })
+      doc.moveDown(0.3)
+      doc.fontSize(10).font('Helvetica').fillColor('#666666').text(`${skillQuestions.length} questions`)
+      doc.fillColor('#000000')
+      doc.moveDown(0.5)
+      doc.moveTo(50, doc.y).lineTo(545, doc.y).stroke('#cccccc')
+      doc.moveDown(0.5)
+
+      // Group by CEFR level within skill
+      const byLevel: Record<string, typeof questions> = {}
+      for (const q of skillQuestions) {
+        const lv = q.cefrLevel || 'Unknown'
+        if (!byLevel[lv]) byLevel[lv] = []
+        byLevel[lv].push(q)
+      }
+
+      const levelOrder = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+      for (const level of levelOrder) {
+        if (!byLevel[level]) continue
+        const levelQs = byLevel[level]
+
+        doc.fontSize(12).font('Helvetica-Bold').fillColor('#333333').text(`Level ${level}`, { underline: true })
+        doc.fillColor('#000000')
+        doc.moveDown(0.3)
+
+        for (let i = 0; i < levelQs.length; i++) {
+          const q = levelQs[i]
+
+          // Check if we need a new page
+          if (doc.y > 700) doc.addPage()
+
+          doc.fontSize(10).font('Helvetica-Bold').text(`Q${i + 1}. ${q.questionText}`)
+
+          if (q.passage) {
+            doc.moveDown(0.2)
+            doc.fontSize(9).font('Helvetica-Oblique').fillColor('#444444')
+            const passageText = q.passage.length > 300 ? q.passage.substring(0, 300) + '...' : q.passage
+            doc.text(passageText, { indent: 10 })
+            doc.fillColor('#000000')
+          }
+
+          if (q.options && Array.isArray(q.options)) {
+            doc.moveDown(0.2)
+            const opts = q.options as Array<{ label: string; value: string }>
+            for (const opt of opts) {
+              doc.fontSize(9).font('Helvetica').text(`   ${opt.label}`, { indent: 15 })
+            }
+          }
+
+          if (q.speakingPrompt) {
+            doc.moveDown(0.2)
+            doc.fontSize(9).font('Helvetica-Oblique').text(`Prompt: ${q.speakingPrompt}`, { indent: 10 })
+          }
+
+          // Answer
+          doc.moveDown(0.2)
+          doc.fontSize(8).font('Helvetica').fillColor('#008800')
+          doc.text(`Answer: ${q.correctAnswer || '(open response)'}`, { indent: 10 })
+          doc.fillColor('#000000')
+          doc.moveDown(0.5)
+        }
+
+        doc.moveDown(0.3)
+      }
+    }
+
+    doc.end()
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // Download multi-skill results as PDF
 router.get('/:id/results/pdf', authenticate, async (req: Request, res: Response) => {
   try {
