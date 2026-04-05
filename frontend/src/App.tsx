@@ -66,6 +66,7 @@ import OrgReportsPage from './pages/org/OrgReportsPage'
 import OrgAssessmentsPage from './pages/org/OrgAssessmentsPage'
 import AdminOrganizationsPage from './pages/admin/OrganizationsPage'
 import IntegrationsPage from './pages/admin/IntegrationsPage'
+import TeacherAvailabilityAdminPage from './pages/admin/TeacherAvailabilityAdminPage'
 import OrganizationDetailPage from './pages/admin/OrganizationDetailPage'
 import SelfPacedCoursePage from './pages/SelfPacedCoursePage'
 import { BusinessPage } from './pages/BusinessPage'
@@ -656,6 +657,16 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
             <Layout>
               <AdminCalendarPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/teacher-availability"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <TeacherAvailabilityAdminPage />
             </Layout>
           </ProtectedRoute>
         }

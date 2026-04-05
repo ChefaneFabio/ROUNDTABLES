@@ -61,6 +61,7 @@ const navGroups: NavGroup[] = [
       { name: 'Courses', href: '/courses', icon: BookOpen, roles: [UserRole.ADMIN, UserRole.TEACHER] },
       { name: 'Lessons', href: '/lessons', icon: Calendar, roles: [UserRole.ADMIN, UserRole.TEACHER] },
       { name: 'Calendar', href: '/admin/calendar', icon: Calendar, roles: [UserRole.ADMIN, UserRole.TEACHER] },
+      { name: 'Teacher Availability', href: '/admin/teacher-availability', icon: Clock, roles: [UserRole.ADMIN] },
       { name: 'Feedback', href: '/feedback', icon: MessageSquare, roles: [UserRole.TEACHER] },
     ]
   },
