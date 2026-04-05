@@ -491,6 +491,11 @@ router.get('/admin/assessments', authenticate, requireTeacher, async (req: Reque
     if (status) where.status = status as string
     if (studentId) where.studentId = studentId as string
 
+    // Privacy: filter by school — teachers/admins only see their own school's students
+    if (req.user?.schoolId) {
+      where.student = { schoolId: req.user.schoolId }
+    }
+
     const assessments = await prisma.assessment.findMany({
       where,
       include: {

@@ -342,9 +342,18 @@ router.post('/admin/assign', authenticate, requireSchoolAdmin, validateRequest(a
   }
 })
 
-// Get a student's assessments (admin/school)
+// Get a student's assessments (admin/school) — verifies student belongs to admin's school
 router.get('/admin/student/:studentId/assessments', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
   try {
+    // Privacy: verify student belongs to the admin's school
+    if (req.user?.schoolId) {
+      const student = await prisma.student.findFirst({
+        where: { id: req.params.studentId, schoolId: req.user.schoolId }
+      })
+      if (!student) {
+        return res.status(403).json(apiResponse.error('Student does not belong to your school', 'FORBIDDEN'))
+      }
+    }
     const assessments = await assessmentService.getStudentAssessmentsAdmin(req.params.studentId)
     return res.json(apiResponse.success(assessments))
   } catch (error) {
@@ -396,13 +405,17 @@ router.post('/admin/seed-all-questions', authenticate, requireAdmin, async (req:
   }
 })
 
-// List all assessments (admin)
+// List all assessments (admin) — filtered by school
 router.get('/admin/list', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
   try {
     const { page = 1, limit = 20, status, language } = req.query
     const where: any = {}
     if (status) where.status = status
     if (language) where.language = language
+    // Privacy: only show assessments for students in admin's school
+    if (req.user?.schoolId) {
+      where.student = { schoolId: req.user.schoolId }
+    }
 
     const [assessments, total] = await Promise.all([
       prisma.assessment.findMany({

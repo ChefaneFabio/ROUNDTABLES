@@ -35,7 +35,7 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
 
     const where: any = { deletedAt: null }
 
-    // Apply access control
+    // Apply access control — each role only sees their own scope
     if (req.user?.role === 'ADMIN') {
       where.schoolId = req.user.schoolId
     } else if (req.user?.role === 'TEACHER') {
@@ -44,6 +44,14 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
         some: {
           course: { courseTeachers: { some: { teacherId: req.user.teacherId } } }
         }
+      }
+    } else if (req.user?.role === 'ORG_ADMIN') {
+      // ORG_ADMIN can only see employees in their organization
+      const orgAdmin = await prisma.orgAdmin.findFirst({ where: { userId: req.user.id } })
+      if (orgAdmin) {
+        where.organizationId = orgAdmin.organizationId
+      } else {
+        where.id = 'none' // No org found, show nothing
       }
     } else if (req.user?.role === 'STUDENT') {
       // Students can only see themselves
@@ -94,7 +102,7 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
   }
 })
 
-// Get student by ID
+// Get student by ID — with role-based access check
 router.get('/:id', authenticate, async (req: Request, res: Response) => {
   try {
     const { id } = req.params
@@ -126,12 +134,20 @@ router.get('/:id', authenticate, async (req: Request, res: Response) => {
       return res.status(404).json(apiResponse.error('Student not found', 'NOT_FOUND'))
     }
 
-    // Check access
-    const canAccess = req.user?.role === 'ADMIN' ||
+    // Check access — each role only sees students in their scope
+    let canAccessStudent = req.user?.role === 'ADMIN' ||
       req.user?.schoolId === student.schoolId ||
       req.user?.studentId === id
 
-    if (!canAccess) {
+    // ORG_ADMIN can see students in their organization
+    if (!canAccessStudent && req.user?.role === 'ORG_ADMIN') {
+      const orgAdmin = await prisma.orgAdmin.findFirst({ where: { userId: req.user!.id } })
+      if (orgAdmin && student.organizationId === orgAdmin.organizationId) {
+        canAccessStudent = true
+      }
+    }
+
+    if (!canAccessStudent) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
 
