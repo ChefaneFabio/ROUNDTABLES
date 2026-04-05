@@ -229,7 +229,7 @@ router.post('/:id/sections/:sectionId/speaking', authenticate, validateRequest(s
 // Get multi-skill results
 router.get('/:id/results', authenticate, async (req: Request, res: Response) => {
   try {
-    // Ownership check: only the student who owns this assessment, or a teacher/admin, can view results
+    // Ownership check: student who owns it, teacher, admin, or org admin for their org's students
     const assessment = await prisma.assessment.findUnique({
       where: { id: req.params.id },
       select: { studentId: true }
@@ -238,8 +238,20 @@ router.get('/:id/results', authenticate, async (req: Request, res: Response) => 
       return res.status(404).json(apiResponse.error('Assessment not found', 'NOT_FOUND'))
     }
     const role = req.user?.role
-    if (role !== 'ADMIN' && role !== 'TEACHER' && assessment.studentId !== req.user?.studentId) {
+    if (role !== 'ADMIN' && role !== 'TEACHER' && role !== 'ORG_ADMIN' && assessment.studentId !== req.user?.studentId) {
       return res.status(403).json(apiResponse.error('Not authorized to view these results', 'FORBIDDEN'))
+    }
+    // For ORG_ADMIN: verify student belongs to their org
+    if (role === 'ORG_ADMIN') {
+      const orgAdmin = await prisma.orgAdmin.findFirst({ where: { userId: req.user!.id } })
+      if (orgAdmin) {
+        const student = await prisma.student.findFirst({
+          where: { id: assessment.studentId, organizationId: orgAdmin.organizationId }
+        })
+        if (!student) {
+          return res.status(403).json(apiResponse.error('Student does not belong to your organization', 'FORBIDDEN'))
+        }
+      }
     }
 
     const results = await sectionAssessmentService.getMultiSkillResults(req.params.id)
@@ -841,10 +853,10 @@ router.get('/:id/results/pdf', authenticate, async (req: Request, res: Response)
     if (!assessment) return res.status(404).json(apiResponse.error('Assessment not found', 'NOT_FOUND'))
     if (assessment.status !== 'COMPLETED') return res.status(400).json(apiResponse.error('Assessment not yet completed', 'NOT_COMPLETED'))
 
-    // Allow student who owns it or admin
+    // Allow student who owns it, admin, teacher, or org admin
     const studentId = (req as any).user?.studentId
     const role = (req as any).user?.role
-    if (role !== 'ADMIN' && assessment.studentId !== studentId) {
+    if (role !== 'ADMIN' && role !== 'TEACHER' && role !== 'ORG_ADMIN' && assessment.studentId !== studentId) {
       return res.status(403).json(apiResponse.error('Not authorized', 'FORBIDDEN'))
     }
 
