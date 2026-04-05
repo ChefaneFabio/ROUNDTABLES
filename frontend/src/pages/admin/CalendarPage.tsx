@@ -45,7 +45,7 @@ interface Lesson {
   meetingHostUrl?: string
   teacherId?: string
   courseId?: string
-  course?: { id: string; name: string }
+  course?: { id: string; name: string; enrollments?: Array<{ student: { id: string; user: { name: string; email: string } } }> }
   teacher?: { id: string; user: { name: string } }
 }
 
@@ -695,16 +695,14 @@ function WeekView({
                           <div className="font-medium truncate">
                             {lesson.course?.name || 'Lesson'}
                           </div>
-                          <div className="truncate text-[10px] opacity-75">
-                            {lesson.teacher?.user?.name}
+                          <div className="truncate text-[10px] opacity-75 flex items-center gap-1">
+                            <span>{lesson.teacher?.user?.name}</span>
                             {lesson.meetingProvider && (
-                              <span
-                                className={clsx(
-                                  'inline-block w-1.5 h-1.5 rounded-full ml-1 align-middle',
-                                  PROVIDER_COLORS[lesson.meetingProvider] || 'bg-gray-400'
-                                )}
-                              />
+                              <span className={clsx('inline-block w-1.5 h-1.5 rounded-full', PROVIDER_COLORS[lesson.meetingProvider] || 'bg-gray-400')} title={PROVIDER_LABELS[lesson.meetingProvider]} />
                             )}
+                            {lesson.course?.enrollments?.length ? (
+                              <span className="text-[9px] opacity-60">{lesson.course.enrollments.length}s</span>
+                            ) : null}
                           </div>
                         </button>
                       )
@@ -816,6 +814,23 @@ function LessonDetail({ lesson, onClose, onSwap }: { lesson: Lesson; onClose: ()
           </div>
         )}
       </div>
+
+      {/* Students enrolled */}
+      {lesson.course?.enrollments?.length > 0 && (
+        <div className="mt-4 pt-4 border-t">
+          <p className="text-xs font-medium text-gray-500 uppercase mb-2">Students ({lesson.course.enrollments.length})</p>
+          <div className="flex flex-wrap gap-2">
+            {lesson.course.enrollments.map((e: any, i: number) => (
+              <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-700">
+                <span className="w-5 h-5 rounded-full bg-primary-100 flex items-center justify-center text-[10px] font-bold text-primary-700">
+                  {e.student?.user?.name?.charAt(0)?.toUpperCase() || '?'}
+                </span>
+                {e.student?.user?.name || e.student?.user?.email || 'Unknown'}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* 3-column status: Questions + Feedback */}
       {(lesson.questionsStatus || lesson.feedbackStatus) && (

@@ -276,7 +276,23 @@ router.get('/calendar', authenticate, async (req: Request, res: Response) => {
     const lessons = await prisma.lesson.findMany({
       where,
       include: {
-        course: { select: { id: true, name: true } },
+        course: {
+          select: {
+            id: true,
+            name: true,
+            enrollments: {
+              where: { status: 'ACTIVE' },
+              select: {
+                student: {
+                  select: {
+                    id: true,
+                    user: { select: { name: true, email: true } }
+                  }
+                }
+              }
+            }
+          }
+        },
         teacher: { include: { user: { select: { name: true } } } }
       },
       orderBy: { scheduledAt: 'asc' }
