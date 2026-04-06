@@ -4,10 +4,11 @@ import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { format } from 'date-fns'
 import {
   ArrowLeft, BookOpen, Users, Calendar, Clock, Globe,
-  DollarSign, Play, ChevronDown
+  DollarSign, Play, ChevronDown, Bell, BellOff, Tag, MessageSquare,
+  BookKey, Send, Plus, Trash2, Upload
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
-import { coursesApi } from '../services/api'
+import { coursesApi, feedbackApi, materialCodesApi, assignmentsApi } from '../services/api'
 import { Card, CardBody, CardHeader } from '../components/common/Card'
 import { Button } from '../components/common/Button'
 import { Badge, StatusBadge } from '../components/common/Badge'
@@ -18,6 +19,10 @@ export function CourseDetailPage() {
   const queryClient = useQueryClient()
   const { isAdmin, isTeacher, isStudent } = useAuth()
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false)
+  const [showAddCode, setShowAddCode] = useState(false)
+  const [codeForm, setCodeForm] = useState({ codeType: 'BOOK', materialName: '', code: '', isGroupCode: false })
+  const [codeSending, setCodeSending] = useState(false)
+  const [codeSendResult, setCodeSendResult] = useState('')
 
   const { data: course, isLoading } = useQuery(
     ['course', id],
@@ -37,12 +42,39 @@ export function CourseDetailPage() {
     { enabled: !!id && (isAdmin || isTeacher) }
   )
 
+  const { data: courseFeedback } = useQuery(
+    ['course-feedback', id],
+    () => feedbackApi.getAll({ courseId: id!, limit: 50 }),
+    { enabled: !!id && (isAdmin || isTeacher) }
+  )
+
+  const { data: materialCodes = [] } = useQuery(
+    ['course-material-codes', id],
+    () => materialCodesApi.getForCourse(id!),
+    { enabled: !!id && isAdmin }
+  )
+
+  const { data: courseAssignments = [] } = useQuery(
+    ['course-assignments', id],
+    () => assignmentsApi.getForCourse(id!),
+    { enabled: !!id && (isAdmin || isTeacher) }
+  )
+
   const statusMutation = useMutation(
     (status: string) => coursesApi.updateStatus(id!, status),
     {
       onSuccess: () => {
         queryClient.invalidateQueries(['course', id])
         setStatusDropdownOpen(false)
+      },
+    }
+  )
+
+  const updateCourseMutation = useMutation(
+    (data: Record<string, any>) => coursesApi.update(id!, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(['course', id])
       },
     }
   )
@@ -88,8 +120,8 @@ export function CourseDetailPage() {
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-gray-900">{course.name}</h1>
             <StatusBadge status={course.status} />
-            <Badge variant={course.courseType === 'SELF_PACED' ? 'info' : 'primary'}>
-              {course.courseType === 'SELF_PACED' ? 'Self-Paced' : 'Live'}
+            <Badge variant={course.courseType === 'SELF_PACED' ? 'info' : course.courseType === 'ROUNDTABLE' ? 'warning' : 'primary'}>
+              {course.courseType === 'SELF_PACED' ? 'Self-Paced' : course.courseType === 'ROUNDTABLE' ? 'Roundtable' : 'Live Lesson'}
             </Badge>
           </div>
 
@@ -206,6 +238,69 @@ export function CourseDetailPage() {
         </CardBody>
       </Card>
 
+      {/* Automations & Settings (Admin only) */}
+      {isAdmin && (
+        <Card>
+          <CardHeader>
+            <h2 className="text-lg font-semibold text-gray-900">Automations & Settings</h2>
+          </CardHeader>
+          <CardBody>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  {course.automationsEnabled ? (
+                    <Bell className="h-5 w-5 text-green-600" />
+                  ) : (
+                    <BellOff className="h-5 w-5 text-gray-400" />
+                  )}
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">
+                      Automated Notifications
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {course.automationsEnabled
+                        ? 'Lesson reminders and notifications are active for this course'
+                        : 'No automated notifications will be sent for this course'}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => updateCourseMutation.mutate({ automationsEnabled: !course.automationsEnabled })}
+                  className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out ${
+                    course.automationsEnabled ? 'bg-green-600' : 'bg-gray-200'
+                  }`}
+                >
+                  <span
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
+                      course.automationsEnabled ? 'translate-x-5' : 'translate-x-0'
+                    }`}
+                  />
+                </button>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <Tag className="h-5 w-5 text-gray-400" />
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-gray-900 mb-1">Course Category</p>
+                  <select
+                    value={course.courseCategory || ''}
+                    onChange={(e) => updateCourseMutation.mutate({ courseCategory: e.target.value || null })}
+                    className="block w-full sm:w-64 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 text-sm"
+                  >
+                    <option value="">No category</option>
+                    <option value="regular">Regular</option>
+                    <option value="workshop">Workshop</option>
+                    <option value="intensive">Intensive</option>
+                    <option value="one-to-one">One-to-One</option>
+                    <option value="group">Group</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+      )}
+
       {/* Teachers */}
       {teachers.length > 0 && (
         <Card>
@@ -320,6 +415,314 @@ export function CourseDetailPage() {
                 </Link>
               ))}
             </div>
+          </CardBody>
+        </Card>
+      )}
+
+      {/* Feedback (Admin/Teacher only) */}
+      {(isAdmin || isTeacher) && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <MessageSquare className="h-5 w-5 text-gray-400" />
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Feedback ({courseFeedback?.data?.length || 0})
+                </h2>
+              </div>
+              <Link to={`/feedback?courseId=${id}`}>
+                <Button variant="outline" size="sm">
+                  Manage Feedback
+                </Button>
+              </Link>
+            </div>
+          </CardHeader>
+          <CardBody>
+            {(!courseFeedback?.data || courseFeedback.data.length === 0) ? (
+              <p className="text-sm text-gray-500 text-center py-4">No feedback for this course yet</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead>
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Lesson</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Student</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Score</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {courseFeedback.data.slice(0, 10).map((fb: any) => (
+                      <tr key={fb.id}>
+                        <td className="px-4 py-3 text-sm text-gray-900">
+                          {fb.lesson?.title || `Lesson ${fb.lesson?.lessonNumber}`}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-900">
+                          {fb.student?.user?.name || 'Unknown'}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-600">
+                          {fb.score !== null ? `${fb.score}/100` : '—'}
+                        </td>
+                        <td className="px-4 py-3">
+                          <StatusBadge status={fb.status} />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {courseFeedback.data.length > 10 && (
+                  <p className="text-xs text-gray-500 text-center py-2">
+                    Showing 10 of {courseFeedback.data.length} —
+                    <Link to={`/feedback?courseId=${id}`} className="text-primary-600 hover:underline ml-1">
+                      View all
+                    </Link>
+                  </p>
+                )}
+              </div>
+            )}
+          </CardBody>
+        </Card>
+      )}
+
+      {/* Assignments (Admin/Teacher) */}
+      {(isAdmin || isTeacher) && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-gray-400" />
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Assignments ({courseAssignments.length})
+                </h2>
+              </div>
+            </div>
+          </CardHeader>
+          <CardBody>
+            {courseAssignments.length === 0 ? (
+              <p className="text-sm text-gray-500 text-center py-4">No assignments for this course yet</p>
+            ) : (
+              <div className="space-y-2">
+                {courseAssignments.map((a: any) => {
+                  const isPastDue = new Date(a.dueDate) < new Date()
+                  const submissionCount = a.submissions?.length || 0
+                  return (
+                    <div key={a.id} className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          {a.title || a.exercise?.title || 'Untitled'}
+                        </p>
+                        <div className="flex items-center gap-3 mt-0.5 text-xs text-gray-500">
+                          <span>Due: {format(new Date(a.dueDate), 'MMM d, yyyy')}</span>
+                          <span>{submissionCount} submission{submissionCount !== 1 ? 's' : ''}</span>
+                          {a.allowFileUpload && (
+                            <span className="flex items-center gap-0.5">
+                              <Upload className="h-3 w-3" /> File upload
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {isPastDue ? (
+                          <Badge variant="danger">Past Due</Badge>
+                        ) : a.isPublished ? (
+                          <Badge variant="success">Published</Badge>
+                        ) : (
+                          <Badge variant="warning">Draft</Badge>
+                        )}
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </CardBody>
+        </Card>
+      )}
+
+      {/* Material Codes (Admin only) */}
+      {isAdmin && (
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BookKey className="h-5 w-5 text-gray-400" />
+                <h2 className="text-lg font-semibold text-gray-900">
+                  Material Codes ({materialCodes.length})
+                </h2>
+              </div>
+              <div className="flex items-center gap-2">
+                {materialCodes.length > 0 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    leftIcon={<Send className="h-4 w-4" />}
+                    disabled={codeSending}
+                    onClick={async () => {
+                      setCodeSending(true)
+                      setCodeSendResult('')
+                      try {
+                        const result = await materialCodesApi.sendAll(id!)
+                        setCodeSendResult(`Sent to ${result.sentToStudents} student(s) and ${result.sentToTeachers} teacher(s)`)
+                        queryClient.invalidateQueries(['course-material-codes', id])
+                      } catch (err) {
+                        setCodeSendResult('Failed to send codes')
+                      } finally {
+                        setCodeSending(false)
+                      }
+                    }}
+                  >
+                    {codeSending ? 'Sending...' : 'Send All Codes'}
+                  </Button>
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<Plus className="h-4 w-4" />}
+                  onClick={() => setShowAddCode(!showAddCode)}
+                >
+                  Add Code
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardBody>
+            {codeSendResult && (
+              <div className={`mb-4 p-3 rounded-lg text-sm ${
+                codeSendResult.includes('Failed') ? 'bg-red-50 text-red-700' : 'bg-green-50 text-green-700'
+              }`}>
+                {codeSendResult}
+              </div>
+            )}
+
+            {/* Add Code Form */}
+            {showAddCode && (
+              <div className="mb-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <select
+                    value={codeForm.codeType}
+                    onChange={e => setCodeForm({ ...codeForm, codeType: e.target.value })}
+                    className="rounded-md border-gray-300 text-sm"
+                  >
+                    <option value="BOOK">Book Code</option>
+                    <option value="MEL">My English Lab</option>
+                    <option value="PLATFORM_ACCESS">Platform Access</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                  <input
+                    type="text"
+                    placeholder="Material name"
+                    value={codeForm.materialName}
+                    onChange={e => setCodeForm({ ...codeForm, materialName: e.target.value })}
+                    className="rounded-md border-gray-300 text-sm"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Code value"
+                    value={codeForm.code}
+                    onChange={e => setCodeForm({ ...codeForm, code: e.target.value })}
+                    className="rounded-md border-gray-300 text-sm font-mono"
+                  />
+                  <div className="flex items-center gap-2">
+                    <label className="flex items-center gap-1.5 text-sm text-gray-600">
+                      <input
+                        type="checkbox"
+                        checked={codeForm.isGroupCode}
+                        onChange={e => setCodeForm({ ...codeForm, isGroupCode: e.target.checked })}
+                        className="rounded border-gray-300 text-blue-600"
+                      />
+                      Group
+                    </label>
+                    <Button
+                      size="sm"
+                      disabled={!codeForm.materialName || !codeForm.code}
+                      onClick={async () => {
+                        try {
+                          await materialCodesApi.create({
+                            courseId: id!,
+                            codeType: codeForm.codeType,
+                            materialName: codeForm.materialName,
+                            code: codeForm.code,
+                            isGroupCode: codeForm.isGroupCode
+                          })
+                          setCodeForm({ codeType: 'BOOK', materialName: '', code: '', isGroupCode: false })
+                          queryClient.invalidateQueries(['course-material-codes', id])
+                        } catch (err) {
+                          console.error('Failed to create code:', err)
+                        }
+                      }}
+                    >
+                      Add
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {materialCodes.length === 0 ? (
+              <p className="text-sm text-gray-500 text-center py-4">No material codes for this course yet</p>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead>
+                    <tr>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Material</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase">Assigned To</th>
+                      <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase">Sent</th>
+                      <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {materialCodes.map((mc: any) => (
+                      <tr key={mc.id}>
+                        <td className="px-3 py-2 text-sm">
+                          <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${
+                            mc.codeType === 'MEL' ? 'bg-purple-100 text-purple-700'
+                            : mc.codeType === 'BOOK' ? 'bg-blue-100 text-blue-700'
+                            : 'bg-gray-100 text-gray-700'
+                          }`}>
+                            {mc.codeType}
+                            {mc.isGroupCode && ' (Group)'}
+                          </span>
+                        </td>
+                        <td className="px-3 py-2 text-sm text-gray-900">{mc.materialName}</td>
+                        <td className="px-3 py-2 text-sm font-mono text-gray-600">{mc.code}</td>
+                        <td className="px-3 py-2 text-sm text-gray-600">
+                          {mc.isGroupCode ? (
+                            <span className="text-gray-400 italic">All students</span>
+                          ) : mc.student?.user?.name ? (
+                            mc.student.user.name
+                          ) : (
+                            <span className="text-orange-500">Unassigned</span>
+                          )}
+                        </td>
+                        <td className="px-3 py-2 text-center">
+                          {mc.sentToStudent ? (
+                            <span className="text-green-600 text-xs font-medium">Sent</span>
+                          ) : (
+                            <span className="text-gray-400 text-xs">Pending</span>
+                          )}
+                        </td>
+                        <td className="px-3 py-2 text-center">
+                          <button
+                            onClick={async () => {
+                              if (confirm('Delete this code?')) {
+                                await materialCodesApi.delete(mc.id)
+                                queryClient.invalidateQueries(['course-material-codes', id])
+                              }
+                            }}
+                            className="p-1 text-gray-400 hover:text-red-600"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </CardBody>
         </Card>
       )}

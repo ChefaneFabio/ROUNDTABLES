@@ -4,7 +4,7 @@ import { useMutation } from 'react-query'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { ArrowLeft, Plus, Trash2 } from 'lucide-react'
+import { ArrowLeft, Plus, Trash2, Video, Users, BookOpen } from 'lucide-react'
 import { coursesApi } from '../services/api'
 import { Card, CardBody, CardHeader } from '../components/common/Card'
 import { Button } from '../components/common/Button'
@@ -12,7 +12,7 @@ import { Button } from '../components/common/Button'
 const schema = yup.object({
   name: yup.string().required('Course name is required'),
   description: yup.string(),
-  courseType: yup.string().oneOf(['LIVE', 'SELF_PACED']).required(),
+  courseType: yup.string().oneOf(['LIVE', 'ROUNDTABLE', 'SELF_PACED']).required(),
   language: yup.string(),
   isPublic: yup.boolean(),
   startDate: yup.string(),
@@ -38,6 +38,8 @@ export function CreateCoursePage() {
     register,
     handleSubmit,
     control,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -126,15 +128,43 @@ export function CreateCoursePage() {
               />
             </div>
 
+            {/* Course Type Selection */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Course Type <span className="text-red-500">*</span>
+              </label>
+              <input type="hidden" {...register('courseType')} />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {[
+                  { value: 'LIVE', icon: Video, label: 'Live Lesson', desc: '1-to-1 or group lessons with a teacher via Zoom/Meet/Teams. Scheduled sessions with attendance tracking.', color: 'border-blue-500 bg-blue-50', iconColor: 'text-blue-600 bg-blue-100' },
+                  { value: 'ROUNDTABLE', icon: Users, label: 'Roundtable', desc: 'Group discussion sessions. Students vote on topics, participate in collaborative conversations with a facilitator.', color: 'border-purple-500 bg-purple-50', iconColor: 'text-purple-600 bg-purple-100' },
+                  { value: 'SELF_PACED', icon: BookOpen, label: 'Self-Paced', desc: 'Students learn at their own pace with pre-recorded videos, exercises, and materials. No live sessions.', color: 'border-green-500 bg-green-50', iconColor: 'text-green-600 bg-green-100' },
+                ].map(type => {
+                  const Icon = type.icon
+                  const isSelected = watch('courseType') === type.value
+                  return (
+                    <button
+                      key={type.value}
+                      type="button"
+                      onClick={() => setValue('courseType', type.value as any)}
+                      className={`p-4 rounded-xl border-2 text-left transition-all hover:shadow-md ${
+                        isSelected ? type.color : 'border-gray-200 hover:border-gray-300 bg-white'
+                      }`}
+                    >
+                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-2 ${isSelected ? type.iconColor : 'bg-gray-100 text-gray-500'}`}>
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <p className="font-semibold text-sm text-gray-900">{type.label}</p>
+                      <p className="text-xs text-gray-500 mt-1">{type.desc}</p>
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Course Type
-                </label>
-                <select {...register('courseType')} className="input w-full">
-                  <option value="LIVE">Live</option>
-                  <option value="SELF_PACED">Self-Paced</option>
-                </select>
+              <div className="hidden">
+                {/* Hidden — courseType handled above */}
               </div>
 
               <div>

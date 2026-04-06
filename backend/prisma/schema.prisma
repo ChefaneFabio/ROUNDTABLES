@@ -275,6 +275,7 @@ model Course {
 
 enum CourseType {
   LIVE
+  ROUNDTABLE
   SELF_PACED
 }
 
