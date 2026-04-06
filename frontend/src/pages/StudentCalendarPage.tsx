@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { lessonsApi } from '../services/api'
-import { Calendar, ChevronLeft, ChevronRight, Video, Clock, User, ExternalLink, Download } from 'lucide-react'
+import { Calendar, ChevronLeft, ChevronRight, Video, Clock, User, ExternalLink, Download, Filter } from 'lucide-react'
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
@@ -14,6 +14,8 @@ interface CalendarLesson {
   status: string
   meetingProvider?: string
   meetingLink?: string
+  location?: string
+  locationDetails?: string
   course?: { id: string; name: string }
   teacher?: { id: string; user: { name: string } }
 }
@@ -41,6 +43,7 @@ export default function StudentCalendarPage() {
   const [loading, setLoading] = useState(true)
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [view, setView] = useState<'month' | 'week'>('month')
+  const [courseFilter, setCourseFilter] = useState<string>('all')
 
   useEffect(() => {
     loadCalendar()
@@ -57,6 +60,28 @@ export default function StudentCalendarPage() {
       setLoading(false)
     }
   }
+
+  // Extract unique courses from all lessons for the filter dropdown
+  const availableCourses = useMemo(() => {
+    const courseMap = new Map<string, string>()
+    Object.values(lessons).flat().forEach((l: CalendarLesson) => {
+      if (l.course?.id && l.course?.name) {
+        courseMap.set(l.course.id, l.course.name)
+      }
+    })
+    return Array.from(courseMap.entries()).sort((a, b) => a[1].localeCompare(b[1]))
+  }, [lessons])
+
+  // Filter lessons by selected course
+  const filteredLessons = useMemo(() => {
+    if (courseFilter === 'all') return lessons
+    const filtered: Record<string, CalendarLesson[]> = {}
+    for (const [date, dateLessons] of Object.entries(lessons)) {
+      const matching = dateLessons.filter(l => l.course?.id === courseFilter)
+      if (matching.length > 0) filtered[date] = matching
+    }
+    return filtered
+  }, [lessons, courseFilter])
 
   const prevMonth = () => {
     if (month === 1) { setMonth(12); setYear(y => y - 1) }
@@ -87,7 +112,7 @@ export default function StudentCalendarPage() {
     })
   }
 
-  const selectedLessons = selectedDate ? (lessons[selectedDate] || []) : []
+  const selectedLessons = selectedDate ? (filteredLessons[selectedDate] || []) : []
 
   const exportIcal = () => {
     const token = localStorage.getItem('accessToken')
@@ -104,6 +129,21 @@ export default function StudentCalendarPage() {
           <h1 className="text-2xl font-bold text-gray-900">My Schedule</h1>
         </div>
         <div className="flex items-center gap-2">
+          {availableCourses.length > 1 && (
+            <div className="flex items-center gap-1.5">
+              <Filter className="w-4 h-4 text-gray-400" />
+              <select
+                value={courseFilter}
+                onChange={e => setCourseFilter(e.target.value)}
+                className="text-sm border border-gray-300 rounded-lg px-2 py-2 bg-white focus:ring-primary-500 focus:border-primary-500"
+              >
+                <option value="all">All Courses</option>
+                {availableCourses.map(([id, name]) => (
+                  <option key={id} value={id}>{name}</option>
+                ))}
+              </select>
+            </div>
+          )}
           <button
             onClick={exportIcal}
             className="flex items-center gap-1.5 px-3 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50"
@@ -167,7 +207,7 @@ export default function StudentCalendarPage() {
               {calendarDays.map((cell, i) => {
                 if (!cell) return <div key={i} className="h-24 bg-gray-50 rounded-lg" />
 
-                const dayLessons = lessons[cell.dateStr] || []
+                const dayLessons = filteredLessons[cell.dateStr] || []
                 const isToday = cell.dateStr === todayStr
                 const isSelected = cell.dateStr === selectedDate
                 const hasLive = dayLessons.some(l => l.status === 'IN_PROGRESS')
@@ -272,7 +312,18 @@ export default function StudentCalendarPage() {
                           )}
                         </div>
 
-                        {lesson.meetingLink && (isLive || lesson.status === 'SCHEDULED' || lesson.status === 'REMINDER_SENT') && (
+                        {lesson.meetingProvider === 'IN_PERSON' && lesson.location ? (
+                          <a
+                            href={`https://maps.google.com/?q=${encodeURIComponent(lesson.location)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={e => e.stopPropagation()}
+                            className="mt-2 flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-amber-500 text-white hover:bg-amber-600"
+                          >
+                            <ExternalLink className="w-3.5 h-3.5" />
+                            {lesson.location}
+                          </a>
+                        ) : lesson.meetingLink && (isLive || lesson.status === 'SCHEDULED' || lesson.status === 'REMINDER_SENT') ? (
                           <a
                             href={lesson.meetingLink}
                             target="_blank"
@@ -287,7 +338,7 @@ export default function StudentCalendarPage() {
                             <ExternalLink className="w-3.5 h-3.5" />
                             {isLive ? 'Join Now' : 'Join Meeting'}
                           </a>
-                        )}
+                        ) : null}
                       </div>
                     )
                   })}

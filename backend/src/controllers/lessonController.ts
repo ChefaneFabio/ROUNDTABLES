@@ -19,7 +19,8 @@ async function sendMeetingLinks(lesson: any) {
 
   const providerName = lesson.meetingProvider === 'ZOOM' ? 'Zoom' :
     lesson.meetingProvider === 'GOOGLE_MEET' ? 'Google Meet' :
-    lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'Microsoft Teams' : 'Video'
+    lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'Microsoft Teams' :
+    lesson.meetingProvider === 'IN_PERSON' ? 'In Person' : 'Video'
 
   const courseName = lesson.course?.name || 'Course'
   const lessonTitle = lesson.title || `Lesson ${lesson.lessonNumber}`
@@ -46,22 +47,36 @@ async function sendMeetingLinks(lesson: any) {
     teacherEmails.push(lesson.teacher.user.email)
   }
 
+  const isInPerson = lesson.meetingProvider === 'IN_PERSON'
+  const locationHtml = isInPerson && lesson.location ? `
+    <p><strong>Location:</strong> ${lesson.location}</p>
+    ${lesson.locationDetails ? `<p><strong>Details:</strong> ${lesson.locationDetails}</p>` : ''}
+    <div style="margin: 24px 0;">
+      <a href="https://maps.google.com/?q=${encodeURIComponent(lesson.location)}"
+         style="display: inline-block; background: #d97706; color: white; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+        Open in Google Maps
+      </a>
+    </div>
+  ` : ''
+
   const meetingLinkHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
       <h2 style="color: #2563eb;">📅 ${courseName} — ${lessonTitle}</h2>
       <p><strong>Date:</strong> ${scheduledAt}</p>
       <p><strong>Duration:</strong> ${duration} minutes</p>
-      <p><strong>Platform:</strong> ${providerName}</p>
-      ${lesson.meetingPassword ? `<p><strong>Password:</strong> ${lesson.meetingPassword}</p>` : ''}
-      <div style="margin: 24px 0;">
-        <a href="${lesson.meetingLink}"
-           style="display: inline-block; background: #2563eb; color: white; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
-          Join ${providerName} Meeting
-        </a>
-      </div>
-      <p style="color: #6b7280; font-size: 13px;">
-        If the button doesn't work, copy this link: ${lesson.meetingLink}
-      </p>
+      <p><strong>${isInPerson ? 'Format' : 'Platform'}:</strong> ${providerName}</p>
+      ${isInPerson ? locationHtml : `
+        ${lesson.meetingPassword ? `<p><strong>Password:</strong> ${lesson.meetingPassword}</p>` : ''}
+        <div style="margin: 24px 0;">
+          <a href="${lesson.meetingLink}"
+             style="display: inline-block; background: #2563eb; color: white; padding: 12px 28px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+            Join ${providerName} Meeting
+          </a>
+        </div>
+        <p style="color: #6b7280; font-size: 13px;">
+          If the button doesn't work, copy this link: ${lesson.meetingLink}
+        </p>
+      `}
     </div>
   `
 

@@ -195,25 +195,47 @@ export function LessonDetailPage() {
                 <div className={`h-12 w-12 rounded-full flex items-center justify-center ${
                   lesson.meetingProvider === 'ZOOM' ? 'bg-blue-100' :
                   lesson.meetingProvider === 'GOOGLE_MEET' ? 'bg-green-100' :
-                  lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'bg-purple-100' : 'bg-gray-100'
+                  lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'bg-purple-100' :
+                  lesson.meetingProvider === 'IN_PERSON' ? 'bg-amber-100' : 'bg-gray-100'
                 }`}>
                   <Video className={`h-6 w-6 ${
                     lesson.meetingProvider === 'ZOOM' ? 'text-blue-600' :
                     lesson.meetingProvider === 'GOOGLE_MEET' ? 'text-green-600' :
-                    lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'text-purple-600' : 'text-gray-600'
+                    lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'text-purple-600' :
+                    lesson.meetingProvider === 'IN_PERSON' ? 'text-amber-600' : 'text-gray-600'
                   }`} />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-gray-900">
                     {lesson.meetingProvider === 'ZOOM' ? 'Zoom Meeting' :
                      lesson.meetingProvider === 'GOOGLE_MEET' ? 'Google Meet' :
-                     lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'Microsoft Teams' : 'Meeting'}
+                     lesson.meetingProvider === 'MICROSOFT_TEAMS' ? 'Microsoft Teams' :
+                     lesson.meetingProvider === 'IN_PERSON' ? 'In-Person Lesson' : 'Meeting'}
                   </p>
-                  {lesson.meetingLink && (
-                    <p className="text-xs text-gray-500 truncate max-w-md">{lesson.meetingLink}</p>
-                  )}
-                  {lesson.meetingPassword && (
-                    <p className="text-xs text-gray-400 mt-0.5">Password: {lesson.meetingPassword}</p>
+                  {lesson.meetingProvider === 'IN_PERSON' && lesson.location ? (
+                    <div>
+                      <p className="text-sm text-gray-700">{lesson.location}</p>
+                      {lesson.locationDetails && (
+                        <p className="text-xs text-gray-400">{lesson.locationDetails}</p>
+                      )}
+                      <a
+                        href={`https://maps.google.com/?q=${encodeURIComponent(lesson.location)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 mt-1"
+                      >
+                        <ExternalLink className="h-3 w-3" /> Open in Maps
+                      </a>
+                    </div>
+                  ) : (
+                    <>
+                      {lesson.meetingLink && (
+                        <p className="text-xs text-gray-500 truncate max-w-md">{lesson.meetingLink}</p>
+                      )}
+                      {lesson.meetingPassword && (
+                        <p className="text-xs text-gray-400 mt-0.5">Password: {lesson.meetingPassword}</p>
+                      )}
+                    </>
                   )}
                 </div>
               </div>

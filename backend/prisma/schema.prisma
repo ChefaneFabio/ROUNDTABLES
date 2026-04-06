@@ -349,12 +349,14 @@ model Lesson {
   deletedAt    DateTime? // Soft delete
 
   // Video Conferencing Integration
-  meetingProvider     MeetingProvider? // Which platform (Zoom, Meet, Teams)
+  meetingProvider     MeetingProvider? // Which platform (Zoom, Meet, Teams, In-Person)
   meetingId           String? // External meeting ID
-  meetingLink         String? // Join link for students
+  meetingLink         String? // Join link for students (or Google Maps link for in-person)
   meetingHostUrl      String? // Host/start link for teacher
   meetingPassword     String? // Meeting password if required
   meetingRecordingUrl String? // Recording link after lesson
+  location            String? // Physical address for in-person lessons
+  locationDetails     String? // Room number, floor, building name, etc.
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
@@ -394,6 +396,7 @@ enum MeetingProvider {
   ZOOM
   GOOGLE_MEET
   MICROSOFT_TEAMS
+  IN_PERSON
   CUSTOM // For custom/manual meeting links
 }
 

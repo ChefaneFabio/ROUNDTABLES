@@ -60,12 +60,16 @@ const PROVIDER_COLORS: Record<string, string> = {
   ZOOM: 'bg-blue-500',
   GOOGLE_MEET: 'bg-green-500',
   MICROSOFT_TEAMS: 'bg-purple-500',
+  IN_PERSON: 'bg-amber-500',
+  CUSTOM: 'bg-gray-500',
 }
 
 const PROVIDER_LABELS: Record<string, string> = {
   ZOOM: 'Zoom',
   GOOGLE_MEET: 'Google Meet',
   MICROSOFT_TEAMS: 'Teams',
+  IN_PERSON: 'In Person',
+  CUSTOM: 'Custom',
 }
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -814,6 +818,25 @@ function LessonDetail({ lesson, onClose, onSwap }: { lesson: Lesson; onClose: ()
           </div>
         )}
       </div>
+
+      {/* Location for in-person lessons */}
+      {lesson.meetingProvider === 'IN_PERSON' && (lesson as any).location && (
+        <div className="mt-4 pt-4 border-t">
+          <p className="text-xs font-medium text-gray-500 uppercase mb-1">Location</p>
+          <p className="text-sm text-gray-900 font-medium">{(lesson as any).location}</p>
+          {(lesson as any).locationDetails && (
+            <p className="text-xs text-gray-500 mt-0.5">{(lesson as any).locationDetails}</p>
+          )}
+          <a
+            href={`https://maps.google.com/?q=${encodeURIComponent((lesson as any).location)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-xs text-blue-600 hover:text-blue-700 mt-1"
+          >
+            <ExternalLink className="w-3 h-3" /> Open in Google Maps
+          </a>
+        </div>
+      )}
 
       {/* Students enrolled */}
       {lesson.course?.enrollments?.length > 0 && (
