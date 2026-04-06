@@ -53,7 +53,7 @@ export function DashboardPage() {
       <div className={clsx(
         'rounded-lg shadow-md p-6',
         isStudent
-          ? 'bg-gradient-to-r from-primary-600 to-indigo-600 text-white'
+          ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white'
           : 'bg-white'
       )}>
         <h1 className={clsx('text-2xl font-bold', isStudent ? 'text-white' : 'text-gray-900')}>
@@ -644,7 +644,7 @@ function StudentDashboard({ data }: { data: any }) {
             <p className="text-gray-500 mb-4">No assessments completed yet</p>
             <button
               onClick={() => navigate('/assessment')}
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-primary-600 to-indigo-600 text-white rounded-lg hover:from-primary-700 hover:to-indigo-700 transition-all shadow-md hover:shadow-lg font-medium"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-slate-700 to-slate-800 text-white rounded-lg hover:from-slate-800 hover:to-slate-900 transition-all shadow-md hover:shadow-lg font-medium"
             >
               Take Placement Test
             </button>

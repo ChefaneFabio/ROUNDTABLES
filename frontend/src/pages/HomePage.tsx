@@ -112,7 +112,7 @@ export function HomePage() {
                 Professional Language Training for Business & Individuals
               </h1>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Maka Learning Management Centre provides comprehensive language education solutions. Our integrated platform serves corporate clients, individual learners, and educators with structured programs and measurable outcomes.
+                Maka Learning Management System provides comprehensive language education solutions. Our integrated platform serves corporate clients, individual learners, and educators with structured programs and measurable outcomes.
               </p>
               <div className="flex gap-4 flex-wrap">
                 <Link
@@ -191,7 +191,7 @@ export function HomePage() {
                 Quality-Driven Language Education
               </h2>
               <p className="text-gray-600 text-lg mb-8">
-                Maka Learning Management Centre combines experienced educators, proven methodologies, and modern technology to deliver effective language training that meets professional standards.
+                Maka Learning Management System combines experienced educators, proven methodologies, and modern technology to deliver effective language training that meets professional standards.
               </p>
               <div className="space-y-4">
                 {benefits.map((benefit) => (
@@ -233,7 +233,7 @@ export function HomePage() {
               Access Your Portal
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto text-lg">
-              Sign in to your dedicated dashboard based on your role within the Maka Learning Management Centre system.
+              Sign in to your dedicated dashboard based on your role within the Maka Learning Management System system.
             </p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
@@ -279,7 +279,7 @@ export function HomePage() {
               Built for Professional Language Education
             </h2>
             <p className="text-gray-600 text-lg mb-8 leading-relaxed">
-              Maka Learning Management Centre is a comprehensive learning management system developed by Maka Language Consulting.
+              Maka Learning Management System is a comprehensive learning management system developed by Maka Language Consulting.
               The platform integrates course management, student tracking, scheduling, and progress analytics into a
               unified solution serving corporate clients, individual learners, and language educators.
             </p>
@@ -336,7 +336,7 @@ export function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div className="md:col-span-2">
-              <img src="/logo.png" alt="Maka Learning Management Centre" className="h-10 w-auto mb-4" />
+              <img src="/logo.png" alt="Maka Learning Management System" className="h-10 w-auto mb-4" />
               <p className="text-sm mb-4 max-w-md">
                 A comprehensive learning management system developed by Maka Language Consulting.
                 Providing professional language education solutions for organizations and individuals.
@@ -361,7 +361,7 @@ export function HomePage() {
           </div>
           <div className="border-t border-gray-800 pt-8">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm">
-              <p>&copy; {new Date().getFullYear()} Maka Learning Management Centre. All rights reserved.</p>
+              <p>&copy; {new Date().getFullYear()} Maka Learning Management System. All rights reserved.</p>
               <p className="text-gray-500">
                 Developed by <span className="text-gray-400">Maka Language Consulting</span>
               </p>

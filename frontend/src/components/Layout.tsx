@@ -140,7 +140,7 @@ const navGroups: NavGroup[] = [
       { name: 'Exercises', href: '/exercises', icon: PenTool, roles: [UserRole.STUDENT] },
       { name: 'Videos', href: '/videos', icon: Video, roles: [UserRole.STUDENT] },
       { name: 'Speaking', href: '/speaking', icon: Mic, roles: [UserRole.STUDENT] },
-      { name: 'AI Chat', href: '/chat', icon: Bot, roles: [UserRole.STUDENT] },
+      // { name: 'AI Chat', href: '/chat', icon: Bot, roles: [UserRole.STUDENT] }, // Hidden from nav — feature remains in code
     ]
   },
 
@@ -201,7 +201,7 @@ function NavSection({ group, isActive, isTestInProgress, onNavigate }: {
         onClick={() => setOpen(!open)}
         className={clsx(
           'w-full flex items-center justify-between px-3 py-2 rounded-lg text-[11px] font-bold uppercase tracking-widest transition-colors',
-          hasActiveItem ? 'text-primary-700 bg-primary-50/50' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-50'
+          hasActiveItem ? 'text-gray-700 bg-gray-100/60' : 'text-gray-400 hover:text-gray-700 hover:bg-gray-50'
         )}
       >
         <div className="flex items-center gap-2">
@@ -229,7 +229,7 @@ function NavSection({ group, isActive, isTestInProgress, onNavigate }: {
                   disabled
                     ? 'text-gray-300 cursor-not-allowed'
                     : active
-                    ? 'bg-primary-50 text-primary-700 border-l-[3px] border-primary-500 shadow-sm'
+                    ? 'bg-gray-100 text-gray-900 border-l-[3px] border-gray-500 shadow-sm'
                     : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border-l-[3px] border-transparent hover:border-gray-300'
                 )}
               >
@@ -287,9 +287,9 @@ export function Layout({ children }: { children: React.ReactNode }) {
     <>
       <div className="flex h-16 items-center px-4 border-b border-gray-700 bg-gradient-to-r from-gray-900 to-gray-800">
         <Link to="/dashboard" className="flex items-center gap-3">
-          <img src="/favicon.webp" alt="Maka" className="h-9 w-9 rounded-xl shadow-lg shadow-primary-500/30" />
+          <img src="/favicon.webp" alt="Maka" className="h-9 w-9 rounded-xl shadow-lg shadow-gray-900/30" />
           <div>
-            <span className="text-sm font-bold text-white block leading-tight">MAKA LMC</span>
+            <span className="text-sm font-bold text-white block leading-tight">MAKA LMS</span>
             <span className="text-[10px] text-gray-400 leading-tight">Language Consulting</span>
           </div>
         </Link>
@@ -316,8 +316,8 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <div className="fixed inset-y-0 left-0 flex w-64 flex-col bg-white shadow-xl">
           <div className="flex items-center justify-between px-4 h-16 border-b border-gray-700 bg-gradient-to-r from-gray-900 to-gray-800">
             <Link to="/dashboard" className="flex items-center gap-3">
-              <img src="/favicon.webp" alt="Maka" className="h-9 w-9 rounded-xl shadow-lg shadow-primary-500/30" />
-              <span className="text-sm font-bold text-white">MAKA LMC</span>
+              <img src="/favicon.webp" alt="Maka" className="h-9 w-9 rounded-xl shadow-lg shadow-gray-900/30" />
+              <span className="text-sm font-bold text-white">MAKA LMS</span>
             </Link>
             <button onClick={() => setSidebarOpen(false)} className="p-1 rounded-lg hover:bg-gray-700">
               <X className="h-5 w-5 text-gray-300" />

@@ -68,7 +68,7 @@ export function RegisterPage() {
           <img src="/logo.svg" alt="Maka Language Consulting" className="h-14 w-auto" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
-          Register with Maka Learning Management Centre
+          Register with Maka Learning Management System
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           Already have an account?{' '}

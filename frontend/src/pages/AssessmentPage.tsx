@@ -84,10 +84,10 @@ export function AssessmentPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Hero */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-indigo-950 to-indigo-900 rounded-2xl p-8 text-white">
+      <div className="relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-900 to-slate-800 rounded-2xl p-8 text-white">
         {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-72 h-72 bg-indigo-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-        <div className="absolute bottom-0 left-0 w-56 h-56 bg-purple-500/10 rounded-full translate-y-1/2 -translate-x-1/2" />
+        <div className="absolute top-0 right-0 w-72 h-72 bg-slate-500/10 rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="absolute bottom-0 left-0 w-56 h-56 bg-gray-500/10 rounded-full translate-y-1/2 -translate-x-1/2" />
         <div className="absolute top-1/2 right-1/4 w-32 h-32 bg-primary-500/5 rounded-full" />
         <div className="absolute -bottom-4 right-12 w-24 h-24 border border-white/5 rounded-full" />
         <div className="absolute top-8 right-1/3 w-16 h-16 border border-white/5 rounded-full" />
@@ -108,15 +108,15 @@ export function AssessmentPage() {
           <div className="flex flex-wrap gap-2.5 mt-5">
             {SKILL_SECTIONS.map(s => (
               <div key={s.label} className="flex items-center gap-2 px-3 py-1.5 bg-white/[0.07] backdrop-blur-sm rounded-lg text-sm border border-white/[0.06]">
-                <s.icon className="w-4 h-4 text-indigo-300" />
+                <s.icon className="w-4 h-4 text-gray-400" />
                 <span className="text-gray-200">{s.label}</span>
                 <span className="text-gray-400 text-xs">{s.time}</span>
               </div>
             ))}
           </div>
-          <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 bg-indigo-500/20 backdrop-blur-sm rounded-full border border-indigo-400/20 text-sm">
-            <Clock className="w-3.5 h-3.5 text-indigo-300" />
-            <span className="text-indigo-200 font-medium">Total: ~70 min &middot; 4 sections</span>
+          <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 bg-slate-500/20 backdrop-blur-sm rounded-full border border-slate-400/20 text-sm">
+            <Clock className="w-3.5 h-3.5 text-gray-400" />
+            <span className="text-gray-300 font-medium">Total: ~70 min &middot; 4 sections</span>
           </div>
         </div>
       </div>
@@ -304,7 +304,7 @@ export function AssessmentPage() {
       )}
 
       {/* CEFR Guide */}
-      <div className="bg-gradient-to-r from-gray-50 via-indigo-50/30 to-purple-50/30 rounded-xl p-6 border border-gray-100">
+      <div className="bg-gradient-to-r from-gray-50 via-slate-50/30 to-gray-50/30 rounded-xl p-6 border border-gray-100">
         <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">CEFR Scale</h2>
         <div className="flex flex-wrap gap-3">
           {[

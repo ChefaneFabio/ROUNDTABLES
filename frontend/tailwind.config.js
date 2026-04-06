@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Maka Learning Management Centre brand colors
+        // Maka Learning Management System brand colors
         primary: {
           50: '#fdfdf5',
           100: '#f9f7e8',

@@ -365,7 +365,7 @@ export function OrgRegisterPage() {
           Register your Organization
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
-          Set up your organization on Maka LMC
+          Set up your organization on Maka LMS
         </p>
       </div>
 
