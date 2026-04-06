@@ -139,7 +139,7 @@ export function BusinessPage() {
           <div className="flex justify-between items-center py-4">
             <Link to="/" className="flex items-center gap-3">
               <img src="/favicon.webp" alt="Maka" className="h-9 w-9 rounded-full" />
-              <img src="/logo.svg" alt="Maka Language Consulting" className="h-8 w-auto" />
+              <span className="text-sm font-bold text-gray-900">MAKA <span className="font-normal text-gray-500">Language Consulting</span></span>
             </Link>
             <nav className="hidden md:flex items-center gap-8">
               <a href="#how-it-works" className="text-gray-600 hover:text-gray-900 font-medium transition-colors">How It Works</a>

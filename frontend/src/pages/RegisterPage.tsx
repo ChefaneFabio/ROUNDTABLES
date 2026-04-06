@@ -64,9 +64,8 @@ export function RegisterPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center items-center gap-3">
-          <img src="/favicon.webp" alt="Maka" className="h-12 w-12 rounded-full" />
-          <img src="/logo.svg" alt="Maka Language Consulting" className="h-10 w-auto" />
+        <div className="flex justify-center">
+          <img src="/favicon.webp" alt="Maka" className="h-16 w-16 rounded-full shadow-lg" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-bold text-gray-900">
           Create Your Account
