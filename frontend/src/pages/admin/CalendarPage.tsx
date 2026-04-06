@@ -839,11 +839,11 @@ function LessonDetail({ lesson, onClose, onSwap }: { lesson: Lesson; onClose: ()
       )}
 
       {/* Students enrolled */}
-      {lesson.course?.enrollments?.length > 0 && (
+      {(lesson.course?.enrollments?.length ?? 0) > 0 && (
         <div className="mt-4 pt-4 border-t">
-          <p className="text-xs font-medium text-gray-500 uppercase mb-2">Students ({lesson.course.enrollments.length})</p>
+          <p className="text-xs font-medium text-gray-500 uppercase mb-2">Students ({lesson.course?.enrollments?.length})</p>
           <div className="flex flex-wrap gap-2">
-            {lesson.course.enrollments.map((e: any, i: number) => (
+            {lesson.course?.enrollments?.map((e: any, i: number) => (
               <span key={i} className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-50 border border-gray-200 rounded-lg text-xs text-gray-700">
                 <span className="w-5 h-5 rounded-full bg-primary-100 flex items-center justify-center text-[10px] font-bold text-primary-700">
                   {e.student?.user?.name?.charAt(0)?.toUpperCase() || '?'}

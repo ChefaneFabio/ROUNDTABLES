@@ -5,7 +5,7 @@ import { UserRole } from '../types'
 import {
   Menu, X, Home, BookOpen, Users, GraduationCap, Calendar, Bell,
   Settings, LogOut, ChevronDown, ChevronRight, User, CreditCard,
-  FileText, MessageSquare, ClipboardCheck, Award, BarChart3, Bot,
+  FileText, MessageSquare, ClipboardCheck, Award, BarChart3,
   Key, Video, PenTool, Mic, Building2, Ticket, Clock, Route,
   Timer, DollarSign, Zap, Layers, Wallet
 } from 'lucide-react'

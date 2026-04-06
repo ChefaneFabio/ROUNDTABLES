@@ -3,13 +3,11 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { assessmentApi } from '../services/assessmentApi'
 import { useToast } from '../components/common/Toast'
 import {
-  BookOpen, Headphones, PenTool, Mic, Award, Download, ArrowLeft,
+  BookOpen, Headphones, PenTool, Mic, Download, ArrowLeft,
   CheckCircle, BookType, Shuffle, Eraser, FileText, TrendingUp, Lightbulb
 } from 'lucide-react'
 
 // ─── GSE & CEFR Mapping (from Maka/Versant reference) ───
-
-const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
 const CEFR_TO_GSE: Record<string, number> = {
   A1: 22, A2: 33, B1: 46, B2: 59, C1: 76, C2: 85,

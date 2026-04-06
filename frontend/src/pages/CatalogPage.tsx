@@ -214,8 +214,8 @@ function CatalogCourseCard({ course, onClick }: { course: Course; onClick: () =>
       <div className="p-5">
         {/* Badges */}
         <div className="flex flex-wrap items-center gap-2 mb-3">
-          <Badge variant={course.courseType === CourseType.LIVE ? 'info' : 'primary'}>
-            {course.courseType === CourseType.LIVE ? 'Live' : 'Self-Paced'}
+          <Badge variant={course.courseType === 'SELF_PACED' ? 'info' : 'primary'}>
+            {course.courseType === 'LIVE_REMOTE' ? 'Live Remote' : course.courseType === 'LIVE_IN_PERSON' ? 'In Person' : course.courseType === 'ROUNDTABLE' ? 'Roundtable' : course.courseType === 'SELF_PACED' ? 'Self-Paced' : 'Live'}
           </Badge>
           {course.language && (
             <Badge variant="gray">

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useQuery } from 'react-query'
 import { Clock, Users, ChevronRight } from 'lucide-react'
-import { studentsApi } from '../../services/api'
 import { availabilityApi } from '../../services/availabilityApi'
 import { LoadingPage } from '../../components/common/LoadingSpinner'
 import { Card } from '../../components/common/Card'
@@ -18,17 +17,7 @@ const STATUS_COLORS: Record<string, string> = {
 export default function TeacherAvailabilityAdminPage() {
   const [selectedTeacherId, setSelectedTeacherId] = useState<string | null>(null)
 
-  // Load all teachers
-  const { data: teachersData, isLoading: loadingTeachers } = useQuery(
-    'adminTeachers',
-    async () => {
-      const res = await studentsApi.getAll({ page: 1, limit: 100 }) // Using a generic fetch
-      return res
-    },
-    { enabled: false } // We'll use a different approach
-  )
-
-  // Actually load teachers from the teachers API
+  // Load teachers from the teachers API
   const { data: teachers, isLoading } = useQuery(
     'allTeachersForAvailability',
     async () => {
@@ -159,11 +148,11 @@ export default function TeacherAvailabilityAdminPage() {
               </div>
 
               {/* Upcoming lessons */}
-              {teacherAvailability?.upcomingLessons?.length > 0 && (
+              {(teacherAvailability?.upcomingLessons?.length ?? 0) > 0 && (
                 <div className="mt-6 pt-4 border-t">
                   <h3 className="text-sm font-semibold text-gray-700 mb-2">Upcoming Lessons</h3>
                   <div className="space-y-2">
-                    {teacherAvailability.upcomingLessons.slice(0, 5).map((lesson: any) => (
+                    {teacherAvailability?.upcomingLessons?.slice(0, 5).map((lesson: any) => (
                       <div key={lesson.id} className="flex items-center justify-between bg-gray-50 rounded-lg px-3 py-2 text-sm">
                         <div>
                           <p className="font-medium text-gray-900">{lesson.title || `Lesson ${lesson.lessonNumber}`}</p>
