@@ -115,7 +115,7 @@ export function SectionTakePage() {
   const [section, setSection] = useState<AssessmentSection | null>(null)
   const [currentQuestion, setCurrentQuestion] = useState<any>(null)
   const [progress, setProgress] = useState<{ answered: number; total: number; currentLevel: string } | null>(null)
-  const [feedback, setFeedback] = useState<{ isCorrect: boolean; correctAnswer: string } | null>(null)
+  // feedback removed — students should not see if answers are correct
   const [isComplete, setIsComplete] = useState(false)
   const [answeredCount, setAnsweredCount] = useState(0)
   const [loading, setLoading] = useState(true)
@@ -203,36 +203,33 @@ export function SectionTakePage() {
     }
   }
 
+  const [awaitingNext, setAwaitingNext] = useState(false)
+  const [lastResult, setLastResult] = useState<any>(null)
+
   const handleReadingListeningAnswer = async (answer: string) => {
     if (!currentQuestion || submitting) return
 
     try {
       setSubmitting(true)
-      setFeedback(null)
 
       const result = await assessmentApi.submitSectionAnswer(
         assessmentId!, sectionId!, currentQuestion.id, answer
       )
 
-      setFeedback({ isCorrect: result.isCorrect, correctAnswer: result.correctAnswer })
-
-      // Show feedback briefly then move to next question
-      setTimeout(async () => {
-        setFeedback(null)
-        if (result.shouldAutoComplete || result.expired) {
-          setAnsweredCount(prev => prev + 1)
-          // Mark section as completed in the backend so next sections unlock
-          try {
-            await assessmentApi.completeSection(assessmentId!, sectionId!)
-          } catch {
-            // May already be completed
-          }
-          setIsComplete(true)
-        } else {
-          await fetchNextQuestion()
-        }
+      // Don't show correct/incorrect — just confirm submission
+      // Don't auto-advance — wait for student to click "Next Question"
+      if (result.shouldAutoComplete || result.expired) {
+        setAnsweredCount(prev => prev + 1)
+        try {
+          await assessmentApi.completeSection(assessmentId!, sectionId!)
+        } catch { /* May already be completed */ }
+        setIsComplete(true)
         setSubmitting(false)
-      }, 1500)
+      } else {
+        setLastResult(result)
+        setAwaitingNext(true)
+        setSubmitting(false)
+      }
     } catch (err: any) {
       setError(err.response?.data?.error || err.message)
       setSubmitting(false)
@@ -513,25 +510,29 @@ export function SectionTakePage() {
       )}
 
       {/* Feedback overlay */}
-      {feedback && (
-        <div className={`mb-4 p-4 rounded-xl text-sm font-medium flex items-center gap-3 shadow-sm ${
-          feedback.isCorrect
-            ? 'bg-green-50 text-green-800 border border-green-200'
-            : 'bg-red-50 text-red-800 border border-red-200'
-        }`}>
-          {feedback.isCorrect
-            ? <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-            : <XCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-          }
-          <span>
-            {feedback.isCorrect ? 'Correct!' : `Incorrect. The correct answer is: ${feedback.correctAnswer}`}
-          </span>
+      {/* Answer submitted — show Next Question button */}
+      {awaitingNext && (
+        <div className="mb-4 p-4 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-blue-800">
+            <CheckCircle className="w-5 h-5 text-blue-600" />
+            <span className="text-sm font-medium">Answer submitted</span>
+          </div>
+          <button
+            onClick={async () => {
+              setAwaitingNext(false)
+              setCurrentQuestion(null)
+              await fetchNextQuestion()
+            }}
+            className="inline-flex items-center gap-1.5 px-5 py-2 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 transition-all shadow-sm"
+          >
+            Next Question
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       )}
 
-      {/* Question rendering — routes by questionType so the Reading section
-          can serve grammar, vocabulary, error-correction, and sentence-transformation questions */}
-      {currentQuestion && (() => {
+      {/* Question rendering — hidden when awaiting next */}
+      {currentQuestion && !awaitingNext && (() => {
         const qType = currentQuestion.questionType
         const skill = section?.skill
 
@@ -559,7 +560,7 @@ export function SectionTakePage() {
         return <ReadingQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
       })()}
 
-      {submitting && !feedback && (
+      {submitting && !awaitingNext && (
         <div className="flex items-center gap-2 mt-4 text-gray-500">
           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
           <span className="text-sm">Submitting...</span>
