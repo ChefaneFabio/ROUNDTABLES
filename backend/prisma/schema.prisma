@@ -274,7 +274,9 @@ model Course {
 }
 
 enum CourseType {
-  LIVE
+  LIVE // Legacy — kept for backward compatibility
+  LIVE_REMOTE
+  LIVE_IN_PERSON
   ROUNDTABLE
   SELF_PACED
 }

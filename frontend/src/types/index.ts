@@ -148,7 +148,8 @@ export enum LanguageLevel {
 // =====================================================
 
 export enum CourseType {
-  LIVE = 'LIVE',
+  LIVE_REMOTE = 'LIVE_REMOTE',
+  LIVE_IN_PERSON = 'LIVE_IN_PERSON',
   ROUNDTABLE = 'ROUNDTABLE',
   SELF_PACED = 'SELF_PACED'
 }

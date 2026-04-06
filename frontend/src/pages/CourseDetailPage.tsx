@@ -120,8 +120,16 @@ export function CourseDetailPage() {
           <div className="flex items-center gap-3">
             <h1 className="text-2xl font-bold text-gray-900">{course.name}</h1>
             <StatusBadge status={course.status} />
-            <Badge variant={course.courseType === 'SELF_PACED' ? 'info' : course.courseType === 'ROUNDTABLE' ? 'warning' : 'primary'}>
-              {course.courseType === 'SELF_PACED' ? 'Self-Paced' : course.courseType === 'ROUNDTABLE' ? 'Roundtable' : 'Live Lesson'}
+            <Badge variant={
+              course.courseType === 'SELF_PACED' ? 'info' :
+              course.courseType === 'ROUNDTABLE' ? 'warning' :
+              course.courseType === 'LIVE_IN_PERSON' ? 'warning' : 'primary'
+            }>
+              {course.courseType === 'LIVE_REMOTE' ? 'Live — Remote' :
+               course.courseType === 'LIVE_IN_PERSON' ? 'Live — In Person' :
+               course.courseType === 'ROUNDTABLE' ? 'Roundtable' :
+               course.courseType === 'SELF_PACED' ? 'Self-Paced' :
+               course.courseType === 'LIVE' ? 'Live' : course.courseType}
             </Badge>
           </div>
 

@@ -4,7 +4,7 @@ import { useMutation } from 'react-query'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { ArrowLeft, Plus, Trash2, Video, Users, BookOpen } from 'lucide-react'
+import { ArrowLeft, Plus, Trash2, Video, Users, BookOpen, MapPin } from 'lucide-react'
 import { coursesApi } from '../services/api'
 import { Card, CardBody, CardHeader } from '../components/common/Card'
 import { Button } from '../components/common/Button'
@@ -12,7 +12,7 @@ import { Button } from '../components/common/Button'
 const schema = yup.object({
   name: yup.string().required('Course name is required'),
   description: yup.string(),
-  courseType: yup.string().oneOf(['LIVE', 'ROUNDTABLE', 'SELF_PACED']).required(),
+  courseType: yup.string().oneOf(['LIVE_REMOTE', 'LIVE_IN_PERSON', 'ROUNDTABLE', 'SELF_PACED']).required(),
   language: yup.string(),
   isPublic: yup.boolean(),
   startDate: yup.string(),
@@ -44,7 +44,7 @@ export function CreateCoursePage() {
   } = useForm<FormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      courseType: 'LIVE',
+      courseType: 'LIVE_REMOTE',
       isPublic: true,
       currency: 'EUR',
       modules: [],
@@ -134,11 +134,12 @@ export function CreateCoursePage() {
                 Course Type <span className="text-red-500">*</span>
               </label>
               <input type="hidden" {...register('courseType')} />
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {[
-                  { value: 'LIVE', icon: Video, label: 'Live Lesson', desc: '1-to-1 or group lessons with a teacher via Zoom/Meet/Teams. Scheduled sessions with attendance tracking.', color: 'border-blue-500 bg-blue-50', iconColor: 'text-blue-600 bg-blue-100' },
-                  { value: 'ROUNDTABLE', icon: Users, label: 'Roundtable', desc: 'Group discussion sessions. Students vote on topics, participate in collaborative conversations with a facilitator.', color: 'border-purple-500 bg-purple-50', iconColor: 'text-purple-600 bg-purple-100' },
-                  { value: 'SELF_PACED', icon: BookOpen, label: 'Self-Paced', desc: 'Students learn at their own pace with pre-recorded videos, exercises, and materials. No live sessions.', color: 'border-green-500 bg-green-50', iconColor: 'text-green-600 bg-green-100' },
+                  { value: 'LIVE_REMOTE', icon: Video, label: 'Live — Remote', desc: 'Online lessons via Zoom, Meet, or Teams. Teacher and students connect remotely with video link.', color: 'border-blue-500 bg-blue-50', iconColor: 'text-blue-600 bg-blue-100' },
+                  { value: 'LIVE_IN_PERSON', icon: MapPin, label: 'Live — In Person', desc: 'Face-to-face lessons at a physical location. Address and Google Maps link shared with participants.', color: 'border-amber-500 bg-amber-50', iconColor: 'text-amber-600 bg-amber-100' },
+                  { value: 'ROUNDTABLE', icon: Users, label: 'Roundtable', desc: 'Group discussion sessions. Students vote on topics and participate in collaborative conversations.', color: 'border-purple-500 bg-purple-50', iconColor: 'text-purple-600 bg-purple-100' },
+                  { value: 'SELF_PACED', icon: BookOpen, label: 'Self-Paced', desc: 'Students learn at their own pace with videos, exercises, and materials. No live sessions.', color: 'border-green-500 bg-green-50', iconColor: 'text-green-600 bg-green-100' },
                 ].map(type => {
                   const Icon = type.icon
                   const isSelected = watch('courseType') === type.value
