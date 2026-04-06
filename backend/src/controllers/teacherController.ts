@@ -68,8 +68,9 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
         skip,
         take: limitNum,
         include: {
-          user: { select: { id: true, name: true, email: true, lastLoginAt: true } },
+          user: { select: { id: true, name: true, email: true, phone: true, lastLoginAt: true } },
           school: { select: { id: true, name: true } },
+          availability: { select: { id: true }, take: 1 },
           _count: {
             select: {
               lessons: true,
