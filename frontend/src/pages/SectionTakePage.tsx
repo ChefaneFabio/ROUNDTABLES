@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { assessmentApi, AssessmentSection } from '../services/assessmentApi'
+import { useAuth } from '../contexts/AuthContext'
 import { SectionTimer } from '../components/assessment/SectionTimer'
 import { ReadingQuestion } from '../components/assessment/ReadingQuestion'
 import { ListeningQuestion } from '../components/assessment/ListeningQuestion'
@@ -111,6 +112,7 @@ const SECTION_INSTRUCTIONS: Record<string, { en: string[]; it: string[] }> = {
 export function SectionTakePage() {
   const { id: assessmentId, sectionId } = useParams<{ id: string; sectionId: string }>()
   const navigate = useNavigate()
+  const { isAdmin } = useAuth()
 
   const [section, setSection] = useState<AssessmentSection | null>(null)
   const [currentQuestion, setCurrentQuestion] = useState<any>(null)
@@ -216,8 +218,7 @@ export function SectionTakePage() {
         assessmentId!, sectionId!, currentQuestion.id, answer
       )
 
-      // Don't show correct/incorrect — just confirm submission
-      // Don't auto-advance — wait for student to click "Next Question"
+      // Students: no feedback. Admin: show correct/incorrect for testing.
       if (result.shouldAutoComplete || result.expired) {
         setAnsweredCount(prev => prev + 1)
         try {
@@ -512,22 +513,45 @@ export function SectionTakePage() {
       {/* Feedback overlay */}
       {/* Answer submitted — show Next Question button */}
       {awaitingNext && (
-        <div className="mb-4 p-4 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-blue-800">
-            <CheckCircle className="w-5 h-5 text-blue-600" />
-            <span className="text-sm font-medium">Answer submitted</span>
+        <div className="mb-4 space-y-3">
+          <div className="p-4 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-between">
+            <div className="flex items-center gap-2 text-blue-800">
+              <CheckCircle className="w-5 h-5 text-blue-600" />
+              <span className="text-sm font-medium">Answer submitted</span>
+            </div>
+            <button
+              onClick={async () => {
+                setAwaitingNext(false)
+                setLastResult(null)
+                setCurrentQuestion(null)
+                await fetchNextQuestion()
+              }}
+              className="inline-flex items-center gap-1.5 px-5 py-2 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 transition-all shadow-sm"
+            >
+              Next Question
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </div>
-          <button
-            onClick={async () => {
-              setAwaitingNext(false)
-              setCurrentQuestion(null)
-              await fetchNextQuestion()
-            }}
-            className="inline-flex items-center gap-1.5 px-5 py-2 bg-blue-600 text-white rounded-xl font-semibold text-sm hover:bg-blue-700 transition-all shadow-sm"
-          >
-            Next Question
-            <ArrowRight className="w-4 h-4" />
-          </button>
+          {/* Admin only: show correct/incorrect for testing */}
+          {isAdmin && lastResult && (
+            <div className={`p-4 rounded-xl text-sm border ${
+              lastResult.isCorrect
+                ? 'bg-green-50 border-green-200 text-green-800'
+                : 'bg-red-50 border-red-200 text-red-800'
+            }`}>
+              <div className="flex items-center gap-2 mb-1">
+                {lastResult.isCorrect
+                  ? <CheckCircle className="w-4 h-4 text-green-600" />
+                  : <XCircle className="w-4 h-4 text-red-600" />
+                }
+                <span className="font-semibold">{lastResult.isCorrect ? 'Correct' : 'Incorrect'}</span>
+                <span className="text-xs bg-amber-100 text-amber-700 px-1.5 py-0.5 rounded font-medium">Admin View</span>
+              </div>
+              {!lastResult.isCorrect && lastResult.correctAnswer && (
+                <p className="text-sm mt-1">Correct answer: <strong>{lastResult.correctAnswer}</strong></p>
+              )}
+            </div>
+          )}
         </div>
       )}
 
