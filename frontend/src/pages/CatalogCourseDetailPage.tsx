@@ -95,7 +95,7 @@ export function CatalogCourseDetailPage() {
 
   const teachers = course.courseTeachers?.map((ct) => ct.teacher?.user?.name).filter(Boolean) || []
   const isSelfPaced = course.courseType === CourseType.SELF_PACED
-  const isLive = course.courseType === 'LIVE' || course.courseType === 'LIVE_REMOTE' || course.courseType === 'LIVE_IN_PERSON'
+  const isLive = (course.courseType as string) === 'LIVE' || course.courseType === CourseType.LIVE_REMOTE || course.courseType === CourseType.LIVE_IN_PERSON
   const sortedContents = [...contents].sort((a, b) => a.orderIndex - b.orderIndex)
   const isOrgAdmin = isAuthenticated && user?.role === UserRole.ORG_ADMIN
 
