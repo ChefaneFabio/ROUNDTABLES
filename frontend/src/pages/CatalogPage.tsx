@@ -69,7 +69,7 @@ export function CatalogPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Course Catalog</h1>
-            <p className="text-gray-600 mt-1">Browse and discover courses</p>
+            <p className="text-gray-600 mt-1">Browse language training courses and programs</p>
           </div>
           <Link
             to="/login"
@@ -102,14 +102,10 @@ export function CatalogPage() {
           >
             <option value="">All Languages</option>
             <option value="English">English</option>
-            <option value="Spanish">Spanish</option>
             <option value="French">French</option>
             <option value="German">German</option>
+            <option value="Spanish">Spanish</option>
             <option value="Italian">Italian</option>
-            <option value="Portuguese">Portuguese</option>
-            <option value="Chinese">Chinese</option>
-            <option value="Japanese">Japanese</option>
-            <option value="Korean">Korean</option>
           </select>
 
           <select
