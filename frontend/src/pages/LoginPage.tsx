@@ -55,9 +55,9 @@ export function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-50 to-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex flex-col items-center">
-          <img src="/favicon.webp" alt="Maka" className="h-20 w-20 rounded-full shadow-xl" />
-        </div>
+        <Link to="/" className="flex flex-col items-center group">
+          <img src="/favicon.webp" alt="Maka" className="h-20 w-20 rounded-full shadow-xl group-hover:shadow-2xl transition-shadow" />
+        </Link>
         <h2 className="mt-4 text-center text-3xl font-bold bg-gradient-to-r from-gray-900 via-gray-800 to-slate-700 bg-clip-text text-transparent">
           Sign in to MAKA LMS
         </h2>
