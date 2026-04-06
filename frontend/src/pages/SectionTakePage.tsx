@@ -335,17 +335,14 @@ export function SectionTakePage() {
     const SkillIcon = SKILL_ICONS[sectionMeta.skill] || BookOpen
     return (
       <div className="max-w-3xl mx-auto">
-        <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-xl border border-white/60 p-8 space-y-6">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 space-y-6">
           <div className="text-center">
-            {assessmentLanguage && (
-              <span className="text-3xl mb-2 block">{LANGUAGE_FLAGS[assessmentLanguage] || ''}</span>
-            )}
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-100 to-indigo-100 mb-4">
-              <SkillIcon className="w-7 h-7 text-indigo-600" />
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gray-100 mb-4">
+              <SkillIcon className="w-6 h-6 text-gray-700" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {assessmentLanguage && <span className="mr-1">{LANGUAGE_FLAGS[assessmentLanguage]}</span>}
-              {label} Section
+              {assessmentLanguage && <span className="text-gray-500 font-medium">{assessmentLanguage} — </span>}
+              {label}
             </h1>
             <div className="flex items-center justify-center gap-3 mt-2">
               <span className="inline-flex items-center gap-1.5 text-sm text-gray-500">
@@ -360,19 +357,19 @@ export function SectionTakePage() {
             </div>
           </div>
 
-          <div className="bg-amber-50/80 border border-amber-200 rounded-xl p-5">
-            <h2 className="font-semibold text-amber-900 mb-3">Instructions / Istruzioni</h2>
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-5">
+            <h2 className="font-semibold text-gray-800 mb-3">Instructions / Istruzioni</h2>
             <div className="space-y-3">
               {instructions.en.map((line, i) => {
                 const InstrIcon = INSTRUCTION_ICONS[i] || Info
                 return (
                   <div key={i} className="flex gap-3 text-sm">
                     <div className="flex-shrink-0 mt-0.5">
-                      <InstrIcon className="w-4 h-4 text-amber-600" />
+                      <InstrIcon className="w-4 h-4 text-gray-500" />
                     </div>
                     <div>
                       <p className="text-gray-800">{line}</p>
-                      <p className="text-amber-700">{instructions.it[i]}</p>
+                      <p className="text-gray-500">{instructions.it[i]}</p>
                     </div>
                   </div>
                 )
@@ -380,13 +377,13 @@ export function SectionTakePage() {
             </div>
           </div>
 
-          <div className="bg-red-50/80 border border-red-200 rounded-xl p-4 flex gap-3 items-start">
-            <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+          <div className="bg-gray-100 border border-gray-200 rounded-xl p-4 flex gap-3 items-start">
+            <AlertCircle className="w-5 h-5 text-gray-500 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm text-red-800 font-medium">
+              <p className="text-sm text-gray-700 font-medium">
                 The timer will start when you click "Start Section".
               </p>
-              <p className="text-sm text-red-600">
+              <p className="text-sm text-gray-500">
                 Il timer partira quando clicchi "Inizia Sezione".
               </p>
             </div>
@@ -402,7 +399,7 @@ export function SectionTakePage() {
             </button>
             <button
               onClick={handleStartSection}
-              className="inline-flex items-center gap-2 px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/25"
+              className="inline-flex items-center gap-2 px-8 py-3 bg-gray-900 text-white rounded-xl font-semibold text-lg hover:bg-gray-800 transition-all"
             >
               Start Section / Inizia Sezione
               <ArrowRight className="w-5 h-5" />
