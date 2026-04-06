@@ -1029,6 +1029,39 @@ router.delete('/:id/meeting', authenticate, requireSchoolAdmin, async (req: Requ
   }
 })
 
+// Manually send meeting link to all students and teachers NOW
+router.post('/:id/send-reminder', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+
+    const lesson = await prisma.lesson.findFirst({
+      where: { id, deletedAt: null },
+      include: {
+        course: { select: { id: true, name: true, schoolId: true } },
+        teacher: { include: { user: { select: { email: true, name: true } } } }
+      }
+    })
+
+    if (!lesson) {
+      return res.status(404).json(apiResponse.error('Lesson not found', 'NOT_FOUND'))
+    }
+
+    if (!lesson.meetingLink) {
+      return res.status(400).json(apiResponse.error('Lesson has no meeting link configured', 'NO_MEETING'))
+    }
+
+    if (!emailService.isConfigured()) {
+      return res.status(400).json(apiResponse.error('Email service not configured (SMTP not set)', 'EMAIL_NOT_CONFIGURED'))
+    }
+
+    await sendMeetingLinks(lesson)
+
+    res.json(apiResponse.success({ sent: true }, 'Meeting links sent to all participants'))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
 // Get meeting join link (different for host vs participant)
 router.get('/:id/meeting/join', authenticate, async (req: Request, res: Response) => {
   try {

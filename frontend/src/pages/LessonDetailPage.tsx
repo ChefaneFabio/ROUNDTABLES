@@ -5,7 +5,7 @@ import { format } from 'date-fns'
 import {
   ArrowLeft, Clock, BookOpen, Users, Video, FileText,
   Image, Link as LinkIcon, Music, File, ChevronDown,
-  Download, ExternalLink, Check, X
+  Download, ExternalLink, Check, X, Send
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { lessonsApi } from '../services/api'
@@ -29,6 +29,8 @@ export function LessonDetailPage() {
   const queryClient = useQueryClient()
   const { isAdmin, isTeacher } = useAuth()
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false)
+  const [sendingLink, setSendingLink] = useState(false)
+  const [sendLinkMsg, setSendLinkMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
   const { data: lesson, isLoading } = useQuery(
     ['lesson', id],
@@ -239,8 +241,39 @@ export function LessonDetailPage() {
                     Host Link
                   </Button>
                 )}
+                {lesson.meetingLink && isAdmin && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    leftIcon={<Send className="h-4 w-4" />}
+                    disabled={sendingLink}
+                    onClick={async () => {
+                      try {
+                        setSendingLink(true)
+                        setSendLinkMsg(null)
+                        const { default: api } = await import('../services/api')
+                        await api.post(`/lessons/${id}/send-reminder`)
+                        setSendLinkMsg({ type: 'success', text: 'Meeting link sent to all students and teachers' })
+                        setTimeout(() => setSendLinkMsg(null), 5000)
+                      } catch (err: any) {
+                        setSendLinkMsg({ type: 'error', text: err.response?.data?.error || 'Failed to send' })
+                      } finally {
+                        setSendingLink(false)
+                      }
+                    }}
+                  >
+                    {sendingLink ? 'Sending...' : 'Send Link Now'}
+                  </Button>
+                )}
               </div>
             </div>
+            {sendLinkMsg && (
+              <div className={`mt-3 px-3 py-2 rounded-lg text-sm ${
+                sendLinkMsg.type === 'success' ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'
+              }`}>
+                {sendLinkMsg.text}
+              </div>
+            )}
             {lesson.meetingRecordingUrl && (
               <div className="mt-3 pt-3 border-t">
                 <a

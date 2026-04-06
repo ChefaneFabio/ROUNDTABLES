@@ -67,6 +67,7 @@ import OrgAssessmentsPage from './pages/org/OrgAssessmentsPage'
 import AdminOrganizationsPage from './pages/admin/OrganizationsPage'
 import IntegrationsPage from './pages/admin/IntegrationsPage'
 import TeacherAvailabilityAdminPage from './pages/admin/TeacherAvailabilityAdminPage'
+import NotificationSettingsPage from './pages/admin/NotificationSettingsPage'
 import OrganizationDetailPage from './pages/admin/OrganizationDetailPage'
 import SelfPacedCoursePage from './pages/SelfPacedCoursePage'
 import { BusinessPage } from './pages/BusinessPage'
@@ -667,6 +668,17 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <TeacherAvailabilityAdminPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin/notification-settings"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <NotificationSettingsPage />
             </Layout>
           </ProtectedRoute>
         }
