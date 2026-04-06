@@ -341,7 +341,12 @@ export function SectionTakePage() {
               <SkillIcon className="w-6 h-6 text-gray-700" />
             </div>
             <h1 className="text-2xl font-bold text-gray-900">
-              {assessmentLanguage && <span className="text-gray-500 font-medium">{assessmentLanguage} — </span>}
+              {assessmentLanguage && (
+                <span className="text-gray-500 font-medium">
+                  {LANGUAGE_FLAGS[assessmentLanguage] && <span className="mr-1.5 text-lg">{LANGUAGE_FLAGS[assessmentLanguage]}</span>}
+                  {assessmentLanguage} —{' '}
+                </span>
+              )}
               {label}
             </h1>
             <div className="flex items-center justify-center gap-3 mt-2">
