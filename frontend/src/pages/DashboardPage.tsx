@@ -15,6 +15,7 @@ import {
   Award,
   ArrowRight,
   Eye,
+  Package,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { useAuth } from '../contexts/AuthContext'
@@ -632,6 +633,65 @@ function StudentDashboard({ data }: { data: any }) {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* SCORM E-Learning Progress */}
+      {data?.scormAttempts && data.scormAttempts.length > 0 && (
+        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+              E-Learning Modules
+            </h3>
+          </div>
+          <div className="p-6 space-y-3">
+            {data.scormAttempts.map((attempt: any) => {
+              const statusColors: Record<string, string> = {
+                NOT_ATTEMPTED: 'bg-gray-100 text-gray-600',
+                INCOMPLETE: 'bg-amber-100 text-amber-700',
+                COMPLETED: 'bg-green-100 text-green-700',
+                PASSED: 'bg-green-100 text-green-700',
+                FAILED: 'bg-red-100 text-red-700'
+              }
+              const statusLabels: Record<string, string> = {
+                NOT_ATTEMPTED: 'Not Started',
+                INCOMPLETE: 'In Progress',
+                COMPLETED: 'Completed',
+                PASSED: 'Passed',
+                FAILED: 'Failed'
+              }
+              return (
+                <Link
+                  key={attempt.id}
+                  to={`/scorm/${attempt.scormPackageId}`}
+                  className="flex items-center justify-between p-4 rounded-lg border border-gray-100 bg-gray-50/50 hover:border-gray-200 hover:shadow-sm transition-all"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-indigo-50 rounded-lg">
+                      <Package className="w-5 h-5 text-indigo-600" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">
+                        {attempt.scormPackage?.title}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        {attempt.scormPackage?.version === 'SCORM_12' ? 'SCORM 1.2' : 'SCORM 2004'}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    {attempt.score !== null && (
+                      <span className="text-sm font-medium text-gray-700">{attempt.score}%</span>
+                    )}
+                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[attempt.status] || statusColors.NOT_ATTEMPTED}`}>
+                      {statusLabels[attempt.status] || attempt.status}
+                    </span>
+                    <ArrowRight className="w-4 h-4 text-gray-400" />
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         </div>
       )}

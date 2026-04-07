@@ -158,8 +158,43 @@ router.get('/:id', authenticate, async (req: Request, res: Response) => {
           },
         })
 
+        // Also get SCORM attempt statuses for courses that contain SCORM content
+        const scormAttempts = await prisma.scormAttempt.findMany({
+          where: {
+            studentId: req.user.studentId,
+            scormPackage: {
+              courseContents: {
+                some: { courseId: { in: path.courses.map(c => c.courseId) } }
+              }
+            }
+          },
+          include: {
+            scormPackage: {
+              select: {
+                courseContents: { select: { courseId: true }, take: 1 }
+              }
+            }
+          }
+        })
+
         const progressMap = Object.fromEntries(courseProgress.map(p => [p.courseId, p]))
+
+        // Attach SCORM attempt info to progress map
+        const scormByCourse: Record<string, any[]> = {}
+        scormAttempts.forEach(a => {
+          const courseId = a.scormPackage.courseContents[0]?.courseId
+          if (courseId) {
+            if (!scormByCourse[courseId]) scormByCourse[courseId] = []
+            scormByCourse[courseId].push({
+              status: a.status,
+              score: a.score,
+              completedAt: a.completedAt
+            })
+          }
+        })
+
         ;(enrollment as any).courseProgress = progressMap
+        ;(enrollment as any).scormProgress = scormByCourse
       }
     }
 
@@ -370,8 +405,56 @@ router.post('/:id/advance', authenticate, async (req: Request, res: Response) =>
       where: { studentId_courseId: { studentId, courseId: currentCourse.courseId } },
     })
 
-    const percentage = Number(progress?.percentage ?? 0)
+    let percentage = Number(progress?.percentage ?? 0)
     const minRequired = currentCourse.minScore ?? 70
+
+    // For self-paced courses, also check SCORM content completion
+    const courseData = await prisma.course.findUnique({
+      where: { id: currentCourse.courseId },
+      select: { courseType: true }
+    })
+
+    if (courseData?.courseType === 'SELF_PACED') {
+      // Get all course content items
+      const contents = await prisma.courseContent.findMany({
+        where: { courseId: currentCourse.courseId },
+        select: { id: true, videoId: true, exerciseId: true, scormPackageId: true, isRequired: true }
+      })
+
+      const requiredContents = contents.filter(c => c.isRequired)
+
+      if (requiredContents.length > 0) {
+        // Check SCORM completions
+        const scormIds = requiredContents
+          .filter(c => c.scormPackageId)
+          .map(c => c.scormPackageId!)
+
+        let scormCompletedCount = 0
+        if (scormIds.length > 0) {
+          scormCompletedCount = await prisma.scormAttempt.count({
+            where: {
+              studentId,
+              scormPackageId: { in: scormIds },
+              status: { in: ['COMPLETED', 'PASSED'] }
+            }
+          })
+        }
+
+        // Calculate content-based progress (videos/exercises tracked via Progress, SCORM via attempts)
+        const nonScormRequired = requiredContents.filter(c => !c.scormPackageId).length
+        const scormRequired = scormIds.length
+        const totalRequired = nonScormRequired + scormRequired
+
+        if (totalRequired > 0 && scormRequired > 0) {
+          // Blend: use existing progress % for non-SCORM, add SCORM completion ratio
+          const scormPortion = (scormCompletedCount / scormRequired) * 100
+          const nonScormPortion = nonScormRequired > 0 ? percentage : 100
+          percentage = Math.round(
+            (nonScormPortion * nonScormRequired + scormPortion * scormRequired) / totalRequired
+          )
+        }
+      }
+    }
 
     if (percentage < minRequired) {
       return res.status(400).json(apiResponse.error(

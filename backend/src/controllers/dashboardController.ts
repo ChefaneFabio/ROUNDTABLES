@@ -227,7 +227,8 @@ async function getStudentDashboard(studentId: string) {
     recentFeedback,
     progressSummary,
     attendanceStats,
-    assignedAssessments
+    assignedAssessments,
+    scormAttempts
   ] = await Promise.all([
     prisma.student.findUnique({
       where: { id: studentId },
@@ -285,6 +286,15 @@ async function getStudentDashboard(studentId: string) {
     prisma.assessment.findMany({
       where: { studentId, status: 'ASSIGNED' },
       orderBy: { assignedAt: 'desc' }
+    }),
+    prisma.scormAttempt.findMany({
+      where: { studentId },
+      orderBy: { updatedAt: 'desc' },
+      include: {
+        scormPackage: {
+          select: { id: true, title: true, version: true, thumbnailUrl: true, passingScore: true }
+        }
+      }
     })
   ])
 
@@ -293,6 +303,12 @@ async function getStudentDashboard(studentId: string) {
     ? progressSummary.reduce((sum, p) => sum + Number(p.percentage), 0) / progressSummary.length
     : 0
 
+  // SCORM stats
+  const scormCompleted = scormAttempts.filter(
+    a => a.status === 'COMPLETED' || a.status === 'PASSED'
+  ).length
+  const scormInProgress = scormAttempts.filter(a => a.status === 'INCOMPLETE').length
+
   return {
     student,
     stats: {
@@ -300,13 +316,16 @@ async function getStudentDashboard(studentId: string) {
       completedCourses: enrollments.filter(e => e.status === 'COMPLETED').length,
       upcomingLessonsCount: upcomingLessons.length,
       averageProgress: Math.round(totalProgress),
+      scormCompleted,
+      scormInProgress,
       ...attendanceStats
     },
     enrollments,
     upcomingLessons,
     recentFeedback,
     progress: progressSummary,
-    assignedAssessments
+    assignedAssessments,
+    scormAttempts
   }
 }
 

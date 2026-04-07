@@ -329,6 +329,16 @@ export const coursesApi = {
     const response = await api.get(`/courses/${courseId}/lessons`)
     return response.data.data || []
   },
+
+  async getContents(courseId: string): Promise<any[]> {
+    const response = await api.get(`/courses/${courseId}/contents`)
+    return response.data.data || []
+  },
+
+  async addContent(courseId: string, data: any): Promise<any> {
+    const response = await api.post(`/courses/${courseId}/contents`, data)
+    return response.data.data
+  },
 }
 
 // Lessons API

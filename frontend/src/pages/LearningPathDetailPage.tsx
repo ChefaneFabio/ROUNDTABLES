@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../components/common/Toast'
 import { learningPathApi, LearningPath } from '../services/learningPathApi'
-import { Route, BookOpen, Clock, CheckCircle, Lock, ChevronRight, Play, TrendingUp, ArrowLeft } from 'lucide-react'
+import { Route, BookOpen, Clock, CheckCircle, Lock, ChevronRight, Play, TrendingUp, ArrowLeft, Package } from 'lucide-react'
 
 export default function LearningPathDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -73,6 +73,7 @@ export default function LearningPathDetailPage() {
 
   const enrollment = path.enrollment
   const courseProgress = (enrollment as any)?.courseProgress || {}
+  const scormProgress = (enrollment as any)?.scormProgress || {}
   const isEnrolled = !!enrollment
   const currentIndex = enrollment?.currentCourseIndex ?? -1
 
@@ -215,6 +216,20 @@ export default function LearningPathDetailPage() {
                   </div>
                   {pc.course.description && (
                     <p className="text-xs text-gray-500 mt-0.5 truncate">{pc.course.description}</p>
+                  )}
+
+                  {/* SCORM status for courses with SCORM content */}
+                  {scormProgress[pc.courseId] && scormProgress[pc.courseId].length > 0 && (
+                    <div className="flex items-center gap-1.5 mt-1">
+                      <Package className="w-3 h-3 text-indigo-500" />
+                      {scormProgress[pc.courseId].some((a: any) => a.status === 'PASSED' || a.status === 'COMPLETED') ? (
+                        <span className="text-[10px] font-medium text-green-600">E-Learning Complete</span>
+                      ) : scormProgress[pc.courseId].some((a: any) => a.status === 'INCOMPLETE') ? (
+                        <span className="text-[10px] font-medium text-amber-600">E-Learning In Progress</span>
+                      ) : (
+                        <span className="text-[10px] font-medium text-gray-400">E-Learning Pending</span>
+                      )}
+                    </div>
                   )}
 
                   {/* Progress bar for current/completed courses */}

@@ -5,7 +5,7 @@ import { format } from 'date-fns'
 import {
   ArrowLeft, BookOpen, Users, Calendar, Clock, Globe,
   DollarSign, Play, ChevronDown, Bell, BellOff, Tag, MessageSquare,
-  BookKey, Send, Plus, Trash2, Upload
+  BookKey, Send, Plus, Trash2, Upload, Package, Dumbbell, Video
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { coursesApi, feedbackApi, materialCodesApi, assignmentsApi } from '../services/api'
@@ -58,6 +58,12 @@ export function CourseDetailPage() {
     ['course-assignments', id],
     () => assignmentsApi.getForCourse(id!),
     { enabled: !!id && (isAdmin || isTeacher) }
+  )
+
+  const { data: courseContents = [] } = useQuery(
+    ['course-contents', id],
+    () => coursesApi.getContents(id!),
+    { enabled: !!id && course?.courseType === 'SELF_PACED' }
   )
 
   const statusMutation = useMutation(
@@ -368,6 +374,67 @@ export function CourseDetailPage() {
                     </div>
                   </div>
                 ))}
+            </div>
+          </CardBody>
+        </Card>
+      )}
+
+      {/* Course Contents (Self-Paced) */}
+      {courseContents.length > 0 && (
+        <Card>
+          <CardHeader>
+            <h2 className="text-lg font-semibold text-gray-900">Course Contents</h2>
+          </CardHeader>
+          <CardBody>
+            <div className="space-y-2">
+              {courseContents
+                .sort((a: any, b: any) => a.orderIndex - b.orderIndex)
+                .map((content: any, index: number) => {
+                  const isVideo = !!content.video
+                  const isExercise = !!content.exercise
+                  const isScorm = !!content.scormPackage
+                  const title = content.video?.title || content.exercise?.title || content.scormPackage?.title || 'Untitled'
+                  const description = content.video?.description || content.exercise?.description || content.scormPackage?.description
+                  const link = isVideo ? `/videos/${content.videoId}` :
+                               isExercise ? `/exercises/${content.exerciseId}` :
+                               isScorm ? `/scorm/${content.scormPackageId}` : '#'
+
+                  return (
+                    <Link
+                      key={content.id}
+                      to={link}
+                      className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                    >
+                      <span className="flex-shrink-0 h-7 w-7 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-sm font-medium">
+                        {index + 1}
+                      </span>
+                      <div className="flex-shrink-0">
+                        {isVideo && <Video className="w-5 h-5 text-blue-500" />}
+                        {isExercise && <Dumbbell className="w-5 h-5 text-purple-500" />}
+                        {isScorm && <Package className="w-5 h-5 text-indigo-500" />}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">{title}</p>
+                        {description && (
+                          <p className="text-xs text-gray-500 truncate">{description}</p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {content.isRequired && (
+                          <Badge variant="warning">Required</Badge>
+                        )}
+                        {isScorm && (
+                          <span className="text-xs text-gray-400 font-mono">
+                            {content.scormPackage.version === 'SCORM_12' ? 'SCORM 1.2' : 'SCORM 2004'}
+                          </span>
+                        )}
+                        {content.video?.cefrLevel && (
+                          <Badge variant="info">{content.video.cefrLevel}</Badge>
+                        )}
+                      </div>
+                    </Link>
+                  )
+                })}
             </div>
           </CardBody>
         </Card>
