@@ -339,6 +339,15 @@ export const coursesApi = {
     const response = await api.post(`/courses/${courseId}/contents`, data)
     return response.data.data
   },
+
+  async removeContent(courseId: string, contentId: string): Promise<void> {
+    await api.delete(`/courses/${courseId}/contents/${contentId}`)
+  },
+
+  async reorderContents(courseId: string, contentIds: string[]): Promise<any> {
+    const response = await api.put(`/courses/${courseId}/contents/reorder`, { contentIds })
+    return response.data.data
+  },
 }
 
 // Lessons API

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BarChart3, Users, BookOpen, TrendingUp } from 'lucide-react'
+import { BarChart3, Users, BookOpen, TrendingUp, Package } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import api from '../../services/api'
 import { LoadingSpinner } from '../../components/common/LoadingSpinner'
@@ -25,6 +25,8 @@ export default function OrgReportsPage() {
     : 0
   const totalEnrollments = report.reduce((s, r) => s + r.totalEnrollments, 0)
   const activeEnrollments = report.reduce((s, r) => s + r.activeEnrollments, 0)
+  const scormCompleted = report.reduce((s, r) => s + (r.scormCompleted || 0), 0)
+  const scormTotal = report.reduce((s, r) => s + (r.scormTotal || 0), 0)
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
@@ -61,6 +63,32 @@ export default function OrgReportsPage() {
         </div>
       </div>
 
+      {/* SCORM summary */}
+      {scormTotal > 0 && (
+        <div className="bg-white rounded-lg border p-4">
+          <div className="flex items-center gap-3 mb-3">
+            <Package className="w-5 h-5 text-indigo-600" />
+            <h3 className="text-sm font-semibold text-gray-700">E-Learning Modules</h3>
+          </div>
+          <div className="grid grid-cols-3 gap-4 text-center">
+            <div>
+              <div className="text-xl font-bold text-indigo-700">{scormTotal}</div>
+              <div className="text-xs text-gray-500">Total Attempts</div>
+            </div>
+            <div>
+              <div className="text-xl font-bold text-green-700">{scormCompleted}</div>
+              <div className="text-xs text-gray-500">Completed</div>
+            </div>
+            <div>
+              <div className="text-xl font-bold text-gray-700">
+                {scormTotal > 0 ? Math.round((scormCompleted / scormTotal) * 100) : 0}%
+              </div>
+              <div className="text-xs text-gray-500">Completion Rate</div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Employee table */}
       {report.length === 0 ? (
         <div className="text-center py-12 bg-white rounded-lg border">
@@ -75,6 +103,7 @@ export default function OrgReportsPage() {
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Employee</th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Level</th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Courses</th>
+                <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">E-Learning</th>
                 <th className="text-left px-4 py-3 text-xs font-medium text-gray-500 uppercase">Progress</th>
               </tr>
             </thead>
@@ -103,6 +132,27 @@ export default function OrgReportsPage() {
                       ))}
                       {emp.courses.length === 0 && <span className="text-gray-400">No courses</span>}
                     </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    {emp.scormModules && emp.scormModules.length > 0 ? (
+                      <div className="space-y-1">
+                        {emp.scormModules.map((s: any, i: number) => (
+                          <div key={i} className="flex items-center gap-2">
+                            <span className="text-gray-700 truncate max-w-[120px]" title={s.packageTitle}>{s.packageTitle}</span>
+                            <span className={`px-1.5 py-0.5 rounded text-[10px] font-medium ${
+                              s.status === 'PASSED' || s.status === 'COMPLETED' ? 'bg-green-100 text-green-700' :
+                              s.status === 'INCOMPLETE' ? 'bg-amber-100 text-amber-700' :
+                              s.status === 'FAILED' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'
+                            }`}>{s.status === 'NOT_ATTEMPTED' ? 'NOT STARTED' : s.status}</span>
+                            {s.score !== null && (
+                              <span className="text-xs text-gray-500">{s.score}%</span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-400">—</span>
+                    )}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">

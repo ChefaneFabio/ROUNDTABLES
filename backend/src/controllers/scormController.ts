@@ -10,6 +10,9 @@ import { authenticate } from '../middleware/auth'
 import { requireSchoolAdmin, requireTeacher } from '../middleware/rbac'
 import { validateRequest } from '../middleware/validateRequest'
 import { apiResponse, handleError } from '../utils/apiResponse'
+import { CertificateService } from '../services/CertificateService'
+
+const certificateService = new CertificateService()
 
 const router = Router()
 
@@ -428,6 +431,18 @@ router.put('/:id/attempt/:attemptId/runtime', authenticate, validateRequest(save
       where: { id: attemptId },
       data: updateData
     })
+
+    // Auto-generate certificate when SCORM is completed/passed
+    if (updateData.status === 'COMPLETED' || updateData.status === 'PASSED') {
+      const studentId = getStudentId(req)
+      if (studentId) {
+        try {
+          await certificateService.generateScormCertificate(studentId, req.params.id)
+        } catch {
+          // Certificate may already exist or score too low — not a critical error
+        }
+      }
+    }
 
     res.json(apiResponse.success(attempt))
   } catch (error) {

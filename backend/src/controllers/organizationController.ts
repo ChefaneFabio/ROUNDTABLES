@@ -483,7 +483,13 @@ router.get('/:id/reports', authenticate, requireOrgAdmin, requireOrgAccess, asyn
             course: { select: { name: true, status: true } }
           }
         },
-        progress: true
+        progress: true,
+        scormAttempts: {
+          include: {
+            scormPackage: { select: { title: true, version: true, passingScore: true } }
+          },
+          orderBy: { updatedAt: 'desc' }
+        }
       }
     })
 
@@ -506,11 +512,22 @@ router.get('/:id/reports', authenticate, requireOrgAdmin, requireOrgAccess, asyn
             totalLessons: prog?.totalLessons || 0
           }
         }),
+        scormModules: emp.scormAttempts.map(a => ({
+          packageTitle: a.scormPackage.title,
+          version: a.scormPackage.version,
+          status: a.status,
+          score: a.score,
+          totalTime: a.totalTime,
+          completedAt: a.completedAt,
+          startedAt: a.startedAt
+        })),
         totalEnrollments: emp.enrollments.length,
         activeEnrollments: emp.enrollments.filter(e => e.status === 'ACTIVE').length,
         avgProgress: emp.progress.length > 0
           ? Math.round(emp.progress.reduce((sum, p) => sum + Number(p.percentage), 0) / emp.progress.length)
-          : 0
+          : 0,
+        scormCompleted: emp.scormAttempts.filter(a => a.status === 'COMPLETED' || a.status === 'PASSED').length,
+        scormTotal: emp.scormAttempts.length
       }
     })
 

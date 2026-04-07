@@ -8,7 +8,7 @@ import {
   BookKey, Send, Plus, Trash2, Upload, Package, Dumbbell, Video
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
-import { coursesApi, feedbackApi, materialCodesApi, assignmentsApi } from '../services/api'
+import { coursesApi, feedbackApi, materialCodesApi, assignmentsApi, scormApi } from '../services/api'
 import { Card, CardBody, CardHeader } from '../components/common/Card'
 import { Button } from '../components/common/Button'
 import { Badge, StatusBadge } from '../components/common/Badge'
@@ -23,6 +23,10 @@ export function CourseDetailPage() {
   const [codeForm, setCodeForm] = useState({ codeType: 'BOOK', materialName: '', code: '', isGroupCode: false })
   const [codeSending, setCodeSending] = useState(false)
   const [codeSendResult, setCodeSendResult] = useState('')
+  const [showAddContent, setShowAddContent] = useState(false)
+  const [addContentType, setAddContentType] = useState<'video' | 'exercise' | 'scorm'>('scorm')
+  const [scormPackages, setScormPackages] = useState<any[]>([])
+  const [removingContentId, setRemovingContentId] = useState<string | null>(null)
 
   const { data: course, isLoading } = useQuery(
     ['course', id],
@@ -380,64 +384,202 @@ export function CourseDetailPage() {
       )}
 
       {/* Course Contents (Self-Paced) */}
-      {courseContents.length > 0 && (
+      {course?.courseType === 'SELF_PACED' && (
         <Card>
-          <CardHeader>
+          <CardHeader className="flex items-center justify-between">
             <h2 className="text-lg font-semibold text-gray-900">Course Contents</h2>
+            {isAdmin && (
+              <Button
+                size="sm"
+                onClick={async () => {
+                  setShowAddContent(true)
+                  try {
+                    const data = await scormApi.list({ limit: 100 })
+                    setScormPackages(data.packages || [])
+                  } catch { /* ignore */ }
+                }}
+              >
+                <Plus className="w-4 h-4 mr-1" />
+                Add Content
+              </Button>
+            )}
           </CardHeader>
           <CardBody>
-            <div className="space-y-2">
-              {courseContents
-                .sort((a: any, b: any) => a.orderIndex - b.orderIndex)
-                .map((content: any, index: number) => {
-                  const isVideo = !!content.video
-                  const isExercise = !!content.exercise
-                  const isScorm = !!content.scormPackage
-                  const title = content.video?.title || content.exercise?.title || content.scormPackage?.title || 'Untitled'
-                  const description = content.video?.description || content.exercise?.description || content.scormPackage?.description
-                  const link = isVideo ? `/videos/${content.videoId}` :
-                               isExercise ? `/exercises/${content.exerciseId}` :
-                               isScorm ? `/scorm/${content.scormPackageId}` : '#'
+            {courseContents.length === 0 ? (
+              <p className="text-sm text-gray-500 text-center py-6">No content added yet. Add videos, exercises, or SCORM packages.</p>
+            ) : (
+              <div className="space-y-2">
+                {courseContents
+                  .sort((a: any, b: any) => a.orderIndex - b.orderIndex)
+                  .map((content: any, index: number) => {
+                    const isVideo = !!content.video
+                    const isExercise = !!content.exercise
+                    const isScorm = !!content.scormPackage
+                    const title = content.video?.title || content.exercise?.title || content.scormPackage?.title || 'Untitled'
+                    const description = content.video?.description || content.exercise?.description || content.scormPackage?.description
+                    const link = isVideo ? `/videos/${content.videoId}` :
+                                 isExercise ? `/exercises/${content.exerciseId}` :
+                                 isScorm ? `/scorm/${content.scormPackageId}` : '#'
 
-                  return (
-                    <Link
-                      key={content.id}
-                      to={link}
-                      className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
-                    >
-                      <span className="flex-shrink-0 h-7 w-7 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-sm font-medium">
-                        {index + 1}
-                      </span>
-                      <div className="flex-shrink-0">
-                        {isVideo && <Video className="w-5 h-5 text-blue-500" />}
-                        {isExercise && <Dumbbell className="w-5 h-5 text-purple-500" />}
-                        {isScorm && <Package className="w-5 h-5 text-indigo-500" />}
+                    return (
+                      <div
+                        key={content.id}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors"
+                      >
+                        <span className="flex-shrink-0 h-7 w-7 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center text-sm font-medium">
+                          {index + 1}
+                        </span>
+                        <div className="flex-shrink-0">
+                          {isVideo && <Video className="w-5 h-5 text-blue-500" />}
+                          {isExercise && <Dumbbell className="w-5 h-5 text-purple-500" />}
+                          {isScorm && <Package className="w-5 h-5 text-indigo-500" />}
+                        </div>
+                        <Link to={link} className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-gray-900 truncate">{title}</p>
+                          {description && (
+                            <p className="text-xs text-gray-500 truncate">{description}</p>
+                          )}
+                        </Link>
+                        <div className="flex items-center gap-2">
+                          {content.isRequired && (
+                            <Badge variant="warning">Required</Badge>
+                          )}
+                          {isScorm && (
+                            <span className="text-xs text-gray-400 font-mono">
+                              {content.scormPackage.version === 'SCORM_12' ? 'SCORM 1.2' : 'SCORM 2004'}
+                            </span>
+                          )}
+                          {content.video?.cefrLevel && (
+                            <Badge variant="info">{content.video.cefrLevel}</Badge>
+                          )}
+                          {isAdmin && (
+                            removingContentId === content.id ? (
+                              <div className="flex items-center gap-1">
+                                <button
+                                  onClick={async () => {
+                                    await coursesApi.removeContent(id!, content.id)
+                                    queryClient.invalidateQueries(['course-contents', id])
+                                    setRemovingContentId(null)
+                                  }}
+                                  className="px-2 py-0.5 text-xs text-white bg-red-600 rounded hover:bg-red-700"
+                                >
+                                  Remove
+                                </button>
+                                <button
+                                  onClick={() => setRemovingContentId(null)}
+                                  className="px-2 py-0.5 text-xs text-gray-600 bg-gray-200 rounded"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => setRemovingContentId(content.id)}
+                                className="p-1 text-gray-400 hover:text-red-500 rounded"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
+                            )
+                          )}
+                        </div>
                       </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 truncate">{title}</p>
-                        {description && (
-                          <p className="text-xs text-gray-500 truncate">{description}</p>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-2">
-                        {content.isRequired && (
-                          <Badge variant="warning">Required</Badge>
-                        )}
-                        {isScorm && (
-                          <span className="text-xs text-gray-400 font-mono">
-                            {content.scormPackage.version === 'SCORM_12' ? 'SCORM 1.2' : 'SCORM 2004'}
-                          </span>
-                        )}
-                        {content.video?.cefrLevel && (
-                          <Badge variant="info">{content.video.cefrLevel}</Badge>
-                        )}
-                      </div>
-                    </Link>
-                  )
-                })}
-            </div>
+                    )
+                  })}
+              </div>
+            )}
           </CardBody>
         </Card>
+      )}
+
+      {/* Add Content Modal */}
+      {showAddContent && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-lg max-h-[80vh] flex flex-col">
+            <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-900">Add Content to Course</h2>
+              <button onClick={() => setShowAddContent(false)} className="text-gray-400 hover:text-gray-600">
+                <span className="text-xl">&times;</span>
+              </button>
+            </div>
+            <div className="p-6 overflow-y-auto">
+              {/* Type tabs */}
+              <div className="flex gap-2 mb-4">
+                {(['scorm', 'video', 'exercise'] as const).map(type => (
+                  <button
+                    key={type}
+                    onClick={() => setAddContentType(type)}
+                    className={`px-3 py-1.5 text-sm rounded-lg font-medium transition-colors ${
+                      addContentType === type
+                        ? 'bg-primary-600 text-white'
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                    }`}
+                  >
+                    {type === 'scorm' ? 'SCORM Package' : type === 'video' ? 'Video' : 'Exercise'}
+                  </button>
+                ))}
+              </div>
+
+              {/* SCORM packages list */}
+              {addContentType === 'scorm' && (
+                <div className="space-y-2">
+                  {scormPackages.length === 0 ? (
+                    <p className="text-sm text-gray-500 text-center py-6">
+                      No SCORM packages available. <Link to="/admin/scorm" className="text-primary-600 hover:underline">Upload one</Link>.
+                    </p>
+                  ) : (
+                    scormPackages.filter(p => p.isPublished).map((pkg: any) => {
+                      const alreadyAdded = courseContents.some((c: any) => c.scormPackageId === pkg.id)
+                      return (
+                        <div
+                          key={pkg.id}
+                          className={`flex items-center justify-between p-3 rounded-lg border ${
+                            alreadyAdded ? 'border-green-200 bg-green-50' : 'border-gray-200 hover:border-gray-300'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <Package className="w-5 h-5 text-indigo-500" />
+                            <div>
+                              <p className="text-sm font-medium text-gray-900">{pkg.title}</p>
+                              <p className="text-xs text-gray-500">
+                                {pkg.version === 'SCORM_12' ? 'SCORM 1.2' : 'SCORM 2004'}
+                              </p>
+                            </div>
+                          </div>
+                          {alreadyAdded ? (
+                            <span className="text-xs text-green-600 font-medium">Added</span>
+                          ) : (
+                            <button
+                              onClick={async () => {
+                                await coursesApi.addContent(id!, { scormPackageId: pkg.id })
+                                queryClient.invalidateQueries(['course-contents', id])
+                                setShowAddContent(false)
+                              }}
+                              className="px-3 py-1 text-xs text-white bg-primary-600 rounded-lg hover:bg-primary-700"
+                            >
+                              Add
+                            </button>
+                          )}
+                        </div>
+                      )
+                    })
+                  )}
+                </div>
+              )}
+
+              {/* Placeholder for video/exercise selection */}
+              {addContentType === 'video' && (
+                <p className="text-sm text-gray-500 text-center py-6">
+                  Select videos from the <Link to="/admin/videos/libraries" className="text-primary-600 hover:underline">Video Library</Link> and add them via the library manager.
+                </p>
+              )}
+              {addContentType === 'exercise' && (
+                <p className="text-sm text-gray-500 text-center py-6">
+                  Select exercises from the <Link to="/admin/exercises" className="text-primary-600 hover:underline">Exercise Library</Link> and add them via the exercise manager.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
       )}
 
       {/* Lessons */}
