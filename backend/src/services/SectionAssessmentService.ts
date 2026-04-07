@@ -808,7 +808,10 @@ export class SectionAssessmentService {
         const studentName = assessment.student.user.name
         const language = assessment.language
         const skillLabel = section.skill.charAt(0) + section.skill.slice(1).toLowerCase()
-        const scoreText = percentageScore != null ? `${percentageScore}%` : 'pending review'
+        const isAutoScored = autoScoredSkills.includes(section.skill)
+        const resultText = isAutoScored
+          ? `Result: ${determinedLevel} (${percentageScore != null ? `${percentageScore}%` : 'N/A'})`
+          : 'Pending AI evaluation — level will be determined after review'
 
         const admins = await prisma.user.findMany({
           where: { role: 'ADMIN', isActive: true, deletedAt: null }
@@ -819,7 +822,7 @@ export class SectionAssessmentService {
             data: {
               type: 'GENERAL',
               subject: `Section Complete: ${studentName} — ${skillLabel} (${language})`,
-              content: `${studentName} completed the ${skillLabel} section of their ${language} placement test. Result: ${determinedLevel} (${scoreText})`,
+              content: `${studentName} completed the ${skillLabel} section of their ${language} placement test. ${resultText}`,
               status: 'SENT',
               sentAt: new Date(),
               userId: admin.id,
@@ -827,7 +830,7 @@ export class SectionAssessmentService {
                 assessmentId,
                 sectionId,
                 skill: section.skill,
-                cefrLevel: determinedLevel,
+                cefrLevel: isAutoScored ? determinedLevel : null,
                 percentageScore,
                 type: 'SECTION_COMPLETED'
               }
