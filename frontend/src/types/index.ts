@@ -6,11 +6,22 @@ export interface User {
   id: string
   email: string
   name: string
+  surname?: string
   role: UserRole
   phone?: string
   address?: string
+  city?: string
+  province?: string
+  postalCode?: string
+  country?: string
+  dateOfBirth?: string
+  placeOfBirth?: string
+  nationality?: string
+  fiscalCode?: string
+  gender?: string
   bio?: string
   preferredLanguage?: string
+  nativeLanguage?: string
   isActive: boolean
   lastLoginAt?: Date
   createdAt: Date

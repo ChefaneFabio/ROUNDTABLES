@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import { Users, Plus, Mail, Phone, Shield, X } from 'lucide-react'
+import { Users, Plus, Shield, X } from 'lucide-react'
 import api from '../../services/api'
 import { Card } from '../../components/common/Card'
 import { Button } from '../../components/common/Button'
@@ -14,11 +14,9 @@ export default function TeamPage() {
   const [success, setSuccess] = useState('')
   const [form, setForm] = useState({ email: '', password: '', name: '', surname: '', phone: '' })
 
-  // Load all admin users
-  const { data, isLoading } = useQuery('adminUsers', async () => {
-    const res = await api.get('/teachers', { params: { page: 1, limit: 100 } })
-    // We don't have a dedicated admin list endpoint, so we'll use a workaround
-    // Actually let's just fetch from users who are ADMIN
+  // Load admin users
+  const { isLoading } = useQuery('adminUsers', async () => {
+    const res = await api.get('/auth/admin/users', { params: { role: 'ADMIN', limit: 50 } })
     return res.data
   })
 

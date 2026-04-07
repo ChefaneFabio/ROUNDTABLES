@@ -11,10 +11,10 @@ import {
   MessageSquare,
   TrendingUp,
   ClipboardCheck,
-  Headphones,
-  PenTool,
-  Mic,
   AlertCircle,
+  Award,
+  ArrowRight,
+  Eye,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { useAuth } from '../contexts/AuthContext'
@@ -51,15 +51,15 @@ export function DashboardPage() {
     <div className="space-y-6">
       {/* Welcome header */}
       <div className={clsx(
-        'rounded-lg shadow-md p-6',
+        'rounded-xl p-6',
         isStudent
           ? 'bg-gradient-to-r from-slate-700 to-slate-800 text-white'
-          : 'bg-white'
+          : 'bg-white border border-gray-200'
       )}>
-        <h1 className={clsx('text-2xl font-bold', isStudent ? 'text-white' : 'text-gray-900')}>
-          Welcome back, {user?.name}!
+        <h1 className={clsx('text-lg font-semibold', isStudent ? 'text-white' : 'text-gray-900')}>
+          Welcome back, {user?.name}
         </h1>
-        <p className={clsx('mt-1', isStudent ? 'text-white/80' : 'text-gray-600')}>
+        <p className={clsx('text-sm mt-0.5', isStudent ? 'text-white/70' : 'text-gray-500')}>
           {isAdmin && (data?.school ? `Here's an overview of ${data.school.name || 'your school'}.` : "Here's an overview of your platform.")}
           {isTeacher && "Here's your teaching schedule and tasks."}
           {isStudent && "Here's your learning progress."}
@@ -405,44 +405,31 @@ function StudentDashboard({ data }: { data: any }) {
 
   const getCefrColor = (level?: string) => cefrColors[level || ''] || 'bg-gray-100 text-gray-800'
 
-  const skillBarWidth: Record<string, number> = {
-    A1: 16, A2: 33, B1: 50, B2: 66, C1: 83, C2: 100,
-  }
-
-  const getSkillWidth = (level?: string) => skillBarWidth[level || ''] || 0
-
-  // Gradient fills per skill type
-  const skillGradients: Record<string, string> = {
-    reading: 'bg-gradient-to-r from-blue-400 to-blue-600',
-    listening: 'bg-gradient-to-r from-green-400 to-green-600',
-    writing: 'bg-gradient-to-r from-amber-400 to-amber-600',
-    speaking: 'bg-gradient-to-r from-purple-400 to-purple-600',
-  }
-
   return (
     <>
       {/* Pending assigned tests */}
       {assignedAssessments.length > 0 && (
-        <div className="bg-amber-50 border-2 border-amber-300 rounded-lg shadow-md p-6">
-          <div className="flex items-center gap-3 mb-3">
-            <ClipboardCheck className="w-6 h-6 text-amber-600" />
-            <h3 className="text-lg font-semibold text-amber-800">Pending Placement Test{assignedAssessments.length > 1 ? 's' : ''}</h3>
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <div className="flex items-center gap-2.5 mb-3">
+            <ClipboardCheck className="w-5 h-5 text-gray-400" />
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Pending Placement Test{assignedAssessments.length > 1 ? 's' : ''}</h3>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {assignedAssessments.map((a: any) => (
-              <div key={a.id} className="flex items-center justify-between bg-white rounded-lg p-4 border border-amber-200">
+              <div key={a.id} className="flex items-center justify-between bg-gray-50/50 rounded-lg p-4 border border-gray-100">
                 <div>
-                  <p className="font-medium text-gray-900">{a.language} Placement Test</p>
-                  <p className="text-sm text-gray-500">
-                    Time limit: {a.timeLimitMin} minutes
-                    {a.assignedAt && ` | Assigned: ${new Date(a.assignedAt).toLocaleDateString()}`}
+                  <p className="text-sm font-medium text-gray-900">{a.language} Placement Test</p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    Time limit: {a.timeLimitMin} min
+                    {a.assignedAt && ` -- Assigned ${new Date(a.assignedAt).toLocaleDateString()}`}
                   </p>
                 </div>
                 <button
                   onClick={() => navigate('/assessment')}
-                  className="flex items-center gap-2 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 transition-colors font-medium"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-800 transition-colors font-medium"
                 >
                   Take Test
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             ))}
@@ -452,28 +439,29 @@ function StudentDashboard({ data }: { data: any }) {
 
       {/* In-progress assessment alert */}
       {pendingAssessments.length > 0 && (
-        <div className="bg-blue-50 border-2 border-blue-300 rounded-lg shadow-md p-6">
-          <div className="flex items-center gap-3 mb-3">
-            <AlertCircle className="w-6 h-6 text-blue-600" />
-            <h3 className="text-lg font-semibold text-blue-800">
-              You have {pendingAssessments.length === 1 ? 'an' : pendingAssessments.length} assessment{pendingAssessments.length > 1 ? 's' : ''} in progress
+        <div className="bg-white border border-gray-200 rounded-xl p-5">
+          <div className="flex items-center gap-2.5 mb-3">
+            <AlertCircle className="w-5 h-5 text-gray-400" />
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+              Assessment{pendingAssessments.length > 1 ? 's' : ''} in progress
             </h3>
           </div>
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {pendingAssessments.map((a: Assessment) => (
-              <div key={a.id} className="flex items-center justify-between bg-white rounded-lg p-4 border border-blue-200">
+              <div key={a.id} className="flex items-center justify-between bg-gray-50/50 rounded-lg p-4 border border-gray-100">
                 <div>
-                  <p className="font-medium text-gray-900">{a.language} Placement Test</p>
-                  <p className="text-sm text-gray-500">
-                    Status: {a.status === 'PAUSED' ? 'Paused' : 'In Progress'}
-                    {a.startedAt && ` | Started: ${new Date(a.startedAt).toLocaleDateString()}`}
+                  <p className="text-sm font-medium text-gray-900">{a.language} Placement Test</p>
+                  <p className="text-xs text-gray-500 mt-0.5">
+                    {a.status === 'PAUSED' ? 'Paused' : 'In Progress'}
+                    {a.startedAt && ` -- Started ${new Date(a.startedAt).toLocaleDateString()}`}
                   </p>
                 </div>
                 <button
                   onClick={() => navigate(a.isMultiSkill ? `/assessment/multi-skill/${a.id}` : '/assessment')}
-                  className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all font-medium animate-pulse shadow-lg shadow-blue-300"
+                  className="flex items-center gap-1.5 px-4 py-2 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-800 transition-colors font-medium"
                 >
                   Continue
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             ))}
@@ -484,198 +472,161 @@ function StudentDashboard({ data }: { data: any }) {
       {/* AI Recommendations */}
       <RecommendationsCard />
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="border-l-4 border-primary-500 rounded-lg hover:shadow-md transition-all">
-          <StatCard
-            title="Enrolled Courses"
-            value={data?.stats?.enrolledCourses || 0}
-            icon={BookOpen}
-            color="primary"
-            href="/courses"
-          />
+      {/* Stats Row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-sm transition-shadow border-l-4 border-l-slate-400">
+          <div className="flex items-center gap-3">
+            <BookOpen className="w-5 h-5 text-gray-400 flex-shrink-0" />
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{data?.stats?.enrolledCourses || 0}</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Courses</p>
+            </div>
+          </div>
         </div>
-        <div className="border-l-4 border-green-500 rounded-lg hover:shadow-md transition-all">
-          <StatCard
-            title="Completed Courses"
-            value={data?.stats?.completedCourses || 0}
-            icon={CheckCircle}
-            color="green"
-          />
+        <div className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-sm transition-shadow border-l-4 border-l-green-400">
+          <div className="flex items-center gap-3">
+            <CheckCircle className="w-5 h-5 text-gray-400 flex-shrink-0" />
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{data?.stats?.lessonsAttended || 0}</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Lessons Attended</p>
+            </div>
+          </div>
         </div>
-        <div className="border-l-4 border-blue-500 rounded-lg hover:shadow-md transition-all">
-          <StatCard
-            title="Average Progress"
-            value={`${data?.stats?.averageProgress || 0}%`}
-            icon={TrendingUp}
-            color="blue"
-          />
+        <div className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-sm transition-shadow border-l-4 border-l-blue-400">
+          <div className="flex items-center gap-3">
+            <ClipboardCheck className="w-5 h-5 text-gray-400 flex-shrink-0" />
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{completedAssessments.length}</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Assessments</p>
+            </div>
+          </div>
         </div>
-        <div className="border-l-4 border-purple-500 rounded-lg hover:shadow-md transition-all">
-          <StatCard
-            title="Attendance Rate"
-            value={`${data?.stats?.attendanceRate || 0}%`}
-            icon={Calendar}
-            color="purple"
-          />
+        <div className="bg-white border border-gray-200 rounded-xl p-5 hover:shadow-sm transition-shadow border-l-4 border-l-purple-400">
+          <div className="flex items-center gap-3">
+            <Award className="w-5 h-5 text-gray-400 flex-shrink-0" />
+            <div>
+              <p className="text-2xl font-bold text-gray-900">{`${data?.stats?.attendanceRate || 0}%`}</p>
+              <p className="text-xs font-medium text-gray-500 uppercase tracking-wide">Attendance</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Attendance Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="border-l-4 border-green-500 rounded-lg hover:shadow-md transition-all">
-          <StatCard
-            title="Lessons Attended"
-            value={data?.stats?.lessonsAttended || 0}
-            icon={CheckCircle}
-            color="green"
-          />
+      {/* Your Language Levels */}
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+          <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            Your Language Levels
+          </h3>
         </div>
-        <div className="border-l-4 border-red-500 rounded-lg hover:shadow-md transition-all">
-          <StatCard
-            title="Lessons Missed"
-            value={data?.stats?.lessonsMissed || 0}
-            icon={Clock}
-            color="red"
-          />
+        <div className="p-6">
+          {completedAssessments.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-left">
+                    <th className="pb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Language</th>
+                    <th className="pb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-center">R</th>
+                    <th className="pb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-center">L</th>
+                    <th className="pb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-center">W</th>
+                    <th className="pb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-center">S</th>
+                    <th className="pb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-center">Overall</th>
+                    <th className="pb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider text-right">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {completedAssessments.map((assessment: Assessment) => (
+                    <tr key={assessment.id} className="group hover:bg-gray-50/50">
+                      <td className="py-4">
+                        <div>
+                          <p className="text-sm font-medium text-gray-900">{assessment.language}</p>
+                          {assessment.completedAt && (
+                            <p className="text-xs text-gray-400 mt-0.5">
+                              {new Date(assessment.completedAt).toLocaleDateString()}
+                            </p>
+                          )}
+                        </div>
+                      </td>
+                      <td className="py-4 text-center">
+                        <span className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${getCefrColor(assessment.readingLevel)}`}>
+                          {assessment.readingLevel || '--'}
+                        </span>
+                      </td>
+                      <td className="py-4 text-center">
+                        <span className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${getCefrColor(assessment.listeningLevel)}`}>
+                          {assessment.listeningLevel || '--'}
+                        </span>
+                      </td>
+                      <td className="py-4 text-center">
+                        <span className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${getCefrColor(assessment.writingLevel)}`}>
+                          {assessment.writingLevel || '--'}
+                        </span>
+                      </td>
+                      <td className="py-4 text-center">
+                        <span className={`inline-block px-2 py-0.5 rounded text-xs font-semibold ${getCefrColor(assessment.speakingLevel)}`}>
+                          {assessment.speakingLevel || '--'}
+                        </span>
+                      </td>
+                      <td className="py-4 text-center">
+                        <span className={`inline-block px-2.5 py-1 rounded-md text-xs font-bold ${getCefrColor(assessment.cefrLevel)}`}>
+                          {assessment.cefrLevel}
+                        </span>
+                      </td>
+                      <td className="py-4 text-right">
+                        <Link
+                          to={`/assessment/multi-skill/${assessment.id}/results`}
+                          className="inline-flex items-center gap-1 text-xs font-medium text-gray-500 hover:text-gray-900 transition-colors"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                          Details
+                        </Link>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center py-10">
+              <ClipboardCheck className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <h4 className="text-sm font-semibold text-gray-700 mb-1">No assessments completed yet</h4>
+              <p className="text-sm text-gray-500 mb-5 max-w-xs mx-auto">
+                Take a placement test to discover your CEFR level across all skills.
+              </p>
+              <button
+                onClick={() => navigate('/assessment')}
+                className="inline-flex items-center gap-2 px-5 py-2.5 text-sm bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors font-medium"
+              >
+                <ClipboardCheck className="w-4 h-4" />
+                Take Placement Test
+              </button>
+            </div>
+          )}
         </div>
-      </div>
-
-      {/* Assessment Summary - Your Language Levels */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Your Language Levels
-        </h3>
-        {completedAssessments.length > 0 ? (
-          <div className="space-y-6">
-            {completedAssessments.map((assessment: Assessment) => (
-              <div key={assessment.id} className="border border-gray-200 rounded-lg p-5">
-                {/* Language header with overall CEFR badge */}
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <h4 className="text-base font-semibold text-gray-900">{assessment.language}</h4>
-                    <span className={`px-3 py-1 rounded-full text-sm font-bold ${getCefrColor(assessment.cefrLevel)}`}>
-                      {assessment.cefrLevel}
-                    </span>
-                  </div>
-                  <Link
-                    to={`/assessment/multi-skill/${assessment.id}/results`}
-                    className="text-sm font-medium text-primary-600 hover:text-primary-800 hover:underline"
-                  >
-                    View Details
-                  </Link>
-                </div>
-
-                {/* 4 Skill bars */}
-                <div className="space-y-3">
-                  {/* Reading */}
-                  <div className="flex items-center gap-3">
-                    <BookOpen className="w-4 h-4 text-blue-500 flex-shrink-0" />
-                    <span className="text-sm font-medium text-gray-700 w-20 flex-shrink-0">Reading</span>
-                    <div className="flex-1 bg-gray-100 rounded-full h-3">
-                      <div
-                        className={`h-3 rounded-full transition-all duration-500 ${skillGradients.reading}`}
-                        style={{ width: `${getSkillWidth(assessment.readingLevel)}%` }}
-                      />
-                    </div>
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded ${getCefrColor(assessment.readingLevel)}`}>
-                      {assessment.readingLevel || '--'}
-                    </span>
-                  </div>
-
-                  {/* Listening */}
-                  <div className="flex items-center gap-3">
-                    <Headphones className="w-4 h-4 text-green-500 flex-shrink-0" />
-                    <span className="text-sm font-medium text-gray-700 w-20 flex-shrink-0">Listening</span>
-                    <div className="flex-1 bg-gray-100 rounded-full h-3">
-                      <div
-                        className={`h-3 rounded-full transition-all duration-500 ${skillGradients.listening}`}
-                        style={{ width: `${getSkillWidth(assessment.listeningLevel)}%` }}
-                      />
-                    </div>
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded ${getCefrColor(assessment.listeningLevel)}`}>
-                      {assessment.listeningLevel || '--'}
-                    </span>
-                  </div>
-
-                  {/* Writing */}
-                  <div className="flex items-center gap-3">
-                    <PenTool className="w-4 h-4 text-amber-500 flex-shrink-0" />
-                    <span className="text-sm font-medium text-gray-700 w-20 flex-shrink-0">Writing</span>
-                    <div className="flex-1 bg-gray-100 rounded-full h-3">
-                      <div
-                        className={`h-3 rounded-full transition-all duration-500 ${skillGradients.writing}`}
-                        style={{ width: `${getSkillWidth(assessment.writingLevel)}%` }}
-                      />
-                    </div>
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded ${getCefrColor(assessment.writingLevel)}`}>
-                      {assessment.writingLevel || '--'}
-                    </span>
-                  </div>
-
-                  {/* Speaking */}
-                  <div className="flex items-center gap-3">
-                    <Mic className="w-4 h-4 text-purple-500 flex-shrink-0" />
-                    <span className="text-sm font-medium text-gray-700 w-20 flex-shrink-0">Speaking</span>
-                    <div className="flex-1 bg-gray-100 rounded-full h-3">
-                      <div
-                        className={`h-3 rounded-full transition-all duration-500 ${skillGradients.speaking}`}
-                        style={{ width: `${getSkillWidth(assessment.speakingLevel)}%` }}
-                      />
-                    </div>
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded ${getCefrColor(assessment.speakingLevel)}`}>
-                      {assessment.speakingLevel || '--'}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Completion date */}
-                {assessment.completedAt && (
-                  <p className="text-xs text-gray-400 mt-3">
-                    Completed {new Date(assessment.completedAt).toLocaleDateString()}
-                  </p>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-12">
-            <ClipboardCheck className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-            <h4 className="text-lg font-semibold text-gray-700 mb-2">No assessments completed yet</h4>
-            <p className="text-gray-500 mb-6 max-w-sm mx-auto">
-              Take a placement test to discover your CEFR level across Reading, Listening, Writing, and Speaking.
-            </p>
-            <button
-              onClick={() => navigate('/assessment')}
-              className="inline-flex items-center gap-2 px-8 py-3 text-base bg-gradient-to-r from-slate-700 to-slate-800 text-white rounded-xl hover:from-slate-800 hover:to-slate-900 transition-all shadow-lg hover:shadow-xl font-semibold"
-            >
-              <ClipboardCheck className="w-5 h-5" />
-              Take Placement Test
-            </button>
-          </div>
-        )}
       </div>
 
       {/* Course Progress */}
       {data?.progress && data.progress.length > 0 && (
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Course Progress
-          </h3>
-          <div className="space-y-4">
+        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+              Course Progress
+            </h3>
+          </div>
+          <div className="p-6 space-y-4">
             {data.progress.map((prog: any) => (
               <div key={prog.id}>
                 <div className="flex items-center justify-between mb-2">
-                  <p className="font-medium text-gray-900">
+                  <p className="text-sm font-medium text-gray-900">
                     {prog.course?.name}
                   </p>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-xs text-gray-500">
                     {prog.completedLessons}/{prog.totalLessons} lessons
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="w-full bg-gray-100 rounded-full h-1.5">
                   <div
-                    className="bg-primary-600 h-2 rounded-full transition-all"
+                    className="bg-gray-700 h-1.5 rounded-full transition-all"
                     style={{ width: `${prog.percentage}%` }}
                   />
                 </div>
@@ -692,28 +643,30 @@ function StudentDashboard({ data }: { data: any }) {
 
       {/* Recent Feedback */}
       {data?.recentFeedback && data.recentFeedback.length > 0 && (
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Recent Feedback
-          </h3>
-          <div className="space-y-4">
+        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+              Recent Feedback
+            </h3>
+          </div>
+          <div className="p-6 space-y-3">
             {data.recentFeedback.map((feedback: any) => (
               <div
                 key={feedback.id}
-                className="p-4 bg-gray-50 rounded-lg border-l-4 border-primary-500"
+                className="p-4 rounded-lg border border-gray-100 bg-gray-50/50"
               >
-                <div className="flex items-center justify-between mb-2">
-                  <p className="font-medium text-gray-900">
+                <div className="flex items-center justify-between mb-1.5">
+                  <p className="text-sm font-medium text-gray-900">
                     {feedback.lesson?.title || 'Lesson'}
                   </p>
                   {feedback.score && (
-                    <span className="px-2 py-1 bg-primary-100 text-primary-800 rounded text-sm font-medium">
+                    <span className="px-2 py-0.5 bg-gray-100 text-gray-700 rounded text-xs font-medium">
                       {feedback.score}/10
                     </span>
                   )}
                 </div>
                 <p className="text-sm text-gray-600">{feedback.content}</p>
-                <p className="text-xs text-gray-500 mt-2">
+                <p className="text-xs text-gray-400 mt-2">
                   From: {feedback.teacher?.user?.name}
                 </p>
               </div>

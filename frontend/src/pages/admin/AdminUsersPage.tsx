@@ -496,7 +496,7 @@ export default function AdminUsersPage() {
                             : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
                         }`}
                       >
-                        {r === 'ORG_ADMIN' ? 'HR' : r.charAt(0) + r.slice(1).toLowerCase()}
+                        {r.charAt(0) + r.slice(1).toLowerCase()}
                       </button>
                     ))}
                   </div>
