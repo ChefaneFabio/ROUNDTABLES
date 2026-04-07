@@ -386,10 +386,10 @@ export function SectionTakePage() {
             <AlertCircle className="w-5 h-5 text-gray-500 flex-shrink-0 mt-0.5" />
             <div>
               <p className="text-sm text-gray-700 font-medium">
-                The timer will start when you click "Start Section".
+                The timer will start when you click "{section?.status === 'IN_PROGRESS' ? 'Continue' : 'Start Section'}".
               </p>
               <p className="text-sm text-gray-500">
-                Il timer partira quando clicchi "Inizia Sezione".
+                Il timer partira quando clicchi "{section?.status === 'IN_PROGRESS' ? 'Continua' : 'Inizia Sezione'}".
               </p>
             </div>
           </div>
@@ -406,7 +406,9 @@ export function SectionTakePage() {
               onClick={handleStartSection}
               className="inline-flex items-center gap-2 px-8 py-3 bg-gray-900 text-white rounded-xl font-semibold text-lg hover:bg-gray-800 transition-all"
             >
-              Start Section / Inizia Sezione
+              {section?.status === 'IN_PROGRESS'
+                ? 'Continue / Continua'
+                : 'Start Section / Inizia Sezione'}
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>
@@ -469,7 +471,7 @@ export function SectionTakePage() {
           </h2>
           {progress && (
             <p className="text-sm text-gray-500">
-              Question {progress.answered + 1} of {progress.total} &middot; Level: {progress.currentLevel}
+              Question {progress.answered + 1} of {progress.total}
             </p>
           )}
           </div>
@@ -489,13 +491,15 @@ export function SectionTakePage() {
             <Pause className="w-3.5 h-3.5" />
             Pause & Save
           </button>
-          <button
-            onClick={handleCompleteSection}
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm text-gray-600 border border-gray-300 rounded-xl hover:bg-gray-50 hover:border-gray-400 transition-all"
-          >
-            <Flag className="w-3.5 h-3.5" />
-            Finish Section
-          </button>
+          {progress && progress.answered >= progress.total - 1 && (
+            <button
+              onClick={handleCompleteSection}
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 transition-all"
+            >
+              <Flag className="w-3.5 h-3.5" />
+              Finish Section & Save
+            </button>
+          )}
         </div>
       </div>
 

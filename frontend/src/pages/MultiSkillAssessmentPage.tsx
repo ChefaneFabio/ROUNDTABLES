@@ -417,11 +417,8 @@ export function MultiSkillAssessmentPage() {
                     <div className="space-y-2">
                       <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-500 text-white text-sm font-bold rounded-full shadow-sm">
                         <CheckCircle className="w-4 h-4" />
-                        {section.cefrLevel || 'Done'}
+                        Done
                       </span>
-                      {section.percentageScore != null && (
-                        <p className="text-xs text-gray-500">{section.percentageScore}%</p>
-                      )}
                       <button
                         onClick={() => handleRequestRetry(section.id)}
                         disabled={actionLoading}
