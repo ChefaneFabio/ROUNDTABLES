@@ -69,6 +69,8 @@ import IntegrationsPage from './pages/admin/IntegrationsPage'
 import TeacherAvailabilityAdminPage from './pages/admin/TeacherAvailabilityAdminPage'
 import NotificationSettingsPage from './pages/admin/NotificationSettingsPage'
 import TeamPage from './pages/admin/TeamPage'
+import AdminUsersPage from './pages/admin/AdminUsersPage'
+import AdminSettingsPage from './pages/admin/AdminSettingsPage'
 import OrganizationDetailPage from './pages/admin/OrganizationDetailPage'
 import SelfPacedCoursePage from './pages/SelfPacedCoursePage'
 import { BusinessPage } from './pages/BusinessPage'
@@ -690,6 +692,26 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <TeamPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <AdminUsersPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/settings"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <AdminSettingsPage />
             </Layout>
           </ProtectedRoute>
         }

@@ -113,7 +113,8 @@ const navGroups: NavGroup[] = [
       { name: 'API Keys', href: '/api-keys', icon: Key, roles: [UserRole.ADMIN] },
       { name: 'Integrations', href: '/admin/integrations', icon: Zap, roles: [UserRole.ADMIN] },
       { name: 'Notifications', href: '/admin/notification-settings', icon: Bell, roles: [UserRole.ADMIN] },
-      { name: 'Maka Team', href: '/admin/team', icon: Users, roles: [UserRole.ADMIN] },
+      { name: 'Users', href: '/admin/users', icon: Users, roles: [UserRole.ADMIN] },
+      { name: 'Platform', href: '/admin/settings', icon: Settings, roles: [UserRole.ADMIN] },
     ]
   },
 

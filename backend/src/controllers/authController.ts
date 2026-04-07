@@ -482,4 +482,161 @@ router.post(
   }
 )
 
+// Admin: Get all users with filters (admin only)
+router.get(
+  '/admin/users',
+  authenticate,
+  async (req: Request, res: Response) => {
+    try {
+      if (!req.user || req.user.role !== 'ADMIN') {
+        return res.status(403).json(apiResponse.error('Admin access required', 'FORBIDDEN'))
+      }
+
+      const { role, search, page = '1', limit = '25' } = req.query
+      const pageNum = Math.max(1, parseInt(page as string) || 1)
+      const limitNum = Math.min(100, Math.max(1, parseInt(limit as string) || 25))
+      const skip = (pageNum - 1) * limitNum
+
+      // Build where clause
+      const where: any = {}
+
+      if (role && role !== 'ALL') {
+        where.role = role as string
+      }
+
+      if (search) {
+        const searchStr = search as string
+        where.OR = [
+          { name: { contains: searchStr, mode: 'insensitive' } },
+          { surname: { contains: searchStr, mode: 'insensitive' } },
+          { email: { contains: searchStr, mode: 'insensitive' } },
+        ]
+      }
+
+      const [users, total] = await Promise.all([
+        prisma.user.findMany({
+          where,
+          select: {
+            id: true,
+            name: true,
+            surname: true,
+            email: true,
+            role: true,
+            phone: true,
+            address: true,
+            city: true,
+            province: true,
+            postalCode: true,
+            country: true,
+            dateOfBirth: true,
+            placeOfBirth: true,
+            nationality: true,
+            fiscalCode: true,
+            gender: true,
+            nativeLanguage: true,
+            isActive: true,
+            lastLoginAt: true,
+            createdAt: true,
+            teacherProfile: { select: { id: true, expertise: true, hourlyRate: true } },
+            studentProfile: { select: { id: true, languageLevel: true, organizationId: true } },
+          },
+          orderBy: { createdAt: 'desc' },
+          skip,
+          take: limitNum,
+        }),
+        prisma.user.count({ where }),
+      ])
+
+      res.json(apiResponse.success({
+        users,
+        pagination: {
+          page: pageNum,
+          limit: limitNum,
+          total,
+          totalPages: Math.ceil(total / limitNum),
+        }
+      }))
+    } catch (error) {
+      handleError(res, error)
+    }
+  }
+)
+
+// Admin: Update a user (admin only)
+router.put(
+  '/admin/users/:id',
+  authenticate,
+  async (req: Request, res: Response) => {
+    try {
+      if (!req.user || req.user.role !== 'ADMIN') {
+        return res.status(403).json(apiResponse.error('Admin access required', 'FORBIDDEN'))
+      }
+
+      const { id } = req.params
+      const { name, surname, email, phone, address, city, province, postalCode, country,
+              dateOfBirth, placeOfBirth, nationality, fiscalCode, gender, nativeLanguage, isActive } = req.body
+
+      const updateData: any = {}
+      if (name !== undefined) updateData.name = name
+      if (surname !== undefined) updateData.surname = surname
+      if (email !== undefined) updateData.email = email
+      if (phone !== undefined) updateData.phone = phone
+      if (address !== undefined) updateData.address = address
+      if (city !== undefined) updateData.city = city
+      if (province !== undefined) updateData.province = province
+      if (postalCode !== undefined) updateData.postalCode = postalCode
+      if (country !== undefined) updateData.country = country
+      if (dateOfBirth !== undefined) updateData.dateOfBirth = dateOfBirth ? new Date(dateOfBirth) : null
+      if (placeOfBirth !== undefined) updateData.placeOfBirth = placeOfBirth
+      if (nationality !== undefined) updateData.nationality = nationality
+      if (fiscalCode !== undefined) updateData.fiscalCode = fiscalCode
+      if (gender !== undefined) updateData.gender = gender
+      if (nativeLanguage !== undefined) updateData.nativeLanguage = nativeLanguage
+      if (isActive !== undefined) updateData.isActive = isActive
+
+      const user = await prisma.user.update({
+        where: { id },
+        data: updateData,
+        select: {
+          id: true, name: true, surname: true, email: true, role: true, phone: true,
+          isActive: true, lastLoginAt: true, createdAt: true,
+        }
+      })
+
+      res.json(apiResponse.success(user, 'User updated successfully'))
+    } catch (error) {
+      handleError(res, error)
+    }
+  }
+)
+
+// Admin: Toggle user active status (admin only)
+router.patch(
+  '/admin/users/:id/toggle-active',
+  authenticate,
+  async (req: Request, res: Response) => {
+    try {
+      if (!req.user || req.user.role !== 'ADMIN') {
+        return res.status(403).json(apiResponse.error('Admin access required', 'FORBIDDEN'))
+      }
+
+      const { id } = req.params
+      const existing = await prisma.user.findUnique({ where: { id }, select: { isActive: true } })
+      if (!existing) {
+        return res.status(404).json(apiResponse.error('User not found', 'NOT_FOUND'))
+      }
+
+      const user = await prisma.user.update({
+        where: { id },
+        data: { isActive: !existing.isActive },
+        select: { id: true, isActive: true }
+      })
+
+      res.json(apiResponse.success(user, `User ${user.isActive ? 'activated' : 'deactivated'} successfully`))
+    } catch (error) {
+      handleError(res, error)
+    }
+  }
+)
+
 export default router
