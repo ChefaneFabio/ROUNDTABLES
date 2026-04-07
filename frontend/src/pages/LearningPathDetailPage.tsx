@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { useToast } from '../components/common/Toast'
 import { learningPathApi, LearningPath } from '../services/learningPathApi'
-import { Route, BookOpen, Clock, CheckCircle, Lock, ChevronRight, Play, TrendingUp } from 'lucide-react'
+import { Route, BookOpen, Clock, CheckCircle, Lock, ChevronRight, Play, TrendingUp, ArrowLeft } from 'lucide-react'
 
 export default function LearningPathDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -78,6 +78,15 @@ export default function LearningPathDetailPage() {
 
   return (
     <div className="max-w-3xl mx-auto">
+      {/* Back button */}
+      <button
+        onClick={() => navigate(-1)}
+        className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 mb-4"
+      >
+        <ArrowLeft className="w-4 h-4" />
+        Back
+      </button>
+
       {/* Header */}
       <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
         <div className="flex items-start justify-between">

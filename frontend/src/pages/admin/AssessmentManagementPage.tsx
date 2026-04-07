@@ -276,9 +276,9 @@ export default function AssessmentManagementPage() {
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Student</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Language</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Status</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Sections</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Score / Level</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Date</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-500 hidden md:table-cell">Sections</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-500 hidden sm:table-cell">Score / Level</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-500 hidden sm:table-cell">Date</th>
                   <th className="text-right py-3 px-4 font-medium text-gray-500">Actions</th>
                 </tr>
               </thead>
@@ -312,7 +312,7 @@ export default function AssessmentManagementPage() {
                         {a.status}
                       </span>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-4 hidden md:table-cell">
                       <div className="flex gap-1">
                         {a.sections?.map((s: any) => (
                           <span
@@ -331,7 +331,7 @@ export default function AssessmentManagementPage() {
                         ))}
                       </div>
                     </td>
-                    <td className="py-3 px-4">
+                    <td className="py-3 px-4 hidden sm:table-cell">
                       {a.status === 'COMPLETED' ? (
                         <div>
                           <span className="font-medium text-gray-900">{a.score}%</span>
@@ -345,7 +345,7 @@ export default function AssessmentManagementPage() {
                         <span className="text-gray-400">--</span>
                       )}
                     </td>
-                    <td className="py-3 px-4 text-gray-500 text-xs">
+                    <td className="py-3 px-4 text-gray-500 text-xs hidden sm:table-cell">
                       {a.assignedAt
                         ? new Date(a.assignedAt).toLocaleDateString()
                         : a.createdAt

@@ -33,10 +33,13 @@ const SKILL_SECTIONS = [
   { icon: Mic, label: 'Speaking', time: '15 min', color: 'text-purple-600 bg-purple-50' },
 ]
 
+const RESULTS_LIMIT = 10
+
 export function AssessmentPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const [error, setError] = useState('')
+  const [showAllResults, setShowAllResults] = useState(false)
 
   const { data: assessments, isLoading } = useQuery('myAssessments', assessmentApi.getMyAssessments)
   const { data: assignedAssessments, isLoading: loadingAssigned } = useQuery('myAssignedAssessments', assessmentApi.getAssignedAssessments)
@@ -121,7 +124,18 @@ export function AssessmentPage() {
         </div>
       </div>
 
-      {error && <Alert type="error" message={error} onClose={() => setError('')} />}
+      {error && (
+        <div className="text-center py-12">
+          <Alert type="error" message="Failed to load assessments. Please try again." />
+          <p className="text-sm text-gray-500 mt-2">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
       {/* Assigned Tests (priority) */}
       {uniqueAssigned.length > 0 && (
@@ -254,51 +268,67 @@ export function AssessmentPage() {
         <div>
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Previous Results</h2>
           <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b bg-gray-50/80">
-                  <th className="text-left py-3.5 px-4 font-medium text-gray-500">Language</th>
-                  <th className="text-center py-3.5 px-4 font-medium text-gray-500">Level</th>
-                  <th className="text-center py-3.5 px-4 font-medium text-gray-500">Score</th>
-                  <th className="text-center py-3.5 px-4 font-medium text-gray-500">R</th>
-                  <th className="text-center py-3.5 px-4 font-medium text-gray-500">L</th>
-                  <th className="text-center py-3.5 px-4 font-medium text-gray-500">W</th>
-                  <th className="text-center py-3.5 px-4 font-medium text-gray-500">S</th>
-                  <th className="text-left py-3.5 px-4 font-medium text-gray-500">Date</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                {completedAssessments.map(a => (
-                  <tr key={a.id} className="border-b border-gray-100 even:bg-gray-50/50 hover:bg-primary-50/40 cursor-pointer transition-colors" onClick={() => navigate(`/assessment/multi-skill/${a.id}/results`)}>
-                    <td className="py-3.5 px-4">
-                      <div className="flex items-center gap-2">
-                        <span>{LANGUAGES.find(l => l.code === a.language)?.flag}</span>
-                        <span className="font-medium text-gray-900">{a.language}</span>
-                      </div>
-                    </td>
-                    <td className="py-3.5 px-4 text-center">
-                      {a.cefrLevel && (
-                        <span className="px-2.5 py-1 bg-primary-100 text-primary-700 rounded-md font-bold text-xs">
-                          {a.cefrLevel}
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3.5 px-4 text-center font-semibold text-gray-900">
-                      {a.score != null ? `${a.score}%` : '--'}
-                    </td>
-                    <td className="py-3.5 px-4 text-center text-xs">{a.readingLevel || '--'}</td>
-                    <td className="py-3.5 px-4 text-center text-xs">{a.listeningLevel || '--'}</td>
-                    <td className="py-3.5 px-4 text-center text-xs">{a.writingLevel || '--'}</td>
-                    <td className="py-3.5 px-4 text-center text-xs">{a.speakingLevel || '--'}</td>
-                    <td className="py-3.5 px-4 text-xs text-gray-500">
-                      {a.completedAt ? new Date(a.completedAt).toLocaleDateString() : '--'}
-                    </td>
-                    <td className="py-3.5 px-4"><ChevronRight className="w-4 h-4 text-gray-400" /></td>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-gray-50/80">
+                    <th className="text-left py-3.5 px-4 font-medium text-gray-500">Language</th>
+                    <th className="text-center py-3.5 px-4 font-medium text-gray-500">Level</th>
+                    <th className="text-center py-3.5 px-4 font-medium text-gray-500">Score</th>
+                    <th className="text-center py-3.5 px-4 font-medium text-gray-500 hidden sm:table-cell">R</th>
+                    <th className="text-center py-3.5 px-4 font-medium text-gray-500 hidden sm:table-cell">L</th>
+                    <th className="text-center py-3.5 px-4 font-medium text-gray-500 hidden sm:table-cell">W</th>
+                    <th className="text-center py-3.5 px-4 font-medium text-gray-500 hidden sm:table-cell">S</th>
+                    <th className="text-left py-3.5 px-4 font-medium text-gray-500">Date</th>
+                    <th></th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {completedAssessments
+                    .slice(0, showAllResults ? completedAssessments.length : RESULTS_LIMIT)
+                    .map(a => (
+                    <tr key={a.id} className="border-b border-gray-100 even:bg-gray-50/50 hover:bg-primary-50/40 cursor-pointer transition-colors" onClick={() => navigate(`/assessment/multi-skill/${a.id}/results`)}>
+                      <td className="py-3.5 px-4">
+                        <div className="flex items-center gap-2">
+                          <span>{LANGUAGES.find(l => l.code === a.language)?.flag}</span>
+                          <span className="font-medium text-gray-900">{a.language}</span>
+                        </div>
+                      </td>
+                      <td className="py-3.5 px-4 text-center">
+                        {a.cefrLevel && (
+                          <span className="px-2.5 py-1 bg-primary-100 text-primary-700 rounded-md font-bold text-xs">
+                            {a.cefrLevel}
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-4 text-center font-semibold text-gray-900">
+                        {a.score != null ? `${a.score}%` : '--'}
+                      </td>
+                      <td className="py-3.5 px-4 text-center text-xs hidden sm:table-cell">{a.readingLevel || '--'}</td>
+                      <td className="py-3.5 px-4 text-center text-xs hidden sm:table-cell">{a.listeningLevel || '--'}</td>
+                      <td className="py-3.5 px-4 text-center text-xs hidden sm:table-cell">{a.writingLevel || '--'}</td>
+                      <td className="py-3.5 px-4 text-center text-xs hidden sm:table-cell">{a.speakingLevel || '--'}</td>
+                      <td className="py-3.5 px-4 text-xs text-gray-500">
+                        {a.completedAt ? new Date(a.completedAt).toLocaleDateString() : '--'}
+                      </td>
+                      <td className="py-3.5 px-4"><ChevronRight className="w-4 h-4 text-gray-400" /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {completedAssessments.length > RESULTS_LIMIT && (
+              <div className="border-t border-gray-100 px-4 py-3 text-center">
+                <button
+                  onClick={() => setShowAllResults(!showAllResults)}
+                  className="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors"
+                >
+                  {showAllResults
+                    ? 'Show less'
+                    : `Show all ${completedAssessments.length} results`}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

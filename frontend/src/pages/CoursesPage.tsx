@@ -88,21 +88,27 @@ export function CoursesPage() {
         </div>
       ) : courses.length === 0 ? (
         <Card>
-          <CardBody className="py-12 text-center">
-            <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <CardBody className="py-16 text-center">
+            <BookOpen className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
               No courses found
             </h3>
-            <p className="text-gray-500 mb-4">
+            <p className="text-gray-500 mb-6 max-w-sm mx-auto">
               {statusFilter
-                ? 'Try adjusting your filters'
+                ? 'Try adjusting your filters to see more courses.'
                 : isAdmin
-                ? 'Get started by creating your first course'
-                : 'No courses available yet'}
+                ? 'Get started by creating your first course to organize lessons and enroll students.'
+                : isStudent
+                ? 'You are not enrolled in any courses yet. Contact your administrator to get started.'
+                : 'No courses available yet. Courses will appear here once created.'}
             </p>
             {(isAdmin) && !statusFilter && (
-              <Button onClick={() => navigate('/courses/new')}>
-                Create Course
+              <Button
+                size="lg"
+                leftIcon={<Plus className="h-5 w-5" />}
+                onClick={() => navigate('/courses/new')}
+              >
+                Create Your First Course
               </Button>
             )}
           </CardBody>

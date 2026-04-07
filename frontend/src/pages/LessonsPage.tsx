@@ -102,15 +102,17 @@ export function LessonsPage() {
         </div>
       ) : lessons.length === 0 ? (
         <Card>
-          <CardBody className="py-12 text-center">
-            <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <CardBody className="py-16 text-center">
+            <Calendar className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">
               No lessons found
             </h3>
-            <p className="text-gray-500">
+            <p className="text-gray-500 max-w-sm mx-auto">
               {statusFilter
-                ? 'Try adjusting your filters'
-                : 'No lessons scheduled yet'}
+                ? 'Try adjusting your filters to see more lessons.'
+                : isTeacher
+                ? 'No lessons scheduled yet. Lessons will appear here once they are created for your courses.'
+                : 'No lessons scheduled yet. Lessons will appear here once your courses have scheduled sessions.'}
             </p>
           </CardBody>
         </Card>

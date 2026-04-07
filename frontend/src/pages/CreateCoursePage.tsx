@@ -102,11 +102,12 @@ export function CreateCoursePage() {
           </CardHeader>
           <CardBody className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="courseName" className="block text-sm font-medium text-gray-700 mb-1">
                 Course Name <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
+                id="courseName"
                 {...register('name')}
                 className="input w-full"
                 placeholder="e.g., English Conversation B1"
@@ -117,10 +118,11 @@ export function CreateCoursePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="courseDescription" className="block text-sm font-medium text-gray-700 mb-1">
                 Description
               </label>
               <textarea
+                id="courseDescription"
                 {...register('description')}
                 className="input w-full"
                 rows={3}
@@ -130,11 +132,11 @@ export function CreateCoursePage() {
 
             {/* Course Type Selection */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label id="courseTypeLabel" className="block text-sm font-medium text-gray-700 mb-2">
                 Course Type <span className="text-red-500">*</span>
               </label>
               <input type="hidden" {...register('courseType')} />
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" role="radiogroup" aria-labelledby="courseTypeLabel">
                 {[
                   { value: 'LIVE_REMOTE', icon: Video, label: 'Live — Remote', desc: 'Online lessons via Zoom, Meet, or Teams. Teacher and students connect remotely with video link.', color: 'border-blue-500 bg-blue-50', iconColor: 'text-blue-600 bg-blue-100' },
                   { value: 'LIVE_IN_PERSON', icon: MapPin, label: 'Live — In Person', desc: 'Face-to-face lessons at a physical location. Address and Google Maps link shared with participants.', color: 'border-amber-500 bg-amber-50', iconColor: 'text-amber-600 bg-amber-100' },
@@ -147,6 +149,9 @@ export function CreateCoursePage() {
                     <button
                       key={type.value}
                       type="button"
+                      role="radio"
+                      aria-checked={isSelected}
+                      aria-label={type.label}
                       onClick={() => setValue('courseType', type.value as any)}
                       className={`p-4 rounded-xl border-2 text-left transition-all hover:shadow-md ${
                         isSelected ? type.color : 'border-gray-200 hover:border-gray-300 bg-white'
@@ -156,7 +161,7 @@ export function CreateCoursePage() {
                         <Icon className="w-5 h-5" />
                       </div>
                       <p className="font-semibold text-sm text-gray-900">{type.label}</p>
-                      <p className="text-xs text-gray-500 mt-1">{type.desc}</p>
+                      <p className="text-xs text-gray-500 mt-1 line-clamp-2">{type.desc}</p>
                     </button>
                   )
                 })}
@@ -169,11 +174,12 @@ export function CreateCoursePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="courseLanguage" className="block text-sm font-medium text-gray-700 mb-1">
                   Language
                 </label>
                 <input
                   type="text"
+                  id="courseLanguage"
                   {...register('language')}
                   className="input w-full"
                   placeholder="e.g., English"
@@ -203,22 +209,24 @@ export function CreateCoursePage() {
           <CardBody className="space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="startDate" className="block text-sm font-medium text-gray-700 mb-1">
                   Start Date
                 </label>
                 <input
                   type="date"
+                  id="startDate"
                   {...register('startDate')}
                   className="input w-full"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="endDate" className="block text-sm font-medium text-gray-700 mb-1">
                   End Date
                 </label>
                 <input
                   type="date"
+                  id="endDate"
                   {...register('endDate')}
                   className="input w-full"
                 />
@@ -227,11 +235,12 @@ export function CreateCoursePage() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="maxStudents" className="block text-sm font-medium text-gray-700 mb-1">
                   Max Students
                 </label>
                 <input
                   type="number"
+                  id="maxStudents"
                   {...register('maxStudents')}
                   className="input w-full"
                   placeholder="e.g., 20"
@@ -240,11 +249,12 @@ export function CreateCoursePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="coursePrice" className="block text-sm font-medium text-gray-700 mb-1">
                   Price
                 </label>
                 <input
                   type="number"
+                  id="coursePrice"
                   {...register('price')}
                   className="input w-full"
                   placeholder="0"
@@ -254,10 +264,10 @@ export function CreateCoursePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="courseCurrency" className="block text-sm font-medium text-gray-700 mb-1">
                   Currency
                 </label>
-                <select {...register('currency')} className="input w-full">
+                <select id="courseCurrency" {...register('currency')} className="input w-full">
                   <option value="EUR">EUR</option>
                   <option value="USD">USD</option>
                   <option value="GBP">GBP</option>

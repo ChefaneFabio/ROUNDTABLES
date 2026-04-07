@@ -639,13 +639,17 @@ function StudentDashboard({ data }: { data: any }) {
             ))}
           </div>
         ) : (
-          <div className="text-center py-8">
-            <ClipboardCheck className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-gray-500 mb-4">No assessments completed yet</p>
+          <div className="text-center py-12">
+            <ClipboardCheck className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+            <h4 className="text-lg font-semibold text-gray-700 mb-2">No assessments completed yet</h4>
+            <p className="text-gray-500 mb-6 max-w-sm mx-auto">
+              Take a placement test to discover your CEFR level across Reading, Listening, Writing, and Speaking.
+            </p>
             <button
               onClick={() => navigate('/assessment')}
-              className="inline-flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-slate-700 to-slate-800 text-white rounded-lg hover:from-slate-800 hover:to-slate-900 transition-all shadow-md hover:shadow-lg font-medium"
+              className="inline-flex items-center gap-2 px-8 py-3 text-base bg-gradient-to-r from-slate-700 to-slate-800 text-white rounded-xl hover:from-slate-800 hover:to-slate-900 transition-all shadow-lg hover:shadow-xl font-semibold"
             >
+              <ClipboardCheck className="w-5 h-5" />
               Take Placement Test
             </button>
           </div>

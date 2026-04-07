@@ -196,11 +196,11 @@ export default function OrgAssessmentsPage() {
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Employee</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Language</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Status</th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Progress</th>
-                  <th className="text-center py-3 px-4 font-medium text-gray-500">R</th>
-                  <th className="text-center py-3 px-4 font-medium text-gray-500">L</th>
-                  <th className="text-center py-3 px-4 font-medium text-gray-500">W</th>
-                  <th className="text-center py-3 px-4 font-medium text-gray-500">S</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-500 hidden sm:table-cell">Progress</th>
+                  <th className="text-center py-3 px-4 font-medium text-gray-500 hidden md:table-cell">R</th>
+                  <th className="text-center py-3 px-4 font-medium text-gray-500 hidden md:table-cell">L</th>
+                  <th className="text-center py-3 px-4 font-medium text-gray-500 hidden md:table-cell">W</th>
+                  <th className="text-center py-3 px-4 font-medium text-gray-500 hidden md:table-cell">S</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Overall</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Date</th>
                   <th className="text-right py-3 px-4 font-medium text-gray-500">Actions</th>
@@ -232,7 +232,7 @@ export default function OrgAssessmentsPage() {
                           {a.status === 'IN_PROGRESS' ? 'In Progress' : a.status}
                         </span>
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-3 px-4 hidden sm:table-cell">
                         <div className="flex items-center gap-1.5">
                           {(a.sections || []).map((s: any, i: number) => (
                             <div
@@ -252,16 +252,16 @@ export default function OrgAssessmentsPage() {
                           <span className="text-xs text-gray-500 ml-1">{completedSections}/{totalSections}</span>
                         </div>
                       </td>
-                      <td className="py-3 px-4 text-center">
+                      <td className="py-3 px-4 text-center hidden md:table-cell">
                         <SectionCell section={readingSection} />
                       </td>
-                      <td className="py-3 px-4 text-center">
+                      <td className="py-3 px-4 text-center hidden md:table-cell">
                         <SectionCell section={listeningSection} />
                       </td>
-                      <td className="py-3 px-4 text-center">
+                      <td className="py-3 px-4 text-center hidden md:table-cell">
                         <SectionCell section={writingSection} />
                       </td>
-                      <td className="py-3 px-4 text-center">
+                      <td className="py-3 px-4 text-center hidden md:table-cell">
                         <SectionCell section={speakingSection} />
                       </td>
                       <td className="py-3 px-4">
