@@ -95,6 +95,59 @@ router.post(
   }
 )
 
+// Create additional admin user (existing admin only)
+router.post(
+  '/register/admin',
+  authenticate,
+  validateRequest(Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(8).required(),
+    name: Joi.string().min(2).max(100).required(),
+    surname: Joi.string().max(100).optional(),
+    phone: Joi.string().max(30).optional(),
+  })),
+  async (req: Request, res: Response) => {
+    try {
+      if (!req.user || req.user.role !== 'ADMIN') {
+        return res.status(403).json(apiResponse.error('Only administrators can create admin users', 'FORBIDDEN'))
+      }
+
+      const { email, password, name, surname, phone } = req.body
+      const hashedPassword = await bcrypt.hash(password, 10)
+
+      // Check if user already exists
+      const existing = await prisma.user.findUnique({ where: { email } })
+      if (existing) {
+        return res.status(409).json(apiResponse.error('Email already in use', 'DUPLICATE'))
+      }
+
+      // Get the admin's school
+      const school = await prisma.school.findFirst({ where: { userId: req.user.id } })
+
+      const user = await prisma.user.create({
+        data: {
+          email,
+          password: hashedPassword,
+          name,
+          surname: surname || null,
+          phone: phone || null,
+          role: 'ADMIN',
+          schoolProfile: school ? undefined : {
+            create: { name: 'Maka Language Consulting', email }
+          }
+        }
+      })
+
+      // If school exists, create a school profile linked to the same school
+      // (multiple admins can share the same school)
+
+      res.status(201).json(apiResponse.success({ id: user.id, email: user.email, name: user.name }, 'Admin user created'))
+    } catch (error) {
+      handleError(res, error)
+    }
+  }
+)
+
 // Register a new student (school admin or self-registration with school invite)
 router.post(
   '/register/student',

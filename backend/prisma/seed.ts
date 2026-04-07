@@ -8,18 +8,29 @@ async function main() {
 
   const password = await bcrypt.hash('demo123', 10)
 
-  // Upsert admin user
-  const corporate = await prisma.user.upsert({
-    where: { email: 'admin@demo.com' },
-    update: { name: 'School Admin', role: 'ADMIN', password },
-    create: {
-      email: 'admin@demo.com',
-      password,
-      name: 'School Admin',
-      role: 'ADMIN'
-    }
-  })
-  console.log('✓ Admin user ready:', corporate.email)
+  // Upsert Maka admin users
+  const makaAdmins = [
+    { email: 'admin@demo.com', name: 'Demo', surname: 'Admin' },
+    { email: 'alessia@makalanguage.com', name: 'Alessia', surname: 'Carde' },
+    { email: 'info@makalanguage.com', name: 'Maka', surname: 'Admin' },
+  ]
+
+  let corporate: any
+  for (const admin of makaAdmins) {
+    const user = await prisma.user.upsert({
+      where: { email: admin.email },
+      update: { name: admin.name, surname: admin.surname, role: 'ADMIN', password },
+      create: {
+        email: admin.email,
+        password,
+        name: admin.name,
+        surname: admin.surname,
+        role: 'ADMIN'
+      }
+    })
+    if (!corporate) corporate = user
+    console.log('✓ Admin user ready:', user.email)
+  }
 
   // Ensure school exists for this user
   let school = await prisma.school.findFirst({ where: { userId: corporate.id } })
@@ -36,7 +47,7 @@ async function main() {
     } else {
       school = await prisma.school.create({
         data: {
-          name: 'Maka Learning Management Centre',
+          name: 'Maka Language Consulting',
           email: 'info@makalanguage.com',
           userId: corporate.id,
           isActive: true
