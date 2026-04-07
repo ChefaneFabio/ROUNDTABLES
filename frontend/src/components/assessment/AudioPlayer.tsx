@@ -28,12 +28,20 @@ export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComp
       audioRef.current.play()
       setIsPlaying(true)
     } else if (ttsScript && 'speechSynthesis' in window) {
-      // Client-side TTS fallback
+      // Client-side TTS fallback — try to pick a voice matching the language
+      const langCode = language === 'Italian' ? 'it' :
+                       language === 'Spanish' ? 'es' :
+                       language === 'French' ? 'fr' :
+                       language === 'German' ? 'de' : 'en'
+      const voices = window.speechSynthesis.getVoices()
+      const langVoices = voices.filter(v => v.lang.startsWith(langCode))
+
       const utterance = new SpeechSynthesisUtterance(ttsScript)
-      utterance.lang = language === 'Italian' ? 'it-IT' :
-                       language === 'Spanish' ? 'es-ES' :
-                       language === 'French' ? 'fr-FR' :
-                       language === 'German' ? 'de-DE' : 'en-US'
+      utterance.lang = `${langCode}-${langCode === 'en' ? 'US' : langCode.toUpperCase()}`
+      // Pick a random voice from available ones for variety
+      if (langVoices.length > 0) {
+        utterance.voice = langVoices[Math.floor(Math.random() * langVoices.length)]
+      }
       utterance.rate = 0.9
       utterance.onstart = () => setIsPlaying(true)
       utterance.onend = () => {
