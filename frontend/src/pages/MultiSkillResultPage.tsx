@@ -394,7 +394,7 @@ export function MultiSkillResultPage() {
       </div>
 
       {/* ─── Action Buttons ─── */}
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-4 flex-wrap">
         <button
           onClick={() => navigate('/assessment')}
           className="flex items-center gap-2 px-6 py-2.5 text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all shadow-sm font-medium"
@@ -418,6 +418,24 @@ export function MultiSkillResultPage() {
           className="flex items-center gap-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-medium hover:from-blue-700 hover:to-blue-800 transition-all shadow-sm"
         >
           <Download className="w-4 h-4" /> Download PDF
+        </button>
+        <button
+          onClick={async () => {
+            try {
+              const blob = await assessmentApi.downloadMultiSkillResultsPdf(id!, true)
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url
+              a.download = `${assessment.language}-placement-results-detailed.pdf`
+              a.click()
+              URL.revokeObjectURL(url)
+            } catch {
+              toast.info('Detailed PDF not available yet.')
+            }
+          }}
+          className="flex items-center gap-2 px-6 py-2.5 text-blue-700 bg-blue-50 border border-blue-200 rounded-xl font-medium hover:bg-blue-100 transition-all shadow-sm"
+        >
+          <Download className="w-4 h-4" /> Detailed Report
         </button>
       </div>
     </div>

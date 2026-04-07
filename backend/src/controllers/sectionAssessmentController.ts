@@ -865,9 +865,10 @@ router.get('/:id/results/pdf', authenticate, async (req: Request, res: Response)
       return res.status(403).json(apiResponse.error('Not authorized', 'FORBIDDEN'))
     }
 
-    const pdfBuffer = await certificateService.generateMultiSkillResultPdf(id)
+    const detailed = req.query.detailed === 'true'
+    const pdfBuffer = await certificateService.generateMultiSkillResultPdf(id, detailed)
     res.setHeader('Content-Type', 'application/pdf')
-    res.setHeader('Content-Disposition', `attachment; filename="${assessment.language}-placement-results.pdf"`)
+    res.setHeader('Content-Disposition', `attachment; filename="${assessment.language}-placement-results${detailed ? '-detailed' : ''}.pdf"`)
     res.send(pdfBuffer)
   } catch (error) {
     return handleError(res, error)

@@ -445,12 +445,14 @@ export class CertificateService {
   }
 
   // Generate multi-skill assessment result PDF
-  async generateMultiSkillResultPdf(assessmentId: string): Promise<Buffer> {
+  async generateMultiSkillResultPdf(assessmentId: string, detailed = false): Promise<Buffer> {
     const assessment = await prisma.assessment.findUnique({
       where: { id: assessmentId },
       include: {
         student: { include: { user: { select: { name: true, email: true } } } },
-        sections: { orderBy: { orderIndex: 'asc' } }
+        sections: { orderBy: { orderIndex: 'asc' } },
+        writingResponses: detailed ? true : false,
+        speakingResponses: detailed ? true : false
       }
     })
 
@@ -627,10 +629,157 @@ export class CertificateService {
         .text('Maka Language Consulting — makalmc.com', 50, footerY, { width: w / 2 })
       doc.text('Confidential Assessment Report', 50 + w / 2, footerY, { width: w / 2, align: 'right' })
 
-      // Remove any extra blank pages
-      const pages = doc.bufferedPageRange()
-      if (pages.count > 1) {
-        // Content fits on 1 page — no action needed, PDFKit handles it
+      // ─── Detailed Answer Breakdown (optional) ───
+      if (detailed) {
+        const questionIds: string[] = []
+        for (const section of (assessment as any).sections) {
+          const answers = (section.answers || []) as Array<{ questionId: string; answer: string; isCorrect: boolean; cefrLevel: string; points: number }>
+          for (const a of answers) {
+            if (a.questionId) questionIds.push(a.questionId)
+          }
+        }
+
+        // Fetch all questions in one query
+        const questions = questionIds.length > 0
+          ? await prisma.assessmentQuestion.findMany({
+              where: { id: { in: questionIds } },
+              select: { id: true, questionText: true, correctAnswer: true, cefrLevel: true, questionType: true, options: true, passage: true }
+            })
+          : []
+        const questionMap = new Map(questions.map(q => [q.id, q]))
+
+        for (const section of (assessment as any).sections) {
+          const answers = (section.answers || []) as Array<{ questionId: string; answer: string; isCorrect: boolean; cefrLevel: string; points: number }>
+          if (answers.length === 0) continue
+
+          const skillLabel = SKILL_LABELS[section.skill] || section.skill
+          const skillColor = SKILL_COLORS[section.skill] || '#6b7280'
+
+          // New page for each section
+          doc.addPage()
+
+          // Section header
+          doc.rect(0, 0, pageW, 50).fill('#1e293b')
+          doc.fillColor('#ffffff').fontSize(14).text(`${skillLabel} — Detailed Answer Report`, 50, 16)
+          doc.fillColor('#94a3b8').fontSize(9)
+            .text(`${assessment.student.user.name} | ${assessment.language} | ${section.cefrLevel || 'Pending'}`, 50, 34)
+
+          let dy = 70
+          const correct = answers.filter(a => a.isCorrect).length
+          const total = answers.length
+
+          // Summary bar
+          doc.roundedRect(50, dy, w, 28, 4).fill('#f1f5f9')
+          doc.fillColor('#22c55e').fontSize(10).text(`${correct} correct`, 60, dy + 8)
+          doc.fillColor('#ef4444').text(`${total - correct} incorrect`, 160, dy + 8)
+          doc.fillColor('#6b7280').text(`${total} total`, 280, dy + 8)
+          if (section.cefrLevel) {
+            const lvColor = CEFR_COLORS[section.cefrLevel] || '#6b7280'
+            doc.roundedRect(w - 10, dy + 4, 50, 20, 3).fill(lvColor)
+            doc.fillColor('#ffffff').fontSize(9).text(section.cefrLevel, w - 10, dy + 9, { width: 50, align: 'center' })
+          }
+          dy += 40
+
+          // Each answer
+          for (let i = 0; i < answers.length; i++) {
+            const a = answers[i]
+            const q = questionMap.get(a.questionId)
+
+            // Check if we need a new page
+            if (dy > doc.page.height - 100) {
+              doc.addPage()
+              dy = 50
+            }
+
+            const bgColor = a.isCorrect ? '#f0fdf4' : '#fef2f2'
+            const borderColor = a.isCorrect ? '#bbf7d0' : '#fecaca'
+            const iconColor = a.isCorrect ? '#22c55e' : '#ef4444'
+
+            // Question box
+            const boxH = q?.passage ? 80 : 56
+            doc.roundedRect(50, dy, w, boxH, 4).fill(bgColor)
+            doc.roundedRect(50, dy, 3, boxH, 0).fill(borderColor)
+
+            // Q number + level
+            doc.fillColor(iconColor).fontSize(9).text(a.isCorrect ? '\u2713' : '\u2717', 60, dy + 6)
+            doc.fillColor('#111827').fontSize(9).text(`Q${i + 1}`, 75, dy + 6)
+            doc.fillColor('#6b7280').fontSize(8).text(a.cefrLevel, 100, dy + 6)
+
+            // Question text (truncated)
+            if (q) {
+              const qText = (q.questionText || '').substring(0, 120) + ((q.questionText || '').length > 120 ? '...' : '')
+              doc.fillColor('#374151').fontSize(8).text(qText, 60, dy + 20, { width: w - 30 })
+            }
+
+            // Student answer vs correct
+            const answerY = q?.passage ? dy + 48 : dy + 36
+            doc.fillColor('#6b7280').fontSize(7).text('Student:', 60, answerY)
+            doc.fillColor(a.isCorrect ? '#166534' : '#991b1b').fontSize(8)
+              .text(String(a.answer).substring(0, 80), 110, answerY)
+
+            if (!a.isCorrect && q) {
+              doc.fillColor('#6b7280').fontSize(7).text('Correct:', 60, answerY + 12)
+              doc.fillColor('#166534').fontSize(8)
+                .text(q.correctAnswer.substring(0, 80), 110, answerY + 12)
+            }
+
+            dy += boxH + 6
+          }
+
+          // Writing responses
+          if (section.skill === 'WRITING' && (assessment as any).writingResponses) {
+            const writingForSection = (assessment as any).writingResponses.filter((wr: any) => wr.sectionId === section.id)
+            for (const wr of writingForSection) {
+              if (dy > doc.page.height - 150) { doc.addPage(); dy = 50 }
+
+              doc.fillColor('#111827').fontSize(10).text('Writing Response:', 50, dy)
+              dy += 16
+              doc.fillColor('#374151').fontSize(8)
+                .text((wr.responseText || '').substring(0, 500), 50, dy, { width: w })
+              dy += doc.heightOfString((wr.responseText || '').substring(0, 500), { width: w }) + 10
+
+              if (wr.aiEvaluation) {
+                const ai = wr.aiEvaluation as any
+                doc.fillColor('#6366f1').fontSize(8).text(`AI Score: ${ai.overall || 'N/A'}/100 — ${ai.cefrLevel || ''}`, 50, dy)
+                dy += 14
+                if (ai.feedback) {
+                  doc.fillColor('#6b7280').fontSize(7).text(`Feedback: ${String(ai.feedback).substring(0, 300)}`, 50, dy, { width: w })
+                  dy += doc.heightOfString(String(ai.feedback).substring(0, 300), { width: w }) + 8
+                }
+              }
+            }
+          }
+
+          // Speaking responses
+          if (section.skill === 'SPEAKING' && (assessment as any).speakingResponses) {
+            const speakingForSection = (assessment as any).speakingResponses.filter((sr: any) => sr.sectionId === section.id)
+            for (const sr of speakingForSection) {
+              if (dy > doc.page.height - 100) { doc.addPage(); dy = 50 }
+
+              doc.fillColor('#111827').fontSize(10).text('Speaking Response:', 50, dy)
+              dy += 14
+              doc.fillColor('#6b7280').fontSize(8).text(`Duration: ${sr.duration || 0}s`, 50, dy)
+              dy += 14
+
+              if (sr.aiEvaluation) {
+                const ai = sr.aiEvaluation as any
+                doc.fillColor('#a855f7').fontSize(8).text(`AI Score: ${ai.overall || 'N/A'}/100 — ${ai.cefrLevel || ''}`, 50, dy)
+                dy += 14
+                if (ai.feedback) {
+                  doc.fillColor('#6b7280').fontSize(7).text(`Feedback: ${String(ai.feedback).substring(0, 300)}`, 50, dy, { width: w })
+                  dy += doc.heightOfString(String(ai.feedback).substring(0, 300), { width: w }) + 8
+                }
+              }
+            }
+          }
+
+          // Section footer
+          if (dy < doc.page.height - 60) {
+            doc.moveTo(50, doc.page.height - 50).lineTo(50 + w, doc.page.height - 50).lineWidth(0.5).stroke('#e5e7eb')
+            doc.fillColor('#9ca3af').fontSize(7)
+              .text('Maka Language Consulting — Confidential', 50, doc.page.height - 42)
+          }
+        }
       }
 
       doc.end()

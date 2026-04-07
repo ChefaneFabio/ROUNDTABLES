@@ -170,8 +170,9 @@ export const assessmentApi = {
   },
 
   // Download multi-skill results PDF
-  async downloadMultiSkillResultsPdf(assessmentId: string): Promise<Blob> {
-    const response = await api.get(`/assessments/multi-skill/${assessmentId}/results/pdf`, {
+  async downloadMultiSkillResultsPdf(assessmentId: string, detailed = false): Promise<Blob> {
+    const params = detailed ? '?detailed=true' : ''
+    const response = await api.get(`/assessments/multi-skill/${assessmentId}/results/pdf${params}`, {
       responseType: 'blob'
     })
     return response.data
