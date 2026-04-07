@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import { User, Mail, Phone, MapPin, Calendar, Camera, Save, Shield } from 'lucide-react'
+import { User, Mail, Phone, MapPin, Calendar, Save, Shield, Globe, FileText, Building2 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { authApi } from '../services/api'
 import { LoadingPage } from '../components/common/LoadingSpinner'
 import { Alert } from '../components/common/Alert'
+
+const EMPTY_FORM = {
+  name: '', surname: '', phone: '', address: '', city: '', province: '',
+  postalCode: '', country: '', dateOfBirth: '', placeOfBirth: '',
+  nationality: '', fiscalCode: '', gender: '', bio: '',
+  preferredLanguage: 'en', nativeLanguage: '',
+}
 
 export const ProfilePage: React.FC = () => {
   const { user: authUser } = useAuth()
   const queryClient = useQueryClient()
   const [isEditing, setIsEditing] = useState(false)
   const [successMsg, setSuccessMsg] = useState('')
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    address: '',
-    bio: '',
-    preferredLanguage: 'en'
-  })
+  const [formData, setFormData] = useState({ ...EMPTY_FORM })
 
   const { data, isLoading, error } = useQuery('profile', authApi.getProfile)
 
@@ -28,10 +29,21 @@ export const ProfilePage: React.FC = () => {
     if (user) {
       setFormData({
         name: user.name || '',
+        surname: user.surname || '',
         phone: user.phone || '',
         address: user.address || '',
+        city: user.city || '',
+        province: user.province || '',
+        postalCode: user.postalCode || '',
+        country: user.country || '',
+        dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split('T')[0] : '',
+        placeOfBirth: user.placeOfBirth || '',
+        nationality: user.nationality || '',
+        fiscalCode: user.fiscalCode || '',
+        gender: user.gender || '',
         bio: user.bio || '',
-        preferredLanguage: user.preferredLanguage || 'en'
+        preferredLanguage: user.preferredLanguage || 'en',
+        nativeLanguage: user.nativeLanguage || '',
       })
     }
   }, [user])
@@ -45,28 +57,31 @@ export const ProfilePage: React.FC = () => {
     }
   })
 
-  const handleSave = () => {
-    updateMutation.mutate(formData)
-  }
+  const handleSave = () => updateMutation.mutate(formData)
 
   const handleCancel = () => {
     if (user) {
       setFormData({
-        name: user.name || '',
-        phone: user.phone || '',
-        address: user.address || '',
-        bio: user.bio || '',
-        preferredLanguage: user.preferredLanguage || 'en'
+        name: user.name || '', surname: user.surname || '', phone: user.phone || '',
+        address: user.address || '', city: user.city || '', province: user.province || '',
+        postalCode: user.postalCode || '', country: user.country || '',
+        dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().split('T')[0] : '',
+        placeOfBirth: user.placeOfBirth || '', nationality: user.nationality || '',
+        fiscalCode: user.fiscalCode || '', gender: user.gender || '', bio: user.bio || '',
+        preferredLanguage: user.preferredLanguage || 'en', nativeLanguage: user.nativeLanguage || '',
       })
     }
     setIsEditing(false)
   }
 
+  const set = (field: string, value: string) => setFormData(prev => ({ ...prev, [field]: value }))
+
   const getRoleBadge = () => {
     switch (user?.role) {
-      case 'ADMIN': return { text: 'Administrator', color: 'bg-red-100 text-red-800' }
-      case 'TEACHER': return { text: 'Teacher', color: 'bg-green-100 text-green-800' }
-      case 'STUDENT': return { text: 'Student', color: 'bg-purple-100 text-purple-800' }
+      case 'ADMIN': return { text: 'Administrator', color: 'bg-gray-200 text-gray-800' }
+      case 'TEACHER': return { text: 'Teacher', color: 'bg-gray-200 text-gray-800' }
+      case 'STUDENT': return { text: 'Student', color: 'bg-gray-200 text-gray-800' }
+      case 'ORG_ADMIN': return { text: 'HR Manager', color: 'bg-gray-200 text-gray-800' }
       default: return { text: 'User', color: 'bg-gray-100 text-gray-800' }
     }
   }
@@ -75,201 +90,149 @@ export const ProfilePage: React.FC = () => {
 
   const roleBadge = getRoleBadge()
 
+  const Field = ({ label, field, icon: Icon, type = 'text', placeholder = '', readOnly = false }: {
+    label: string; field: string; icon?: React.ElementType; type?: string; placeholder?: string; readOnly?: boolean
+  }) => (
+    <div>
+      <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">{label}</label>
+      {isEditing && !readOnly ? (
+        <input
+          type={type}
+          value={(formData as any)[field] || ''}
+          onChange={e => set(field, e.target.value)}
+          placeholder={placeholder}
+          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gray-400 focus:border-gray-400"
+        />
+      ) : (
+        <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg min-h-[38px]">
+          {Icon && <Icon className="w-4 h-4 text-gray-400 flex-shrink-0" />}
+          <span className="text-sm text-gray-900">{(user as any)?.[field] || (formData as any)[field] || '—'}</span>
+        </div>
+      )}
+    </div>
+  )
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
-          <p className="text-gray-600">Manage your personal information</p>
+          <p className="text-sm text-gray-500">Personal and anagraphic information</p>
         </div>
         {!isEditing ? (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-          >
+          <button onClick={() => setIsEditing(true)} className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm font-medium">
             Edit Profile
           </button>
         ) : (
           <div className="flex gap-2">
-            <button
-              onClick={handleCancel}
-              className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSave}
-              disabled={updateMutation.isLoading}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50"
-            >
-              {updateMutation.isLoading ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Save className="w-4 h-4" />
-                  Save Changes
-                </>
-              )}
+            <button onClick={handleCancel} className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-sm">Cancel</button>
+            <button onClick={handleSave} disabled={updateMutation.isLoading} className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800 text-sm disabled:opacity-50">
+              <Save className="w-4 h-4" /> {updateMutation.isLoading ? 'Saving...' : 'Save'}
             </button>
           </div>
         )}
       </div>
 
       {successMsg && <Alert type="success" message={successMsg} />}
-      {(error || updateMutation.error) && (
-        <Alert type="error" message={(updateMutation.error as Error)?.message || 'Failed to load profile'} />
-      )}
+      {(error || updateMutation.error) && <Alert type="error" message={(updateMutation.error as Error)?.message || 'Failed to load profile'} />}
 
-      {/* Profile Card */}
-      <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-        {/* Cover */}
-        <div className="h-32 bg-gradient-to-r from-blue-500 to-blue-600" />
-
-        {/* Avatar & Basic Info */}
+      {/* Profile Header */}
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="h-24 bg-gradient-to-r from-gray-800 to-gray-900" />
         <div className="px-6 pb-6">
-          <div className="flex items-end gap-4 -mt-12 mb-4">
-            <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-white border-4 border-white flex items-center justify-center bg-blue-100">
-                <span className="text-3xl font-bold text-blue-600">
-                  {user?.name?.charAt(0).toUpperCase()}
-                </span>
-              </div>
-              {isEditing && (
-                <button className="absolute bottom-0 right-0 p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700">
-                  <Camera className="w-4 h-4" />
-                </button>
-              )}
-            </div>
-            <div className="flex-1 pb-2">
-              <h2 className="text-xl font-bold text-gray-900">{user?.name}</h2>
-              <span className={`inline-flex px-2 py-0.5 rounded-full text-xs font-medium ${roleBadge.color}`}>
-                {roleBadge.text}
+          <div className="flex items-end gap-4 -mt-10 mb-4">
+            <div className="w-20 h-20 rounded-full bg-white border-4 border-white flex items-center justify-center bg-gray-100">
+              <span className="text-2xl font-bold text-gray-700">
+                {user?.name?.charAt(0)?.toUpperCase()}{user?.surname?.charAt(0)?.toUpperCase() || ''}
               </span>
             </div>
-          </div>
-
-          {/* Form */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              ) : (
-                <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
-                  <User className="w-4 h-4 text-gray-400" />
-                  <span className="text-gray-900">{user?.name}</span>
-                </div>
-              )}
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Email Address
-              </label>
-              <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
-                <Mail className="w-4 h-4 text-gray-400" />
-                <span className="text-gray-900">{user?.email}</span>
-                <Shield className="w-4 h-4 text-green-500 ml-auto" />
+            <div className="pb-1">
+              <h2 className="text-xl font-bold text-gray-900">{user?.name} {user?.surname || ''}</h2>
+              <div className="flex items-center gap-2 mt-1">
+                <span className={`inline-flex px-2 py-0.5 rounded text-xs font-medium ${roleBadge.color}`}>{roleBadge.text}</span>
+                <span className="text-xs text-gray-400">{user?.email}</span>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number
-              </label>
-              {isEditing ? (
-                <input
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="+1 234 567 8900"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              ) : (
-                <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
-                  <Phone className="w-4 h-4 text-gray-400" />
-                  <span className={user?.phone ? 'text-gray-900' : 'text-gray-500'}>
-                    {user?.phone || 'Not provided'}
-                  </span>
-                </div>
-              )}
-            </div>
+      {/* Personal Information */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Personal Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Field label="First Name" field="name" icon={User} placeholder="First name" />
+          <Field label="Surname" field="surname" icon={User} placeholder="Surname" />
+          <div>
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Gender</label>
+            {isEditing ? (
+              <select value={formData.gender} onChange={e => set('gender', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
+                <option value="">—</option>
+                <option value="M">Male</option>
+                <option value="F">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            ) : (
+              <div className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-lg min-h-[38px]">
+                <span className="text-sm text-gray-900">{user?.gender === 'M' ? 'Male' : user?.gender === 'F' ? 'Female' : user?.gender || '—'}</span>
+              </div>
+            )}
+          </div>
+          <Field label="Date of Birth" field="dateOfBirth" icon={Calendar} type="date" />
+          <Field label="Place of Birth" field="placeOfBirth" icon={MapPin} placeholder="City, Country" />
+          <Field label="Nationality" field="nationality" icon={Globe} placeholder="e.g. Italian" />
+          <Field label="Fiscal Code (Codice Fiscale)" field="fiscalCode" icon={FileText} placeholder="RSSMRA85M01H501Z" />
+          <Field label="Native Language" field="nativeLanguage" icon={Globe} placeholder="e.g. Italian" />
+        </div>
+      </div>
 
+      {/* Contact & Address */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Contact & Address</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Field label="Email" field="email" icon={Mail} readOnly />
+          <Field label="Phone" field="phone" icon={Phone} placeholder="+39 333 123 4567" />
+          <Field label="Address" field="address" icon={MapPin} placeholder="Via Roma 1" />
+          <Field label="City" field="city" icon={Building2} placeholder="Milan" />
+          <Field label="Province" field="province" placeholder="MI" />
+          <Field label="Postal Code" field="postalCode" placeholder="20100" />
+          <Field label="Country" field="country" icon={Globe} placeholder="Italy" />
+        </div>
+      </div>
+
+      {/* Bio & Preferences */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Bio & Preferences</h3>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Bio</label>
+            {isEditing ? (
+              <textarea
+                value={formData.bio}
+                onChange={e => set('bio', e.target.value)}
+                rows={3}
+                placeholder="Tell us about yourself..."
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-gray-400"
+              />
+            ) : (
+              <p className="px-3 py-2 bg-gray-50 rounded-lg text-sm text-gray-900 min-h-[60px]">{user?.bio || '—'}</p>
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Preferred Language
-              </label>
+              <label className="block text-xs font-medium text-gray-500 uppercase tracking-wide mb-1">Platform Language</label>
               {isEditing ? (
-                <select
-                  value={formData.preferredLanguage}
-                  onChange={(e) => setFormData({ ...formData, preferredLanguage: e.target.value })}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
+                <select value={formData.preferredLanguage} onChange={e => set('preferredLanguage', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm">
                   <option value="en">English</option>
-                  <option value="es">Spanish</option>
+                  <option value="it">Italian</option>
                   <option value="fr">French</option>
                   <option value="de">German</option>
-                  <option value="it">Italian</option>
+                  <option value="es">Spanish</option>
                 </select>
               ) : (
-                <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
-                  <span className="text-gray-900">
-                    {{ en: 'English', es: 'Spanish', fr: 'French', de: 'German', it: 'Italian' }[user?.preferredLanguage || 'en'] || user?.preferredLanguage || 'English'}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Address
-              </label>
-              {isEditing ? (
-                <input
-                  type="text"
-                  value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                  placeholder="Enter your address"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              ) : (
-                <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
-                  <MapPin className="w-4 h-4 text-gray-400" />
-                  <span className={user?.address ? 'text-gray-900' : 'text-gray-500'}>
-                    {user?.address || 'Not provided'}
-                  </span>
-                </div>
-              )}
-            </div>
-
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Bio
-              </label>
-              {isEditing ? (
-                <textarea
-                  value={formData.bio}
-                  onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
-                  rows={4}
-                  placeholder="Tell us about yourself..."
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-              ) : (
-                <div className="px-4 py-2 bg-gray-50 rounded-lg min-h-[100px]">
-                  <span className={user?.bio ? 'text-gray-900' : 'text-gray-500'}>
-                    {user?.bio || 'No bio provided'}
-                  </span>
+                <div className="px-3 py-2 bg-gray-50 rounded-lg text-sm text-gray-900">
+                  {user?.preferredLanguage === 'it' ? 'Italian' : user?.preferredLanguage === 'fr' ? 'French' : user?.preferredLanguage === 'de' ? 'German' : user?.preferredLanguage === 'es' ? 'Spanish' : 'English'}
                 </div>
               )}
             </div>
@@ -277,88 +240,24 @@ export const ProfilePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Role-specific info */}
-      {profile && (
-        <div className="bg-white rounded-lg border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            {user?.role === 'ADMIN' ? 'School Details' :
-             user?.role === 'TEACHER' ? 'Teacher Details' :
-             user?.role === 'STUDENT' ? 'Student Details' : 'Details'}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {user?.role === 'ADMIN' && (
-              <>
-                {profile.company && (
-                  <InfoItem label="Company" value={profile.company} />
-                )}
-                {profile.description && (
-                  <InfoItem label="Description" value={profile.description} className="md:col-span-2" />
-                )}
-                <InfoItem label="Subscription" value={profile.subscriptionPlan?.replace(/_/g, ' ')} />
-              </>
-            )}
-            {user?.role === 'TEACHER' && (
-              <>
-                {profile.expertise?.length > 0 && (
-                  <div className="md:col-span-2">
-                    <p className="text-sm text-gray-500 mb-1">Expertise</p>
-                    <div className="flex flex-wrap gap-2">
-                      {profile.expertise.map((e: string) => (
-                        <span key={e} className="px-2 py-1 bg-green-100 text-green-800 rounded text-sm">{e}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {profile.school?.name && (
-                  <InfoItem label="School" value={profile.school.name} />
-                )}
-              </>
-            )}
-            {user?.role === 'STUDENT' && (
-              <>
-                <InfoItem label="Language Level" value={profile.languageLevel} />
-                {profile.school?.name && (
-                  <InfoItem label="School" value={profile.school.name} />
-                )}
-              </>
-            )}
+      {/* Account Info (read-only) */}
+      <div className="bg-white rounded-xl border border-gray-200 p-6">
+        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Account</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <div>
+            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Role</p>
+            <p className="text-gray-900">{roleBadge.text}</p>
           </div>
-        </div>
-      )}
-
-      {/* Account Info */}
-      <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Account Information</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <Calendar className="w-5 h-5 text-gray-400" />
-            <div>
-              <p className="text-sm text-gray-500">Member since</p>
-              <p className="font-medium text-gray-900">
-                {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Unknown'}
-              </p>
-            </div>
+          <div>
+            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Member Since</p>
+            <p className="text-gray-900">{user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-GB') : '—'}</p>
           </div>
-          <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <Shield className="w-5 h-5 text-gray-400" />
-            <div>
-              <p className="text-sm text-gray-500">Account Status</p>
-              <p className={`font-medium ${user?.isActive ? 'text-green-600' : 'text-red-600'}`}>
-                {user?.isActive ? 'Active' : 'Inactive'}
-              </p>
-            </div>
+          <div>
+            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Last Login</p>
+            <p className="text-gray-900">{user?.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString('en-GB') : '—'}</p>
           </div>
         </div>
       </div>
-    </div>
-  )
-}
-
-function InfoItem({ label, value, className }: { label: string; value: string; className?: string }) {
-  return (
-    <div className={`p-3 bg-gray-50 rounded-lg ${className || ''}`}>
-      <p className="text-sm text-gray-500">{label}</p>
-      <p className="font-medium text-gray-900">{value}</p>
     </div>
   )
 }

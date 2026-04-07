@@ -386,16 +386,24 @@ export class AuthService {
   }
 
   // Update user profile
-  async updateProfile(userId: string, data: { name?: string; phone?: string; address?: string; bio?: string; preferredLanguage?: string }) {
+  async updateProfile(userId: string, data: Record<string, any>) {
+    const allowedFields = ['name', 'surname', 'phone', 'address', 'city', 'province', 'postalCode', 'country', 'dateOfBirth', 'placeOfBirth', 'nationality', 'fiscalCode', 'gender', 'bio', 'preferredLanguage', 'nativeLanguage']
+    const updateData: Record<string, any> = {}
+    for (const field of allowedFields) {
+      if (data[field] !== undefined) {
+        updateData[field] = data[field] || null
+      }
+    }
+    // Keep name non-null
+    if (updateData.name === null) delete updateData.name
+    // Parse dateOfBirth as Date
+    if (updateData.dateOfBirth && typeof updateData.dateOfBirth === 'string') {
+      updateData.dateOfBirth = new Date(updateData.dateOfBirth)
+    }
+
     const user = await prisma.user.update({
       where: { id: userId },
-      data: {
-        ...(data.name !== undefined && { name: data.name }),
-        ...(data.phone !== undefined && { phone: data.phone || null }),
-        ...(data.address !== undefined && { address: data.address || null }),
-        ...(data.bio !== undefined && { bio: data.bio || null }),
-        ...(data.preferredLanguage !== undefined && { preferredLanguage: data.preferredLanguage }),
-      },
+      data: updateData,
       include: {
         schoolProfile: true,
         teacherProfile: true,

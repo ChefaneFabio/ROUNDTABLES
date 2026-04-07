@@ -16,11 +16,22 @@ model User {
   email             String    @unique
   password          String // Hashed password
   name              String
+  surname           String?
   role              UserRole  @default(STUDENT)
   phone             String?
   address           String?
+  city              String?
+  province          String?
+  postalCode        String?
+  country           String?
+  dateOfBirth       DateTime?
+  placeOfBirth      String?
+  nationality       String?
+  fiscalCode        String?  // Codice Fiscale (Italian tax code)
+  gender            String?  // M, F, Other
   bio               String?
   preferredLanguage String?   @default("en")
+  nativeLanguage    String?
   isActive          Boolean   @default(true)
   lastLoginAt       DateTime?
   createdAt         DateTime  @default(now())

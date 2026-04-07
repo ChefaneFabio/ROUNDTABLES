@@ -197,10 +197,21 @@ router.get('/me', authenticate, async (req: Request, res: Response) => {
 // Update current user profile
 const updateProfileSchema = Joi.object({
   name: Joi.string().min(2).max(100).optional(),
+  surname: Joi.string().max(100).allow('', null).optional(),
   phone: Joi.string().max(30).allow('', null).optional(),
   address: Joi.string().max(500).allow('', null).optional(),
+  city: Joi.string().max(100).allow('', null).optional(),
+  province: Joi.string().max(100).allow('', null).optional(),
+  postalCode: Joi.string().max(20).allow('', null).optional(),
+  country: Joi.string().max(100).allow('', null).optional(),
+  dateOfBirth: Joi.string().allow('', null).optional(),
+  placeOfBirth: Joi.string().max(200).allow('', null).optional(),
+  nationality: Joi.string().max(100).allow('', null).optional(),
+  fiscalCode: Joi.string().max(20).allow('', null).optional(),
+  gender: Joi.string().valid('M', 'F', 'Other').allow('', null).optional(),
   bio: Joi.string().max(1000).allow('', null).optional(),
   preferredLanguage: Joi.string().max(10).optional(),
+  nativeLanguage: Joi.string().max(50).allow('', null).optional(),
 })
 
 router.put(
