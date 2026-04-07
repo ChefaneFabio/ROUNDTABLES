@@ -68,7 +68,14 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
         skip,
         take: limitNum,
         include: {
-          user: { select: { id: true, name: true, email: true, phone: true, lastLoginAt: true } },
+          user: {
+            select: {
+              id: true, name: true, surname: true, email: true, phone: true,
+              address: true, city: true, province: true, postalCode: true, country: true,
+              dateOfBirth: true, placeOfBirth: true, nationality: true, fiscalCode: true,
+              gender: true, nativeLanguage: true, lastLoginAt: true, createdAt: true,
+            }
+          },
           school: { select: { id: true, name: true } },
           availability: { select: { id: true }, take: 1 },
           _count: {
@@ -84,7 +91,20 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
       prisma.teacher.count({ where })
     ])
 
-    res.json(apiResponse.paginated(teachers, { page: pageNum, limit: limitNum, total }))
+    // Privacy: only admin sees full anagraphic data
+    const role = req.user?.role
+    const sanitized = role === 'ADMIN' ? teachers : teachers.map((t: any) => ({
+      ...t,
+      user: {
+        id: t.user.id,
+        name: t.user.name,
+        surname: t.user.surname,
+        email: t.user.email,
+        lastLoginAt: t.user.lastLoginAt,
+      }
+    }))
+
+    res.json(apiResponse.paginated(sanitized, { page: pageNum, limit: limitNum, total }))
   } catch (error) {
     handleError(res, error)
   }

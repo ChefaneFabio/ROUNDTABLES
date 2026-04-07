@@ -85,7 +85,14 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
         skip,
         take: limitNum,
         include: {
-          user: { select: { id: true, name: true, email: true, phone: true, lastLoginAt: true } },
+          user: {
+            select: {
+              id: true, name: true, surname: true, email: true, phone: true,
+              address: true, city: true, province: true, postalCode: true, country: true,
+              dateOfBirth: true, placeOfBirth: true, nationality: true, fiscalCode: true,
+              gender: true, nativeLanguage: true, lastLoginAt: true, createdAt: true,
+            }
+          },
           school: { select: { id: true, name: true } },
           organization: { select: { id: true, name: true } },
           _count: {
@@ -97,7 +104,23 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
       prisma.student.count({ where })
     ])
 
-    res.json(apiResponse.paginated(students, { page: pageNum, limit: limitNum, total }))
+    // Privacy: strip sensitive anagraphic data for non-admin roles
+    const role = req.user?.role
+    const sanitized = role === 'ADMIN' ? students : students.map((s: any) => ({
+      ...s,
+      user: {
+        id: s.user.id,
+        name: s.user.name,
+        surname: s.user.surname,
+        email: s.user.email,
+        phone: role === 'ORG_ADMIN' ? s.user.phone : undefined,
+        lastLoginAt: s.user.lastLoginAt,
+        createdAt: s.user.createdAt,
+        // Hide sensitive fields from non-admin: address, DOB, fiscal code, etc.
+      }
+    }))
+
+    res.json(apiResponse.paginated(sanitized, { page: pageNum, limit: limitNum, total }))
   } catch (error) {
     handleError(res, error)
   }
@@ -111,8 +134,16 @@ router.get('/:id', authenticate, async (req: Request, res: Response) => {
     const student = await prisma.student.findFirst({
       where: { id, deletedAt: null },
       include: {
-        user: { select: { id: true, name: true, email: true, lastLoginAt: true, createdAt: true } },
+        user: {
+          select: {
+            id: true, name: true, surname: true, email: true, phone: true,
+            address: true, city: true, province: true, postalCode: true, country: true,
+            dateOfBirth: true, placeOfBirth: true, nationality: true, fiscalCode: true,
+            gender: true, nativeLanguage: true, lastLoginAt: true, createdAt: true,
+          }
+        },
         school: { select: { id: true, name: true } },
+        organization: { select: { id: true, name: true } },
         enrollments: {
           include: {
             course: {
@@ -150,6 +181,21 @@ router.get('/:id', authenticate, async (req: Request, res: Response) => {
 
     if (!canAccessStudent) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
+    }
+
+    // Privacy: strip sensitive data for non-admin
+    const role = req.user?.role
+    if (role !== 'ADMIN' && req.user?.studentId !== id) {
+      // Non-admin viewing another person — strip sensitive fields
+      (student as any).user = {
+        id: (student as any).user.id,
+        name: (student as any).user.name,
+        surname: (student as any).user.surname,
+        email: (student as any).user.email,
+        phone: role === 'ORG_ADMIN' ? (student as any).user.phone : undefined,
+        lastLoginAt: (student as any).user.lastLoginAt,
+        createdAt: (student as any).user.createdAt,
+      }
     }
 
     res.json(apiResponse.success(student))
