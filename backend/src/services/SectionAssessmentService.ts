@@ -123,10 +123,10 @@ export class SectionAssessmentService {
     const sectionSkills = Object.keys(SECTION_CONFIG) as Array<keyof typeof SECTION_CONFIG>
     const totalQuestions = sectionSkills.reduce((sum, skill) => sum + SECTION_CONFIG[skill].questionsLimit, 0)
 
-    // PLACEMENT = adaptive (starts B1, adapts up/down like Versant)
+    // PLACEMENT = adaptive (starts A2 for gentle entry, adapts up/down)
     // PROGRESS = fixed level (all questions from one CEFR level)
     const testType = fixedLevel ? 'PROGRESS' : 'PLACEMENT'
-    const startLevel = fixedLevel || 'B1'
+    const startLevel = fixedLevel || 'A2'
 
     const assessment = await prisma.assessment.create({
       data: {
@@ -490,15 +490,17 @@ export class SectionAssessmentService {
     let targetLevel = section.targetLevel || 'B1'
     const isAdaptive = section.assessment.type === 'PLACEMENT'
 
-    if (isAdaptive && answers.length >= 3) {
-      // Adaptive level adjustment — move up if doing well, down if struggling
-      const recentAnswers = answers.slice(-3)
+    if (isAdaptive && answers.length >= 2) {
+      // Adaptive level adjustment — check last 2 answers for faster response
+      const recentAnswers = answers.slice(-2)
       const correctCount = recentAnswers.filter(a => a.isCorrect).length
       const currentLevelIndex = CEFR_LEVELS.indexOf(targetLevel)
 
-      if (correctCount >= 2 && currentLevelIndex < CEFR_LEVELS.length - 1) {
+      if (correctCount === 2 && currentLevelIndex < CEFR_LEVELS.length - 1) {
+        // Both correct → move up
         targetLevel = CEFR_LEVELS[currentLevelIndex + 1]
       } else if (correctCount === 0 && currentLevelIndex > 0) {
+        // Both wrong → move down
         targetLevel = CEFR_LEVELS[currentLevelIndex - 1]
       }
 
