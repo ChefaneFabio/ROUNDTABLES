@@ -43,13 +43,16 @@ export const ScormPlayer: React.FC<ScormPlayerProps> = ({
 
   // Auto-commit: batch commits every 10 seconds if there are changes
   const pendingChanges = useRef(false)
+  // Stable ref so the timer never needs to be recreated when onCommit changes
+  const onCommitRef = useRef(onCommit)
+  onCommitRef.current = onCommit
 
   const doCommit = useCallback(() => {
     if (pendingChanges.current) {
       pendingChanges.current = false
-      onCommit({ ...cmiData.current })
+      onCommitRef.current({ ...cmiData.current })
     }
-  }, [onCommit])
+  }, [])
 
   useEffect(() => {
     commitTimer.current = window.setInterval(doCommit, 10000)
@@ -276,7 +279,7 @@ export const ScormPlayer: React.FC<ScormPlayerProps> = ({
         className="w-full border-0"
         style={{ height: isFullscreen ? 'calc(100vh - 44px)' : '680px' }}
         title="SCORM Content"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+        sandbox="allow-scripts allow-same-origin allow-forms"
         onError={handleIframeError}
       />
     </div>

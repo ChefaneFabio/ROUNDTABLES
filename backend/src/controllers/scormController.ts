@@ -22,6 +22,8 @@ if (!fs.existsSync(scormDir)) {
   fs.mkdirSync(scormDir, { recursive: true })
 }
 
+const MAX_EXTRACTED_SIZE = 2 * 1024 * 1024 * 1024 // 2GB max extracted size
+
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, scormDir),
   filename: (_req, file, cb) => {
@@ -60,6 +62,39 @@ const saveRuntimeSchema = Joi.object({
 // ─── Helpers ─────────────────────────────────────────────────────
 
 /**
+ * Validate an entry point path is safe (no traversal, relative only)
+ */
+function validateEntryPoint(entryPoint: string): boolean {
+  if (!entryPoint) return false
+  // Must not start with / or contain ..
+  if (entryPoint.startsWith('/')) return false
+  if (entryPoint.includes('..')) return false
+  // Must not be an absolute URL
+  if (/^https?:\/\//i.test(entryPoint)) return false
+  // Must not contain null bytes
+  if (entryPoint.includes('\0')) return false
+  return true
+}
+
+/**
+ * Validate ZIP entries for path traversal before extraction
+ */
+function validateZipEntries(zip: AdmZip, targetDir: string): { safe: boolean; totalSize: number } {
+  const resolvedTarget = path.resolve(targetDir)
+  let totalSize = 0
+
+  for (const entry of zip.getEntries()) {
+    const resolvedPath = path.resolve(targetDir, entry.entryName)
+    if (!resolvedPath.startsWith(resolvedTarget + path.sep) && resolvedPath !== resolvedTarget) {
+      return { safe: false, totalSize }
+    }
+    totalSize += entry.header.size
+  }
+
+  return { safe: true, totalSize }
+}
+
+/**
  * Parse imsmanifest.xml to extract SCORM version and entry point
  */
 async function parseManifest(manifestPath: string): Promise<{
@@ -67,6 +102,12 @@ async function parseManifest(manifestPath: string): Promise<{
   entryPoint: string
   title: string
 }> {
+  // Limit manifest size to prevent DoS
+  const stats = fs.statSync(manifestPath)
+  if (stats.size > 5 * 1024 * 1024) { // 5MB max manifest
+    throw new Error('Manifest file too large')
+  }
+
   const xml = fs.readFileSync(manifestPath, 'utf-8')
   const result = await parseStringPromise(xml, { explicitArray: false })
 
@@ -119,13 +160,19 @@ async function parseManifest(manifestPath: string): Promise<{
 
   if (!entryPoint) throw new Error('Could not find entry point in SCORM manifest')
 
+  // Validate entry point is safe
+  if (!validateEntryPoint(entryPoint)) {
+    throw new Error('Invalid entry point path in SCORM manifest')
+  }
+
   return { version, entryPoint, title }
 }
 
 function getSchoolId(req: Request): string {
   return (req as any).user?.schoolId ||
          (req as any).user?.schoolProfile?.id ||
-         (req as any).user?.teacherProfile?.schoolId || ''
+         (req as any).user?.teacherProfile?.schoolId ||
+         (req as any).user?.studentProfile?.schoolId || ''
 }
 
 function getUserId(req: Request): string {
@@ -134,6 +181,19 @@ function getUserId(req: Request): string {
 
 function getStudentId(req: Request): string | null {
   return (req as any).user?.studentProfile?.id || null
+}
+
+/**
+ * Verify that a SCORM package belongs to the requesting user's school
+ */
+async function requirePackageAccess(req: Request, packageId: string): Promise<any> {
+  const pkg = await prisma.scormPackage.findUnique({ where: { id: packageId } })
+  if (!pkg) return null
+
+  const schoolId = getSchoolId(req)
+  if (pkg.schoolId !== schoolId) return null
+
+  return pkg
 }
 
 // ─── Routes ──────────────────────────────────────────────────────
@@ -160,42 +220,55 @@ router.post('/upload', authenticate, requireTeacher, upload.single('file'), asyn
     const extractDir = path.join(scormDir, packageId)
     fs.mkdirSync(extractDir, { recursive: true })
 
-    // Extract ZIP
-    const zip = new AdmZip(file.path)
-    zip.extractAllTo(extractDir, true)
+    try {
+      // Validate ZIP entries before extraction (path traversal + size check)
+      const zip = new AdmZip(file.path)
+      const { safe, totalSize } = validateZipEntries(zip, extractDir)
 
-    // Find and parse imsmanifest.xml
-    const manifestPath = path.join(extractDir, 'imsmanifest.xml')
-    if (!fs.existsSync(manifestPath)) {
-      // Clean up
-      fs.rmSync(extractDir, { recursive: true, force: true })
-      fs.unlinkSync(file.path)
-      return res.status(400).json(
-        apiResponse.error('Invalid SCORM package: imsmanifest.xml not found', 'INVALID_SCORM')
-      )
-    }
-
-    const { version, entryPoint, title } = await parseManifest(manifestPath)
-
-    // Clean up the original ZIP
-    fs.unlinkSync(file.path)
-
-    // Save to database
-    const scormPackage = await prisma.scormPackage.create({
-      data: {
-        title: (req.body.title as string) || title,
-        description: req.body.description || null,
-        version,
-        filename: file.originalname,
-        entryPoint,
-        storagePath: packageId, // Relative path under uploads/scorm/
-        fileSize: file.size,
-        schoolId,
-        uploadedById: userId
+      if (!safe) {
+        throw new Error('ZIP contains entries with path traversal')
       }
-    })
 
-    res.status(201).json(apiResponse.success(scormPackage))
+      if (totalSize > MAX_EXTRACTED_SIZE) {
+        throw new Error(`Extracted size (${Math.round(totalSize / 1024 / 1024)}MB) exceeds limit`)
+      }
+
+      // Extract ZIP (safe after validation)
+      zip.extractAllTo(extractDir, true)
+
+      // Find and parse imsmanifest.xml
+      const manifestPath = path.join(extractDir, 'imsmanifest.xml')
+      if (!fs.existsSync(manifestPath)) {
+        throw new Error('Invalid SCORM package: imsmanifest.xml not found')
+      }
+
+      const { version, entryPoint, title } = await parseManifest(manifestPath)
+
+      // Clean up the original ZIP
+      fs.unlinkSync(file.path)
+
+      // Save to database
+      const scormPackage = await prisma.scormPackage.create({
+        data: {
+          title: (req.body.title as string) || title,
+          description: req.body.description || null,
+          version,
+          filename: file.originalname,
+          entryPoint,
+          storagePath: packageId,
+          fileSize: file.size,
+          schoolId,
+          uploadedById: userId
+        }
+      })
+
+      res.status(201).json(apiResponse.success(scormPackage))
+    } catch (innerError: any) {
+      // Clean up on failure
+      fs.rmSync(extractDir, { recursive: true, force: true })
+      if (fs.existsSync(file.path)) fs.unlinkSync(file.path)
+      return res.status(400).json(apiResponse.error(innerError.message || 'SCORM processing failed', 'INVALID_SCORM'))
+    }
   } catch (error: any) {
     handleError(res, error)
   }
@@ -245,11 +318,17 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
 
 /**
  * GET /api/scorm/:id
- * Get SCORM package details
+ * Get SCORM package details (school-scoped)
  */
 router.get('/:id', authenticate, async (req: Request, res: Response) => {
   try {
-    const pkg = await prisma.scormPackage.findUnique({
+    const pkg = await requirePackageAccess(req, req.params.id)
+    if (!pkg) {
+      return res.status(404).json(apiResponse.error('SCORM package not found', 'NOT_FOUND'))
+    }
+
+    // Re-fetch with includes
+    const full = await prisma.scormPackage.findUnique({
       where: { id: req.params.id },
       include: {
         uploadedBy: { select: { id: true, name: true, surname: true } },
@@ -257,11 +336,7 @@ router.get('/:id', authenticate, async (req: Request, res: Response) => {
       }
     })
 
-    if (!pkg) {
-      return res.status(404).json(apiResponse.error('SCORM package not found', 'NOT_FOUND'))
-    }
-
-    res.json(apiResponse.success(pkg))
+    res.json(apiResponse.success(full))
   } catch (error) {
     handleError(res, error)
   }
@@ -269,11 +344,11 @@ router.get('/:id', authenticate, async (req: Request, res: Response) => {
 
 /**
  * PUT /api/scorm/:id
- * Update SCORM package metadata
+ * Update SCORM package metadata (school-scoped)
  */
 router.put('/:id', authenticate, requireTeacher, validateRequest(updatePackageSchema), async (req: Request, res: Response) => {
   try {
-    const pkg = await prisma.scormPackage.findUnique({ where: { id: req.params.id } })
+    const pkg = await requirePackageAccess(req, req.params.id)
     if (!pkg) {
       return res.status(404).json(apiResponse.error('SCORM package not found', 'NOT_FOUND'))
     }
@@ -291,11 +366,11 @@ router.put('/:id', authenticate, requireTeacher, validateRequest(updatePackageSc
 
 /**
  * DELETE /api/scorm/:id
- * Delete SCORM package and its files
+ * Delete SCORM package and its files (school-scoped)
  */
 router.delete('/:id', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
   try {
-    const pkg = await prisma.scormPackage.findUnique({ where: { id: req.params.id } })
+    const pkg = await requirePackageAccess(req, req.params.id)
     if (!pkg) {
       return res.status(404).json(apiResponse.error('SCORM package not found', 'NOT_FOUND'))
     }
@@ -327,6 +402,12 @@ router.get('/:id/attempt', authenticate, async (req: Request, res: Response) => 
     const studentId = getStudentId(req)
     if (!studentId) {
       return res.status(403).json(apiResponse.error('Student access required', 'NOT_STUDENT'))
+    }
+
+    // Verify package belongs to student's school
+    const pkg = await requirePackageAccess(req, req.params.id)
+    if (!pkg) {
+      return res.status(404).json(apiResponse.error('SCORM package not found', 'NOT_FOUND'))
     }
 
     // Find the most recent active (non-completed) attempt, or create one
@@ -363,6 +444,24 @@ router.put('/:id/attempt/:attemptId/runtime', authenticate, validateRequest(save
     const { attemptId } = req.params
     const { cmiData } = req.body
 
+    // Verify attempt ownership: must belong to the authenticated student
+    const studentId = getStudentId(req)
+    if (!studentId) {
+      return res.status(403).json(apiResponse.error('Student access required', 'NOT_STUDENT'))
+    }
+
+    const existingAttempt = await prisma.scormAttempt.findUnique({
+      where: { id: attemptId }
+    })
+
+    if (!existingAttempt || existingAttempt.studentId !== studentId) {
+      return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
+    }
+
+    if (existingAttempt.scormPackageId !== req.params.id) {
+      return res.status(400).json(apiResponse.error('Attempt does not belong to this package', 'MISMATCH'))
+    }
+
     // Extract key fields from CMI data
     const updateData: any = {
       runtimeData: cmiData,
@@ -378,7 +477,7 @@ router.put('/:id/attempt/:attemptId/runtime', authenticate, validateRequest(save
       } else if (status === 'failed') {
         updateData.status = 'FAILED'
         updateData.completedAt = new Date()
-      } else if (status === 'incomplete') {
+      } else if (status === 'incomplete' || status === 'browsed' || status === 'not attempted') {
         updateData.status = 'INCOMPLETE'
       }
     }
@@ -396,23 +495,31 @@ router.put('/:id/attempt/:attemptId/runtime', authenticate, validateRequest(save
       } else if (completion === 'completed') {
         updateData.status = 'COMPLETED'
         updateData.completedAt = new Date()
-      } else if (completion === 'incomplete') {
+      } else if (completion === 'incomplete' || completion === 'not attempted' || success === 'unknown') {
         updateData.status = 'INCOMPLETE'
       }
     }
 
-    // Score
+    // Score (with safe normalization)
     const scoreRaw = cmiData['cmi.core.score.raw'] || cmiData['cmi.score.raw']
     const scoreMin = cmiData['cmi.core.score.min'] || cmiData['cmi.score.min']
     const scoreMax = cmiData['cmi.core.score.max'] || cmiData['cmi.score.max']
     if (scoreRaw !== undefined) {
-      updateData.scoreRaw = parseFloat(scoreRaw)
-      // Normalize to 0-100
+      const raw = parseFloat(scoreRaw)
       const min = scoreMin ? parseFloat(scoreMin) : 0
       const max = scoreMax ? parseFloat(scoreMax) : 100
-      updateData.score = Math.round(((parseFloat(scoreRaw) - min) / (max - min)) * 100)
+
+      updateData.scoreRaw = raw
       updateData.scoreMin = min
       updateData.scoreMax = max
+
+      // Safe normalization: guard against division by zero and out-of-range
+      if (max > min) {
+        const normalized = ((raw - min) / (max - min)) * 100
+        updateData.score = Math.max(0, Math.min(100, Math.round(normalized)))
+      } else {
+        updateData.score = Math.max(0, Math.min(100, Math.round(raw)))
+      }
     }
 
     // Time
@@ -434,13 +541,10 @@ router.put('/:id/attempt/:attemptId/runtime', authenticate, validateRequest(save
 
     // Auto-generate certificate when SCORM is completed/passed
     if (updateData.status === 'COMPLETED' || updateData.status === 'PASSED') {
-      const studentId = getStudentId(req)
-      if (studentId) {
-        try {
-          await certificateService.generateScormCertificate(studentId, req.params.id)
-        } catch {
-          // Certificate may already exist or score too low — not a critical error
-        }
+      try {
+        await certificateService.generateScormCertificate(studentId, req.params.id)
+      } catch {
+        // Certificate may already exist or score too low — not a critical error
       }
     }
 
@@ -452,10 +556,15 @@ router.put('/:id/attempt/:attemptId/runtime', authenticate, validateRequest(save
 
 /**
  * GET /api/scorm/:id/attempts
- * Get all attempts for a package (admin/teacher view)
+ * Get all attempts for a package (admin/teacher view, school-scoped)
  */
 router.get('/:id/attempts', authenticate, requireTeacher, async (req: Request, res: Response) => {
   try {
+    const pkg = await requirePackageAccess(req, req.params.id)
+    if (!pkg) {
+      return res.status(404).json(apiResponse.error('SCORM package not found', 'NOT_FOUND'))
+    }
+
     const attempts = await prisma.scormAttempt.findMany({
       where: { scormPackageId: req.params.id },
       orderBy: { startedAt: 'desc' },
@@ -476,16 +585,16 @@ router.get('/:id/attempts', authenticate, requireTeacher, async (req: Request, r
 
 /**
  * GET /api/scorm/:id/launch
- * Get launch URL for the SCORM content
+ * Get launch URL for the SCORM content (school-scoped)
  */
 router.get('/:id/launch', authenticate, async (req: Request, res: Response) => {
   try {
-    const pkg = await prisma.scormPackage.findUnique({ where: { id: req.params.id } })
+    const pkg = await requirePackageAccess(req, req.params.id)
     if (!pkg) {
       return res.status(404).json(apiResponse.error('SCORM package not found', 'NOT_FOUND'))
     }
 
-    // Build the URL to the entry point
+    // Build the URL to the entry point (entryPoint was validated on upload)
     const launchUrl = `/scorm-content/${pkg.storagePath}/${pkg.entryPoint}`
 
     res.json(apiResponse.success({
