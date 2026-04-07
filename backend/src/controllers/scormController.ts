@@ -608,4 +608,70 @@ router.get('/:id/launch', authenticate, async (req: Request, res: Response) => {
   }
 })
 
+/**
+ * POST /api/scorm/:id/retry
+ * Create a new attempt (student retries after fail/complete)
+ */
+router.post('/:id/retry', authenticate, async (req: Request, res: Response) => {
+  try {
+    const studentId = getStudentId(req)
+    if (!studentId) {
+      return res.status(403).json(apiResponse.error('Student access required', 'NOT_STUDENT'))
+    }
+
+    const pkg = await requirePackageAccess(req, req.params.id)
+    if (!pkg) {
+      return res.status(404).json(apiResponse.error('SCORM package not found', 'NOT_FOUND'))
+    }
+
+    // Only allow retry if previous attempt is completed/passed/failed
+    const lastAttempt = await prisma.scormAttempt.findFirst({
+      where: { scormPackageId: req.params.id, studentId },
+      orderBy: { startedAt: 'desc' }
+    })
+
+    if (lastAttempt && (lastAttempt.status === 'NOT_ATTEMPTED' || lastAttempt.status === 'INCOMPLETE')) {
+      return res.json(apiResponse.success(lastAttempt)) // Return existing active attempt
+    }
+
+    const attempt = await prisma.scormAttempt.create({
+      data: {
+        scormPackageId: req.params.id,
+        studentId
+      }
+    })
+
+    res.status(201).json(apiResponse.success(attempt))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+/**
+ * DELETE /api/scorm/:id/attempts/:attemptId
+ * Reset/delete a student attempt (teacher/admin only)
+ */
+router.delete('/:id/attempts/:attemptId', authenticate, requireTeacher, async (req: Request, res: Response) => {
+  try {
+    const pkg = await requirePackageAccess(req, req.params.id)
+    if (!pkg) {
+      return res.status(404).json(apiResponse.error('SCORM package not found', 'NOT_FOUND'))
+    }
+
+    const attempt = await prisma.scormAttempt.findUnique({
+      where: { id: req.params.attemptId }
+    })
+
+    if (!attempt || attempt.scormPackageId !== req.params.id) {
+      return res.status(404).json(apiResponse.error('Attempt not found', 'NOT_FOUND'))
+    }
+
+    await prisma.scormAttempt.delete({ where: { id: req.params.attemptId } })
+
+    res.json(apiResponse.success({ message: 'Attempt reset successfully' }))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
 export default router

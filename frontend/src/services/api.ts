@@ -905,6 +905,15 @@ export const scormApi = {
   async getAttempts(packageId: string): Promise<any[]> {
     const response = await api.get(`/scorm/${packageId}/attempts`)
     return response.data.data
+  },
+
+  async retry(packageId: string): Promise<any> {
+    const response = await api.post(`/scorm/${packageId}/retry`)
+    return response.data.data
+  },
+
+  async resetAttempt(packageId: string, attemptId: string): Promise<void> {
+    await api.delete(`/scorm/${packageId}/attempts/${attemptId}`)
   }
 }
 

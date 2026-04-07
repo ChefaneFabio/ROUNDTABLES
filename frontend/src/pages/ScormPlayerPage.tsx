@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Package, Clock, Award, CheckCircle, XCircle } from 'lucide-react'
+import { ArrowLeft, Package, Clock, Award, CheckCircle, XCircle, RotateCcw } from 'lucide-react'
 import { scormApi } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
 import { ScormPlayer } from '../components/scorm/ScormPlayer'
@@ -108,6 +108,19 @@ const ScormPlayerPage: React.FC = () => {
   const apiBase = import.meta.env.VITE_API_URL?.replace('/api', '') || 'http://localhost:5000'
   const fullLaunchUrl = `${apiBase}${launchInfo.launchUrl}`
 
+  const isFinished = ['COMPLETED', 'PASSED', 'FAILED'].includes(currentStatus)
+
+  const handleRetry = async () => {
+    if (!id) return
+    try {
+      const newAttempt = await scormApi.retry(id)
+      setAttempt(newAttempt)
+      setCurrentStatus('NOT_ATTEMPTED')
+    } catch (err: any) {
+      console.error('Retry failed:', err)
+    }
+  }
+
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-4">
       {/* Header */}
@@ -135,6 +148,15 @@ const ScormPlayerPage: React.FC = () => {
             </span>
           )}
           {getStatusBadge()}
+          {isFinished && (
+            <button
+              onClick={handleRetry}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium text-indigo-700 bg-indigo-50 rounded-lg hover:bg-indigo-100 transition-colors"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Retry
+            </button>
+          )}
         </div>
       </div>
 

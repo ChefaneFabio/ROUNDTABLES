@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { BarChart3, Users, BookOpen, TrendingUp, Package } from 'lucide-react'
+import { BarChart3, Users, BookOpen, TrendingUp, Package, Download } from 'lucide-react'
 import { useAuth } from '../../contexts/AuthContext'
 import api from '../../services/api'
 import { LoadingSpinner } from '../../components/common/LoadingSpinner'
@@ -30,9 +30,52 @@ export default function OrgReportsPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Employee Progress Reports</h1>
-        <p className="text-gray-600">Track your team's learning progress</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Employee Progress Reports</h1>
+          <p className="text-gray-600">Track your team's learning progress</p>
+        </div>
+        {report.length > 0 && (
+          <button
+            onClick={() => {
+              // Build CSV with course + SCORM data
+              const rows = [['Employee', 'Email', 'Level', 'Course', 'Course Status', 'Progress', 'SCORM Module', 'SCORM Status', 'SCORM Score', 'SCORM Time']]
+              report.forEach((emp: any) => {
+                const maxRows = Math.max(emp.courses?.length || 0, emp.scormModules?.length || 0, 1)
+                for (let i = 0; i < maxRows; i++) {
+                  const c = emp.courses?.[i]
+                  const s = emp.scormModules?.[i]
+                  rows.push([
+                    i === 0 ? emp.name : '',
+                    i === 0 ? emp.email : '',
+                    i === 0 ? emp.languageLevel || '' : '',
+                    c?.courseName || '',
+                    c?.enrollmentStatus || '',
+                    c ? `${c.progress}%` : '',
+                    s?.packageTitle || '',
+                    s?.status || '',
+                    s?.score !== null && s?.score !== undefined ? `${s.score}%` : '',
+                    s?.totalTime || ''
+                  ])
+                }
+              })
+              const csv = rows.map(r => r.map(v => `"${(v || '').replace(/"/g, '""')}"`).join(',')).join('\n')
+              const blob = new Blob([csv], { type: 'text/csv' })
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url
+              a.download = `employee-progress-${new Date().toISOString().slice(0, 10)}.csv`
+              document.body.appendChild(a)
+              a.click()
+              a.remove()
+              URL.revokeObjectURL(url)
+            }}
+            className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800"
+          >
+            <Download className="w-4 h-4" />
+            Export CSV
+          </button>
+        )}
       </div>
 
       {/* Summary cards */}

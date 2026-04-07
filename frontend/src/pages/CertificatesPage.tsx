@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query'
 import { Link } from 'react-router-dom'
-import { Award, Download, Share2, Calendar, CheckCircle, FileText } from 'lucide-react'
+import { Award, Download, Share2, Calendar, CheckCircle, FileText, Package } from 'lucide-react'
 import { certificateApi, Certificate } from '../services/certificateApi'
 import { LoadingPage } from '../components/common/LoadingSpinner'
 import { Alert } from '../components/common/Alert'
@@ -81,7 +81,7 @@ export function CertificatesPage() {
           <Award className="w-10 h-10 text-gray-300 mx-auto mb-3" />
           <p className="text-sm font-medium text-gray-700">No Certificates Yet</p>
           <p className="text-sm text-gray-400 mt-1 max-w-xs mx-auto">
-            Complete courses or take an assessment to earn your first certificate.
+            Complete courses, e-learning modules, or take an assessment to earn your first certificate.
           </p>
           <div className="flex justify-center gap-3 mt-6">
             <Link
@@ -130,19 +130,30 @@ function CertificateCard({
 }) {
   const cefrColorClass = CEFR_COLORS[certificate.cefrLevel] || 'bg-gray-100 text-gray-700 border-gray-200'
 
+  const metadata = (certificate as any).metadata || {}
+  const isScorm = !!(certificate as any).scormPackageId || !!metadata.scormPackageTitle
+  const certTitle = certificate.course?.name
+    || metadata.scormPackageTitle
+    || 'Placement Test Certificate'
+
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-6 hover:border-gray-300 transition-colors">
       <div className="flex items-start gap-4">
-        <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center flex-shrink-0">
-          <FileText className="w-5 h-5 text-gray-500" />
+        <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
+          isScorm ? 'bg-indigo-50' : 'bg-gray-100'
+        }`}>
+          {isScorm ? <Package className="w-5 h-5 text-indigo-500" /> : <FileText className="w-5 h-5 text-gray-500" />}
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-sm font-semibold text-gray-900 truncate">
             {certificate.language} - CEFR {certificate.cefrLevel}
           </h3>
           <p className="text-xs text-gray-500 mt-0.5 truncate">
-            {certificate.course?.name || 'Placement Test Certificate'}
+            {certTitle}
           </p>
+          {isScorm && metadata.scormScore !== undefined && (
+            <p className="text-xs text-indigo-600 mt-0.5">Score: {metadata.scormScore}%</p>
+          )}
         </div>
       </div>
 

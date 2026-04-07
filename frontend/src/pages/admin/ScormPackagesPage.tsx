@@ -379,13 +379,15 @@ const ScormPackagesPage: React.FC = () => {
                       <th className="text-left px-3 py-2 text-xs font-medium text-gray-500 uppercase">Score</th>
                       <th className="text-left px-3 py-2 text-xs font-medium text-gray-500 uppercase">Time</th>
                       <th className="text-left px-3 py-2 text-xs font-medium text-gray-500 uppercase">Started</th>
+                      <th className="text-right px-3 py-2 text-xs font-medium text-gray-500 uppercase"></th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">
                     {attempts.map((att) => (
                       <tr key={att.id}>
                         <td className="px-3 py-2 text-sm text-gray-900">
-                          {att.student?.user?.name} {att.student?.user?.surname || ''}
+                          <div>{att.student?.user?.name} {att.student?.user?.surname || ''}</div>
+                          <div className="text-xs text-gray-400">{att.student?.user?.email}</div>
                         </td>
                         <td className="px-3 py-2">{getStatusBadge(att.status)}</td>
                         <td className="px-3 py-2 text-sm text-gray-600">
@@ -396,6 +398,19 @@ const ScormPackagesPage: React.FC = () => {
                         </td>
                         <td className="px-3 py-2 text-sm text-gray-500">
                           {new Date(att.startedAt).toLocaleDateString()}
+                        </td>
+                        <td className="px-3 py-2 text-right">
+                          <button
+                            onClick={async () => {
+                              if (!showAttemptsModal) return
+                              await scormApi.resetAttempt(showAttemptsModal, att.id)
+                              handleViewAttempts(showAttemptsModal)
+                            }}
+                            className="text-xs text-red-500 hover:text-red-700"
+                            title="Reset this attempt"
+                          >
+                            Reset
+                          </button>
                         </td>
                       </tr>
                     ))}
