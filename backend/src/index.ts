@@ -51,6 +51,8 @@ import assignmentRoutes from './controllers/assignmentController'
 import materialCodeRoutes from './controllers/materialCodeController'
 // Integration routes (HubSpot, QuickBooks)
 import integrationsRoutes from './controllers/integrationsController'
+// SCORM routes
+import scormRoutes from './controllers/scormController'
 
 // Import middleware
 import { errorHandler } from './middleware/errorHandler'
@@ -112,6 +114,7 @@ app.use(requestLogger)
 app.use('/audio', express.static(path.join(__dirname, '../public/audio')))
 app.use('/uploads/speaking', express.static(path.join(__dirname, '../uploads/speaking')))
 app.use('/uploads/assignments', express.static(path.join(__dirname, '../uploads/assignments')))
+app.use('/scorm-content', express.static(path.join(__dirname, '../uploads/scorm')))
 
 // Apply rate limiting to all routes
 app.use(standardLimiter)
@@ -182,6 +185,7 @@ app.use('/api/organizations', organizationContactRoutes)
 app.use('/api/assignments', assignmentRoutes)
 app.use('/api/material-codes', materialCodeRoutes)
 app.use('/api/integrations', integrationsRoutes)
+app.use('/api/scorm', scormRoutes)
 
 // Error handling
 app.use(errorHandler)

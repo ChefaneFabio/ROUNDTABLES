@@ -93,6 +93,24 @@ router.post('/assessment/:assessmentId', authenticate, async (req: Request, res:
   }
 })
 
+// Generate SCORM certificate
+router.post('/scorm/:scormPackageId', authenticate, async (req: Request, res: Response) => {
+  try {
+    if (!req.user?.studentId) {
+      return res.status(403).json(apiResponse.error('Only students can request certificates', 'NOT_STUDENT'))
+    }
+
+    const certificate = await certificateService.generateScormCertificate(
+      req.user.studentId,
+      req.params.scormPackageId
+    )
+
+    return res.status(201).json(apiResponse.success(certificate, 'Certificate generated'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // Download certificate PDF
 router.get('/:id/download', authenticate, async (req: Request, res: Response) => {
   try {

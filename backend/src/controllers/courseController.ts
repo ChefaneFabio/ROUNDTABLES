@@ -504,9 +504,10 @@ router.delete('/:id', authenticate, requireSchoolAdmin, async (req: Request, res
 const addContentSchema = Joi.object({
   videoId: Joi.string().optional(),
   exerciseId: Joi.string().optional(),
+  scormPackageId: Joi.string().optional(),
   isRequired: Joi.boolean().optional(),
   isPreview: Joi.boolean().optional(),
-}).xor('videoId', 'exerciseId') // exactly one must be provided
+}).xor('videoId', 'exerciseId', 'scormPackageId') // exactly one must be provided
 
 const reorderContentSchema = Joi.object({
   contentIds: Joi.array().items(Joi.string()).min(1).required()
@@ -516,7 +517,7 @@ const reorderContentSchema = Joi.object({
 router.post('/:id/contents', authenticate, requireSchoolAdmin, validateRequest(addContentSchema), async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const { videoId, exerciseId, isRequired, isPreview } = req.body
+    const { videoId, exerciseId, scormPackageId, isRequired, isPreview } = req.body
 
     const course = await prisma.course.findFirst({
       where: { id, deletedAt: null }
@@ -541,6 +542,7 @@ router.post('/:id/contents', authenticate, requireSchoolAdmin, validateRequest(a
         courseId: id,
         videoId: videoId || null,
         exerciseId: exerciseId || null,
+        scormPackageId: scormPackageId || null,
         isRequired: isRequired ?? true,
         isPreview: isPreview ?? false,
         orderIndex: (maxOrder._max.orderIndex ?? -1) + 1,
@@ -548,6 +550,7 @@ router.post('/:id/contents', authenticate, requireSchoolAdmin, validateRequest(a
       include: {
         video: { select: { id: true, title: true, duration: true, cefrLevel: true } },
         exercise: { select: { id: true, title: true, type: true, cefrLevel: true } },
+        scormPackage: { select: { id: true, title: true, version: true } },
       }
     })
 
@@ -568,6 +571,7 @@ router.get('/:id/contents', authenticate, requireCourseAccess, async (req: Reque
       include: {
         video: { select: { id: true, title: true, description: true, url: true, thumbnailUrl: true, duration: true, cefrLevel: true, language: true } },
         exercise: { select: { id: true, title: true, description: true, type: true, cefrLevel: true, language: true } },
+        scormPackage: { select: { id: true, title: true, description: true, version: true, thumbnailUrl: true } },
       }
     })
 
@@ -598,6 +602,7 @@ router.put('/:id/contents/reorder', authenticate, requireSchoolAdmin, validateRe
       include: {
         video: { select: { id: true, title: true } },
         exercise: { select: { id: true, title: true } },
+        scormPackage: { select: { id: true, title: true } },
       }
     })
 

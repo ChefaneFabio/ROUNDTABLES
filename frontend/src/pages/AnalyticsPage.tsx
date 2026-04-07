@@ -6,7 +6,8 @@ import {
   BookOpen,
   Clock,
   TrendingUp,
-  Download
+  Download,
+  Package
 } from 'lucide-react'
 import {
   BarChart,
@@ -224,7 +225,12 @@ export function AnalyticsPage() {
                   className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
                 >
                   <div>
-                    <p className="font-medium text-gray-900">{completion.studentName}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-medium text-gray-900">{completion.studentName}</p>
+                      {completion.type === 'scorm' && (
+                        <span className="px-1.5 py-0.5 bg-indigo-100 text-indigo-700 rounded text-xs font-medium">SCORM</span>
+                      )}
+                    </div>
                     <p className="text-sm text-gray-500">{completion.courseName}</p>
                   </div>
                   <div className="text-right">
@@ -297,6 +303,30 @@ export function AnalyticsPage() {
           <p className="text-sm text-gray-500">Training Hours</p>
         </div>
       </div>
+
+      {/* SCORM Stats */}
+      {data.scorm && data.scorm.totalPackages > 0 && (
+        <Card>
+          <div className="flex items-center gap-2 mb-4">
+            <Package className="w-5 h-5 text-indigo-600" />
+            <h3 className="text-lg font-semibold text-gray-900">SCORM E-Learning</h3>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="p-4 bg-indigo-50 rounded-lg text-center">
+              <p className="text-2xl font-bold text-indigo-700">{data.scorm.totalPackages}</p>
+              <p className="text-sm text-indigo-600">Packages Available</p>
+            </div>
+            <div className="p-4 bg-green-50 rounded-lg text-center">
+              <p className="text-2xl font-bold text-green-700">{data.scorm.completedAttempts}</p>
+              <p className="text-sm text-green-600">Completions</p>
+            </div>
+            <div className="p-4 bg-purple-50 rounded-lg text-center">
+              <p className="text-2xl font-bold text-purple-700">{data.scorm.averageScore > 0 ? `${data.scorm.averageScore}%` : '—'}</p>
+              <p className="text-sm text-purple-600">Average Score</p>
+            </div>
+          </div>
+        </Card>
+      )}
     </div>
   )
 }

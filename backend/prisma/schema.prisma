@@ -53,6 +53,9 @@ model User {
   // Exercise assignments created by this user
   exerciseAssignments ExerciseAssignment[]
 
+  // SCORM packages uploaded by this user
+  scormPackages ScormPackage[]
+
   // External integrations
   hubspotContactId String?
 
@@ -116,6 +119,7 @@ model School {
   organizations  Organization[]
   learningPaths  LearningPath[]
   materialCodes  MaterialCode[]
+  scormPackages  ScormPackage[]
 
   @@index([email])
   @@index([userId])
@@ -211,6 +215,7 @@ model Student {
   // Assignments & submissions
   assignmentSubmissions AssignmentSubmission[]
   materialCodes         MaterialCode[]
+  scormAttempts         ScormAttempt[]
 
   @@index([userId])
   @@index([schoolId])
@@ -1301,6 +1306,7 @@ model Certificate {
   courseId          String?
   course            Course?   @relation(fields: [courseId], references: [id])
   assessmentId      String?
+  scormPackageId    String?
   cefrLevel         String
   language          String
   certificateNumber String    @unique
@@ -1313,6 +1319,7 @@ model Certificate {
   @@index([certificateNumber])
   @@index([courseId])
   @@index([assessmentId])
+  @@index([scormPackageId])
   @@map("certificates")
 }
 
@@ -1857,9 +1864,13 @@ model CourseContent {
   exerciseId String?
   exercise   Exercise? @relation(fields: [exerciseId], references: [id])
 
+  scormPackageId String?
+  scormPackage   ScormPackage? @relation(fields: [scormPackageId], references: [id])
+
   @@index([courseId])
   @@index([videoId])
   @@index([exerciseId])
+  @@index([scormPackageId])
   @@map("course_contents")
 }
 
@@ -2004,4 +2015,77 @@ model MaterialCode {
   @@index([studentId])
   @@index([codeType])
   @@map("material_codes")
+}
+
+// =====================================================
+// SCORM PACKAGES & TRACKING
+// =====================================================
+
+model ScormPackage {
+  id              String      @id @default(cuid())
+  title           String
+  description     String?
+  version         ScormVersion @default(SCORM_12)
+  filename        String      // Original ZIP filename
+  entryPoint      String      // Relative path to launch file (from imsmanifest.xml)
+  storagePath     String      // Directory where unzipped content lives
+  fileSize        Int         // ZIP size in bytes
+  isPublished     Boolean     @default(false)
+  passingScore    Int?        // Optional passing threshold (0-100)
+  thumbnailUrl    String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  schoolId String
+  school   School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  uploadedById String
+  uploadedBy   User @relation(fields: [uploadedById], references: [id])
+
+  attempts       ScormAttempt[]
+  courseContents  CourseContent[]
+
+  @@index([schoolId])
+  @@index([uploadedById])
+  @@map("scorm_packages")
+}
+
+model ScormAttempt {
+  id             String       @id @default(cuid())
+  status         ScormStatus  @default(NOT_ATTEMPTED)
+  score          Int?         // 0-100
+  scoreRaw       Decimal?     @db.Decimal(10, 2)
+  scoreMin       Decimal?     @db.Decimal(10, 2)
+  scoreMax       Decimal?     @db.Decimal(10, 2)
+  totalTime      String?      // ISO 8601 duration or SCORM time format
+  suspendData    String?      @db.Text // SCORM suspend_data for resuming
+  location       String?      // cmi.core.lesson_location / cmi.location
+  runtimeData    Json?        // Full CMI data model snapshot
+  completedAt    DateTime?
+  startedAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  scormPackageId String
+  scormPackage   ScormPackage @relation(fields: [scormPackageId], references: [id], onDelete: Cascade)
+
+  studentId String
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([scormPackageId])
+  @@index([studentId])
+  @@index([scormPackageId, studentId])
+  @@map("scorm_attempts")
+}
+
+enum ScormVersion {
+  SCORM_12
+  SCORM_2004
+}
+
+enum ScormStatus {
+  NOT_ATTEMPTED
+  INCOMPLETE
+  COMPLETED
+  PASSED
+  FAILED
 }

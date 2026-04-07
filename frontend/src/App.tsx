@@ -34,6 +34,7 @@ import AdminVideoLibrariesPage from './pages/admin/VideoLibrariesPage'
 import AdminExercisesPage from './pages/admin/ExercisesPage'
 import AdminExerciseEditorPage from './pages/admin/ExerciseEditorPage'
 import AdminExerciseStatsPage from './pages/admin/ExerciseStatsPage'
+import AdminScormPackagesPage from './pages/admin/ScormPackagesPage'
 import AdminAssessmentQuestionsPage from './pages/admin/AssessmentQuestionsPage'
 import AdminAssessmentManagementPage from './pages/admin/AssessmentManagementPage'
 import AdminCalendarPage from './pages/admin/CalendarPage'
@@ -73,6 +74,7 @@ import AdminUsersPage from './pages/admin/AdminUsersPage'
 import AdminSettingsPage from './pages/admin/AdminSettingsPage'
 import OrganizationDetailPage from './pages/admin/OrganizationDetailPage'
 import SelfPacedCoursePage from './pages/SelfPacedCoursePage'
+import ScormPlayerPage from './pages/ScormPlayerPage'
 import { BusinessPage } from './pages/BusinessPage'
 // Calendar & availability pages
 import StudentCalendarPage from './pages/StudentCalendarPage'
@@ -642,6 +644,18 @@ function App() {
         }
       />
 
+      {/* Admin: SCORM Packages */}
+      <Route
+        path="/admin/scorm"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
+            <Layout>
+              <AdminScormPackagesPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
       {/* Admin: Assessment Management */}
       <Route
         path="/admin/assessments"
@@ -842,6 +856,18 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
             <Layout>
               <SelfPacedCoursePage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* SCORM Player */}
+      <Route
+        path="/scorm/:id"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <ScormPlayerPage />
             </Layout>
           </ProtectedRoute>
         }

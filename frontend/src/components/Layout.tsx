@@ -9,7 +9,7 @@ import {
   Settings, LogOut, ChevronDown, ChevronRight, User, CreditCard,
   FileText, MessageSquare, ClipboardCheck, Award, BarChart3,
   Key, Video, PenTool, Mic, Building2, Ticket, Clock, Route,
-  Timer, DollarSign, Zap, Layers, Wallet
+  Timer, DollarSign, Zap, Layers, Wallet, Package
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -90,6 +90,7 @@ const navGroups: NavGroup[] = [
     items: [
       { name: 'Videos', href: '/admin/videos/libraries', icon: Video, roles: [UserRole.ADMIN, UserRole.TEACHER] },
       { name: 'Exercises', href: '/admin/exercises', icon: PenTool, roles: [UserRole.ADMIN, UserRole.TEACHER] },
+      { name: 'SCORM', href: '/admin/scorm', icon: Package, roles: [UserRole.ADMIN, UserRole.TEACHER] },
       { name: 'Assessments', href: '/admin/assessments', icon: ClipboardCheck, roles: [UserRole.ADMIN, UserRole.TEACHER] },
       { name: 'Question Bank', href: '/admin/assessment-questions', icon: ClipboardCheck, roles: [UserRole.ADMIN, UserRole.TEACHER] },
     ]

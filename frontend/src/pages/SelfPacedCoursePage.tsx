@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Play, Dumbbell, CheckCircle, Circle, BookOpen } from 'lucide-react'
+import { ArrowLeft, Play, Dumbbell, CheckCircle, Circle, BookOpen, Package } from 'lucide-react'
 import { coursesApi } from '../services/api'
 import { useAuth } from '../contexts/AuthContext'
 
@@ -44,6 +44,9 @@ const SelfPacedCoursePage: React.FC = () => {
     const type = (item.contentType || item.type || '').toLowerCase()
     if (type === 'video' && item.videoId) return `/videos/${item.videoId}`
     if (type === 'exercise' && item.exerciseId) return `/exercises/${item.exerciseId}`
+    if (type === 'scorm' && item.scormPackageId) return `/scorm/${item.scormPackageId}`
+    // Auto-detect from available IDs
+    if (item.scormPackageId) return `/scorm/${item.scormPackageId}`
     return '#'
   }
 
@@ -51,6 +54,7 @@ const SelfPacedCoursePage: React.FC = () => {
     const type = (item.contentType || item.type || '').toLowerCase()
     if (type === 'video') return <Play className="w-5 h-5 text-blue-500" />
     if (type === 'exercise') return <Dumbbell className="w-5 h-5 text-purple-500" />
+    if (type === 'scorm' || item.scormPackageId) return <Package className="w-5 h-5 text-indigo-500" />
     return <BookOpen className="w-5 h-5 text-gray-500" />
   }
 

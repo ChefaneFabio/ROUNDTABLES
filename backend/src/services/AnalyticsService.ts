@@ -21,6 +21,12 @@ interface CorporateAnalytics {
   recentCompletions: any[]
   topPerformers: any[]
   monthlyProgress: any[]
+  scorm?: {
+    totalPackages: number
+    completedAttempts: number
+    averageScore: number
+    recentCompletions: any[]
+  }
 }
 
 export class AnalyticsService {
@@ -43,7 +49,9 @@ export class AnalyticsService {
       activeCourses,
       enrollments,
       progress,
-      lessons
+      lessons,
+      scormPackageCount,
+      scormAttempts
     ] = await Promise.all([
       prisma.student.count({ where: { schoolId, deletedAt: null } }),
       prisma.student.count({ where: { schoolId, isActive: true, deletedAt: null } }),
@@ -65,6 +73,15 @@ export class AnalyticsService {
       }),
       prisma.lesson.findMany({
         where: { course: { schoolId }, status: 'COMPLETED' }
+      }),
+      prisma.scormPackage.count({ where: { schoolId } }),
+      prisma.scormAttempt.findMany({
+        where: { scormPackage: { schoolId } },
+        include: {
+          scormPackage: { select: { title: true } },
+          student: { include: { user: { select: { name: true } } } }
+        },
+        orderBy: { updatedAt: 'desc' }
       })
     ])
 
@@ -74,10 +91,12 @@ export class AnalyticsService {
       ? Math.round((completedEnrollments / enrollments.length) * 100)
       : 0
 
-    // Calculate average score
-    const scoresArray = progress.filter(p => p.averageScore).map(p => Number(p.averageScore))
-    const averageScore = scoresArray.length > 0
-      ? Math.round(scoresArray.reduce((a, b) => a + b, 0) / scoresArray.length)
+    // Calculate average score (including SCORM scores)
+    const courseScores = progress.filter(p => p.averageScore).map(p => Number(p.averageScore))
+    const scormScores = scormAttempts.filter(a => a.score !== null).map(a => a.score as number)
+    const allScores = [...courseScores, ...scormScores]
+    const averageScore = allScores.length > 0
+      ? Math.round(allScores.reduce((a, b) => a + b, 0) / allScores.length)
       : 0
 
     // Calculate total training hours
@@ -104,14 +123,33 @@ export class AnalyticsService {
     const thirtyDaysAgo = new Date()
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
 
-    const recentCompletions = progress
+    const courseCompletions = progress
       .filter(p => p.completedAt && p.completedAt >= thirtyDaysAgo)
       .map(p => ({
         studentName: p.student.user.name,
         courseName: p.course.name,
         completedAt: p.completedAt,
-        grade: p.grade
+        grade: p.grade,
+        type: 'course' as const
       }))
+
+    const scormCompletions = scormAttempts
+      .filter(a => a.completedAt && a.completedAt >= thirtyDaysAgo &&
+        (a.status === 'COMPLETED' || a.status === 'PASSED'))
+      .map(a => ({
+        studentName: a.student.user.name,
+        courseName: a.scormPackage.title,
+        completedAt: a.completedAt,
+        grade: a.score !== null ? `${a.score}%` : null,
+        type: 'scorm' as const
+      }))
+
+    const recentCompletions = [...courseCompletions, ...scormCompletions]
+      .sort((a, b) => {
+        const da = a.completedAt ? new Date(a.completedAt).getTime() : 0
+        const db = b.completedAt ? new Date(b.completedAt).getTime() : 0
+        return db - da
+      })
       .slice(0, 10)
 
     // Top performers (by average score)
@@ -144,7 +182,15 @@ export class AnalyticsService {
       progressByDepartment: [], // Would need department field in student model
       recentCompletions,
       topPerformers,
-      monthlyProgress
+      monthlyProgress,
+      scorm: {
+        totalPackages: scormPackageCount,
+        completedAttempts: scormAttempts.filter(a => a.status === 'COMPLETED' || a.status === 'PASSED').length,
+        averageScore: scormScores.length > 0
+          ? Math.round(scormScores.reduce((a, b) => a + b, 0) / scormScores.length)
+          : 0,
+        recentCompletions: scormCompletions.slice(0, 5)
+      }
     }
   }
 
@@ -234,6 +280,12 @@ export class AnalyticsService {
         },
         certificates: {
           orderBy: { issuedAt: 'desc' }
+        },
+        scormAttempts: {
+          include: {
+            scormPackage: { select: { title: true, version: true } }
+          },
+          orderBy: { updatedAt: 'desc' }
         }
       }
     })
@@ -256,6 +308,11 @@ export class AnalyticsService {
       ? student.progress.reduce((sum, p) => sum + Number(p.percentage), 0) / totalProgress
       : 0
 
+    // SCORM stats
+    const scormCompleted = student.scormAttempts.filter(
+      a => a.status === 'COMPLETED' || a.status === 'PASSED'
+    ).length
+
     return {
       student: {
         id: student.id,
@@ -272,14 +329,16 @@ export class AnalyticsService {
         averageProgress: Math.round(averageProgress),
         attendanceRate,
         certificatesEarned: student.certificates.length,
-        assessmentsTaken: student.assessments.length
+        assessmentsTaken: student.assessments.length,
+        scormCompleted
       },
       enrollments: student.enrollments,
       progress: student.progress,
       recentAttendance: student.attendance,
       recentFeedback: student.feedback,
       assessments: student.assessments,
-      certificates: student.certificates
+      certificates: student.certificates,
+      scormAttempts: student.scormAttempts
     }
   }
 

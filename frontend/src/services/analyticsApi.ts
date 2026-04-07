@@ -18,6 +18,7 @@ export interface CorporateAnalytics {
     courseName: string
     completedAt: string
     grade?: string
+    type?: 'course' | 'scorm'
   }[]
   topPerformers: {
     studentName: string
@@ -30,6 +31,12 @@ export interface CorporateAnalytics {
     enrolled: number
     completed: number
   }[]
+  scorm?: {
+    totalPackages: number
+    completedAttempts: number
+    averageScore: number
+    recentCompletions: any[]
+  }
 }
 
 export interface StudentReport {

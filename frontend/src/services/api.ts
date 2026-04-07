@@ -835,4 +835,58 @@ export const organizationContactsApi = {
   }
 }
 
+// ─── SCORM API ─────────────────────────────────────────────────
+export const scormApi = {
+  async list(params?: { page?: number; limit?: number; search?: string }): Promise<any> {
+    const response = await api.get('/scorm', { params })
+    return response.data.data
+  },
+
+  async getById(id: string): Promise<any> {
+    const response = await api.get(`/scorm/${id}`)
+    return response.data.data
+  },
+
+  async upload(file: File, title?: string, description?: string): Promise<any> {
+    const formData = new FormData()
+    formData.append('file', file)
+    if (title) formData.append('title', title)
+    if (description) formData.append('description', description)
+    const response = await api.post('/scorm/upload', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 120000
+    })
+    return response.data.data
+  },
+
+  async update(id: string, data: any): Promise<any> {
+    const response = await api.put(`/scorm/${id}`, data)
+    return response.data.data
+  },
+
+  async remove(id: string): Promise<void> {
+    await api.delete(`/scorm/${id}`)
+  },
+
+  async getLaunchInfo(id: string): Promise<any> {
+    const response = await api.get(`/scorm/${id}/launch`)
+    return response.data.data
+  },
+
+  async getAttempt(packageId: string): Promise<any> {
+    const response = await api.get(`/scorm/${packageId}/attempt`)
+    return response.data.data
+  },
+
+  async saveRuntime(packageId: string, attemptId: string, cmiData: Record<string, string>): Promise<any> {
+    const response = await api.put(`/scorm/${packageId}/attempt/${attemptId}/runtime`, { cmiData })
+    return response.data.data
+  },
+
+  async getAttempts(packageId: string): Promise<any[]> {
+    const response = await api.get(`/scorm/${packageId}/attempts`)
+    return response.data.data
+  }
+}
+
 export default api

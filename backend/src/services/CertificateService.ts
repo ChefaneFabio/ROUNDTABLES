@@ -131,6 +131,72 @@ export class CertificateService {
     return certificate
   }
 
+  // Generate certificate for SCORM package completion
+  async generateScormCertificate(studentId: string, scormPackageId: string) {
+    // Find the best completed attempt
+    const attempt = await prisma.scormAttempt.findFirst({
+      where: {
+        studentId,
+        scormPackageId,
+        status: { in: ['COMPLETED', 'PASSED'] }
+      },
+      orderBy: { score: 'desc' },
+      include: {
+        scormPackage: true,
+        student: {
+          include: { user: { select: { name: true, email: true } } }
+        }
+      }
+    })
+
+    if (!attempt) {
+      throw new Error('No completed SCORM attempt found')
+    }
+
+    // Check passing score if defined
+    if (attempt.scormPackage.passingScore !== null &&
+        attempt.score !== null &&
+        attempt.score < attempt.scormPackage.passingScore) {
+      throw new Error(`Score ${attempt.score}% does not meet passing threshold of ${attempt.scormPackage.passingScore}%`)
+    }
+
+    // Check if certificate already exists
+    const existingCert = await prisma.certificate.findFirst({
+      where: { studentId, scormPackageId }
+    })
+
+    if (existingCert) {
+      return existingCert
+    }
+
+    const student = await prisma.student.findUnique({
+      where: { id: studentId }
+    })
+
+    const certificate = await prisma.certificate.create({
+      data: {
+        studentId,
+        scormPackageId,
+        cefrLevel: student?.languageLevel || 'B1',
+        language: 'English',
+        certificateNumber: this.generateCertificateNumber(),
+        validUntil: new Date(Date.now() + 2 * 365 * 24 * 60 * 60 * 1000),
+        metadata: {
+          scormPackageTitle: attempt.scormPackage.title,
+          scormScore: attempt.score,
+          scormStatus: attempt.status,
+          totalTime: attempt.totalTime,
+          completedAt: attempt.completedAt
+        }
+      },
+      include: {
+        student: { include: { user: { select: { name: true, email: true } } } }
+      }
+    })
+
+    return certificate
+  }
+
   // Get certificate by ID
   async getCertificate(certificateId: string) {
     const certificate = await prisma.certificate.findUnique({
