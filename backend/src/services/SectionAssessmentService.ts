@@ -797,6 +797,48 @@ export class SectionAssessmentService {
       }
     })
 
+    // Notify Maka admins that a section was completed
+    try {
+      const assessment = await prisma.assessment.findUnique({
+        where: { id: assessmentId },
+        include: { student: { include: { user: { select: { name: true } } } } }
+      })
+
+      if (assessment) {
+        const studentName = assessment.student.user.name
+        const language = assessment.language
+        const skillLabel = section.skill.charAt(0) + section.skill.slice(1).toLowerCase()
+        const scoreText = percentageScore != null ? `${percentageScore}%` : 'pending review'
+
+        const admins = await prisma.user.findMany({
+          where: { role: 'ADMIN', isActive: true, deletedAt: null }
+        })
+
+        for (const admin of admins) {
+          await prisma.notification.create({
+            data: {
+              type: 'GENERAL',
+              subject: `Section Complete: ${studentName} — ${skillLabel} (${language})`,
+              content: `${studentName} completed the ${skillLabel} section of their ${language} placement test. Result: ${determinedLevel} (${scoreText})`,
+              status: 'SENT',
+              sentAt: new Date(),
+              userId: admin.id,
+              metadata: {
+                assessmentId,
+                sectionId,
+                skill: section.skill,
+                cefrLevel: determinedLevel,
+                percentageScore,
+                type: 'SECTION_COMPLETED'
+              }
+            }
+          })
+        }
+      }
+    } catch (e) {
+      console.error('Failed to send section completion notification:', e)
+    }
+
     // Check if all sections are completed -> complete assessment
     await this.checkAndCompleteAssessment(assessmentId)
 
