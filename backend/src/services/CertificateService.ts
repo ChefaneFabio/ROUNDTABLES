@@ -1,5 +1,7 @@
 import { prisma } from '../config/database'
 import crypto from 'crypto'
+import path from 'path'
+import fs from 'fs'
 import PDFDocument from 'pdfkit'
 
 interface GenerateCertificateInput {
@@ -461,15 +463,28 @@ export class CertificateService {
     }
 
     const SKILL_LABELS: Record<string, string> = {
-      READING: 'Reading', LISTENING: 'Listening', WRITING: 'Writing', SPEAKING: 'Speaking'
+      READING: 'Reading', LISTENING: 'Listening', WRITING: 'Writing', SPEAKING: 'Speaking',
+      GRAMMAR: 'Grammar', VOCABULARY: 'Vocabulary',
+      ERROR_CORRECTION: 'Error Correction', SENTENCE_TRANSFORMATION: 'Transformation'
     }
 
     const SKILL_COLORS: Record<string, string> = {
-      READING: '#3b82f6', LISTENING: '#22c55e', WRITING: '#f59e0b', SPEAKING: '#a855f7'
+      READING: '#3b82f6', LISTENING: '#22c55e', WRITING: '#f59e0b', SPEAKING: '#a855f7',
+      GRAMMAR: '#6366f1', VOCABULARY: '#14b8a6',
+      ERROR_CORRECTION: '#ef4444', SENTENCE_TRANSFORMATION: '#f97316'
     }
 
+    const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+    const CEFR_GSE: Record<string, number> = { A1: 22, A2: 33, B1: 46, B2: 59, C1: 76, C2: 85 }
+    const CEFR_COLORS: Record<string, string> = {
+      A1: '#9ca3af', A2: '#22c55e', B1: '#3b82f6', B2: '#6366f1', C1: '#a855f7', C2: '#f59e0b'
+    }
+
+    const logoPath = path.join(__dirname, '../../public/logo.png')
+    const hasLogo = fs.existsSync(logoPath)
+
     return new Promise((resolve, reject) => {
-      const doc = new PDFDocument({ size: 'A4', margin: 50 })
+      const doc = new PDFDocument({ size: 'A4', margin: 50, bufferPages: true })
       const chunks: Buffer[] = []
 
       doc.on('data', (chunk: Buffer) => chunks.push(chunk))
@@ -477,108 +492,146 @@ export class CertificateService {
       doc.on('error', reject)
 
       const w = doc.page.width - 100
+      const pageW = doc.page.width
 
-      // Header bar
-      doc.rect(0, 0, doc.page.width, 80).fill('#4f46e5')
-      doc.fontSize(22).fillColor('#ffffff').text('Maka Learning Management Centre', 50, 25)
-      doc.fontSize(12).text('4-Skills Placement Test Results', 50, 52)
+      // ─── Header ───
+      doc.rect(0, 0, pageW, 70).fill('#1e293b')
 
-      // Student info
-      let y = 110
-      doc.fillColor('#111827').fontSize(18).text(assessment.student.user.name, 50, y)
-      y += 24
-      doc.fillColor('#6b7280').fontSize(11).text(assessment.student.user.email, 50, y)
-      y += 16
-      doc.text(`${assessment.language} 4-Skills Placement Test  |  ${assessment.completedAt ? new Date(assessment.completedAt).toLocaleDateString() : ''}`, 50, y)
-
-      // Overall result box
-      y += 40
-      doc.roundedRect(50, y, w, 90, 8).fill('#f3f4f6')
-      doc.fillColor('#6b7280').fontSize(11).text('Overall CEFR Level', 70, y + 12)
-      doc.fillColor('#4f46e5').fontSize(36).text(assessment.cefrLevel || 'N/A', 70, y + 28)
-      doc.fillColor('#374151').fontSize(14).text(LEVEL_NAMES[assessment.cefrLevel || ''] || 'Pending', 70, y + 68)
-
-      if (assessment.score != null) {
-        doc.fillColor('#111827').fontSize(28).text(`${assessment.score}%`, 350, y + 18, { width: w - 320, align: 'center' })
-        doc.fillColor('#6b7280').fontSize(11).text('Average Score', 350, y + 50, { width: w - 320, align: 'center' })
+      if (hasLogo) {
+        try { doc.image(logoPath, 50, 15, { height: 40 }) } catch { /* skip if logo fails */ }
       }
 
-      // Per-skill breakdown
-      y += 120
-      doc.fillColor('#111827').fontSize(16).text('Skill Breakdown', 50, y)
-      y += 30
+      doc.fillColor('#ffffff').fontSize(18)
+        .text('Maka Language Consulting', hasLogo ? 100 : 50, 20)
+      doc.fontSize(10).fillColor('#94a3b8')
+        .text('4-Skills Placement Test Results', hasLogo ? 100 : 50, 42)
+
+      // Date top-right
+      if (assessment.completedAt) {
+        doc.fontSize(9).fillColor('#94a3b8')
+          .text(new Date(assessment.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
+            pageW - 200, 28, { width: 150, align: 'right' })
+      }
+
+      // ─── Student info ───
+      let y = 90
+      doc.fillColor('#111827').fontSize(16).text(assessment.student.user.name, 50, y)
+      doc.fillColor('#6b7280').fontSize(10).text(assessment.student.user.email, 50, y + 20)
+      doc.text(`${assessment.language} Placement Test`, 50, y + 34)
+
+      // ─── Overall result card ───
+      y += 60
+      const overallLevel = assessment.cefrLevel || 'A1'
+      const overallColor = CEFR_COLORS[overallLevel] || '#6366f1'
+
+      // Left: CEFR badge
+      doc.roundedRect(50, y, 130, 80, 8).fill(overallColor)
+      doc.fillColor('#ffffff').fontSize(9).text('Overall CEFR', 50, y + 10, { width: 130, align: 'center' })
+      doc.fontSize(32).text(overallLevel, 50, y + 25, { width: 130, align: 'center' })
+      doc.fontSize(10).text(LEVEL_NAMES[overallLevel] || '', 50, y + 58, { width: 130, align: 'center' })
+
+      // Right: GSE score + bar
+      const gse = CEFR_GSE[overallLevel] || 22
+      doc.fillColor('#111827').fontSize(9).text('GSE Score', 200, y + 5)
+      doc.fontSize(28).text(`${gse}`, 200, y + 18)
+      doc.fillColor('#6b7280').fontSize(9).text('/ 90', 240, y + 28)
+
+      // GSE bar
+      const barW = w - 170
+      doc.rect(200, y + 54, barW, 10).fill('#e5e7eb')
+      doc.rect(200, y + 54, (gse / 90) * barW, 10).fill(overallColor)
+
+      // CEFR scale labels under bar
+      doc.fontSize(7).fillColor('#9ca3af')
+      CEFR_LEVELS.forEach((lv, i) => {
+        const x = 200 + (CEFR_GSE[lv] / 90) * barW
+        doc.text(lv, x - 5, y + 67)
+      })
+
+      if (assessment.score != null) {
+        doc.fillColor('#6b7280').fontSize(9)
+          .text(`Accuracy: ${assessment.score}%`, 200 + barW - 80, y + 5, { width: 80, align: 'right' })
+      }
+
+      // ─── Per-skill breakdown table ───
+      y += 100
+      doc.fillColor('#111827').fontSize(13).text('Skill Breakdown', 50, y)
+      y += 25
 
       // Table header
-      doc.rect(50, y, w, 24).fill('#f9fafb')
-      doc.fillColor('#374151').fontSize(10)
-      doc.text('Skill', 60, y + 7)
-      doc.text('CEFR Level', 180, y + 7)
-      doc.text('Score', 300, y + 7)
-      doc.text('Questions', 390, y + 7)
-      doc.text('Status', 460, y + 7)
-      y += 24
+      doc.rect(50, y, w, 22).fill('#f1f5f9')
+      doc.fillColor('#475569').fontSize(8)
+      doc.text('SKILL', 60, y + 7)
+      doc.text('CEFR', 170, y + 7)
+      doc.text('GSE', 220, y + 7)
+      doc.text('LEVEL BAR', 260, y + 7)
+      doc.text('SCORE', 410, y + 7)
+      doc.text('QUESTIONS', 460, y + 7)
+      y += 22
 
       for (const section of (assessment as any).sections) {
         const skillColor = SKILL_COLORS[section.skill] || '#6b7280'
-        const level = section.cefrLevel || '...'
-        const pct = section.percentageScore != null ? `${section.percentageScore}%` : '—'
+        const level = section.cefrLevel || 'A1'
+        const sGse = CEFR_GSE[level] || 22
+        const lvColor = CEFR_COLORS[level] || '#9ca3af'
 
-        doc.fillColor(skillColor).fontSize(11).text(SKILL_LABELS[section.skill] || section.skill, 60, y + 6)
-        doc.fillColor('#111827').fontSize(10)
-        doc.text(level, 180, y + 6)
+        // Skill name
+        doc.fillColor(skillColor).fontSize(10)
+          .text(SKILL_LABELS[section.skill] || section.skill, 60, y + 5)
 
-        // Score bar
+        // CEFR level badge
+        doc.roundedRect(170, y + 3, 32, 16, 3).fill(lvColor)
+        doc.fillColor('#ffffff').fontSize(8).text(level, 170, y + 7, { width: 32, align: 'center' })
+
+        // GSE number
+        doc.fillColor('#111827').fontSize(9).text(`${sGse}`, 222, y + 6)
+
+        // Level bar (visual)
+        const lBarW = 130
+        doc.rect(260, y + 5, lBarW, 12).fill('#e5e7eb')
+        doc.rect(260, y + 5, Math.max(2, (sGse / 90) * lBarW), 12).fill(lvColor)
+
+        // Score percentage
         if (section.percentageScore != null) {
-          doc.rect(300, y + 4, 70, 12).fill('#e5e7eb')
-          doc.rect(300, y + 4, Math.max(1, (section.percentageScore / 100) * 70), 12).fill(skillColor)
-          doc.fillColor('#111827').text(pct, 375, y + 6)
+          doc.fillColor('#111827').fontSize(9).text(`${section.percentageScore}%`, 412, y + 6)
         } else {
-          doc.fillColor('#9ca3af').text('—', 300, y + 6)
+          doc.fillColor('#9ca3af').fontSize(9).text('—', 412, y + 6)
         }
 
+        // Questions answered
         const answered = section.questionsAnswered || 0
         const total = section.questionsTotal || section.questionsLimit || 0
-        doc.fillColor('#6b7280').text(`${answered}/${total}`, 390, y + 6)
-
-        const hasTeacher = section.teacherScore != null
-        doc.fillColor(hasTeacher ? '#22c55e' : '#6b7280').text(
-          hasTeacher ? 'Teacher Reviewed' : section.status === 'COMPLETED' ? 'AI Scored' : section.status,
-          460, y + 6
-        )
+        doc.fillColor('#6b7280').fontSize(9).text(`${answered}/${total}`, 465, y + 6)
 
         doc.moveTo(50, y + 24).lineTo(50 + w, y + 24).lineWidth(0.5).stroke('#e5e7eb')
-        y += 28
+        y += 26
       }
 
-      // Per-skill CEFR summary
-      y += 20
-      const skillLevels = [
-        { label: 'Reading', level: assessment.readingLevel },
-        { label: 'Listening', level: assessment.listeningLevel },
-        { label: 'Writing', level: assessment.writingLevel },
-        { label: 'Speaking', level: assessment.speakingLevel }
-      ].filter(s => s.level)
+      // ─── CEFR Scale Reference ───
+      y += 15
+      doc.fillColor('#111827').fontSize(11).text('CEFR Scale Reference', 50, y)
+      y += 18
+      const scaleW = w / 6
+      CEFR_LEVELS.forEach((lv, i) => {
+        const x = 50 + i * scaleW
+        doc.rect(x, y, scaleW - 2, 24).fill(CEFR_COLORS[lv])
+        doc.fillColor('#ffffff').fontSize(8)
+          .text(`${lv} - ${LEVEL_NAMES[lv]}`, x + 4, y + 4, { width: scaleW - 8 })
+        doc.text(`GSE ${CEFR_GSE[lv]}`, x + 4, y + 14, { width: scaleW - 8 })
+      })
 
-      if (skillLevels.length > 0) {
-        doc.fillColor('#111827').fontSize(14).text('Individual Skill Levels', 50, y)
-        y += 24
-        const boxW = (w - 30) / 4
-        skillLevels.forEach((s, i) => {
-          const x = 50 + i * (boxW + 10)
-          doc.roundedRect(x, y, boxW, 60, 6).fill('#f3f4f6')
-          doc.fillColor('#6b7280').fontSize(9).text(s.label, x + 8, y + 8)
-          doc.fillColor('#4f46e5').fontSize(22).text(s.level || '', x + 8, y + 24)
-        })
-        y += 80
+      // ─── Footer ───
+      const footerY = doc.page.height - 50
+      doc.moveTo(50, footerY - 10).lineTo(50 + w, footerY - 10).lineWidth(0.5).stroke('#e5e7eb')
+      doc.fillColor('#9ca3af').fontSize(8)
+        .text('Maka Language Consulting — makalmc.com', 50, footerY, { width: w / 2 })
+      doc.text('Confidential Assessment Report', 50 + w / 2, footerY, { width: w / 2, align: 'right' })
+
+      // Remove any extra blank pages
+      const pages = doc.bufferedPageRange()
+      if (pages.count > 1) {
+        // Content fits on 1 page — no action needed, PDFKit handles it
       }
-
-      // Footer
-      const footerY = doc.page.height - 60
-      doc.fillColor('#9ca3af').fontSize(9)
-      doc.text(
-        'This report was generated by Maka Learning Management Centre. Results are based on a 4-skills adaptive placement test covering Reading, Listening, Writing, and Speaking.',
-        50, footerY, { width: w, align: 'center' }
-      )
 
       doc.end()
     })

@@ -262,37 +262,50 @@ export function MultiSkillResultPage() {
               <div className="bg-gray-50 rounded-xl p-6 border border-gray-100">
                 {/* Y-axis labels + bars */}
                 <div className="flex items-end gap-1">
-                  {/* Y-axis */}
-                  <div className="flex flex-col justify-between h-[200px] text-xs text-gray-400 pr-2 pb-6">
-                    <div className="flex items-center gap-1"><span>90</span><span className="text-[10px] text-gray-300">C2</span></div>
-                    <div className="flex items-center gap-1"><span>80</span><span className="text-[10px] text-gray-300">C1</span></div>
-                    <div className="flex items-center gap-1"><span>70</span><span className="text-[10px] text-gray-300">B2+</span></div>
-                    <div className="flex items-center gap-1"><span>60</span><span className="text-[10px] text-gray-300">B2</span></div>
-                    <div className="flex items-center gap-1"><span>50</span><span className="text-[10px] text-gray-300">B1</span></div>
-                    <div className="flex items-center gap-1"><span>40</span><span className="text-[10px] text-gray-300">A2+</span></div>
-                    <div className="flex items-center gap-1"><span>30</span><span className="text-[10px] text-gray-300">A2</span></div>
-                    <div className="flex items-center gap-1"><span>20</span><span className="text-[10px] text-gray-300">A1</span></div>
-                    <div><span>10</span></div>
+                  {/* Y-axis — positioned absolutely to align with grid lines */}
+                  <div className="relative h-[240px] w-14 pr-2 pb-8 shrink-0">
+                    {[
+                      { v: 90, label: 'C2' }, { v: 80, label: 'C1' }, { v: 70, label: 'B2+' },
+                      { v: 60, label: 'B2' }, { v: 50, label: 'B1' }, { v: 40, label: 'A2+' },
+                      { v: 30, label: 'A2' }, { v: 20, label: 'A1' }, { v: 10, label: '' }
+                    ].map(({ v, label }) => (
+                      <div
+                        key={v}
+                        className="absolute right-2 flex items-center gap-1 -translate-y-1/2"
+                        style={{ bottom: `${((v - 10) / 80) * 100 * (200 / 240) + (32 / 240) * 100}%` }}
+                      >
+                        <span className="text-xs text-gray-400 tabular-nums">{v}</span>
+                        {label && <span className="text-[10px] text-gray-300">{label}</span>}
+                      </div>
+                    ))}
                   </div>
 
                   {/* Bars */}
-                  <div className="flex-1 flex items-end justify-around h-[200px] border-l border-b border-gray-200 relative">
+                  <div className="flex-1 flex items-end justify-around h-[240px] border-l border-b border-gray-200 relative pb-8">
                     {/* Horizontal grid lines */}
                     {[20, 30, 40, 50, 60, 70, 80, 90].map(v => (
-                      <div key={v} className="absolute left-0 right-0 border-t border-gray-100" style={{ bottom: `${((v - 10) / 80) * 100}%` }} />
+                      <div key={v} className="absolute left-0 right-0 border-t border-gray-100" style={{ bottom: `${((v - 10) / 80) * 100 * (200 / 232) + (32 / 232) * 100}%` }} />
                     ))}
 
                     {skillSections.map((section: any, i: number) => {
-                      const gse = cefrToGse(section.cefrLevel)
+                      const level = section.cefrLevel || 'A1'
+                      const gse = cefrToGse(level)
                       const height = gseToBarHeight(gse)
                       const meta = SKILL_META[section.skill]
                       return (
                         <div key={section.skill} className="flex flex-col items-center gap-1 relative z-10" style={{ width: '20%' }}>
+                          {/* GSE value */}
                           <span className="text-sm font-bold text-gray-700">{gse}</span>
+                          {/* CEFR level badge */}
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${meta.badgeBg} ${meta.color}`}>
+                            {level}
+                          </span>
+                          {/* Bar */}
                           <div
                             className={`w-16 ${barColors[i]} rounded-t-lg transition-all duration-700 ease-out shadow-sm`}
                             style={{ height: `${height}%` }}
                           />
+                          {/* Skill label */}
                           <div className="flex items-center gap-1 mt-1">
                             <meta.icon className="w-3.5 h-3.5 text-gray-500" />
                             <span className="text-xs text-gray-600 font-medium">{meta.label}</span>
@@ -303,10 +316,11 @@ export function MultiSkillResultPage() {
                   </div>
                 </div>
 
-                {/* Overall GSE indicator line */}
+                {/* Overall GSE indicator */}
                 <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-200">
                   <div className="w-4 h-0.5 bg-red-500" />
                   <span className="text-xs text-gray-500">Overall GSE: <strong className="text-gray-700">{overallGse}</strong>/90</span>
+                  <span className="text-xs text-gray-400 ml-2">CEFR: <strong className="text-gray-700">{overallLevel}</strong></span>
                 </div>
               </div>
             </div>

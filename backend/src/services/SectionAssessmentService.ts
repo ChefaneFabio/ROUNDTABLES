@@ -770,13 +770,15 @@ export class SectionAssessmentService {
         }
       }
 
-      // Determine CEFR level: highest level with >= 60% accuracy
+      // Determine CEFR level: highest level where student answered questions with >= 60% accuracy
+      // Skip levels with no questions (adaptive testing may skip levels)
       for (const level of CEFR_LEVELS) {
         const ls = levelScores[level]
-        if (ls && ls.total > 0 && (ls.correct / ls.total) >= 0.6) {
-          determinedLevel = level
-        } else if (ls && ls.total > 0) {
-          break
+        if (!ls || ls.total === 0) continue // No questions at this level — skip, don't stop
+        if ((ls.correct / ls.total) >= 0.6) {
+          determinedLevel = level // Student passed this level — keep looking higher
+        } else {
+          break // Student failed this level — stop, this is their ceiling
         }
       }
     }
