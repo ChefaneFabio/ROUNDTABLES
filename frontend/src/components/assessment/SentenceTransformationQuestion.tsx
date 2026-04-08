@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { SpecialCharactersBar } from './SpecialCharactersBar'
 
 interface SentenceTransformationQuestionProps {
   question: {
@@ -8,10 +9,12 @@ interface SentenceTransformationQuestionProps {
   }
   onSubmit: (answer: string) => void
   disabled?: boolean
+  language?: string
 }
 
-export function SentenceTransformationQuestion({ question, onSubmit, disabled }: SentenceTransformationQuestionProps) {
+export function SentenceTransformationQuestion({ question, onSubmit, disabled, language }: SentenceTransformationQuestionProps) {
   const [answer, setAnswer] = useState('')
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const handleSubmit = () => {
     if (answer.trim()) {
@@ -37,7 +40,11 @@ export function SentenceTransformationQuestion({ question, onSubmit, disabled }:
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Write the transformed sentence:
         </label>
+        {language && (
+          <SpecialCharactersBar language={language} inputRef={textareaRef} onInsert={setAnswer} />
+        )}
         <textarea
+          ref={textareaRef}
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSubmit())}

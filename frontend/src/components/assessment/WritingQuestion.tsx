@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
+import { SpecialCharactersBar } from './SpecialCharactersBar'
 
 interface WritingQuestionProps {
   question: {
@@ -9,10 +10,12 @@ interface WritingQuestionProps {
   }
   onSubmit: (responseText: string) => void
   disabled?: boolean
+  language?: string
 }
 
-export function WritingQuestion({ question, onSubmit, disabled }: WritingQuestionProps) {
+export function WritingQuestion({ question, onSubmit, disabled, language }: WritingQuestionProps) {
   const [text, setText] = useState('')
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   const wordCount = useMemo(() => {
     return text.trim().split(/\s+/).filter(w => w.length > 0).length
@@ -37,8 +40,13 @@ export function WritingQuestion({ question, onSubmit, disabled }: WritingQuestio
         </p>
       </div>
 
+      {language && (
+        <SpecialCharactersBar language={language} inputRef={textareaRef} onInsert={setText} />
+      )}
+
       <div className="relative">
         <textarea
+          ref={textareaRef}
           value={text}
           onChange={(e) => setText(e.target.value)}
           disabled={disabled}

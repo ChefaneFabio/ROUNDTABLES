@@ -568,7 +568,7 @@ export function SectionTakePage() {
 
         // Writing section
         if (skill === 'WRITING' || qType === 'WRITING' || qType === 'ESSAY') {
-          return <WritingQuestion question={currentQuestion} onSubmit={handleWritingSubmit} disabled={submitting} />
+          return <WritingQuestion question={currentQuestion} onSubmit={handleWritingSubmit} disabled={submitting} language={assessmentLanguage} />
         }
         // Speaking section
         if (skill === 'SPEAKING' || qType === 'SPEAKING_PROMPT') {
@@ -576,18 +576,18 @@ export function SectionTakePage() {
         }
         // Listening section
         if (skill === 'LISTENING' || qType === 'LISTENING' || qType === 'DICTATION') {
-          return <ListeningQuestion question={{ ...currentQuestion, language: 'English' }} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
+          return <ListeningQuestion question={{ ...currentQuestion, language: assessmentLanguage || 'English' }} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
         }
         // Error correction (can appear in Reading section)
         if (qType === 'ERROR_CORRECTION') {
-          return <ErrorCorrectionQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
+          return <ErrorCorrectionQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
         }
         // Sentence transformation (can appear in Reading section)
         if (qType === 'SENTENCE_TRANSFORMATION') {
-          return <SentenceTransformationQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
+          return <SentenceTransformationQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
         }
         // Default: Reading / MC / Fill-blank / Grammar / Vocabulary
-        return <ReadingQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
+        return <ReadingQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
       })()}
 
       {submitting && !awaitingNext && (

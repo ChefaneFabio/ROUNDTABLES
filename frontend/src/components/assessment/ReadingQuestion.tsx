@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { SpecialCharactersBar } from './SpecialCharactersBar'
 
 const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
 
@@ -13,11 +14,13 @@ interface ReadingQuestionProps {
   }
   onSubmit: (answer: string) => void
   disabled?: boolean
+  language?: string
 }
 
-export function ReadingQuestion({ question, onSubmit, disabled }: ReadingQuestionProps) {
+export function ReadingQuestion({ question, onSubmit, disabled, language }: ReadingQuestionProps) {
   const [selectedAnswer, setSelectedAnswer] = useState('')
   const [fillAnswer, setFillAnswer] = useState('')
+  const fillInputRef = useRef<HTMLInputElement>(null)
 
   const isMC = question.questionType === 'MULTIPLE_CHOICE' || question.questionType === 'READING'
   const isFillBlank = question.questionType === 'FILL_BLANK' || question.questionType === 'SHORT_ANSWER'
@@ -80,15 +83,21 @@ export function ReadingQuestion({ question, onSubmit, disabled }: ReadingQuestio
       )}
 
       {isFillBlank && (
-        <input
-          type="text"
-          value={fillAnswer}
-          onChange={(e) => setFillAnswer(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
-          disabled={disabled}
-          placeholder="Type your answer..."
-          className="w-full p-4 border-2 border-gray-200 rounded-xl text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
-        />
+        <div>
+          {language && (
+            <SpecialCharactersBar language={language} inputRef={fillInputRef} onInsert={setFillAnswer} />
+          )}
+          <input
+            ref={fillInputRef}
+            type="text"
+            value={fillAnswer}
+            onChange={(e) => setFillAnswer(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleSubmit()}
+            disabled={disabled}
+            placeholder="Type your answer..."
+            className="w-full p-4 border-2 border-gray-200 rounded-xl text-base focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all"
+          />
+        </div>
       )}
 
       <button

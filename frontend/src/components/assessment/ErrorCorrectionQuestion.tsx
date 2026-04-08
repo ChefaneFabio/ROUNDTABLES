@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import { SpecialCharactersBar } from './SpecialCharactersBar'
 
 interface ErrorCorrectionQuestionProps {
   question: {
@@ -8,10 +9,12 @@ interface ErrorCorrectionQuestionProps {
   }
   onSubmit: (answer: string) => void
   disabled?: boolean
+  language?: string
 }
 
-export function ErrorCorrectionQuestion({ question, onSubmit, disabled }: ErrorCorrectionQuestionProps) {
+export function ErrorCorrectionQuestion({ question, onSubmit, disabled, language }: ErrorCorrectionQuestionProps) {
   const [answer, setAnswer] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit = () => {
     if (answer.trim()) {
@@ -34,7 +37,11 @@ export function ErrorCorrectionQuestion({ question, onSubmit, disabled }: ErrorC
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Write the corrected sentence:
         </label>
+        {language && (
+          <SpecialCharactersBar language={language} inputRef={inputRef} onInsert={setAnswer} />
+        )}
         <input
+          ref={inputRef}
           type="text"
           value={answer}
           onChange={(e) => setAnswer(e.target.value)}

@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { AudioPlayer } from './AudioPlayer'
 import { assessmentApi } from '../../services/assessmentApi'
+import { SpecialCharactersBar } from './SpecialCharactersBar'
 
 interface ListeningQuestionProps {
   question: {
@@ -23,6 +24,7 @@ export function ListeningQuestion({ question, onSubmit, disabled }: ListeningQue
   const [ttsScript, setTtsScript] = useState<string>(question.ttsScript || '')
 
   const isDictation = question.questionType === 'DICTATION'
+  const dictationRef = useRef<HTMLTextAreaElement>(null)
 
   // Load TTS audio if needed
   useEffect(() => {
@@ -85,14 +87,20 @@ export function ListeningQuestion({ question, onSubmit, disabled }: ListeningQue
 
       {/* Dictation input */}
       {isDictation && (
-        <textarea
-          value={dictationAnswer}
-          onChange={(e) => setDictationAnswer(e.target.value)}
-          disabled={disabled}
-          placeholder="Write what you hear..."
-          rows={3}
-          className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
-        />
+        <div>
+          {question.language && (
+            <SpecialCharactersBar language={question.language} inputRef={dictationRef} onInsert={setDictationAnswer} />
+          )}
+          <textarea
+            ref={dictationRef}
+            value={dictationAnswer}
+            onChange={(e) => setDictationAnswer(e.target.value)}
+            disabled={disabled}
+            placeholder="Write what you hear..."
+            rows={3}
+            className="w-full p-3 border-2 border-gray-200 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none resize-none"
+          />
+        </div>
       )}
 
       <button
