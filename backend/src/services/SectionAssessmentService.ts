@@ -24,6 +24,24 @@ const LEVEL_NAMES: Record<string, string> = {
   B2: 'Upper Intermediate', C1: 'Advanced', C2: 'Proficiency'
 }
 
+const SUBLEVEL_NAMES: Record<string, string> = {
+  'A1.1': 'Beginner (Foundation)', 'A1.2': 'Beginner (Consolidation)',
+  'A2.1': 'Elementary (Foundation)', 'A2.2': 'Elementary (Consolidation)',
+  'B1.1': 'Intermediate (Foundation)', 'B1.2': 'Intermediate (Consolidation)',
+  'B2.1': 'Upper Intermediate (Foundation)', 'B2.2': 'Upper Intermediate (Consolidation)',
+  'C1.1': 'Advanced (Foundation)', 'C1.2': 'Advanced (Consolidation)',
+  'C2.1': 'Proficiency (Foundation)', 'C2.2': 'Proficiency (Consolidation)',
+}
+
+// Calculate sublevel from CEFR level + percentage score within that level
+// < 75% accuracy at a level = .1 (still building), >= 75% = .2 (consolidating)
+function calculateSublevel(cefrLevel: string, percentageScore: number | null): string {
+  if (!cefrLevel) return 'A1.1'
+  const threshold = 75
+  const sub = (percentageScore != null && percentageScore >= threshold) ? '.2' : '.1'
+  return `${cefrLevel}${sub}`
+}
+
 // Legacy 4-section configuration
 const SECTION_CONFIG_V1: Record<string, { timeLimitMin: number; questionsLimit: number; orderIndex: number }> = {
   READING: { timeLimitMin: 20, questionsLimit: 10, orderIndex: 0 },
@@ -958,12 +976,15 @@ export class SectionAssessmentService {
         }
       })
 
+      const sublevel = calculateSublevel(s.cefrLevel || 'A1', s.percentageScore)
       return {
         id: s.id,
         skill: s.skill,
         status: s.status,
         cefrLevel: s.cefrLevel,
+        cefrSublevel: sublevel,
         cefrName: LEVEL_NAMES[s.cefrLevel || 'A1'] || '',
+        cefrSublevelName: SUBLEVEL_NAMES[sublevel] || '',
         percentageScore: s.percentageScore,
         rawScore: s.rawScore,
         maxScore: s.maxScore,
@@ -984,7 +1005,9 @@ export class SectionAssessmentService {
         status: assessment.status,
         score: assessment.score,
         cefrLevel: assessment.cefrLevel,
+        cefrSublevel: calculateSublevel(assessment.cefrLevel || 'A1', assessment.score),
         cefrName: LEVEL_NAMES[assessment.cefrLevel || 'A1'] || '',
+        cefrSublevelName: SUBLEVEL_NAMES[calculateSublevel(assessment.cefrLevel || 'A1', assessment.score)] || '',
         isMultiSkill: assessment.isMultiSkill,
         startedAt: assessment.startedAt,
         completedAt: assessment.completedAt,

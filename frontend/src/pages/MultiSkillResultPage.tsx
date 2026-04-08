@@ -282,10 +282,10 @@ export function MultiSkillResultPage() {
                   <span className="text-6xl font-black text-gray-900">{overallGse}</span>
                   <span className="text-gray-400 text-lg mb-2">/90</span>
                 </div>
-                <div className={`inline-flex px-4 py-1.5 rounded-full bg-gradient-to-r ${levelStyle.from} ${levelStyle.to} text-white font-bold text-lg shadow-md mb-3`}>
-                  CEFR: {overallLevel}
+                <div className={`inline-flex px-4 py-1.5 rounded-full bg-gradient-to-r ${levelStyle.from} ${levelStyle.to} text-white font-bold text-lg shadow-md mb-1`}>
+                  CEFR: {assessment.cefrSublevel || overallLevel}
                 </div>
-                <p className="text-sm text-gray-400">{LEVEL_NAMES[overallLevel] || ''}</p>
+                <p className="text-sm text-gray-500 font-medium">{assessment.cefrSublevelName || LEVEL_NAMES[overallLevel] || ''}</p>
                 {assessment.score != null && (
                   <p className="text-xs text-gray-400 mt-1">Versant equivalent: {CEFR_TO_VERSANT[overallLevel] || '--'}/80</p>
                 )}
@@ -335,6 +335,7 @@ export function MultiSkillResultPage() {
 
                     {skillSections.map((section: any, i: number) => {
                       const level = section.cefrLevel || 'A1'
+                      const sublevel = section.cefrSublevel || level
                       const gse = cefrToGse(level)
                       const height = gseToBarHeight(gse)
                       const meta = SKILL_META[section.skill]
@@ -344,7 +345,7 @@ export function MultiSkillResultPage() {
                           <span className="text-sm font-bold text-gray-700">{gse}</span>
                           {/* CEFR level badge */}
                           <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${meta.badgeBg} ${meta.color}`}>
-                            {level}
+                            {sublevel}
                           </span>
                           {/* Bar */}
                           <div
@@ -366,7 +367,7 @@ export function MultiSkillResultPage() {
                 <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-200">
                   <div className="w-4 h-0.5 bg-red-500" />
                   <span className="text-xs text-gray-500">Overall GSE: <strong className="text-gray-700">{overallGse}</strong>/90</span>
-                  <span className="text-xs text-gray-400 ml-2">CEFR: <strong className="text-gray-700">{overallLevel}</strong></span>
+                  <span className="text-xs text-gray-400 ml-2">CEFR: <strong className="text-gray-700">{assessment.cefrSublevel || overallLevel}</strong></span>
                 </div>
               </div>
             </div>
@@ -378,6 +379,7 @@ export function MultiSkillResultPage() {
                 const meta = SKILL_META[section.skill] || SKILL_META.READING
                 const Icon = meta.icon
                 const level = section.cefrLevel || 'A1'
+                const sublevel = section.cefrSublevel || level
                 const gse = cefrToGse(level)
                 const description = SKILL_DESCRIPTIONS[section.skill]?.[level] || ''
                 const tips = IMPROVEMENT_TIPS[section.skill]?.[level] || []
@@ -407,7 +409,7 @@ export function MultiSkillResultPage() {
                             <span className={`px-2 py-0.5 rounded-md ${meta.badgeBg} text-xs font-bold ${meta.color}`}>
                               GSE: {gse}/90
                             </span>
-                            <span className="text-xs text-gray-500">CEFR: <strong>{level}</strong></span>
+                            <span className="text-xs text-gray-500">CEFR: <strong>{sublevel}</strong></span>
                           </div>
                           {section.percentageScore != null && (
                             <p className="text-xs text-gray-400 mt-1">{section.questionsAnswered}/{section.questionsTotal} questions &middot; {section.percentageScore}%</p>
