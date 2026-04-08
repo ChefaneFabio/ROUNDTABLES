@@ -1,20 +1,21 @@
 import { useAudioRecorder } from '../../hooks/useAudioRecorder'
 
 interface AudioRecorderProps {
-  onRecordingComplete: (blob: Blob, duration: number) => void
+  onRecordingComplete: (blob: Blob, duration: number, transcript: string) => void
   maxAttempts?: number
   currentAttempt?: number
   disabled?: boolean
+  language?: string
 }
 
-export function AudioRecorder({ onRecordingComplete, maxAttempts = 2, currentAttempt = 0, disabled }: AudioRecorderProps) {
-  const { isRecording, audioBlob, audioUrl, duration, startRecording, stopRecording, resetRecording, error } = useAudioRecorder()
+export function AudioRecorder({ onRecordingComplete, maxAttempts = 2, currentAttempt = 0, disabled, language }: AudioRecorderProps) {
+  const { isRecording, audioBlob, audioUrl, duration, transcript, startRecording, stopRecording, resetRecording, error } = useAudioRecorder()
 
   const canRecord = currentAttempt < maxAttempts && !disabled
 
   const handleSubmit = () => {
     if (audioBlob) {
-      onRecordingComplete(audioBlob, duration)
+      onRecordingComplete(audioBlob, duration, transcript)
     }
   }
 
@@ -36,7 +37,7 @@ export function AudioRecorder({ onRecordingComplete, maxAttempts = 2, currentAtt
       <div className="flex items-center gap-4">
         {!isRecording && !audioUrl && (
           <button
-            onClick={startRecording}
+            onClick={() => startRecording(language)}
             disabled={!canRecord}
             className="flex items-center gap-2 px-4 py-2 bg-red-500 text-white rounded-lg font-medium hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
@@ -68,6 +69,16 @@ export function AudioRecorder({ onRecordingComplete, maxAttempts = 2, currentAtt
           </div>
         )}
       </div>
+
+      {/* Live transcript preview */}
+      {(isRecording || transcript) && (
+        <div className="bg-white border border-gray-200 rounded-lg p-3">
+          <p className="text-xs text-gray-400 mb-1">Transcript {isRecording ? '(live)' : ''}</p>
+          <p className="text-sm text-gray-700 italic">
+            {transcript || (isRecording ? 'Listening...' : 'No transcript captured')}
+          </p>
+        </div>
+      )}
 
       {/* Action buttons */}
       {audioUrl && !isRecording && (

@@ -334,9 +334,9 @@ export const assessmentApi = {
   },
 
   // Submit speaking response
-  async submitSpeakingResponse(assessmentId: string, sectionId: string, questionId: string, audioUrl: string, duration?: number): Promise<any> {
+  async submitSpeakingResponse(assessmentId: string, sectionId: string, questionId: string, audioUrl: string, duration?: number, transcript?: string): Promise<any> {
     const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/speaking`, {
-      questionId, audioUrl, duration
+      questionId, audioUrl, duration, transcript
     })
     return response.data.data
   },

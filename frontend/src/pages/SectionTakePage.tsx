@@ -253,7 +253,7 @@ export function SectionTakePage() {
     }
   }
 
-  const handleSpeakingSubmit = async (audioBlob: Blob, duration: number) => {
+  const handleSpeakingSubmit = async (audioBlob: Blob, duration: number, transcript?: string) => {
     if (!currentQuestion || submitting) return
 
     try {
@@ -262,9 +262,9 @@ export function SectionTakePage() {
       // Upload audio first
       const uploadResult = await assessmentApi.uploadAudio(audioBlob)
 
-      // Submit speaking response
+      // Submit speaking response with transcript
       await assessmentApi.submitSpeakingResponse(
-        assessmentId!, sectionId!, currentQuestion.id, uploadResult.audioUrl, duration
+        assessmentId!, sectionId!, currentQuestion.id, uploadResult.audioUrl, duration, transcript
       )
 
       // Move to next question
@@ -572,7 +572,7 @@ export function SectionTakePage() {
         }
         // Speaking section
         if (skill === 'SPEAKING' || qType === 'SPEAKING_PROMPT') {
-          return <SpeakingQuestion question={currentQuestion} onSubmit={handleSpeakingSubmit} disabled={submitting} />
+          return <SpeakingQuestion question={currentQuestion} onSubmit={handleSpeakingSubmit} disabled={submitting} language={assessmentLanguage} />
         }
         // Listening section
         if (skill === 'LISTENING' || qType === 'LISTENING' || qType === 'DICTATION') {

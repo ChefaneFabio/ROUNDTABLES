@@ -6,7 +6,8 @@ interface UseAudioRecorderReturn {
   audioBlob: Blob | null
   audioUrl: string | null
   duration: number
-  startRecording: () => Promise<void>
+  transcript: string
+  startRecording: (language?: string) => Promise<void>
   stopRecording: () => void
   resetRecording: () => void
   error: string | null
@@ -18,12 +19,14 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [duration, setDuration] = useState(0)
+  const [transcript, setTranscript] = useState('')
   const [error, setError] = useState<string | null>(null)
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
   const chunksRef = useRef<Blob[]>([])
   const startTimeRef = useRef<number>(0)
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const recognitionRef = useRef<any>(null)
 
   // Cleanup on unmount: stop recording, revoke URL, clear timer
   useEffect(() => {
@@ -34,12 +37,17 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
       if (timerRef.current) {
         clearInterval(timerRef.current)
       }
+      if (recognitionRef.current) {
+        recognitionRef.current.stop()
+        recognitionRef.current = null
+      }
     }
   }, [])
 
-  const startRecording = useCallback(async () => {
+  const startRecording = useCallback(async (language?: string) => {
     try {
       setError(null)
+      setTranscript('')
       chunksRef.current = []
 
       const stream = await navigator.mediaDevices.getUserMedia({
@@ -96,6 +104,36 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
       timerRef.current = setInterval(() => {
         setDuration(Math.floor((Date.now() - startTimeRef.current) / 1000))
       }, 1000)
+
+      // Start Web Speech API for live transcription
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition()
+        const langCode = language === 'Italian' ? 'it-IT' :
+                         language === 'Spanish' ? 'es-ES' :
+                         language === 'French' ? 'fr-FR' :
+                         language === 'German' ? 'de-DE' : 'en-US'
+        recognition.lang = langCode
+        recognition.continuous = true
+        recognition.interimResults = false
+
+        let fullTranscript = ''
+        recognition.onresult = (event: any) => {
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            if (event.results[i].isFinal) {
+              fullTranscript += event.results[i][0].transcript + ' '
+              setTranscript(fullTranscript.trim())
+            }
+          }
+        }
+
+        recognition.onerror = () => {
+          // Speech recognition not critical — continue recording without it
+        }
+
+        recognition.start()
+        recognitionRef.current = recognition
+      }
     } catch (err: any) {
       if (err.name === 'NotAllowedError') {
         setError('Microphone access denied. Please allow microphone access and try again.')
@@ -113,6 +151,10 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
       setIsRecording(false)
       setIsPaused(false)
     }
+    if (recognitionRef.current) {
+      recognitionRef.current.stop()
+      recognitionRef.current = null
+    }
   }, [])
 
   const resetRecording = useCallback(() => {
@@ -122,6 +164,7 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
     setAudioBlob(null)
     setAudioUrl(null)
     setDuration(0)
+    setTranscript('')
     setIsRecording(false)
     setIsPaused(false)
     setError(null)
@@ -134,6 +177,7 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
     audioBlob,
     audioUrl,
     duration,
+    transcript,
     startRecording,
     stopRecording,
     resetRecording,

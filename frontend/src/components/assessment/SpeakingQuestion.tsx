@@ -7,20 +7,21 @@ interface SpeakingQuestionProps {
     questionText: string
     speakingPrompt?: string
   }
-  onSubmit: (audioBlob: Blob, duration: number) => void
+  onSubmit: (audioBlob: Blob, duration: number, transcript?: string) => void
   disabled?: boolean
+  language?: string
 }
 
-export function SpeakingQuestion({ question, onSubmit, disabled }: SpeakingQuestionProps) {
+export function SpeakingQuestion({ question, onSubmit, disabled, language }: SpeakingQuestionProps) {
   const [attempt, setAttempt] = useState(0)
 
   useEffect(() => {
     setAttempt(0)
   }, [question.id])
 
-  const handleRecordingComplete = (blob: Blob, duration: number) => {
+  const handleRecordingComplete = (blob: Blob, duration: number, transcript: string) => {
     setAttempt(a => a + 1)
-    onSubmit(blob, duration)
+    onSubmit(blob, duration, transcript || undefined)
   }
 
   return (
@@ -40,6 +41,7 @@ export function SpeakingQuestion({ question, onSubmit, disabled }: SpeakingQuest
         maxAttempts={2}
         currentAttempt={attempt}
         disabled={disabled}
+        language={language}
       />
     </div>
   )

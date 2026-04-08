@@ -60,7 +60,8 @@ const submitWritingSchema = Joi.object({
 const submitSpeakingSchema = Joi.object({
   questionId: Joi.string().required(),
   audioUrl: Joi.string().required(),
-  duration: Joi.number().integer().optional()
+  duration: Joi.number().integer().optional(),
+  transcript: Joi.string().optional().allow('')
 })
 
 const teacherScoreSchema = Joi.object({
@@ -218,7 +219,8 @@ router.post('/:id/sections/:sectionId/speaking', authenticate, validateRequest(s
       questionId: req.body.questionId,
       studentId: req.user.studentId,
       audioUrl: req.body.audioUrl,
-      duration: req.body.duration
+      duration: req.body.duration,
+      transcript: req.body.transcript
     })
     return res.json(apiResponse.success(result, 'Speaking response submitted'))
   } catch (error) {

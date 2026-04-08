@@ -1,4 +1,4 @@
-import OpenAI from 'openai'
+import Anthropic from '@anthropic-ai/sdk'
 import { prisma } from '../config/database'
 
 interface WritingEvaluation {
@@ -13,7 +13,7 @@ interface WritingEvaluation {
 }
 
 interface SpeakingEvaluation {
-  pronunciation: number  // 0-100 (approximated from transcript accuracy)
+  pronunciation: number  // 0-100 (approximated from transcript)
   fluency: number        // 0-100
   grammar: number        // 0-100
   vocabulary: number     // 0-100
@@ -23,16 +23,32 @@ interface SpeakingEvaluation {
 }
 
 export class AiScoringService {
-  private openai: OpenAI | null = null
+  private anthropic: Anthropic | null = null
 
   constructor() {
-    if (process.env.OPENAI_API_KEY) {
-      this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
+    const apiKey = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY
+    if (apiKey) {
+      this.anthropic = new Anthropic({ apiKey })
     }
   }
 
   isConfigured(): boolean {
-    return !!this.openai
+    return !!this.anthropic
+  }
+
+  private async callClaude(systemPrompt: string, userMessage: string): Promise<string> {
+    if (!this.anthropic) throw new Error('Anthropic API key not configured')
+
+    const response = await this.anthropic.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 600,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userMessage }],
+      temperature: 0.3
+    })
+
+    const block = response.content[0]
+    return block.type === 'text' ? block.text : ''
   }
 
   // Evaluate a writing response against CEFR rubrics
@@ -43,10 +59,6 @@ export class AiScoringService {
     language: string
     rubric?: Record<string, any>
   }): Promise<WritingEvaluation> {
-    if (!this.openai) {
-      throw new Error('OpenAI API key not configured')
-    }
-
     const { responseText, prompt, targetLevel, language, rubric } = params
 
     const systemPrompt = `You are an expert language assessor specializing in CEFR-aligned evaluation of ${language} writing.
@@ -65,24 +77,12 @@ ${rubric ? `Additional rubric criteria: ${JSON.stringify(rubric)}` : ''}
 Respond ONLY with valid JSON in this exact format:
 {"grammar":N,"coherence":N,"vocabulary":N,"spelling":N,"taskAchievement":N,"overall":N,"cefrLevel":"XX","feedback":"..."}`
 
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Prompt: ${prompt}\n\nStudent's response:\n${responseText}` }
-      ],
-      temperature: 0.3,
-      max_tokens: 500
-    })
-
-    const content = response.choices[0]?.message?.content || ''
-
     try {
+      const content = await this.callClaude(systemPrompt, `Prompt: ${prompt}\n\nStudent's response:\n${responseText}`)
       const jsonMatch = content.match(/\{[\s\S]*\}/)
-      if (!jsonMatch) throw new Error('No JSON found in response')
+      if (!jsonMatch) throw new Error('No JSON found')
       return JSON.parse(jsonMatch[0]) as WritingEvaluation
     } catch {
-      // Fallback evaluation if parsing fails
       return {
         grammar: 50, coherence: 50, vocabulary: 50, spelling: 50,
         taskAchievement: 50, overall: 50, cefrLevel: targetLevel,
@@ -99,10 +99,6 @@ Respond ONLY with valid JSON in this exact format:
     language: string
     duration?: number
   }): Promise<SpeakingEvaluation> {
-    if (!this.openai) {
-      throw new Error('OpenAI API key not configured')
-    }
-
     const { transcript, prompt, targetLevel, language, duration } = params
 
     const systemPrompt = `You are an expert language assessor specializing in CEFR-aligned evaluation of ${language} speaking.
@@ -120,21 +116,10 @@ Provide brief, constructive feedback (2-3 sentences).
 Respond ONLY with valid JSON:
 {"pronunciation":N,"fluency":N,"grammar":N,"vocabulary":N,"overall":N,"cefrLevel":"XX","feedback":"..."}`
 
-    const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: `Prompt: ${prompt}\n\nStudent's transcript:\n${transcript}` }
-      ],
-      temperature: 0.3,
-      max_tokens: 500
-    })
-
-    const content = response.choices[0]?.message?.content || ''
-
     try {
+      const content = await this.callClaude(systemPrompt, `Prompt: ${prompt}\n\nStudent's transcript:\n${transcript}`)
       const jsonMatch = content.match(/\{[\s\S]*\}/)
-      if (!jsonMatch) throw new Error('No JSON found in response')
+      if (!jsonMatch) throw new Error('No JSON found')
       return JSON.parse(jsonMatch[0]) as SpeakingEvaluation
     } catch {
       return {
@@ -145,26 +130,12 @@ Respond ONLY with valid JSON:
     }
   }
 
-  // Transcribe audio using Whisper API
-  async transcribeAudio(audioPath: string, language: string): Promise<string> {
-    if (!this.openai) {
-      throw new Error('OpenAI API key not configured')
-    }
-
-    const fs = await import('fs')
-    const file = fs.createReadStream(audioPath)
-
-    const languageCodes: Record<string, string> = {
-      English: 'en', Italian: 'it', Spanish: 'es', French: 'fr', German: 'de'
-    }
-
-    const transcription = await this.openai.audio.transcriptions.create({
-      file,
-      model: 'whisper-1',
-      language: languageCodes[language] || 'en'
-    })
-
-    return transcription.text
+  // Transcribe audio using browser-provided transcript (no server-side transcription)
+  // Speaking responses should include a transcript from the browser's Web Speech API
+  async transcribeAudio(_audioPath: string, _language: string): Promise<string> {
+    // Claude API does not support audio transcription.
+    // Transcription should happen client-side via Web Speech API or be provided manually.
+    throw new Error('Audio transcription requires client-side Web Speech API. No server-side transcription available.')
   }
 
   // Score a writing response and save to DB
@@ -178,7 +149,6 @@ Respond ONLY with valid JSON:
 
     if (!response) throw new Error('Writing response not found')
 
-    // Get the question for prompt text
     const question = await prisma.assessmentQuestion.findUnique({
       where: { id: response.questionId }
     })
@@ -191,7 +161,6 @@ Respond ONLY with valid JSON:
       rubric: question?.rubric as Record<string, any> | undefined
     })
 
-    // Save evaluation
     await prisma.writingResponse.update({
       where: { id: writingResponseId },
       data: { aiEvaluation: evaluation as any }
@@ -200,7 +169,7 @@ Respond ONLY with valid JSON:
     return evaluation
   }
 
-  // Score a speaking response: transcribe + evaluate
+  // Score a speaking response: evaluate transcript with Claude
   async scoreSpeakingResponse(speakingResponseId: string) {
     const response = await prisma.speakingResponse.findUnique({
       where: { id: speakingResponseId },
@@ -215,24 +184,11 @@ Respond ONLY with valid JSON:
       where: { id: response.questionId }
     })
 
-    // Transcribe if not already done
-    let transcript = response.transcript
-    if (!transcript && response.audioUrl) {
-      const path = await import('path')
-      const audioPath = path.join(__dirname, '../../', response.audioUrl)
-      transcript = await this.transcribeAudio(audioPath, response.section.assessment.language)
-
-      await prisma.speakingResponse.update({
-        where: { id: speakingResponseId },
-        data: { transcript, transcribedAt: new Date() }
-      })
-    }
-
+    const transcript = response.transcript
     if (!transcript) {
-      throw new Error('No audio or transcript available')
+      throw new Error('No transcript available. Ensure client-side transcription is enabled.')
     }
 
-    // Evaluate transcript
     const evaluation = await this.evaluateSpeaking({
       transcript,
       prompt: question?.speakingPrompt || question?.questionText || '',
@@ -287,7 +243,6 @@ Respond ONLY with valid JSON:
 
         if (evals.length > 0) {
           const avgOverall = Math.round(evals.reduce((sum: number, e: any) => sum + e.overall, 0) / evals.length)
-          // Use the most common CEFR level
           const levels = evals.map((e: any) => e.cefrLevel)
           const cefrLevel = mode(levels) || section.targetLevel
 
@@ -313,7 +268,7 @@ Respond ONLY with valid JSON:
 
     if (section.skill === 'SPEAKING') {
       for (const sr of section.speakingResponses) {
-        if (!sr.aiEvaluation) {
+        if (!sr.aiEvaluation && sr.transcript) {
           try {
             const eval_ = await this.scoreSpeakingResponse(sr.id)
             results.push({ id: sr.id, type: 'speaking', evaluation: eval_ })

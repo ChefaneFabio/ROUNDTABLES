@@ -2,6 +2,7 @@ import { prisma } from '../config/database'
 import { Prisma, AssessmentStatus, AssessmentSkill, SectionStatus, AssessmentQuestionType } from '@prisma/client'
 import { emailService } from './EmailService'
 import { certificateService } from './CertificateService'
+import { aiScoringService } from './AiScoringService'
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
@@ -696,8 +697,9 @@ export class SectionAssessmentService {
     studentId: string
     audioUrl: string
     duration?: number
+    transcript?: string
   }) {
-    const { assessmentId, sectionId, questionId, studentId, audioUrl, duration } = input
+    const { assessmentId, sectionId, questionId, studentId, audioUrl, duration, transcript } = input
 
     const section = await prisma.assessmentSection.findUnique({
       where: { id: sectionId },
@@ -715,7 +717,9 @@ export class SectionAssessmentService {
         questionId,
         studentId,
         audioUrl,
-        duration
+        duration,
+        transcript: transcript || null,
+        transcribedAt: transcript ? new Date() : null
       }
     })
 
@@ -846,6 +850,17 @@ export class SectionAssessmentService {
       }
     } catch (e) {
       console.error('Failed to send section completion notification:', e)
+    }
+
+    // Auto-trigger AI scoring for writing/speaking sections (async, don't block)
+    if ((section.skill === 'WRITING' || section.skill === 'SPEAKING') && aiScoringService.isConfigured()) {
+      aiScoringService.scoreSectionResponses(sectionId).then(() => {
+        console.log(`AI scoring completed for ${section.skill} section ${sectionId}`)
+        // Recalculate assessment after AI scores are saved
+        this.checkAndCompleteAssessment(assessmentId).catch(() => {})
+      }).catch(e => {
+        console.error(`AI scoring failed for section ${sectionId}:`, e.message)
+      })
     }
 
     // Check if all sections are completed -> complete assessment
