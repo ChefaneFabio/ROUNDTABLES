@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { AudioRecorder } from './AudioRecorder'
 
 interface SpeakingQuestionProps {
@@ -13,6 +13,10 @@ interface SpeakingQuestionProps {
 
 export function SpeakingQuestion({ question, onSubmit, disabled }: SpeakingQuestionProps) {
   const [attempt, setAttempt] = useState(0)
+
+  useEffect(() => {
+    setAttempt(0)
+  }, [question.id])
 
   const handleRecordingComplete = (blob: Blob, duration: number) => {
     setAttempt(a => a + 1)
@@ -29,8 +33,9 @@ export function SpeakingQuestion({ question, onSubmit, disabled }: SpeakingQuest
         )}
       </div>
 
-      {/* Recorder */}
+      {/* Recorder — key forces reset on new question */}
       <AudioRecorder
+        key={question.id}
         onRecordingComplete={handleRecordingComplete}
         maxAttempts={2}
         currentAttempt={attempt}
