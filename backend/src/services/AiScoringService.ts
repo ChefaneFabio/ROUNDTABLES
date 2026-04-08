@@ -318,6 +318,54 @@ Respond ONLY with valid JSON:
       }
     }
 
+    // Notify admins that AI scoring is done (so they can review and optionally override)
+    if (results.length > 0) {
+      try {
+        const sectionWithAssessment = await prisma.assessmentSection.findUnique({
+          where: { id: sectionId },
+          include: {
+            assessment: {
+              include: { student: { include: { user: { select: { name: true } } } } }
+            }
+          }
+        })
+
+        if (sectionWithAssessment) {
+          const studentName = sectionWithAssessment.assessment.student.user.name
+          const language = sectionWithAssessment.assessment.language
+          const skillLabel = section.skill.charAt(0) + section.skill.slice(1).toLowerCase()
+          const aiLevel = sectionWithAssessment.cefrLevel || 'Pending'
+          const aiScore = sectionWithAssessment.percentageScore != null ? `${sectionWithAssessment.percentageScore}%` : 'N/A'
+
+          const admins = await prisma.user.findMany({
+            where: { role: 'ADMIN', isActive: true, deletedAt: null }
+          })
+
+          for (const admin of admins) {
+            await prisma.notification.create({
+              data: {
+                type: 'GENERAL',
+                subject: `AI Scored: ${studentName} — ${skillLabel} (${language})`,
+                content: `AI has evaluated ${studentName}'s ${skillLabel} responses for their ${language} test.\n\nAI Result: ${aiLevel} (${aiScore})\n\nYou can review and override the score in the assessment results page.`,
+                status: 'SENT',
+                sentAt: new Date(),
+                userId: admin.id,
+                metadata: {
+                  assessmentId: sectionWithAssessment.assessmentId,
+                  sectionId,
+                  skill: section.skill,
+                  cefrLevel: aiLevel,
+                  type: 'AI_SCORING_COMPLETED'
+                }
+              }
+            })
+          }
+        }
+      } catch (e) {
+        console.error('Failed to send AI scoring notification:', e)
+      }
+    }
+
     return results
   }
 }

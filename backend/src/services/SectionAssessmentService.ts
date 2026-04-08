@@ -1242,6 +1242,43 @@ export class SectionAssessmentService {
         data: { languageLevel: overallLevel as any }
       })
 
+      // Notify all admins that the full assessment is completed
+      try {
+        const studentName = assessment.student.user.name
+        const language = assessment.language
+        const skillSummary = assessment.sections
+          .filter(s => s.cefrLevel)
+          .map(s => `${s.skill.charAt(0) + s.skill.slice(1).toLowerCase()}: ${s.cefrLevel}`)
+          .join(', ')
+
+        const admins = await prisma.user.findMany({
+          where: { role: 'ADMIN', isActive: true, deletedAt: null }
+        })
+
+        for (const admin of admins) {
+          await prisma.notification.create({
+            data: {
+              type: 'GENERAL',
+              subject: `Test Complete: ${studentName} — ${language} ${overallLevel}`,
+              content: `${studentName} has completed their ${language} placement test.\n\nOverall: ${overallLevel} (${avgPercentage}%)\nSkills: ${skillSummary}\n\nView the full results and review answers in the assessment management page.`,
+              status: 'SENT',
+              sentAt: new Date(),
+              userId: admin.id,
+              metadata: {
+                assessmentId,
+                studentId: assessment.studentId,
+                language,
+                cefrLevel: overallLevel,
+                score: avgPercentage,
+                type: 'ASSESSMENT_COMPLETED'
+              }
+            }
+          })
+        }
+      } catch (e) {
+        console.error('Failed to send assessment completion notification:', e)
+      }
+
       // Generate certificate
       try {
         await certificateService.generateAssessmentCertificate(assessment.studentId, assessmentId)
