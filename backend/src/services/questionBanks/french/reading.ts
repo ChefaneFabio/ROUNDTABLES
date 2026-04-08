@@ -438,5 +438,471 @@ export const frenchReadingQuestions: MultiSkillQuestionData[] = [
     passage: 'Le peuple Kuuk Thaayorre utilise les directions cardinales plutôt que des termes spatiaux égocentriques.',
     questionText: 'Les Kuuk Thaayorre utilisent les directions ___ plutôt que des termes spatiaux égocentriques.',
     correctAnswer: 'cardinales', points: 3, orderIndex: 42, tags: ['linguistique']
+  },
+
+  // ============================================================
+  // ADDITIONAL QUESTIONS — 40 more (orderIndex 43–82)
+  // ============================================================
+
+  // ---- A1 — Débutant (7 questions) ----
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Le menu du café',
+    passage: 'Café : 2 euros. Thé : 2 euros. Jus d\'orange : 3 euros. Croissant : 1 euro. Sandwich jambon-fromage : 5 euros. Salade : 4 euros.',
+    questionText: 'Combien coûte un jus d\'orange ?',
+    options: [{ label: '2 euros', value: '2 euros' }, { label: '3 euros', value: '3 euros' }, { label: '4 euros', value: '4 euros' }, { label: '5 euros', value: '5 euros' }],
+    correctAnswer: '3 euros', points: 1, orderIndex: 43, tags: ['nourriture', 'nombres']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Le menu du café',
+    passage: 'Café : 2 euros. Thé : 2 euros. Jus d\'orange : 3 euros. Croissant : 1 euro. Sandwich jambon-fromage : 5 euros. Salade : 4 euros.',
+    questionText: 'Quel est le produit le moins cher ?',
+    options: [{ label: 'Le café', value: 'le café' }, { label: 'Le croissant', value: 'le croissant' }, { label: 'La salade', value: 'la salade' }, { label: 'Le thé', value: 'le thé' }],
+    correctAnswer: 'le croissant', points: 1, orderIndex: 44, tags: ['nourriture', 'nombres']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'READING',
+    passageTitle: 'Panneau à la gare',
+    passage: 'Train pour Lyon : départ 10h15, quai 3. Train pour Marseille : départ 11h00, quai 7. Train pour Bordeaux : départ 12h30, quai 5. Attention : le train pour Nice est annulé.',
+    questionText: 'À quelle heure part le train pour Marseille ?',
+    options: [{ label: '10h15', value: '10h15' }, { label: '11h00', value: '11h00' }, { label: '12h30', value: '12h30' }, { label: '13h00', value: '13h00' }],
+    correctAnswer: '11h00', points: 1, orderIndex: 45, tags: ['transport', 'heure']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Panneau à la gare',
+    passage: 'Train pour Lyon : départ 10h15, quai 3. Train pour Marseille : départ 11h00, quai 7. Train pour Bordeaux : départ 12h30, quai 5. Attention : le train pour Nice est annulé.',
+    questionText: 'Quel train est annulé ?',
+    options: [{ label: 'Le train pour Lyon', value: 'le train pour Lyon' }, { label: 'Le train pour Bordeaux', value: 'le train pour Bordeaux' }, { label: 'Le train pour Nice', value: 'le train pour Nice' }, { label: 'Le train pour Marseille', value: 'le train pour Marseille' }],
+    correctAnswer: 'le train pour Nice', points: 1, orderIndex: 46, tags: ['transport']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Ma chambre',
+    passage: 'Ma chambre est petite mais jolie. Il y a un lit, une table et une chaise. Sur la table, il y a un ordinateur. Les murs sont bleus. La fenêtre est grande. J\'aime ma chambre.',
+    questionText: 'De quelle couleur sont les murs ?',
+    options: [{ label: 'Blancs', value: 'blancs' }, { label: 'Bleus', value: 'bleus' }, { label: 'Verts', value: 'verts' }, { label: 'Jaunes', value: 'jaunes' }],
+    correctAnswer: 'bleus', points: 1, orderIndex: 47, tags: ['maison', 'couleurs']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Ma chambre',
+    passage: 'Ma chambre est petite mais jolie. Il y a un lit, une table et une chaise. Sur la table, il y a un ordinateur. Les murs sont bleus. La fenêtre est grande. J\'aime ma chambre.',
+    questionText: 'Qu\'est-ce qu\'il y a sur la table ?',
+    options: [{ label: 'Un livre', value: 'un livre' }, { label: 'Un ordinateur', value: 'un ordinateur' }, { label: 'Un téléphone', value: 'un téléphone' }, { label: 'Une lampe', value: 'une lampe' }],
+    correctAnswer: 'un ordinateur', points: 1, orderIndex: 48, tags: ['maison', 'objets']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'READING',
+    passageTitle: 'Un message',
+    passage: 'Bonjour Paul, je suis malade aujourd\'hui. Je ne vais pas à l\'école. Peux-tu me donner les devoirs ? Merci. À demain. Julie.',
+    questionText: 'Pourquoi Julie n\'est pas à l\'école ?',
+    options: [{ label: 'Elle est en vacances', value: 'elle est en vacances' }, { label: 'Elle est malade', value: 'elle est malade' }, { label: 'Elle est en retard', value: 'elle est en retard' }, { label: 'Elle n\'aime pas l\'école', value: 'elle n\'aime pas l\'école' }],
+    correctAnswer: 'elle est malade', points: 1, orderIndex: 49, tags: ['communication', 'santé']
+  },
+
+  // ---- A2 — Élémentaire (7 questions) ----
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Annonce de location',
+    passage: 'À louer : appartement 3 pièces au centre-ville. Deuxième étage avec ascenseur. Cuisine équipée, salle de bain moderne. Proche des commerces et du métro. Loyer : 850 euros par mois, charges comprises. Animaux acceptés. Disponible à partir du 1er mars. Contacter M. Dupont au 06 12 34 56 78.',
+    questionText: 'Combien coûte le loyer par mois ?',
+    options: [{ label: '750 euros', value: '750 euros' }, { label: '800 euros', value: '800 euros' }, { label: '850 euros', value: '850 euros' }, { label: '900 euros', value: '900 euros' }],
+    correctAnswer: '850 euros', points: 1, orderIndex: 50, tags: ['logement', 'nombres']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Annonce de location',
+    passage: 'À louer : appartement 3 pièces au centre-ville. Deuxième étage avec ascenseur. Cuisine équipée, salle de bain moderne. Proche des commerces et du métro. Loyer : 850 euros par mois, charges comprises. Animaux acceptés. Disponible à partir du 1er mars. Contacter M. Dupont au 06 12 34 56 78.',
+    questionText: 'Est-ce qu\'on peut avoir un animal dans cet appartement ?',
+    options: [{ label: 'Oui, les animaux sont acceptés', value: 'oui' }, { label: 'Non, les animaux sont interdits', value: 'non' }, { label: 'Seulement les chats', value: 'seulement les chats' }, { label: 'Ce n\'est pas mentionné', value: 'pas mentionné' }],
+    correctAnswer: 'oui', points: 1, orderIndex: 51, tags: ['logement']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Programme du week-end',
+    passage: 'Samedi matin : marché de la place Saint-Pierre de 8h à 13h. Samedi après-midi : match de football au stade municipal à 15h. Dimanche matin : randonnée en forêt, départ à 9h devant la mairie. Dimanche soir : concert gratuit au parc central à 20h. Inscription obligatoire pour la randonnée.',
+    questionText: 'Quelle activité nécessite une inscription ?',
+    options: [{ label: 'Le marché', value: 'le marché' }, { label: 'Le match de football', value: 'le match de football' }, { label: 'La randonnée', value: 'la randonnée' }, { label: 'Le concert', value: 'le concert' }],
+    correctAnswer: 'la randonnée', points: 1, orderIndex: 52, tags: ['loisirs', 'planification']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'READING',
+    passageTitle: 'Programme du week-end',
+    passage: 'Samedi matin : marché de la place Saint-Pierre de 8h à 13h. Samedi après-midi : match de football au stade municipal à 15h. Dimanche matin : randonnée en forêt, départ à 9h devant la mairie. Dimanche soir : concert gratuit au parc central à 20h. Inscription obligatoire pour la randonnée.',
+    questionText: 'À quelle heure est le concert ?',
+    options: [{ label: '15h', value: '15h' }, { label: '18h', value: '18h' }, { label: '20h', value: '20h' }, { label: '21h', value: '21h' }],
+    correctAnswer: '20h', points: 1, orderIndex: 53, tags: ['loisirs', 'heure']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Carte postale de vacances',
+    passage: 'Cher Antoine, je suis en Bretagne avec ma famille. Nous sommes arrivés lundi. L\'hôtel est très confortable et la plage est à cinq minutes à pied. Hier, nous avons visité un vieux château. La nourriture est délicieuse, surtout les crêpes ! Il pleut un peu mais nous nous amusons bien. On rentre dimanche. Bisous, Claire.',
+    questionText: 'Où est Claire en vacances ?',
+    options: [{ label: 'En Provence', value: 'en Provence' }, { label: 'En Bretagne', value: 'en Bretagne' }, { label: 'En Normandie', value: 'en Normandie' }, { label: 'En Alsace', value: 'en Alsace' }],
+    correctAnswer: 'en Bretagne', points: 1, orderIndex: 54, tags: ['voyage', 'correspondance']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Carte postale de vacances',
+    passage: 'Cher Antoine, je suis en Bretagne avec ma famille. Nous sommes arrivés lundi. L\'hôtel est très confortable et la plage est à cinq minutes à pied. Hier, nous avons visité un vieux château. La nourriture est délicieuse, surtout les crêpes ! Il pleut un peu mais nous nous amusons bien. On rentre dimanche. Bisous, Claire.',
+    questionText: 'Quelle spécialité culinaire Claire mentionne-t-elle ?',
+    options: [{ label: 'Les galettes', value: 'les galettes' }, { label: 'Les crêpes', value: 'les crêpes' }, { label: 'Les croissants', value: 'les croissants' }, { label: 'Le fromage', value: 'le fromage' }],
+    correctAnswer: 'les crêpes', points: 1, orderIndex: 55, tags: ['voyage', 'nourriture']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Horaires de la bibliothèque',
+    passage: 'La bibliothèque municipale est ouverte du mardi au samedi. Horaires : mardi à vendredi de 9h à 18h, samedi de 10h à 16h. Fermée le dimanche et le lundi. Prêt de livres gratuit avec la carte de la bibliothèque. Maximum 5 livres pour 3 semaines. Section enfants au rez-de-chaussée, section adultes au premier étage.',
+    questionText: 'Combien de livres peut-on emprunter au maximum ?',
+    options: [{ label: '3 livres', value: '3 livres' }, { label: '4 livres', value: '4 livres' }, { label: '5 livres', value: '5 livres' }, { label: '10 livres', value: '10 livres' }],
+    correctAnswer: '5 livres', points: 1, orderIndex: 56, tags: ['lieux', 'services']
+  },
+
+  // ---- B1 — Intermédiaire (7 questions) ----
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La cuisine française en évolution',
+    passage: 'La cuisine française, longtemps considérée comme la référence mondiale de la gastronomie, connaît une transformation importante. Les jeunes chefs s\'inspirent de plus en plus des cuisines du monde entier, intégrant des saveurs asiatiques, africaines et sud-américaines dans leurs plats. Parallèlement, le mouvement « locavore » encourage l\'utilisation de produits locaux et de saison. Les restaurants étoilés proposent désormais des menus végétariens, ce qui aurait été impensable il y a vingt ans.',
+    questionText: 'Comment la cuisine française évolue-t-elle selon le texte ?',
+    options: [
+      { label: 'Elle devient plus traditionnelle', value: 'elle devient plus traditionnelle' },
+      { label: 'Elle s\'ouvre aux influences internationales et aux tendances modernes', value: 'elle s\'ouvre aux influences internationales' },
+      { label: 'Elle perd en qualité', value: 'elle perd en qualité' },
+      { label: 'Elle se concentre uniquement sur la viande', value: 'elle se concentre sur la viande' }
+    ],
+    correctAnswer: 'elle s\'ouvre aux influences internationales', points: 1, orderIndex: 57, tags: ['gastronomie', 'culture']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La cuisine française en évolution',
+    passage: 'La cuisine française, longtemps considérée comme la référence mondiale de la gastronomie, connaît une transformation importante. Les jeunes chefs s\'inspirent de plus en plus des cuisines du monde entier, intégrant des saveurs asiatiques, africaines et sud-américaines dans leurs plats. Parallèlement, le mouvement « locavore » encourage l\'utilisation de produits locaux et de saison. Les restaurants étoilés proposent désormais des menus végétariens, ce qui aurait été impensable il y a vingt ans.',
+    questionText: 'Qu\'est-ce que le mouvement « locavore » encourage ?',
+    options: [
+      { label: 'L\'importation de produits exotiques', value: 'l\'importation de produits exotiques' },
+      { label: 'L\'utilisation de produits locaux et de saison', value: 'l\'utilisation de produits locaux et de saison' },
+      { label: 'La restauration rapide', value: 'la restauration rapide' },
+      { label: 'Les repas surgelés', value: 'les repas surgelés' }
+    ],
+    correctAnswer: 'l\'utilisation de produits locaux et de saison', points: 1, orderIndex: 58, tags: ['gastronomie', 'environnement']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Lettre au directeur',
+    passage: 'Monsieur le Directeur, je vous écris pour exprimer mon inquiétude concernant la fermeture prévue de la piscine municipale. Cette installation est utilisée quotidiennement par des centaines de personnes, notamment des enfants qui apprennent à nager et des personnes âgées qui font de l\'aquagym. La piscine est le seul équipement sportif accessible à tous dans notre quartier. Sa fermeture obligerait beaucoup de familles à se déplacer en voiture vers la ville voisine. Je vous prie de reconsidérer cette décision.',
+    questionText: 'Pourquoi l\'auteur écrit-il cette lettre ?',
+    options: [
+      { label: 'Pour remercier le directeur', value: 'pour remercier le directeur' },
+      { label: 'Pour protester contre la fermeture de la piscine', value: 'pour protester contre la fermeture de la piscine' },
+      { label: 'Pour demander un emploi', value: 'pour demander un emploi' },
+      { label: 'Pour proposer la construction d\'une piscine', value: 'pour proposer la construction' }
+    ],
+    correctAnswer: 'pour protester contre la fermeture de la piscine', points: 1, orderIndex: 59, tags: ['communication', 'société']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Lettre au directeur',
+    passage: 'Monsieur le Directeur, je vous écris pour exprimer mon inquiétude concernant la fermeture prévue de la piscine municipale. Cette installation est utilisée quotidiennement par des centaines de personnes, notamment des enfants qui apprennent à nager et des personnes âgées qui font de l\'aquagym. La piscine est le seul équipement sportif accessible à tous dans notre quartier. Sa fermeture obligerait beaucoup de familles à se déplacer en voiture vers la ville voisine.',
+    questionText: 'Quels groupes de personnes utilisent la piscine ?',
+    options: [
+      { label: 'Uniquement des sportifs professionnels', value: 'des sportifs professionnels' },
+      { label: 'Des enfants et des personnes âgées entre autres', value: 'des enfants et des personnes âgées' },
+      { label: 'Seulement des adultes', value: 'seulement des adultes' },
+      { label: 'Des touristes', value: 'des touristes' }
+    ],
+    correctAnswer: 'des enfants et des personnes âgées', points: 1, orderIndex: 60, tags: ['société', 'sport']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Les transports en commun',
+    passage: 'La ville de Strasbourg est souvent citée comme un exemple réussi de politique de transports en commun. Depuis l\'introduction du tramway en 1994, le nombre de voitures dans le centre-ville a diminué de 30 %. Le réseau de pistes cyclables a également été considérablement développé. Les habitants bénéficient d\'un abonnement mensuel à prix réduit qui couvre le bus, le tramway et le vélo en libre-service. Cette politique a amélioré la qualité de l\'air et rendu le centre-ville plus agréable pour les piétons.',
+    questionText: 'Quel a été l\'effet du tramway sur la circulation automobile ?',
+    options: [
+      { label: 'Elle a augmenté de 30 %', value: 'elle a augmenté' },
+      { label: 'Elle a diminué de 30 %', value: 'elle a diminué de 30 %' },
+      { label: 'Elle n\'a pas changé', value: 'elle n\'a pas changé' },
+      { label: 'Elle a doublé', value: 'elle a doublé' }
+    ],
+    correctAnswer: 'elle a diminué de 30 %', points: 1, orderIndex: 61, tags: ['transport', 'urbanisme']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Le bénévolat chez les jeunes',
+    passage: 'Une étude récente montre que de plus en plus de jeunes Français s\'engagent dans des activités bénévoles. Les associations humanitaires, environnementales et sportives sont les plus populaires. Les motivations sont variées : aider les autres, acquérir de l\'expérience professionnelle, ou simplement rencontrer des gens. Cependant, beaucoup de jeunes disent qu\'ils aimeraient faire plus de bénévolat mais qu\'ils manquent de temps à cause de leurs études ou de leur travail.',
+    questionText: 'Quel est le principal obstacle au bénévolat chez les jeunes ?',
+    options: [
+      { label: 'Le manque d\'intérêt', value: 'le manque d\'intérêt' },
+      { label: 'Le manque de temps', value: 'le manque de temps' },
+      { label: 'Le manque d\'argent', value: 'le manque d\'argent' },
+      { label: 'Le manque d\'associations', value: 'le manque d\'associations' }
+    ],
+    correctAnswer: 'le manque de temps', points: 1, orderIndex: 62, tags: ['société', 'jeunesse']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Le bénévolat chez les jeunes',
+    passage: 'Une étude récente montre que de plus en plus de jeunes Français s\'engagent dans des activités bénévoles. Les associations humanitaires, environnementales et sportives sont les plus populaires. Les motivations sont variées : aider les autres, acquérir de l\'expérience professionnelle, ou simplement rencontrer des gens.',
+    questionText: 'Quels types d\'associations attirent le plus les jeunes ?',
+    options: [
+      { label: 'Politiques et religieuses', value: 'politiques et religieuses' },
+      { label: 'Humanitaires, environnementales et sportives', value: 'humanitaires, environnementales et sportives' },
+      { label: 'Culturelles et artistiques', value: 'culturelles et artistiques' },
+      { label: 'Financières et commerciales', value: 'financières et commerciales' }
+    ],
+    correctAnswer: 'humanitaires, environnementales et sportives', points: 1, orderIndex: 63, tags: ['société', 'jeunesse']
+  },
+
+  // ---- B2 — Intermédiaire supérieur (7 questions) ----
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La déconnexion numérique',
+    passage: 'Face à l\'omniprésence des écrans dans notre quotidien, un nombre croissant de personnes choisissent de pratiquer la « déconnexion numérique ». Cette tendance consiste à s\'éloigner volontairement des appareils connectés pendant une période déterminée. Des études en psychologie ont montré que l\'utilisation excessive des réseaux sociaux peut entraîner des troubles de l\'anxiété, une baisse de l\'estime de soi et des difficultés de concentration. Certaines entreprises françaises ont d\'ailleurs instauré un « droit à la déconnexion » pour leurs employés, leur interdisant d\'envoyer ou de recevoir des courriels professionnels en dehors des heures de travail.',
+    questionText: 'Qu\'est-ce que le « droit à la déconnexion » permet aux employés ?',
+    options: [
+      { label: 'De travailler uniquement de chez eux', value: 'travailler de chez eux' },
+      { label: 'De ne pas être contactés par courriel en dehors des heures de travail', value: 'ne pas être contactés en dehors des heures de travail' },
+      { label: 'D\'utiliser les réseaux sociaux au bureau', value: 'utiliser les réseaux sociaux au bureau' },
+      { label: 'De choisir leurs horaires de travail', value: 'choisir leurs horaires' }
+    ],
+    correctAnswer: 'ne pas être contactés en dehors des heures de travail', points: 2, orderIndex: 64, tags: ['technologie', 'travail']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La déconnexion numérique',
+    passage: 'Face à l\'omniprésence des écrans dans notre quotidien, un nombre croissant de personnes choisissent de pratiquer la « déconnexion numérique ». Cette tendance consiste à s\'éloigner volontairement des appareils connectés pendant une période déterminée. Des études en psychologie ont montré que l\'utilisation excessive des réseaux sociaux peut entraîner des troubles de l\'anxiété, une baisse de l\'estime de soi et des difficultés de concentration.',
+    questionText: 'Quels effets négatifs des réseaux sociaux sont mentionnés ?',
+    options: [
+      { label: 'Perte de poids et insomnie', value: 'perte de poids et insomnie' },
+      { label: 'Anxiété, baisse de l\'estime de soi et difficultés de concentration', value: 'anxiété, estime de soi, concentration' },
+      { label: 'Problèmes de vue et maux de dos', value: 'problèmes de vue et maux de dos' },
+      { label: 'Isolement social et dépression', value: 'isolement et dépression' }
+    ],
+    correctAnswer: 'anxiété, estime de soi, concentration', points: 2, orderIndex: 65, tags: ['technologie', 'santé']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Le patrimoine industriel',
+    passage: 'La reconversion des sites industriels abandonnés en espaces culturels est devenue un phénomène majeur dans de nombreuses villes européennes. D\'anciennes usines sont transformées en musées, galeries d\'art ou salles de spectacle. Ce mouvement répond à un double objectif : préserver la mémoire ouvrière et revitaliser des quartiers en déclin. Le Lieu Unique à Nantes, installé dans une ancienne biscuiterie, illustre parfaitement cette tendance. Toutefois, certains critiques dénoncent un processus de gentrification qui chasse les habitants les plus modestes de ces quartiers rénovés.',
+    questionText: 'Quelle critique est formulée contre la reconversion des sites industriels ?',
+    options: [
+      { label: 'Les bâtiments sont trop vieux', value: 'bâtiments trop vieux' },
+      { label: 'Elle entraîne une gentrification qui déplace les habitants modestes', value: 'gentrification et déplacement des habitants' },
+      { label: 'Les musées ne sont pas rentables', value: 'musées pas rentables' },
+      { label: 'Les ouvriers perdent leur emploi', value: 'ouvriers perdent leur emploi' }
+    ],
+    correctAnswer: 'gentrification et déplacement des habitants', points: 2, orderIndex: 66, tags: ['urbanisme', 'culture']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Le patrimoine industriel',
+    passage: 'La reconversion des sites industriels abandonnés en espaces culturels est devenue un phénomène majeur dans de nombreuses villes européennes. D\'anciennes usines sont transformées en musées, galeries d\'art ou salles de spectacle. Ce mouvement répond à un double objectif : préserver la mémoire ouvrière et revitaliser des quartiers en déclin. Le Lieu Unique à Nantes, installé dans une ancienne biscuiterie, illustre parfaitement cette tendance.',
+    questionText: 'Quels sont les deux objectifs de la reconversion des sites industriels ?',
+    options: [
+      { label: 'Créer des emplois et attirer des touristes', value: 'emplois et touristes' },
+      { label: 'Préserver la mémoire ouvrière et revitaliser les quartiers', value: 'préserver la mémoire et revitaliser les quartiers' },
+      { label: 'Construire des logements et des bureaux', value: 'logements et bureaux' },
+      { label: 'Protéger l\'environnement et réduire la pollution', value: 'environnement et pollution' }
+    ],
+    correctAnswer: 'préserver la mémoire et revitaliser les quartiers', points: 2, orderIndex: 67, tags: ['urbanisme', 'société']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'éducation bilingue',
+    passage: 'Les recherches en neurolinguistique ont démontré que le bilinguisme offre des avantages cognitifs significatifs au-delà de la simple maîtrise de deux langues. Les personnes bilingues font preuve d\'une meilleure flexibilité mentale, d\'une capacité accrue de résolution de problèmes et d\'une plus grande résistance au déclin cognitif lié à l\'âge. Cependant, les programmes d\'éducation bilingue restent controversés dans certains pays. Les opposants craignent que l\'apprentissage simultané de deux langues ne retarde le développement linguistique de l\'enfant, bien que cette hypothèse ait été largement réfutée par la recherche scientifique.',
+    questionText: 'Selon la recherche, que se passe-t-il quand un enfant apprend deux langues simultanément ?',
+    options: [
+      { label: 'Son développement linguistique est retardé', value: 'développement retardé' },
+      { label: 'Il développe des avantages cognitifs, contrairement aux craintes', value: 'avantages cognitifs, craintes réfutées' },
+      { label: 'Il oublie sa langue maternelle', value: 'oublie la langue maternelle' },
+      { label: 'Il a des difficultés scolaires', value: 'difficultés scolaires' }
+    ],
+    correctAnswer: 'avantages cognitifs, craintes réfutées', points: 2, orderIndex: 68, tags: ['éducation', 'linguistique']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Le commerce équitable',
+    passage: 'Le commerce équitable vise à garantir une rémunération juste aux producteurs des pays en développement tout en promouvant des pratiques durables. En France, le marché du commerce équitable a connu une croissance annuelle de 22 % ces dernières années, le café et le chocolat restant les produits les plus vendus. Pourtant, des voix critiques s\'élèvent. Certains économistes soutiennent que le système crée des distorsions de marché et que seule une faible proportion du prix final revient effectivement aux producteurs. D\'autres estiment que le label « équitable » est devenu un outil marketing plus qu\'un véritable engagement éthique.',
+    questionText: 'Quelle critique les économistes formulent-ils contre le commerce équitable ?',
+    options: [
+      { label: 'Les produits sont de mauvaise qualité', value: 'mauvaise qualité' },
+      { label: 'Il crée des distorsions de marché et peu de profit revient aux producteurs', value: 'distorsions de marché et faible retour aux producteurs' },
+      { label: 'Il est trop cher pour les consommateurs', value: 'trop cher' },
+      { label: 'Il ne concerne pas assez de pays', value: 'pas assez de pays' }
+    ],
+    correctAnswer: 'distorsions de marché et faible retour aux producteurs', points: 2, orderIndex: 69, tags: ['économie', 'éthique']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Le commerce équitable',
+    passage: 'Le commerce équitable vise à garantir une rémunération juste aux producteurs des pays en développement tout en promouvant des pratiques durables. En France, le marché du commerce équitable a connu une croissance annuelle de 22 % ces dernières années, le café et le chocolat restant les produits les plus vendus.',
+    questionText: 'Quels sont les deux produits équitables les plus vendus en France ?',
+    options: [
+      { label: 'Le thé et le sucre', value: 'le thé et le sucre' },
+      { label: 'Le café et le chocolat', value: 'le café et le chocolat' },
+      { label: 'Les bananes et le riz', value: 'les bananes et le riz' },
+      { label: 'Le coton et le cacao', value: 'le coton et le cacao' }
+    ],
+    correctAnswer: 'le café et le chocolat', points: 2, orderIndex: 70, tags: ['économie', 'consommation']
+  },
+
+  // ---- C1 — Avancé (6 questions) ----
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La mémoire collective',
+    passage: 'Le sociologue Maurice Halbwachs a développé le concept de « mémoire collective » pour désigner la manière dont les groupes sociaux construisent et entretiennent un souvenir partagé du passé. Selon Halbwachs, la mémoire individuelle est toujours socialement encadrée : nous nous souvenons en fonction des cadres fournis par nos appartenances familiales, religieuses et nationales. Cette théorie a profondément influencé les études sur la commémoration et le rapport des sociétés à leur histoire. Pierre Nora a prolongé cette réflexion avec son concept de « lieux de mémoire », montrant comment certains espaces, symboles et rituels cristallisent l\'identité nationale.',
+    questionText: 'Quelle est la thèse centrale de Halbwachs sur la mémoire ?',
+    options: [
+      { label: 'La mémoire est purement biologique', value: 'mémoire biologique' },
+      { label: 'La mémoire individuelle est toujours socialement encadrée', value: 'mémoire socialement encadrée' },
+      { label: 'Les sociétés n\'ont pas de mémoire', value: 'pas de mémoire' },
+      { label: 'La mémoire collective est identique à l\'histoire officielle', value: 'identique à l\'histoire officielle' }
+    ],
+    correctAnswer: 'mémoire socialement encadrée', points: 2, orderIndex: 71, tags: ['sociologie', 'philosophie']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La mémoire collective',
+    passage: 'Pierre Nora a prolongé cette réflexion avec son concept de « lieux de mémoire », montrant comment certains espaces, symboles et rituels cristallisent l\'identité nationale. Le sociologue Maurice Halbwachs a développé le concept de « mémoire collective » pour désigner la manière dont les groupes sociaux construisent et entretiennent un souvenir partagé du passé.',
+    questionText: 'Que sont les « lieux de mémoire » selon Pierre Nora ?',
+    options: [
+      { label: 'Des bibliothèques et des archives', value: 'bibliothèques et archives' },
+      { label: 'Des espaces, symboles et rituels qui cristallisent l\'identité nationale', value: 'espaces, symboles et rituels identitaires' },
+      { label: 'Des monuments historiques classés', value: 'monuments classés' },
+      { label: 'Des musées nationaux', value: 'musées nationaux' }
+    ],
+    correctAnswer: 'espaces, symboles et rituels identitaires', points: 2, orderIndex: 72, tags: ['sociologie', 'histoire']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'obsolescence programmée',
+    passage: 'L\'obsolescence programmée désigne la stratégie par laquelle un fabricant conçoit délibérément un produit dont la durée de vie est limitée afin de stimuler le renouvellement des achats. Ce phénomène, documenté dès les années 1930 avec le cartel Phoebus qui limita volontairement la durée de vie des ampoules électriques, suscite aujourd\'hui un débat d\'une acuité particulière dans le contexte de la crise environnementale. La France est devenue en 2015 le premier pays au monde à criminaliser l\'obsolescence programmée, la rendant passible de deux ans d\'emprisonnement et de 300 000 euros d\'amende. Néanmoins, les poursuites judiciaires restent rares en raison de la difficulté à prouver l\'intention délibérée du fabricant.',
+    questionText: 'Pourquoi les poursuites judiciaires contre l\'obsolescence programmée sont-elles rares en France ?',
+    options: [
+      { label: 'La loi n\'existe pas encore', value: 'loi inexistante' },
+      { label: 'Il est difficile de prouver l\'intention délibérée du fabricant', value: 'difficulté de prouver l\'intention' },
+      { label: 'Les amendes sont trop faibles', value: 'amendes trop faibles' },
+      { label: 'Les consommateurs ne portent pas plainte', value: 'pas de plaintes' }
+    ],
+    correctAnswer: 'difficulté de prouver l\'intention', points: 2, orderIndex: 73, tags: ['économie', 'droit']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'obsolescence programmée',
+    passage: 'L\'obsolescence programmée désigne la stratégie par laquelle un fabricant conçoit délibérément un produit dont la durée de vie est limitée afin de stimuler le renouvellement des achats. Ce phénomène, documenté dès les années 1930 avec le cartel Phoebus qui limita volontairement la durée de vie des ampoules électriques, suscite aujourd\'hui un débat d\'une acuité particulière dans le contexte de la crise environnementale.',
+    questionText: 'Quel exemple historique d\'obsolescence programmée est cité ?',
+    options: [
+      { label: 'Les premiers téléphones portables', value: 'téléphones portables' },
+      { label: 'Le cartel Phoebus et les ampoules électriques', value: 'cartel Phoebus et ampoules' },
+      { label: 'Les automobiles Ford', value: 'automobiles Ford' },
+      { label: 'Les premiers ordinateurs IBM', value: 'ordinateurs IBM' }
+    ],
+    correctAnswer: 'cartel Phoebus et ampoules', points: 2, orderIndex: 74, tags: ['histoire', 'économie']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Le paradoxe de la tolérance',
+    passage: 'Karl Popper a formulé le « paradoxe de la tolérance » dans La Société ouverte et ses ennemis en 1945 : une société infiniment tolérante sera inévitablement détruite par les intolérants si elle ne se réserve pas le droit de limiter la tolérance envers ceux qui prônent l\'intolérance. Ce paradoxe a acquis une pertinence renouvelée dans les débats contemporains sur la liberté d\'expression, la modération des contenus en ligne et la montée des mouvements extrémistes. Les philosophes politiques continuent de débattre sur les critères qui devraient déterminer où tracer la frontière entre expression protégée et discours intolérable.',
+    questionText: 'En quoi consiste le paradoxe de la tolérance selon Popper ?',
+    options: [
+      { label: 'La tolérance mène toujours à la paix', value: 'tolérance mène à la paix' },
+      { label: 'Une tolérance illimitée permet aux intolérants de détruire la société ouverte', value: 'tolérance illimitée détruit la société ouverte' },
+      { label: 'L\'intolérance est toujours justifiable', value: 'intolérance justifiable' },
+      { label: 'La tolérance et l\'intolérance sont identiques', value: 'identiques' }
+    ],
+    correctAnswer: 'tolérance illimitée détruit la société ouverte', points: 2, orderIndex: 75, tags: ['philosophie', 'politique']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La neuroplasticité',
+    passage: 'Pendant longtemps, la neuroscience a considéré le cerveau adulte comme un organe essentiellement figé, incapable de changements structurels significatifs après l\'enfance. La découverte de la neuroplasticité a bouleversé ce paradigme en démontrant que le cerveau conserve la capacité de se réorganiser tout au long de la vie en formant de nouvelles connexions synaptiques. Cette propriété a des implications thérapeutiques considérables : la rééducation après un accident vasculaire cérébral, le traitement de certains troubles psychiatriques et même l\'apprentissage de nouvelles compétences à un âge avancé reposent sur cette capacité d\'adaptation neuronale.',
+    questionText: 'Qu\'est-ce que la neuroplasticité a remis en question ?',
+    options: [
+      { label: 'L\'existence des neurones', value: 'existence des neurones' },
+      { label: 'L\'idée que le cerveau adulte est figé et incapable de changements structurels', value: 'cerveau adulte figé' },
+      { label: 'L\'importance de l\'enfance pour le développement', value: 'importance de l\'enfance' },
+      { label: 'La fonction de la mémoire à court terme', value: 'mémoire à court terme' }
+    ],
+    correctAnswer: 'cerveau adulte figé', points: 2, orderIndex: 76, tags: ['science', 'neurosciences']
+  },
+
+  // ---- C2 — Maîtrise (6 questions) ----
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'absurde chez Camus',
+    passage: 'Dans Le Mythe de Sisyphe, Albert Camus définit l\'absurde comme la confrontation entre l\'appel humain vers le sens et le silence déraisonnable du monde. L\'absurde naît précisément de ce divorce entre l\'homme qui interroge et l\'univers qui ne répond pas. Contrairement à une lecture superficielle qui associerait l\'absurde au nihilisme, Camus y voit une invitation à vivre pleinement : c\'est justement parce que la vie n\'a pas de sens transcendant qu\'il faut l\'embrasser dans toute son immanence. La célèbre conclusion — « il faut imaginer Sisyphe heureux » — résume cette éthique de la révolte joyeuse face à la condition humaine.',
+    questionText: 'Comment Camus distingue-t-il l\'absurde du nihilisme ?',
+    options: [
+      { label: 'Il ne les distingue pas, ce sont des synonymes', value: 'synonymes' },
+      { label: 'L\'absurde invite à vivre pleinement plutôt qu\'à renoncer au sens', value: 'vivre pleinement plutôt que renoncer' },
+      { label: 'Le nihilisme est plus optimiste que l\'absurde', value: 'nihilisme plus optimiste' },
+      { label: 'L\'absurde concerne uniquement la religion', value: 'concerne la religion' }
+    ],
+    correctAnswer: 'vivre pleinement plutôt que renoncer', points: 2, orderIndex: 77, tags: ['littérature', 'philosophie']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'absurde chez Camus',
+    passage: 'Dans Le Mythe de Sisyphe, Albert Camus définit l\'absurde comme la confrontation entre l\'appel humain vers le sens et le silence déraisonnable du monde. L\'absurde naît précisément de ce divorce entre l\'homme qui interroge et l\'univers qui ne répond pas. La célèbre conclusion — « il faut imaginer Sisyphe heureux » — résume cette éthique de la révolte joyeuse face à la condition humaine.',
+    questionText: 'Que signifie « il faut imaginer Sisyphe heureux » dans la pensée de Camus ?',
+    options: [
+      { label: 'Le travail répétitif rend heureux', value: 'travail répétitif' },
+      { label: 'On peut trouver la joie dans l\'acceptation lucide d\'une condition sans sens transcendant', value: 'joie dans l\'acceptation lucide' },
+      { label: 'Sisyphe a réussi à échapper à sa punition', value: 'échapper à la punition' },
+      { label: 'Le bonheur est une illusion', value: 'bonheur illusion' }
+    ],
+    correctAnswer: 'joie dans l\'acceptation lucide', points: 2, orderIndex: 78, tags: ['littérature', 'philosophie']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La déconstruction derridienne',
+    passage: 'Jacques Derrida a élaboré la déconstruction non pas comme une méthode d\'analyse textuelle mais comme une mise en évidence des hiérarchies implicites qui structurent la pensée occidentale. Toute opposition binaire — nature/culture, parole/écriture, présence/absence — dissimule selon Derrida une valorisation du premier terme au détriment du second. La déconstruction consiste à montrer que cette hiérarchie n\'est ni naturelle ni inévitable, puis à explorer les conséquences de son renversement. Le concept de « différance », néologisme combinant différence et report, illustre l\'impossibilité d\'un sens fixe et définitif : la signification est toujours en mouvement, toujours différée.',
+    questionText: 'Que révèle la déconstruction à propos des oppositions binaires ?',
+    options: [
+      { label: 'Elles sont naturelles et universelles', value: 'naturelles et universelles' },
+      { label: 'Elles dissimulent une hiérarchie implicite qui n\'est ni naturelle ni inévitable', value: 'hiérarchie implicite non naturelle' },
+      { label: 'Elles sont inutiles à la pensée', value: 'inutiles' },
+      { label: 'Elles sont le fondement de toute vérité', value: 'fondement de la vérité' }
+    ],
+    correctAnswer: 'hiérarchie implicite non naturelle', points: 2, orderIndex: 79, tags: ['philosophie', 'linguistique']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La déconstruction derridienne',
+    passage: 'Le concept de « différance », néologisme combinant différence et report, illustre l\'impossibilité d\'un sens fixe et définitif : la signification est toujours en mouvement, toujours différée. Jacques Derrida a élaboré la déconstruction non pas comme une méthode d\'analyse textuelle mais comme une mise en évidence des hiérarchies implicites qui structurent la pensée occidentale.',
+    questionText: 'Que signifie le néologisme « différance » chez Derrida ?',
+    options: [
+      { label: 'Une simple faute d\'orthographe de « différence »', value: 'faute d\'orthographe' },
+      { label: 'Un concept combinant différence et report, montrant que le sens est toujours différé', value: 'différence et report, sens différé' },
+      { label: 'Un synonyme de « contradiction »', value: 'synonyme de contradiction' },
+      { label: 'Une catégorie grammaticale', value: 'catégorie grammaticale' }
+    ],
+    correctAnswer: 'différence et report, sens différé', points: 2, orderIndex: 80, tags: ['philosophie', 'linguistique']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'anthropocène et ses critiques',
+    passage: 'La notion d\'anthropocène, proposée par le chimiste Paul Crutzen en 2000, désigne une nouvelle ère géologique dans laquelle l\'activité humaine est devenue la force dominante façonnant le système terrestre. Si le concept a été largement adopté dans les discours environnementaux, il fait l\'objet de critiques épistémologiques et politiques. Certains chercheurs lui reprochent de présenter « l\'humanité » comme un agent homogène, occultant les responsabilités différenciées entre pays industrialisés et pays du Sud. Des alternatives ont été proposées, comme le « capitalocène » de Jason Moore, qui situe la cause première de la crise écologique non dans l\'espèce humaine en soi mais dans les rapports de production capitalistes.',
+    questionText: 'Pourquoi certains chercheurs critiquent-ils le terme « anthropocène » ?',
+    options: [
+      { label: 'Il n\'est pas scientifiquement fondé', value: 'pas fondé scientifiquement' },
+      { label: 'Il présente l\'humanité comme un agent homogène en occultant les responsabilités différenciées', value: 'humanité homogène, responsabilités occultées' },
+      { label: 'Il est trop récent pour être validé', value: 'trop récent' },
+      { label: 'Il ne concerne que les pays du Sud', value: 'seulement les pays du Sud' }
+    ],
+    correctAnswer: 'humanité homogène, responsabilités occultées', points: 2, orderIndex: 81, tags: ['environnement', 'philosophie']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'anthropocène et ses critiques',
+    passage: 'Des alternatives ont été proposées, comme le « capitalocène » de Jason Moore, qui situe la cause première de la crise écologique non dans l\'espèce humaine en soi mais dans les rapports de production capitalistes. La notion d\'anthropocène, proposée par le chimiste Paul Crutzen en 2000, désigne une nouvelle ère géologique dans laquelle l\'activité humaine est devenue la force dominante façonnant le système terrestre.',
+    questionText: 'Que propose le concept de « capitalocène » de Jason Moore ?',
+    options: [
+      { label: 'Que le capitalisme est la seule solution à la crise écologique', value: 'capitalisme solution' },
+      { label: 'Que la crise écologique est causée par les rapports de production capitalistes, non par l\'humanité en soi', value: 'rapports capitalistes, pas l\'humanité en soi' },
+      { label: 'Que l\'ère géologique actuelle est terminée', value: 'ère terminée' },
+      { label: 'Que seuls les pays capitalistes sont responsables', value: 'seuls les pays capitalistes' }
+    ],
+    correctAnswer: 'rapports capitalistes, pas l\'humanité en soi', points: 2, orderIndex: 82, tags: ['environnement', 'économie']
   }
 ]

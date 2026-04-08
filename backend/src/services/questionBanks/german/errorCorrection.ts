@@ -92,4 +92,156 @@ export const germanErrorCorrectionQuestions: MultiSkillQuestionData[] = [
     correctAnswer: 'Die Forschung, zusammen mit ihren Ergebnissen, hat große Aufmerksamkeit erregt.',
     points: 1, orderIndex: 10, tags: ['Subjekt-Verb-Kongruenz', 'Einschub']
   },
+
+  // ============================================================
+  // NEUE FRAGEN — 20 weitere (orderIndex 11-30)
+  // ============================================================
+
+  // A2 (5 Fragen)
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Ich bin einverstanden mit du.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Ich bin einverstanden mit dir.',
+    points: 1, orderIndex: 11, tags: ['Dativ', 'Pronomen']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Es gibt viele Leute in den Park.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Es gibt viele Leute in dem Park.|Es gibt viele Leute im Park.',
+    points: 1, orderIndex: 12, tags: ['Dativ', 'Präposition in']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Sie kann gut zu schwimmen.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Sie kann gut schwimmen.',
+    points: 1, orderIndex: 13, tags: ['Modalverben', 'Infinitiv']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Ich habe letztes Jahr Paris besuchen.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Ich habe letztes Jahr Paris besucht.',
+    points: 1, orderIndex: 14, tags: ['Perfekt', 'Partizip II']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Er immer kommt zu spät zum Unterricht.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Er kommt immer zu spät zum Unterricht.',
+    points: 1, orderIndex: 15, tags: ['Wortstellung', 'Adverb']
+  },
+
+  // B1 (5 Fragen)
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Ich freue mich auf dich zu sehen.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Ich freue mich darauf, dich zu sehen.|Ich freue mich, dich zu sehen.',
+    points: 1, orderIndex: 16, tags: ['sich freuen auf', 'Infinitivsatz']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Er hat mir gesagt, dass er morgen kommt.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Er hat mir gesagt, dass er am nächsten Tag kommen werde.|Er sagte mir, dass er am nächsten Tag kommen werde.',
+    points: 1, orderIndex: 17, tags: ['indirekte Rede', 'Konjunktiv I']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Obwohl es regnete, aber wir sind spazieren gegangen.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Obwohl es regnete, sind wir spazieren gegangen.|Es regnete, aber wir sind spazieren gegangen.',
+    points: 1, orderIndex: 18, tags: ['Konjunktionen', 'obwohl/aber']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Das ist das Buch, dass ich gelesen habe.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Das ist das Buch, das ich gelesen habe.',
+    points: 1, orderIndex: 19, tags: ['Relativpronomen', 'dass/das']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Sie hat mich gefragt, ob ich kann ihr helfen.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Sie hat mich gefragt, ob ich ihr helfen kann.',
+    points: 1, orderIndex: 20, tags: ['Wortstellung', 'Nebensatz']
+  },
+
+  // B2 (5 Fragen)
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Er hat geleugnet, das Geld zu gestohlen haben.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Er hat geleugnet, das Geld gestohlen zu haben.',
+    points: 1, orderIndex: 21, tags: ['Infinitivsatz', 'Wortstellung']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Je mehr du übst, du wirst besser.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Je mehr du übst, desto besser wirst du.|Je mehr du übst, umso besser wirst du.',
+    points: 1, orderIndex: 22, tags: ['je...desto', 'Komparativ']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Ich wünsche, ich kann fließend Französisch sprechen.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Ich wünschte, ich könnte fließend Französisch sprechen.',
+    points: 1, orderIndex: 23, tags: ['Konjunktiv II', 'Wunsch']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Sie ist eine der nettesten Person, die ich je getroffen habe.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Sie ist eine der nettesten Personen, die ich je getroffen habe.',
+    points: 1, orderIndex: 24, tags: ['Plural', 'Superlativ']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Trotz er müde war, hat er weitergearbeitet.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Obwohl er müde war, hat er weitergearbeitet.|Trotz seiner Müdigkeit hat er weitergearbeitet.',
+    points: 1, orderIndex: 25, tags: ['trotz', 'Konjunktion']
+  },
+
+  // C1 (5 Fragen)
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Kaum er war angekommen, begann die Besprechung.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Kaum war er angekommen, begann die Besprechung.',
+    points: 1, orderIndex: 26, tags: ['Inversion', 'kaum']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Die Mehrheit der Studenten denkt, dass die Prüfung leicht war.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Die Mehrheit der Studenten denkt, dass die Prüfung leicht gewesen sei.',
+    points: 1, orderIndex: 27, tags: ['Konjunktiv I', 'indirekte Rede']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Ohne seine Hilfe, hätte ich die Prüfung nicht bestanden gehabt.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Ohne seine Hilfe hätte ich die Prüfung nicht bestanden.',
+    points: 1, orderIndex: 28, tags: ['Konjunktiv II', 'Plusquamperfekt']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Die Anzahl der Studenten, die sich dieses Jahr eingeschrieben hat, ist gestiegen.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Die Anzahl der Studenten, die sich dieses Jahr eingeschrieben haben, ist gestiegen.',
+    points: 1, orderIndex: 29, tags: ['Subjekt-Verb-Kongruenz', 'Relativsatz']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Es ist unerlässlich, dass jeder Mitarbeiter seinen Bericht bis Freitag einreicht.',
+    questionText: 'Finden und korrigieren Sie den Fehler in diesem Satz.',
+    correctAnswer: 'Es ist unerlässlich, dass jeder Mitarbeiter seinen Bericht bis Freitag einreiche.',
+    points: 1, orderIndex: 30, tags: ['Konjunktiv I', 'Forderung']
+  },
 ]

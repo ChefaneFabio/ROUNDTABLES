@@ -1,6 +1,6 @@
 import { MultiSkillQuestionData } from '../types'
 
-// Italian Reading Questions — ~7 per CEFR level (42 total)
+// Italian Reading Questions — ~7 per CEFR level (~82 total)
 // Types: READING, MULTIPLE_CHOICE, FILL_BLANK with passages
 
 export const italianReadingQuestions: MultiSkillQuestionData[] = [
@@ -438,5 +438,423 @@ export const italianReadingQuestions: MultiSkillQuestionData[] = [
     passage: 'Il popolo Kuuk Thaayorre utilizza le direzioni cardinali anziché termini spaziali egocentrici.',
     questionText: 'I Kuuk Thaayorre usano le direzioni ___ anziché termini spaziali egocentrici.',
     correctAnswer: 'cardinali', points: 3, orderIndex: 42, tags: ['linguistica']
+  },
+
+  // ============================================================
+  // NEW QUESTIONS (43–82) — ~7 per level
+  // ============================================================
+
+  // A1 — Menu, cartelli, descrizioni semplici (43–49)
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Menu del Bar',
+    passage: 'BAR CENTRALE — MENU\nCaffè espresso: 1,20 €\nCappuccino: 1,80 €\nCornetto: 1,50 €\nSucco d\'arancia: 2,00 €\nPanino al prosciutto: 3,50 €\nAcqua minerale: 1,00 €',
+    questionText: 'Quanto costa un cappuccino?',
+    options: [{ label: '1,20 €', value: '1,20 €' }, { label: '1,50 €', value: '1,50 €' }, { label: '1,80 €', value: '1,80 €' }, { label: '2,00 €', value: '2,00 €' }],
+    correctAnswer: '1,80 €', points: 1, orderIndex: 43, tags: ['menu', 'prezzi']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Menu del Bar',
+    passage: 'BAR CENTRALE — MENU\nCaffè espresso: 1,20 €\nCappuccino: 1,80 €\nCornetto: 1,50 €\nSucco d\'arancia: 2,00 €\nPanino al prosciutto: 3,50 €\nAcqua minerale: 1,00 €',
+    questionText: 'Quale è la cosa più costosa nel menu?',
+    options: [{ label: 'Cappuccino', value: 'cappuccino' }, { label: 'Succo d\'arancia', value: 'succo d\'arancia' }, { label: 'Panino al prosciutto', value: 'panino al prosciutto' }, { label: 'Cornetto', value: 'cornetto' }],
+    correctAnswer: 'panino al prosciutto', points: 1, orderIndex: 44, tags: ['menu', 'comprensione']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Cartello in un negozio',
+    passage: 'ORARIO DI APERTURA\nLunedì - Venerdì: 9:00 - 19:30\nSabato: 9:00 - 13:00\nDomenica: CHIUSO\nPer informazioni: 06-12345678',
+    questionText: 'Quando è chiuso il negozio?',
+    options: [{ label: 'Lunedì', value: 'lunedì' }, { label: 'Sabato', value: 'sabato' }, { label: 'Domenica', value: 'domenica' }, { label: 'Venerdì', value: 'venerdì' }],
+    correctAnswer: 'domenica', points: 1, orderIndex: 45, tags: ['cartelli', 'orari']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Cartello in un negozio',
+    passage: 'ORARIO DI APERTURA\nLunedì - Venerdì: 9:00 - 19:30\nSabato: 9:00 - 13:00\nDomenica: CHIUSO\nPer informazioni: 06-12345678',
+    questionText: 'A che ora chiude il negozio il sabato?',
+    options: [{ label: '9:00', value: '9:00' }, { label: '13:00', value: '13:00' }, { label: '19:30', value: '19:30' }, { label: '18:00', value: '18:00' }],
+    correctAnswer: '13:00', points: 1, orderIndex: 46, tags: ['cartelli', 'orari']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il mio amico',
+    passage: 'Il mio amico si chiama Luca. Ha dodici anni. È alto e ha i capelli neri. Gli piace giocare a basket. Ha un cane che si chiama Rex. Luca è molto simpatico.',
+    questionText: 'Come si chiama il cane di Luca?',
+    options: [{ label: 'Max', value: 'Max' }, { label: 'Rex', value: 'Rex' }, { label: 'Fido', value: 'Fido' }, { label: 'Bobby', value: 'Bobby' }],
+    correctAnswer: 'Rex', points: 1, orderIndex: 47, tags: ['descrizione', 'animali']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Il mio amico si chiama Luca. Ha dodici anni. È alto e ha i capelli neri. Gli piace giocare a basket.',
+    questionText: 'A Luca piace giocare a ___.',
+    correctAnswer: 'basket', points: 1, orderIndex: 48, tags: ['sport']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il mio amico',
+    passage: 'Il mio amico si chiama Luca. Ha dodici anni. È alto e ha i capelli neri. Gli piace giocare a basket. Ha un cane che si chiama Rex. Luca è molto simpatico.',
+    questionText: 'Quanti anni ha Luca?',
+    options: [{ label: '10', value: '10' }, { label: '11', value: '11' }, { label: '12', value: '12' }, { label: '13', value: '13' }],
+    correctAnswer: '12', points: 1, orderIndex: 49, tags: ['descrizione', 'numeri']
+  },
+
+  // A2 — Email, annunci, descrizioni più lunghe (50–55)
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Annuncio di lavoro',
+    passage: 'CERCASI CAMERIERE/A\nRistorante "Il Giardino" cerca cameriere/a part-time. Orario: venerdì, sabato e domenica dalle 18:00 alle 23:00. Richiesta esperienza minima di 1 anno. Stipendio: 800 € al mese. Inviare curriculum a: info@ilgiardino.it',
+    questionText: 'Quanti giorni alla settimana bisogna lavorare?',
+    options: [{ label: '2', value: '2' }, { label: '3', value: '3' }, { label: '4', value: '4' }, { label: '5', value: '5' }],
+    correctAnswer: '3', points: 1, orderIndex: 50, tags: ['lavoro', 'annunci']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Annuncio di lavoro',
+    passage: 'CERCASI CAMERIERE/A\nRistorante "Il Giardino" cerca cameriere/a part-time. Orario: venerdì, sabato e domenica dalle 18:00 alle 23:00. Richiesta esperienza minima di 1 anno. Stipendio: 800 € al mese. Inviare curriculum a: info@ilgiardino.it',
+    questionText: 'Quanta esperienza serve per questo lavoro?',
+    options: [{ label: 'Nessuna', value: 'nessuna' }, { label: 'Almeno 1 anno', value: 'almeno 1 anno' }, { label: 'Almeno 2 anni', value: 'almeno 2 anni' }, { label: 'Almeno 5 anni', value: 'almeno 5 anni' }],
+    correctAnswer: 'almeno 1 anno', points: 1, orderIndex: 51, tags: ['lavoro', 'annunci']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il fine settimana di Marco',
+    passage: 'Sabato scorso Marco si è alzato tardi. Ha fatto colazione alle dieci. Poi è andato in centro a fare shopping con la sua ragazza. Hanno comprato dei vestiti nuovi. A pranzo hanno mangiato in un ristorante cinese. Il pomeriggio sono andati al cinema a vedere un film d\'avventura. La sera Marco è rimasto a casa e ha guardato la partita di calcio in TV.',
+    questionText: 'Cosa hanno fatto Marco e la sua ragazza il pomeriggio?',
+    options: [{ label: 'Hanno fatto shopping', value: 'hanno fatto shopping' }, { label: 'Sono andati al cinema', value: 'sono andati al cinema' }, { label: 'Hanno guardato la TV', value: 'hanno guardato la TV' }, { label: 'Hanno mangiato al ristorante', value: 'hanno mangiato al ristorante' }],
+    correctAnswer: 'sono andati al cinema', points: 1, orderIndex: 52, tags: ['tempo libero']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il fine settimana di Marco',
+    passage: 'Sabato scorso Marco si è alzato tardi. Ha fatto colazione alle dieci. Poi è andato in centro a fare shopping con la sua ragazza. Hanno comprato dei vestiti nuovi. A pranzo hanno mangiato in un ristorante cinese. Il pomeriggio sono andati al cinema a vedere un film d\'avventura. La sera Marco è rimasto a casa e ha guardato la partita di calcio in TV.',
+    questionText: 'Dove hanno pranzato?',
+    options: [{ label: 'A casa', value: 'a casa' }, { label: 'In un ristorante italiano', value: 'in un ristorante italiano' }, { label: 'In un ristorante cinese', value: 'in un ristorante cinese' }, { label: 'In pizzeria', value: 'in pizzeria' }],
+    correctAnswer: 'in un ristorante cinese', points: 1, orderIndex: 53, tags: ['tempo libero', 'cibo']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Marco è rimasto a casa e ha guardato la partita di calcio in TV.',
+    questionText: 'La sera Marco ha guardato la partita di ___ in TV.',
+    correctAnswer: 'calcio', points: 1, orderIndex: 54, tags: ['sport']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il fine settimana di Marco',
+    passage: 'Sabato scorso Marco si è alzato tardi. Ha fatto colazione alle dieci. Poi è andato in centro a fare shopping con la sua ragazza. Hanno comprato dei vestiti nuovi.',
+    questionText: 'A che ora ha fatto colazione Marco?',
+    options: [{ label: 'Alle otto', value: 'alle otto' }, { label: 'Alle nove', value: 'alle nove' }, { label: 'Alle dieci', value: 'alle dieci' }, { label: 'Alle undici', value: 'alle undici' }],
+    correctAnswer: 'alle dieci', points: 1, orderIndex: 55, tags: ['routine', 'orario']
+  },
+
+  // B1 — Articoli, storie, opinioni (56–62)
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il volontariato',
+    passage: 'Sempre più giovani italiani scelgono di dedicare parte del loro tempo libero al volontariato. Le attività più comuni includono l\'assistenza agli anziani, la distribuzione di cibo ai senzatetto e la pulizia di parchi e spiagge. Secondo un recente sondaggio, il sessanta per cento dei volontari afferma di sentirsi più soddisfatto della propria vita grazie a questa esperienza. Molti giovani dicono anche che il volontariato li ha aiutati a sviluppare competenze utili per il mondo del lavoro.',
+    questionText: 'Quale percentuale di volontari si sente più soddisfatta?',
+    options: [
+      { label: '40%', value: '40%' },
+      { label: '50%', value: '50%' },
+      { label: '60%', value: '60%' },
+      { label: '70%', value: '70%' }
+    ],
+    correctAnswer: '60%', points: 1, orderIndex: 56, tags: ['società', 'volontariato']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il volontariato',
+    passage: 'Le attività più comuni includono l\'assistenza agli anziani, la distribuzione di cibo ai senzatetto e la pulizia di parchi e spiagge. Molti giovani dicono anche che il volontariato li ha aiutati a sviluppare competenze utili per il mondo del lavoro.',
+    questionText: 'Quale beneficio aggiuntivo del volontariato è menzionato?',
+    options: [
+      { label: 'Guadagnare soldi', value: 'guadagnare soldi' },
+      { label: 'Sviluppare competenze utili per il lavoro', value: 'sviluppare competenze per il lavoro' },
+      { label: 'Viaggiare all\'estero', value: 'viaggiare all\'estero' },
+      { label: 'Ottenere un diploma', value: 'ottenere un diploma' }
+    ],
+    correctAnswer: 'sviluppare competenze per il lavoro', points: 1, orderIndex: 57, tags: ['società', 'lavoro']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La dieta mediterranea',
+    passage: 'La dieta mediterranea è considerata una delle più salutari al mondo. Si basa sul consumo abbondante di frutta, verdura, legumi, cereali integrali e olio d\'oliva. Il pesce viene consumato due o tre volte alla settimana, mentre la carne rossa è limitata. Numerosi studi scientifici hanno dimostrato che questa dieta riduce il rischio di malattie cardiovascolari e diabete di tipo 2. Nel 2010, l\'UNESCO l\'ha riconosciuta come patrimonio culturale immateriale dell\'umanità.',
+    questionText: 'Quanto spesso si mangia pesce nella dieta mediterranea?',
+    options: [
+      { label: 'Ogni giorno', value: 'ogni giorno' },
+      { label: 'Due o tre volte alla settimana', value: 'due o tre volte alla settimana' },
+      { label: 'Una volta al mese', value: 'una volta al mese' },
+      { label: 'Mai', value: 'mai' }
+    ],
+    correctAnswer: 'due o tre volte alla settimana', points: 1, orderIndex: 58, tags: ['salute', 'cibo']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La dieta mediterranea',
+    passage: 'Numerosi studi scientifici hanno dimostrato che questa dieta riduce il rischio di malattie cardiovascolari e diabete di tipo 2. Nel 2010, l\'UNESCO l\'ha riconosciuta come patrimonio culturale immateriale dell\'umanità.',
+    questionText: 'In che anno l\'UNESCO ha riconosciuto la dieta mediterranea?',
+    options: [
+      { label: '2005', value: '2005' },
+      { label: '2008', value: '2008' },
+      { label: '2010', value: '2010' },
+      { label: '2015', value: '2015' }
+    ],
+    correctAnswer: '2010', points: 1, orderIndex: 59, tags: ['cultura', 'storia']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'La dieta mediterranea si basa sul consumo abbondante di frutta, verdura, legumi, cereali integrali e olio d\'oliva.',
+    questionText: 'L\'olio d\' ___ è un elemento fondamentale della dieta mediterranea.',
+    correctAnswer: 'oliva', points: 1, orderIndex: 60, tags: ['cibo']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Lo sport in Italia',
+    passage: 'Il calcio è di gran lunga lo sport più popolare in Italia. Ogni domenica, milioni di italiani guardano le partite di Serie A in televisione o vanno allo stadio. Tuttavia, negli ultimi anni, altri sport come il basket, il tennis e il ciclismo hanno guadagnato sempre più appassionati. Il successo di atleti italiani alle Olimpiadi ha contribuito a questo fenomeno, ispirando molti giovani a praticare sport diversi.',
+    questionText: 'Cosa ha contribuito alla popolarità di altri sport in Italia?',
+    options: [
+      { label: 'La pubblicità in televisione', value: 'la pubblicità' },
+      { label: 'Il successo di atleti italiani alle Olimpiadi', value: 'successo alle Olimpiadi' },
+      { label: 'L\'apertura di nuovi stadi', value: 'nuovi stadi' },
+      { label: 'Il calo di interesse per il calcio', value: 'calo interesse calcio' }
+    ],
+    correctAnswer: 'successo alle Olimpiadi', points: 1, orderIndex: 61, tags: ['sport', 'cultura']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Ogni domenica, milioni di italiani guardano le partite di Serie A in televisione o vanno allo stadio.',
+    questionText: 'Il campionato di calcio italiano più importante si chiama Serie ___.',
+    correctAnswer: 'A', points: 1, orderIndex: 62, tags: ['sport']
+  },
+
+  // B2 — Testi argomentativi, analisi sociale (63–69)
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'I social media e la democrazia',
+    passage: 'I social media hanno radicalmente trasformato il panorama politico contemporaneo. Da un lato, hanno democratizzato l\'accesso all\'informazione, consentendo ai cittadini di partecipare attivamente al dibattito pubblico. Dall\'altro, la diffusione di notizie false e la polarizzazione delle opinioni rappresentano minacce concrete al processo democratico. Diversi studi hanno evidenziato come le piattaforme digitali tendano a creare "bolle informative" in cui gli utenti sono esposti prevalentemente a contenuti che confermano le loro convinzioni preesistenti.',
+    questionText: 'Cosa sono le "bolle informative" secondo il testo?',
+    options: [
+      { label: 'Gruppi di discussione aperti', value: 'gruppi aperti' },
+      { label: 'Ambienti dove si vedono solo contenuti che confermano le proprie idee', value: 'ambienti con contenuti confermanti' },
+      { label: 'Siti web di notizie verificate', value: 'notizie verificate' },
+      { label: 'Forum di esperti', value: 'forum di esperti' }
+    ],
+    correctAnswer: 'ambienti con contenuti confermanti', points: 2, orderIndex: 63, tags: ['tecnologia', 'politica']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'I social media e la democrazia',
+    passage: 'Da un lato, hanno democratizzato l\'accesso all\'informazione, consentendo ai cittadini di partecipare attivamente al dibattito pubblico. Dall\'altro, la diffusione di notizie false e la polarizzazione delle opinioni rappresentano minacce concrete al processo democratico.',
+    questionText: 'Qual è il tono dell\'autore rispetto ai social media?',
+    options: [
+      { label: 'Completamente positivo', value: 'positivo' },
+      { label: 'Completamente negativo', value: 'negativo' },
+      { label: 'Equilibrato, riconosce vantaggi e svantaggi', value: 'equilibrato' },
+      { label: 'Indifferente', value: 'indifferente' }
+    ],
+    correctAnswer: 'equilibrato', points: 2, orderIndex: 64, tags: ['comprensione', 'tono']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il turismo sostenibile',
+    passage: 'Il turismo di massa ha generato conseguenze ambientali e sociali significative in molte destinazioni popolari. Città come Venezia, Barcellona e Dubrovnik hanno sperimentato il fenomeno dell\'"overtourism", con l\'afflusso di visitatori che supera la capacità ricettiva del territorio. Il turismo sostenibile propone un approccio alternativo: viaggiare in modo responsabile, rispettando le comunità locali e minimizzando l\'impatto ambientale. Tra le pratiche consigliate vi sono la scelta di alloggi a gestione locale, il consumo di prodotti del territorio e la visita di destinazioni meno conosciute.',
+    questionText: 'Cosa si intende per "overtourism"?',
+    options: [
+      { label: 'Turismo di lusso', value: 'turismo di lusso' },
+      { label: 'Un numero di visitatori superiore a ciò che il territorio può sopportare', value: 'visitatori superiori alla capacità' },
+      { label: 'Turismo in paesi lontani', value: 'turismo lontano' },
+      { label: 'Turismo organizzato da agenzie', value: 'turismo organizzato' }
+    ],
+    correctAnswer: 'visitatori superiori alla capacità', points: 2, orderIndex: 65, tags: ['turismo', 'ambiente']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il turismo sostenibile',
+    passage: 'Tra le pratiche consigliate vi sono la scelta di alloggi a gestione locale, il consumo di prodotti del territorio e la visita di destinazioni meno conosciute.',
+    questionText: 'Quale pratica NON è menzionata tra quelle del turismo sostenibile?',
+    options: [
+      { label: 'Scegliere alloggi locali', value: 'alloggi locali' },
+      { label: 'Consumare prodotti del territorio', value: 'prodotti locali' },
+      { label: 'Viaggiare in aereo meno possibile', value: 'meno aerei' },
+      { label: 'Visitare destinazioni meno conosciute', value: 'destinazioni meno note' }
+    ],
+    correctAnswer: 'meno aerei', points: 2, orderIndex: 66, tags: ['turismo', 'comprensione']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Città come Venezia, Barcellona e Dubrovnik hanno sperimentato il fenomeno dell\'"overtourism", con l\'afflusso di visitatori che supera la capacità ricettiva del territorio.',
+    questionText: 'L\'afflusso di visitatori supera la capacità ___ del territorio.',
+    correctAnswer: 'ricettiva', points: 2, orderIndex: 67, tags: ['turismo', 'vocabolario']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'invecchiamento della popolazione',
+    passage: 'L\'Italia è uno dei Paesi con il tasso di natalità più basso al mondo. Questo, combinato con l\'aumento dell\'aspettativa di vita, sta creando una popolazione sempre più anziana. Le conseguenze economiche sono significative: il sistema pensionistico è sotto pressione crescente, la forza lavoro si riduce e i costi sanitari aumentano. Alcuni economisti propongono di incentivare l\'immigrazione qualificata come soluzione parziale, mentre altri suggeriscono politiche più incisive a sostegno delle famiglie.',
+    questionText: 'Quale soluzione propongono alcuni economisti?',
+    options: [
+      { label: 'Aumentare l\'età pensionabile', value: 'età pensionabile' },
+      { label: 'Incentivare l\'immigrazione qualificata', value: 'immigrazione qualificata' },
+      { label: 'Ridurre i servizi sanitari', value: 'ridurre sanità' },
+      { label: 'Aumentare le tasse', value: 'aumentare tasse' }
+    ],
+    correctAnswer: 'immigrazione qualificata', points: 2, orderIndex: 68, tags: ['società', 'economia']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'L\'Italia è uno dei Paesi con il tasso di natalità più basso al mondo. Questo, combinato con l\'aumento dell\'aspettativa di vita, sta creando una popolazione sempre più anziana.',
+    questionText: 'L\'aumento dell\'aspettativa di ___ contribuisce all\'invecchiamento della popolazione.',
+    correctAnswer: 'vita', points: 2, orderIndex: 69, tags: ['società']
+  },
+
+  // C1 — Testi accademici, analisi critiche (70–76)
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il paradosso della scelta',
+    passage: 'Lo psicologo Barry Schwartz ha teorizzato che un eccesso di opzioni, anziché aumentare il benessere, genera ansia decisionale e insoddisfazione cronica. In un celebre esperimento, i consumatori esposti a ventiquattro varietà di marmellata acquistarono meno rispetto a quelli che ne avevano solo sei a disposizione. Schwartz distingue tra "massimizzatori" — individui che cercano ossessivamente la scelta ottimale — e "soddisfazionisti" — coloro che si accontentano di un\'opzione sufficientemente buona. I secondi risultano sistematicamente più felici, suggerendo che la razionalità economica e il benessere psicologico non sempre coincidono.',
+    questionText: 'Qual è il "paradosso della scelta" secondo Schwartz?',
+    options: [
+      { label: 'Più opzioni portano a decisioni migliori', value: 'decisioni migliori' },
+      { label: 'Troppe opzioni generano ansia e insoddisfazione', value: 'troppe opzioni generano ansia' },
+      { label: 'Le persone scelgono sempre la stessa cosa', value: 'sempre la stessa cosa' },
+      { label: 'La scelta non influenza la felicità', value: 'nessuna influenza' }
+    ],
+    correctAnswer: 'troppe opzioni generano ansia', points: 2, orderIndex: 70, tags: ['psicologia']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il paradosso della scelta',
+    passage: 'Schwartz distingue tra "massimizzatori" — individui che cercano ossessivamente la scelta ottimale — e "soddisfazionisti" — coloro che si accontentano di un\'opzione sufficientemente buona. I secondi risultano sistematicamente più felici.',
+    questionText: 'Chi è più felice secondo la ricerca di Schwartz?',
+    options: [
+      { label: 'I massimizzatori', value: 'massimizzatori' },
+      { label: 'I soddisfazionisti', value: 'soddisfazionisti' },
+      { label: 'Entrambi allo stesso livello', value: 'entrambi' },
+      { label: 'Nessuno dei due', value: 'nessuno' }
+    ],
+    correctAnswer: 'soddisfazionisti', points: 2, orderIndex: 71, tags: ['psicologia']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La gentrificazione urbana',
+    passage: 'La gentrificazione designa il processo attraverso cui quartieri storicamente popolari vengono progressivamente trasformati dall\'arrivo di residenti più abbienti. Se da un lato questo fenomeno porta alla riqualificazione edilizia e alla riduzione della criminalità, dall\'altro causa lo sfollamento delle comunità originarie, incapaci di sostenere l\'aumento degli affitti. Critici come Neil Smith interpretano la gentrificazione come una forma di "colonialismo urbano", in cui il capitale riplasma lo spazio urbano secondo logiche di profitto, a scapito della diversità sociale e culturale che caratterizzava i quartieri originari.',
+    questionText: 'Come definisce Neil Smith la gentrificazione?',
+    options: [
+      { label: 'Un progresso necessario', value: 'progresso' },
+      { label: 'Una forma di colonialismo urbano', value: 'colonialismo urbano' },
+      { label: 'Un fenomeno naturale', value: 'fenomeno naturale' },
+      { label: 'Una politica governativa', value: 'politica governativa' }
+    ],
+    correctAnswer: 'colonialismo urbano', points: 2, orderIndex: 72, tags: ['urbanistica', 'sociologia']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La gentrificazione urbana',
+    passage: 'Se da un lato questo fenomeno porta alla riqualificazione edilizia e alla riduzione della criminalità, dall\'altro causa lo sfollamento delle comunità originarie, incapaci di sostenere l\'aumento degli affitti.',
+    questionText: 'Quale effetto negativo della gentrificazione è descritto?',
+    options: [
+      { label: 'Aumento della criminalità', value: 'criminalità' },
+      { label: 'Sfollamento delle comunità originarie', value: 'sfollamento comunità' },
+      { label: 'Deterioramento degli edifici', value: 'deterioramento' },
+      { label: 'Isolamento dei quartieri', value: 'isolamento' }
+    ],
+    correctAnswer: 'sfollamento comunità', points: 2, orderIndex: 73, tags: ['urbanistica']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'La gentrificazione designa il processo attraverso cui quartieri storicamente popolari vengono progressivamente trasformati dall\'arrivo di residenti più abbienti.',
+    questionText: 'L\'arrivo di residenti più ___ trasforma i quartieri popolari.',
+    correctAnswer: 'abbienti', points: 2, orderIndex: 74, tags: ['vocabolario avanzato']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il bilinguismo cognitivo',
+    passage: 'Le ricerche più recenti sul bilinguismo hanno sfatato il mito secondo cui crescere con due lingue causerebbe confusione cognitiva nei bambini. Al contrario, i bilingui mostrano vantaggi significativi nelle funzioni esecutive, tra cui la capacità di inibire risposte automatiche, passare flessibilmente tra compiti diversi e mantenere informazioni nella memoria di lavoro. Alcuni studi longitudinali suggeriscono inoltre che il bilinguismo possa ritardare l\'insorgenza di malattie neurodegenerative come l\'Alzheimer di quattro-cinque anni.',
+    questionText: 'Di quanto il bilinguismo può ritardare l\'Alzheimer?',
+    options: [
+      { label: '1-2 anni', value: '1-2 anni' },
+      { label: '4-5 anni', value: '4-5 anni' },
+      { label: '7-8 anni', value: '7-8 anni' },
+      { label: '10 anni', value: '10 anni' }
+    ],
+    correctAnswer: '4-5 anni', points: 2, orderIndex: 75, tags: ['linguistica', 'scienza']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'I bilingui mostrano vantaggi significativi nelle funzioni esecutive, tra cui la capacità di inibire risposte automatiche e passare flessibilmente tra compiti diversi.',
+    questionText: 'I bilingui hanno vantaggi nelle funzioni ___.',
+    correctAnswer: 'esecutive', points: 2, orderIndex: 76, tags: ['linguistica', 'vocabolario']
+  },
+
+  // C2 — Testi filosofici, letterari, critici (77–82)
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'ontologia del virtuale',
+    passage: 'La distinzione tra reale e virtuale, un tempo nitida, si è progressivamente offuscata nell\'era digitale. Il filosofo Pierre Lévy sostiene che il virtuale non si oppone al reale, bensì all\'attuale: il virtuale è reale nella misura in cui produce effetti concreti sulla coscienza e sul comportamento umano. Le relazioni sociali mediate digitalmente, le identità costruite online e le economie interamente digitali suggeriscono che il virtuale abbia acquisito una consistenza ontologica propria, irriducibile alla mera simulazione del mondo fisico.',
+    questionText: 'Secondo Lévy, a cosa si oppone il virtuale?',
+    options: [
+      { label: 'Al reale', value: 'al reale' },
+      { label: 'All\'attuale', value: 'all\'attuale' },
+      { label: 'Al fisico', value: 'al fisico' },
+      { label: 'All\'immaginario', value: 'all\'immaginario' }
+    ],
+    correctAnswer: 'all\'attuale', points: 2, orderIndex: 77, tags: ['filosofia', 'tecnologia']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'ontologia del virtuale',
+    passage: 'Le relazioni sociali mediate digitalmente, le identità costruite online e le economie interamente digitali suggeriscono che il virtuale abbia acquisito una consistenza ontologica propria, irriducibile alla mera simulazione del mondo fisico.',
+    questionText: 'Cosa significa "consistenza ontologica" in questo contesto?',
+    options: [
+      { label: 'Solidità materiale', value: 'solidità materiale' },
+      { label: 'Un\'esistenza reale e autonoma', value: 'esistenza reale e autonoma' },
+      { label: 'Una somiglianza con il mondo fisico', value: 'somiglianza' },
+      { label: 'Un valore economico', value: 'valore economico' }
+    ],
+    correctAnswer: 'esistenza reale e autonoma', points: 2, orderIndex: 78, tags: ['filosofia', 'vocabolario']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Leopardi e il pessimismo cosmico',
+    passage: 'Nella fase matura del suo pensiero, Giacomo Leopardi approda a un pessimismo cosmico che trascende la dimensione individuale e storica per investire la condizione stessa dell\'esistenza. Ne "La ginestra", il poeta invita gli uomini ad abbandonare le illusioni di progresso e a riconoscere la propria fragilità di fronte alla natura indifferente. Paradossalmente, è proprio questa consapevolezza della comune miseria a fondare la possibilità di un\'autentica solidarietà umana — una "social catena" che rappresenta l\'unica risposta dignitosa all\'assurdità dell\'esistenza.',
+    questionText: 'Cosa rappresenta la "social catena" ne La ginestra?',
+    options: [
+      { label: 'La catena dell\'oppressione sociale', value: 'oppressione' },
+      { label: 'La solidarietà umana di fronte alla sofferenza comune', value: 'solidarietà umana' },
+      { label: 'Il progresso tecnologico', value: 'progresso' },
+      { label: 'I legami familiari', value: 'legami familiari' }
+    ],
+    correctAnswer: 'solidarietà umana', points: 2, orderIndex: 79, tags: ['letteratura', 'filosofia']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Leopardi e il pessimismo cosmico',
+    passage: 'Il poeta invita gli uomini ad abbandonare le illusioni di progresso e a riconoscere la propria fragilità di fronte alla natura indifferente. Paradossalmente, è proprio questa consapevolezza della comune miseria a fondare la possibilità di un\'autentica solidarietà umana.',
+    questionText: 'Perché il messaggio di Leopardi è definito "paradossale"?',
+    options: [
+      { label: 'Perché è contraddittorio', value: 'contraddittorio' },
+      { label: 'Perché dalla consapevolezza della miseria nasce la solidarietà', value: 'dalla miseria nasce solidarietà' },
+      { label: 'Perché il poeta non crede in ciò che scrive', value: 'non ci crede' },
+      { label: 'Perché usa un linguaggio allegro per temi tristi', value: 'linguaggio allegro' }
+    ],
+    correctAnswer: 'dalla miseria nasce solidarietà', points: 2, orderIndex: 80, tags: ['letteratura']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Leopardi approda a un pessimismo cosmico che trascende la dimensione individuale e storica per investire la condizione stessa dell\'esistenza.',
+    questionText: 'Leopardi approda a un pessimismo ___ che va oltre la dimensione individuale.',
+    correctAnswer: 'cosmico', points: 2, orderIndex: 81, tags: ['letteratura']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Etica dell\'alterità',
+    passage: 'Emmanuel Lévinas propone un\'etica fondata sull\'incontro con il Volto dell\'Altro, un\'esperienza che precede ogni categorizzazione concettuale e si configura come appello irrecusabile alla responsabilità. Per Lévinas, l\'Altro non è un alter ego da comprendere per analogia con il sé, ma un\'alterità irriducibile che mette in questione la sovranità del soggetto. La relazione etica, in questa prospettiva, non è un contratto tra eguali ma una risposta asimmetrica alla vulnerabilità dell\'altro, anteriore a qualsiasi scelta deliberata.',
+    questionText: 'Secondo Lévinas, la relazione etica è:',
+    options: [
+      { label: 'Un contratto tra parti uguali', value: 'contratto tra uguali' },
+      { label: 'Una risposta asimmetrica alla vulnerabilità dell\'altro', value: 'risposta asimmetrica' },
+      { label: 'Una scelta razionale e deliberata', value: 'scelta razionale' },
+      { label: 'Un accordo basato sulla reciprocità', value: 'reciprocità' }
+    ],
+    correctAnswer: 'risposta asimmetrica', points: 2, orderIndex: 82, tags: ['filosofia', 'etica']
   }
 ]

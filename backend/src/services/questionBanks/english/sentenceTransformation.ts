@@ -92,4 +92,156 @@ export const englishSentenceTransformationQuestions: MultiSkillQuestionData[] = 
     correctAnswer: 'She may have missed the train.|She might have missed the train.|She could have missed the train.',
     points: 1, orderIndex: 10, tags: ['modal perfect', 'deduction']
   },
+
+  // ============================================================
+  // NEW QUESTIONS — 20 more (orderIndex 11-30)
+  // ============================================================
+
+  // A2 (5 questions)
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'The book is very interesting.',
+    questionText: 'Rewrite using: such',
+    correctAnswer: 'It is such an interesting book.',
+    points: 1, orderIndex: 11, tags: ['such', 'adjectives']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'She is taller than her brother.',
+    questionText: 'Rewrite beginning with: Her brother...',
+    correctAnswer: 'Her brother is shorter than her.|Her brother is not as tall as her.|Her brother is shorter than she is.',
+    points: 1, orderIndex: 12, tags: ['comparative', 'reversal']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'They built this house in 1990.',
+    questionText: 'Rewrite in the passive voice.',
+    correctAnswer: 'This house was built in 1990.',
+    points: 1, orderIndex: 13, tags: ['passive voice', 'past simple']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'It is not allowed to park here.',
+    questionText: 'Rewrite using: must not',
+    correctAnswer: 'You must not park here.',
+    points: 1, orderIndex: 14, tags: ['modals', 'prohibition']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'I prefer tea to coffee.',
+    questionText: 'Rewrite using: rather',
+    correctAnswer: 'I would rather have tea than coffee.|I would rather drink tea than coffee.',
+    points: 1, orderIndex: 15, tags: ['would rather', 'preference']
+  },
+
+  // B1 (5 questions)
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Someone stole my wallet yesterday.',
+    questionText: 'Rewrite in the passive voice.',
+    correctAnswer: 'My wallet was stolen yesterday.',
+    points: 1, orderIndex: 16, tags: ['passive voice', 'past simple']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: '"Don\'t touch the painting," the guard said to us.',
+    questionText: 'Rewrite in reported speech beginning with: The guard told us...',
+    correctAnswer: 'The guard told us not to touch the painting.',
+    points: 1, orderIndex: 17, tags: ['reported speech', 'imperative']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'It is possible that they are at home.',
+    questionText: 'Rewrite using a modal verb.',
+    correctAnswer: 'They may be at home.|They might be at home.|They could be at home.',
+    points: 1, orderIndex: 18, tags: ['modals', 'possibility']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'He is too young to drive a car.',
+    questionText: 'Rewrite using: not old enough',
+    correctAnswer: 'He is not old enough to drive a car.',
+    points: 1, orderIndex: 19, tags: ['too/enough']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'She started working here three years ago.',
+    questionText: 'Rewrite beginning with: She has...',
+    correctAnswer: 'She has worked here for three years.|She has been working here for three years.',
+    points: 1, orderIndex: 20, tags: ['present perfect', 'duration']
+  },
+
+  // B2 (5 questions)
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'I last saw him in 2019.',
+    questionText: 'Rewrite beginning with: I haven\'t...',
+    correctAnswer: 'I haven\'t seen him since 2019.',
+    points: 1, orderIndex: 21, tags: ['present perfect', 'since']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'We couldn\'t go to the beach because it was raining.',
+    questionText: 'Rewrite beginning with: If it...',
+    correctAnswer: 'If it hadn\'t been raining, we could have gone to the beach.|If it had not been raining, we could have gone to the beach.',
+    points: 1, orderIndex: 22, tags: ['third conditional']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'They say the company will close next year.',
+    questionText: 'Rewrite beginning with: The company...',
+    correctAnswer: 'The company is said to be closing next year.|The company is said to close next year.',
+    points: 1, orderIndex: 23, tags: ['passive reporting']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'I would prefer to stay at home rather than go to the party.',
+    questionText: 'Rewrite using: I\'d rather...',
+    correctAnswer: 'I\'d rather stay at home than go to the party.',
+    points: 1, orderIndex: 24, tags: ['would rather', 'preference']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'She didn\'t study hard enough, so she failed the exam.',
+    questionText: 'Rewrite beginning with: If she...',
+    correctAnswer: 'If she had studied hard enough, she would have passed the exam.|If she had studied harder, she would not have failed the exam.',
+    points: 1, orderIndex: 25, tags: ['third conditional']
+  },
+
+  // C1 (5 questions)
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'I didn\'t know she was ill, so I didn\'t visit her.',
+    questionText: 'Rewrite beginning with: Had I...',
+    correctAnswer: 'Had I known she was ill, I would have visited her.',
+    points: 1, orderIndex: 26, tags: ['inversion', 'third conditional']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'The government should invest more in renewable energy.',
+    questionText: 'Rewrite using: It is high time...',
+    correctAnswer: 'It is high time the government invested more in renewable energy.',
+    points: 1, orderIndex: 27, tags: ['it is high time', 'subjunctive']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'He only realized the truth after she had left.',
+    questionText: 'Rewrite beginning with: Only after...',
+    correctAnswer: 'Only after she had left did he realize the truth.',
+    points: 1, orderIndex: 28, tags: ['inversion', 'only after']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'We have never experienced such a severe storm.',
+    questionText: 'Rewrite beginning with: Never...',
+    correctAnswer: 'Never have we experienced such a severe storm.',
+    points: 1, orderIndex: 29, tags: ['inversion', 'never']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'It is believed that the ancient city was destroyed by an earthquake.',
+    questionText: 'Rewrite beginning with: The ancient city...',
+    correctAnswer: 'The ancient city is believed to have been destroyed by an earthquake.',
+    points: 1, orderIndex: 30, tags: ['passive reporting', 'perfect infinitive']
+  },
 ]

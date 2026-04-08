@@ -92,4 +92,156 @@ export const spanishErrorCorrectionQuestions: MultiSkillQuestionData[] = [
     correctAnswer: 'Busco una secretaria que hable tres idiomas.',
     points: 1, orderIndex: 10, tags: ['subjunctive', 'relative clauses', 'personal a']
   },
+
+  // ============================================================
+  // NUEVAS PREGUNTAS — 20 más (orderIndex 11-30)
+  // ============================================================
+
+  // A2 (5 preguntas)
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Hay mucho personas en el parque.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Hay muchas personas en el parque.',
+    points: 1, orderIndex: 11, tags: ['concordancia', 'mucho/muchas']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Ella puede a nadar muy bien.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Ella puede nadar muy bien.|Ella sabe nadar muy bien.',
+    points: 1, orderIndex: 12, tags: ['poder + infinitivo', 'preposición']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'He visitado París el año pasado.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Visité París el año pasado.',
+    points: 1, orderIndex: 13, tags: ['pretérito perfecto vs indefinido']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Él siempre está llegar tarde a clase.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Él siempre llega tarde a clase.',
+    points: 1, orderIndex: 14, tags: ['presente de indicativo', 'construcción verbal']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'A mí me gusta los gatos.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'A mí me gustan los gatos.',
+    points: 1, orderIndex: 15, tags: ['gustar', 'concordancia sujeto-verbo']
+  },
+
+  // B1 (5 preguntas)
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Me acuerdo de su nombre.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Recuerdo su nombre.|Me acuerdo de su nombre.',
+    points: 1, orderIndex: 16, tags: ['acordarse/recordar', 'régimen verbal']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Me dijo que viene mañana.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Me dijo que vendría al día siguiente.|Me dijo que vendría mañana.',
+    points: 1, orderIndex: 17, tags: ['concordancia temporal', 'estilo indirecto']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Aunque llovía, pero salimos a pasear.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Aunque llovía, salimos a pasear.|Llovía, pero salimos a pasear.',
+    points: 1, orderIndex: 18, tags: ['conjunciones', 'aunque/pero']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Este es el libro que tengo necesidad.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Este es el libro que necesito.|Este es el libro del que tengo necesidad.',
+    points: 1, orderIndex: 19, tags: ['pronombre relativo', 'construcción verbal']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Me pidió que le ayudo con la mudanza.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Me pidió que le ayudara con la mudanza.|Me pidió que le ayudase con la mudanza.',
+    points: 1, orderIndex: 20, tags: ['subjuntivo imperfecto', 'pedir que']
+  },
+
+  // B2 (5 preguntas)
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Negó de haber robado el dinero.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Negó haber robado el dinero.',
+    points: 1, orderIndex: 21, tags: ['negar', 'infinitivo compuesto']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Cuanto más practicas, más mejoras más.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Cuanto más practicas, más mejoras.',
+    points: 1, orderIndex: 22, tags: ['comparativo progresivo', 'redundancia']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Ojalá puedo hablar francés con fluidez.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Ojalá pudiera hablar francés con fluidez.|Ojalá pudiese hablar francés con fluidez.',
+    points: 1, orderIndex: 23, tags: ['ojalá', 'subjuntivo imperfecto']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Ella es una de las persona más amable que he conocido.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Ella es una de las personas más amables que he conocido.',
+    points: 1, orderIndex: 24, tags: ['plural', 'superlativo', 'concordancia']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'A pesar que estaba cansado, siguió trabajando.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'A pesar de que estaba cansado, siguió trabajando.',
+    points: 1, orderIndex: 25, tags: ['a pesar de', 'preposición']
+  },
+
+  // C1 (5 preguntas)
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Apenas él había llegado, empezó la reunión.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Apenas hubo llegado, empezó la reunión.|Apenas llegó, empezó la reunión.',
+    points: 1, orderIndex: 26, tags: ['pretérito anterior', 'apenas']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'La mayoría de los estudiantes piensa que el examen fue fácil.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'La mayoría de los estudiantes piensan que el examen fue fácil.',
+    points: 1, orderIndex: 27, tags: ['concordancia sujeto-verbo', 'la mayoría']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Sin su ayuda, habría sido suspendido del examen.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Sin su ayuda, habría suspendido el examen.',
+    points: 1, orderIndex: 28, tags: ['condicional compuesto', 'construcción verbal']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'El número de estudiantes que se ha matriculado este año ha aumentado.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'El número de estudiantes que se han matriculado este año ha aumentado.',
+    points: 1, orderIndex: 29, tags: ['concordancia sujeto-verbo', 'cláusula relativa']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Es imprescindible que cada empleado entrega su informe el viernes.',
+    questionText: 'Encuentra y corrige el error en esta oración.',
+    correctAnswer: 'Es imprescindible que cada empleado entregue su informe el viernes.',
+    points: 1, orderIndex: 30, tags: ['subjuntivo presente', 'es imprescindible que']
+  },
 ]

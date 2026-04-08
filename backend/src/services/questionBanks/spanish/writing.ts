@@ -107,5 +107,133 @@ export const spanishWritingQuestions: MultiSkillQuestionData[] = [
     correctAnswer: '', points: 3, orderIndex: 14,
     rubric: { minWords: 200, maxWords: 300, criteria: ['profundidad filosófica', 'análisis equilibrado', 'conciencia de políticas públicas', 'prosa elegante', 'coherencia lógica'] },
     tags: ['tecnología', 'política', 'ética'], timeSuggested: 720
+  },
+
+  // ============================================================
+  // NUEVAS PREGUNTAS — 16 más (orderIndex 15-30)
+  // ============================================================
+
+  // A1 (20-50 palabras)
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Escribe una postal corta a un amigo. Dile dónde estás y cómo está el tiempo.',
+    correctAnswer: '', points: 1, orderIndex: 15,
+    rubric: { minWords: 20, maxWords: 50, criteria: ['fórmula de saludo', 'oraciones simples', 'vocabulario del tiempo'] },
+    tags: ['postal', 'tiempo'], timeSuggested: 180
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Describe tu casa o apartamento. ¿Cuántas habitaciones tiene? ¿Cuál es tu habitación favorita?',
+    correctAnswer: '', points: 1, orderIndex: 16,
+    rubric: { minWords: 20, maxWords: 50, criteria: ['vocabulario de la vivienda', 'hay', 'adjetivos simples'] },
+    tags: ['vivienda', 'descripción'], timeSuggested: 180
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: '¿Qué te gusta comer y beber? Escribe sobre tus comidas favoritas.',
+    correctAnswer: '', points: 1, orderIndex: 17,
+    rubric: { minWords: 20, maxWords: 50, criteria: ['vocabulario de comida', 'gustar/preferir', 'oraciones simples'] },
+    tags: ['comida', 'preferencias'], timeSuggested: 180
+  },
+
+  // A2 (40-80 palabras)
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Escribe un correo electrónico a un amigo invitándolo a una fiesta. Incluye la fecha, la hora, el lugar y qué debe traer.',
+    correctAnswer: '', points: 1, orderIndex: 18,
+    rubric: { minWords: 40, maxWords: 80, criteria: ['formato de correo', 'planes futuros', 'lenguaje de invitación', 'detalles'] },
+    tags: ['correo', 'invitación'], timeSuggested: 240
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Describe a tu mejor amigo/a. ¿Cómo es físicamente? ¿Qué os gusta hacer juntos?',
+    correctAnswer: '', points: 1, orderIndex: 19,
+    rubric: { minWords: 40, maxWords: 80, criteria: ['descripción física', 'adjetivos de personalidad', 'presente de indicativo', 'gustar + infinitivo'] },
+    tags: ['amigo', 'descripción'], timeSuggested: 240
+  },
+
+  // B1 (80-150 palabras)
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Escribe una carta de reclamación al director de un hotel sobre un problema que tuviste durante tu estancia.',
+    correctAnswer: '', points: 2, orderIndex: 20,
+    rubric: { minWords: 80, maxWords: 150, criteria: ['formato de carta formal', 'lenguaje de reclamación', 'narrativa en pasado', 'peticiones corteses'] },
+    tags: ['reclamación', 'carta formal'], timeSuggested: 360
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: '¿Crees que los deberes son útiles para los estudiantes? Da tu opinión con razones y ejemplos.',
+    correctAnswer: '', points: 2, orderIndex: 21,
+    rubric: { minWords: 80, maxWords: 150, criteria: ['expresión de opinión', 'razones de apoyo', 'ejemplos', 'estructura de párrafo'] },
+    tags: ['opinión', 'educación'], timeSuggested: 360
+  },
+
+  // B2 (150-250 palabras)
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Redacta un informe sobre el impacto del turismo en las comunidades locales. Considera los efectos positivos y negativos y sugiere soluciones.',
+    correctAnswer: '', points: 2, orderIndex: 22,
+    rubric: { minWords: 150, maxWords: 250, criteria: ['estructura de informe', 'análisis equilibrado', 'recomendaciones', 'registro formal', 'conectores discursivos'] },
+    tags: ['informe', 'turismo'], timeSuggested: 480
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Algunos consideran que los deportes de competición enseñan habilidades importantes para la vida, mientras otros piensan que ejercen demasiada presión sobre los jóvenes. Discute ambas posturas.',
+    correctAnswer: '', points: 2, orderIndex: 23,
+    rubric: { minWords: 150, maxWords: 250, criteria: ['tesis clara', 'argumento equilibrado', 'ejemplos específicos', 'vocabulario formal', 'estructura lógica'] },
+    tags: ['argumentativo', 'deporte'], timeSuggested: 480
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Escribe un ensayo discutiendo si los influencers de redes sociales tienen un impacto positivo o negativo en la autoestima y los valores de los jóvenes.',
+    correctAnswer: '', points: 2, orderIndex: 24,
+    rubric: { minWords: 150, maxWords: 250, criteria: ['estructura argumentativa', 'conciencia de contraargumentos', 'ejemplos', 'vocabulario académico'] },
+    tags: ['argumentativo', 'redes sociales'], timeSuggested: 480
+  },
+
+  // C1 (200-350 palabras)
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Redacta una propuesta para tu empresa o institución sugiriendo formas de reducir su huella ecológica. Incluye medidas específicas y justifica su viabilidad.',
+    correctAnswer: '', points: 3, orderIndex: 25,
+    rubric: { minWords: 200, maxWords: 350, criteria: ['formato de propuesta', 'argumentación persuasiva', 'análisis de viabilidad', 'vocabulario sofisticado', 'registro formal'] },
+    tags: ['propuesta', 'medio ambiente'], timeSuggested: 600
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Analiza críticamente el papel de los exámenes estandarizados en la educación. ¿Miden el aprendizaje de forma eficaz o dificultan un auténtico desarrollo intelectual?',
+    correctAnswer: '', points: 3, orderIndex: 26,
+    rubric: { minWords: 200, maxWords: 350, criteria: ['análisis crítico', 'argumento basado en evidencias', 'posición matizada', 'recursos retóricos', 'registro académico'] },
+    tags: ['análisis crítico', 'educación'], timeSuggested: 600
+  },
+
+  // C2 (250-400 palabras)
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Escribe un ensayo filosófico explorando si las verdades morales son hechos objetivos o construcciones sociales. Haz referencia a al menos dos tradiciones filosóficas.',
+    correctAnswer: '', points: 3, orderIndex: 27,
+    rubric: { minWords: 250, maxWords: 400, criteria: ['profundidad filosófica', 'referencias interdisciplinarias', 'razonamiento abstracto', 'fluidez casi nativa', 'prosa elegante'] },
+    tags: ['filosofía', 'ética'], timeSuggested: 720
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Escribe una crítica literaria de una novela u obra de teatro que hayas leído, analizando sus temas, técnicas narrativas y significado cultural.',
+    correctAnswer: '', points: 3, orderIndex: 28,
+    rubric: { minWords: 250, maxWords: 400, criteria: ['análisis literario', 'argumentación sofisticada', 'evaluación crítica', 'vocabulario preciso', 'variedad estilística'] },
+    tags: ['crítica literaria', 'cultura'], timeSuggested: 720
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Examina la paradoja de la tolerancia: ¿puede una sociedad verdaderamente tolerante tolerar la intolerancia? Discute con referencia a la filosofía política y ejemplos contemporáneos.',
+    correctAnswer: '', points: 3, orderIndex: 29,
+    rubric: { minWords: 250, maxWords: 400, criteria: ['razonamiento filosófico', 'conclusión matizada', 'registro académico', 'manejo de contraargumentos', 'coherencia lógica'] },
+    tags: ['filosofía', 'política'], timeSuggested: 720
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: '¿Es la noción de meritocracia un ideal útil o un mito peligroso? Analiza las dimensiones sociológicas y filosóficas de esta cuestión.',
+    correctAnswer: '', points: 3, orderIndex: 30,
+    rubric: { minWords: 250, maxWords: 400, criteria: ['argumentación sofisticada', 'análisis interdisciplinario', 'razonamiento abstracto', 'expresión elegante', 'posición matizada'] },
+    tags: ['sociología', 'filosofía', 'economía'], timeSuggested: 720
   }
 ]

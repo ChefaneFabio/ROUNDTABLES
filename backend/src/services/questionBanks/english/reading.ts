@@ -438,5 +438,451 @@ export const englishReadingQuestions: MultiSkillQuestionData[] = [
     passage: 'The Kuuk Thaayorre people use cardinal directions rather than egocentric spatial terms.',
     questionText: 'The Kuuk Thaayorre use ___ directions rather than egocentric spatial terms.',
     correctAnswer: 'cardinal', points: 3, orderIndex: 42, tags: ['linguistics']
-  }
+  },
+
+  // ============================================================
+  // NEW QUESTIONS 43-82 (40 additional, ~7 per level)
+  // ============================================================
+
+  // ============================================================
+  // A1 — Beginner (43-49)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'A Sign at the Park',
+    passage: 'PARK RULES: No dogs. No bicycles. Open from 8 AM to 6 PM. Children must be with an adult.',
+    questionText: 'Can you bring your dog to the park?',
+    options: [{ label: 'Yes', value: 'yes' }, { label: 'No', value: 'no' }, { label: 'Only small dogs', value: 'only small dogs' }, { label: 'Only on weekends', value: 'only on weekends' }],
+    correctAnswer: 'no', points: 1, orderIndex: 43, tags: ['signs', 'rules']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'A Sign at the Park',
+    passage: 'PARK RULES: No dogs. No bicycles. Open from 8 AM to 6 PM. Children must be with an adult.',
+    questionText: 'What time does the park close?',
+    options: [{ label: '5 PM', value: '5 PM' }, { label: '6 PM', value: '6 PM' }, { label: '7 PM', value: '7 PM' }, { label: '8 PM', value: '8 PM' }],
+    correctAnswer: '6 PM', points: 1, orderIndex: 44, tags: ['signs', 'time']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'My Pet',
+    passage: 'I have a cat. Her name is Mimi. She is white and very small. She sleeps on my bed. She likes milk and fish. I love my cat very much.',
+    questionText: 'What does Mimi like to eat?',
+    options: [{ label: 'Bread and water', value: 'bread and water' }, { label: 'Milk and fish', value: 'milk and fish' }, { label: 'Rice and chicken', value: 'rice and chicken' }, { label: 'Fruit and vegetables', value: 'fruit and vegetables' }],
+    correctAnswer: 'milk and fish', points: 1, orderIndex: 45, tags: ['pets', 'food']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'My Pet',
+    passage: 'I have a cat. Her name is Mimi. She is white and very small. She sleeps on my bed. She likes milk and fish. I love my cat very much.',
+    questionText: 'Where does Mimi sleep?',
+    options: [{ label: 'On the floor', value: 'on the floor' }, { label: 'On the sofa', value: 'on the sofa' }, { label: 'On the bed', value: 'on the bed' }, { label: 'In the garden', value: 'in the garden' }],
+    correctAnswer: 'on the bed', points: 1, orderIndex: 46, tags: ['pets', 'house']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'A Short Note',
+    passage: 'Dear Lisa, I am at the supermarket. There is no bread at home. I will buy bread, eggs, and cheese. I will be home at 5. Love, Mum.',
+    questionText: 'Where is Mum?',
+    options: [{ label: 'At home', value: 'at home' }, { label: 'At work', value: 'at work' }, { label: 'At the supermarket', value: 'at the supermarket' }, { label: 'At school', value: 'at school' }],
+    correctAnswer: 'at the supermarket', points: 1, orderIndex: 47, tags: ['notes', 'shopping']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'A Short Note',
+    passage: 'Dear Lisa, I am at the supermarket. There is no bread at home. I will buy bread, eggs, and cheese. I will be home at 5. Love, Mum.',
+    questionText: 'What will Mum buy?',
+    options: [{ label: 'Milk, rice, and fruit', value: 'milk, rice, and fruit' }, { label: 'Bread, eggs, and cheese', value: 'bread, eggs, and cheese' }, { label: 'Water and juice', value: 'water and juice' }, { label: 'Meat and vegetables', value: 'meat and vegetables' }],
+    correctAnswer: 'bread, eggs, and cheese', points: 1, orderIndex: 48, tags: ['notes', 'shopping']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Dear Lisa, I am at the supermarket. There is no bread at home. I will buy bread, eggs, and cheese. I will be home at 5.',
+    questionText: 'Mum will be home at ___.',
+    correctAnswer: '5', points: 1, orderIndex: 49, tags: ['notes', 'time']
+  },
+
+  // ============================================================
+  // A2 — Elementary (50-56)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'A Job Advert',
+    passage: 'WANTED: Waiter/Waitress for busy restaurant. Part-time, weekends only. Experience preferred but not essential. Must speak English. Good pay and free meals. Call 020-555-1234 to apply.',
+    questionText: 'When is the job?',
+    options: [{ label: 'Every day', value: 'every day' }, { label: 'Weekdays only', value: 'weekdays only' }, { label: 'Weekends only', value: 'weekends only' }, { label: 'Monday to Friday', value: 'Monday to Friday' }],
+    correctAnswer: 'weekends only', points: 1, orderIndex: 50, tags: ['jobs', 'adverts']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'A Job Advert',
+    passage: 'WANTED: Waiter/Waitress for busy restaurant. Part-time, weekends only. Experience preferred but not essential. Must speak English. Good pay and free meals. Call 020-555-1234 to apply.',
+    questionText: 'Do you need experience for this job?',
+    options: [{ label: 'Yes, it is required', value: 'yes required' }, { label: 'No, but it is preferred', value: 'no but preferred' }, { label: 'Yes, five years minimum', value: 'five years' }, { label: 'No, experience is not mentioned', value: 'not mentioned' }],
+    correctAnswer: 'no but preferred', points: 1, orderIndex: 51, tags: ['jobs', 'adverts']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'At the Doctor',
+    passage: 'Mark went to the doctor because he had a bad cough. The doctor listened to his chest and checked his temperature. She said he had a cold and needed to rest for a few days. She also told him to drink lots of water and take some medicine twice a day.',
+    questionText: 'What was wrong with Mark?',
+    options: [{ label: 'He broke his arm', value: 'broke arm' }, { label: 'He had a cold', value: 'had a cold' }, { label: 'He had a headache', value: 'headache' }, { label: 'He hurt his leg', value: 'hurt leg' }],
+    correctAnswer: 'had a cold', points: 1, orderIndex: 52, tags: ['health', 'doctor']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'At the Doctor',
+    passage: 'Mark went to the doctor because he had a bad cough. The doctor listened to his chest and checked his temperature. She said he had a cold and needed to rest for a few days. She also told him to drink lots of water and take some medicine twice a day.',
+    questionText: 'How often should Mark take the medicine?',
+    options: [{ label: 'Once a day', value: 'once a day' }, { label: 'Twice a day', value: 'twice a day' }, { label: 'Three times a day', value: 'three times' }, { label: 'Every hour', value: 'every hour' }],
+    correctAnswer: 'twice a day', points: 1, orderIndex: 53, tags: ['health', 'frequency']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Weekend Plans',
+    passage: 'Hi James, Are you free this Saturday? My parents are having a barbecue in the garden. There will be burgers, salads, and cake. My cousin is coming too — you met him at my birthday party. It starts at 2 PM. Let me know! Best, Daniel',
+    questionText: 'What kind of event is it?',
+    options: [{ label: 'A birthday party', value: 'birthday party' }, { label: 'A barbecue', value: 'a barbecue' }, { label: 'A wedding', value: 'wedding' }, { label: 'A dinner party', value: 'dinner party' }],
+    correctAnswer: 'a barbecue', points: 1, orderIndex: 54, tags: ['social', 'invitations']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Weekend Plans',
+    passage: 'Hi James, Are you free this Saturday? My parents are having a barbecue in the garden. There will be burgers, salads, and cake. My cousin is coming too — you met him at my birthday party. It starts at 2 PM. Let me know! Best, Daniel',
+    questionText: 'When does the barbecue start?',
+    options: [{ label: '12 PM', value: '12 PM' }, { label: '1 PM', value: '1 PM' }, { label: '2 PM', value: '2 PM' }, { label: '3 PM', value: '3 PM' }],
+    correctAnswer: '2 PM', points: 1, orderIndex: 55, tags: ['social', 'time']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Hi James, My parents are having a barbecue in the garden. There will be burgers, salads, and cake.',
+    questionText: 'The barbecue is in the ___.',
+    correctAnswer: 'garden', points: 1, orderIndex: 56, tags: ['social', 'places']
+  },
+
+  // ============================================================
+  // B1 — Intermediate (57-63)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Online Shopping',
+    passage: 'Online shopping has become increasingly popular over the past decade. Consumers enjoy the convenience of browsing products from home and having them delivered to their door. However, there are drawbacks. Customers cannot try on clothes or test products before buying. Returns can be complicated, and delivery costs sometimes make online prices less competitive. Despite these issues, online retail continues to grow year after year.',
+    questionText: 'What is one drawback of online shopping mentioned in the text?',
+    options: [
+      { label: 'Products are always expensive', value: 'always expensive' },
+      { label: 'You cannot try on clothes before buying', value: 'cannot try on clothes' },
+      { label: 'Delivery is always free', value: 'delivery always free' },
+      { label: 'There are too few products available', value: 'too few products' }
+    ],
+    correctAnswer: 'cannot try on clothes', points: 1, orderIndex: 57, tags: ['shopping', 'technology']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Online Shopping',
+    passage: 'Online shopping has become increasingly popular over the past decade. Consumers enjoy the convenience of browsing products from home and having them delivered to their door. However, there are drawbacks. Customers cannot try on clothes or test products before buying. Returns can be complicated, and delivery costs sometimes make online prices less competitive.',
+    questionText: 'Why might online prices sometimes be less competitive?',
+    options: [
+      { label: 'Because products are lower quality', value: 'lower quality' },
+      { label: 'Because of delivery costs', value: 'delivery costs' },
+      { label: 'Because shops offer bigger discounts', value: 'bigger discounts' },
+      { label: 'Because taxes are higher online', value: 'higher taxes' }
+    ],
+    correctAnswer: 'delivery costs', points: 1, orderIndex: 58, tags: ['shopping', 'economics']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Volunteering Abroad',
+    passage: 'More and more young people are choosing to volunteer abroad before starting university. Popular destinations include Southeast Asia, Africa, and South America. Volunteers help with teaching English, building schools, and protecting wildlife. While the experience is rewarding, critics argue that some programs do more harm than good. Unskilled volunteers may take jobs from local workers, and short stays rarely create lasting change.',
+    questionText: 'What criticism is made of volunteering abroad?',
+    options: [
+      { label: 'It is too expensive', value: 'too expensive' },
+      { label: 'Unskilled volunteers may take jobs from locals', value: 'take jobs from locals' },
+      { label: 'Volunteers learn nothing', value: 'learn nothing' },
+      { label: 'There are no popular destinations', value: 'no destinations' }
+    ],
+    correctAnswer: 'take jobs from locals', points: 1, orderIndex: 59, tags: ['volunteering', 'social issues']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Volunteering Abroad',
+    passage: 'More and more young people are choosing to volunteer abroad before starting university. Popular destinations include Southeast Asia, Africa, and South America. Volunteers help with teaching English, building schools, and protecting wildlife.',
+    questionText: 'What do volunteers help with?',
+    options: [
+      { label: 'Cooking and cleaning', value: 'cooking and cleaning' },
+      { label: 'Teaching English and building schools', value: 'teaching and building' },
+      { label: 'Farming and fishing', value: 'farming and fishing' },
+      { label: 'Selling products', value: 'selling products' }
+    ],
+    correctAnswer: 'teaching and building', points: 1, orderIndex: 60, tags: ['volunteering']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Sleep Habits',
+    passage: 'Most experts recommend that adults get between seven and nine hours of sleep per night. However, a recent study found that nearly a third of adults in the UK sleep fewer than six hours. Poor sleep can lead to weight gain, a weakened immune system, and difficulty concentrating. Simple changes — such as avoiding screens before bed, keeping a regular schedule, and reducing caffeine intake — can significantly improve sleep quality.',
+    questionText: 'How many hours of sleep do experts recommend for adults?',
+    options: [
+      { label: '5 to 7 hours', value: '5 to 7' },
+      { label: '6 to 8 hours', value: '6 to 8' },
+      { label: '7 to 9 hours', value: '7 to 9' },
+      { label: '8 to 10 hours', value: '8 to 10' }
+    ],
+    correctAnswer: '7 to 9', points: 1, orderIndex: 61, tags: ['health', 'sleep']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Simple changes — such as avoiding screens before bed, keeping a regular schedule, and reducing caffeine intake — can significantly improve sleep quality.',
+    questionText: 'Reducing ___ intake can help improve sleep quality.',
+    correctAnswer: 'caffeine', points: 1, orderIndex: 62, tags: ['health', 'sleep']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Sleep Habits',
+    passage: 'A recent study found that nearly a third of adults in the UK sleep fewer than six hours. Poor sleep can lead to weight gain, a weakened immune system, and difficulty concentrating.',
+    questionText: 'What fraction of UK adults sleep fewer than six hours?',
+    options: [
+      { label: 'A quarter', value: 'a quarter' },
+      { label: 'A third', value: 'a third' },
+      { label: 'Half', value: 'half' },
+      { label: 'Two thirds', value: 'two thirds' }
+    ],
+    correctAnswer: 'a third', points: 1, orderIndex: 63, tags: ['health', 'statistics']
+  },
+
+  // ============================================================
+  // B2 — Upper Intermediate (64-69)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The Future of Work',
+    passage: 'Automation and artificial intelligence are expected to transform the labor market significantly over the coming decades. While some jobs will be replaced entirely, others will be augmented — workers will use AI tools to become more productive rather than being displaced. The World Economic Forum estimates that by 2030, 85 million jobs may be displaced by technology, but 97 million new roles could emerge that are better adapted to the new division of labor between humans and machines.',
+    questionText: 'According to the World Economic Forum, will technology create or destroy more jobs by 2030?',
+    options: [
+      { label: 'Destroy more jobs', value: 'destroy more' },
+      { label: 'Create more jobs', value: 'create more' },
+      { label: 'Have no effect', value: 'no effect' },
+      { label: 'The report does not say', value: 'does not say' }
+    ],
+    correctAnswer: 'create more', points: 2, orderIndex: 64, tags: ['technology', 'work']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The Future of Work',
+    passage: 'While some jobs will be replaced entirely, others will be augmented — workers will use AI tools to become more productive rather than being displaced.',
+    questionText: 'What does "augmented" mean in this context?',
+    options: [
+      { label: 'Eliminated', value: 'eliminated' },
+      { label: 'Enhanced by technology', value: 'enhanced by technology' },
+      { label: 'Made more difficult', value: 'more difficult' },
+      { label: 'Automated completely', value: 'automated' }
+    ],
+    correctAnswer: 'enhanced by technology', points: 2, orderIndex: 65, tags: ['vocabulary', 'technology']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Social Media and Democracy',
+    passage: 'Social media has fundamentally changed political communication. Politicians can now reach millions of voters directly, bypassing traditional media gatekeepers. This democratization of communication has enabled grassroots movements to organize more effectively. However, the same platforms have also facilitated the spread of misinformation and deepened political polarization, as algorithms prioritize engaging content over accurate content. Several democracies are now grappling with how to regulate these platforms without undermining free speech.',
+    questionText: 'According to the text, what do algorithms prioritize?',
+    options: [
+      { label: 'Accurate content', value: 'accurate content' },
+      { label: 'Engaging content', value: 'engaging content' },
+      { label: 'Political content', value: 'political content' },
+      { label: 'Educational content', value: 'educational content' }
+    ],
+    correctAnswer: 'engaging content', points: 2, orderIndex: 66, tags: ['media', 'politics']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Social Media and Democracy',
+    passage: 'Several democracies are now grappling with how to regulate these platforms without undermining free speech. Politicians can now reach millions of voters directly, bypassing traditional media gatekeepers.',
+    questionText: 'What challenge do democracies face regarding social media?',
+    options: [
+      { label: 'Making platforms more expensive', value: 'more expensive' },
+      { label: 'Regulating platforms without undermining free speech', value: 'regulating without undermining free speech' },
+      { label: 'Banning all political content', value: 'banning political content' },
+      { label: 'Replacing social media with traditional media', value: 'replacing' }
+    ],
+    correctAnswer: 'regulating without undermining free speech', points: 2, orderIndex: 67, tags: ['media', 'democracy']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Social media has fundamentally changed political communication. Politicians can now reach millions of voters directly, bypassing traditional media gatekeepers.',
+    questionText: 'Politicians can bypass traditional media ___.',
+    correctAnswer: 'gatekeepers', points: 2, orderIndex: 68, tags: ['media', 'vocabulary']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Bilingualism and the Brain',
+    passage: 'Research suggests that bilingual individuals may have certain cognitive advantages over monolinguals. Studies have shown that managing two languages strengthens executive function — the mental processes responsible for planning, focusing attention, and switching between tasks. Some researchers also believe that bilingualism may delay the onset of dementia by several years, although this remains a subject of ongoing investigation.',
+    questionText: 'What cognitive benefit of bilingualism is mentioned?',
+    options: [
+      { label: 'Better mathematical skills', value: 'math skills' },
+      { label: 'Stronger executive function', value: 'stronger executive function' },
+      { label: 'Improved musical ability', value: 'musical ability' },
+      { label: 'Faster reading speed', value: 'faster reading' }
+    ],
+    correctAnswer: 'stronger executive function', points: 2, orderIndex: 69, tags: ['linguistics', 'brain']
+  },
+
+  // ============================================================
+  // C1 — Advanced (70-76)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The Paradox of Choice',
+    passage: 'In "The Paradox of Choice," psychologist Barry Schwartz argues that an abundance of options does not necessarily lead to greater satisfaction. While a certain degree of choice is essential for autonomy, too many options can lead to decision paralysis, increased anxiety, and diminished satisfaction with the choices we do make. Schwartz distinguishes between "maximizers" — those who exhaustively search for the best possible option — and "satisficers" — those who settle for an option that meets their criteria. Research consistently shows that satisficers tend to be happier than maximizers, despite often making objectively similar choices.',
+    questionText: 'According to Schwartz, who tends to be happier?',
+    options: [
+      { label: 'Maximizers', value: 'maximizers' },
+      { label: 'Satisficers', value: 'satisficers' },
+      { label: 'Both are equally happy', value: 'equally happy' },
+      { label: 'Neither — happiness is unrelated to choice', value: 'unrelated' }
+    ],
+    correctAnswer: 'satisficers', points: 2, orderIndex: 70, tags: ['psychology', 'decision making']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The Paradox of Choice',
+    passage: 'While a certain degree of choice is essential for autonomy, too many options can lead to decision paralysis, increased anxiety, and diminished satisfaction with the choices we do make.',
+    questionText: 'What negative effects of too many choices are mentioned?',
+    options: [
+      { label: 'Boredom and fatigue', value: 'boredom and fatigue' },
+      { label: 'Decision paralysis, anxiety, and diminished satisfaction', value: 'paralysis, anxiety, diminished satisfaction' },
+      { label: 'Anger and frustration', value: 'anger and frustration' },
+      { label: 'Depression and loneliness', value: 'depression and loneliness' }
+    ],
+    correctAnswer: 'paralysis, anxiety, diminished satisfaction', points: 2, orderIndex: 71, tags: ['psychology']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Rewilding',
+    passage: 'Rewilding is a conservation strategy that seeks to restore ecosystems by reintroducing species that have been lost, allowing natural processes to resume. The reintroduction of wolves to Yellowstone National Park in 1995 is often cited as a landmark example. The wolves\' presence triggered a trophic cascade: they reduced the elk population, which allowed vegetation to recover along riverbanks, stabilizing the soil and changing the course of rivers. Critics, however, argue that rewilding can create conflicts with agricultural communities and that ecosystems have already adapted to the absence of keystone species.',
+    questionText: 'What is a "trophic cascade" as illustrated in the passage?',
+    options: [
+      { label: 'A type of waterfall', value: 'waterfall' },
+      { label: 'A chain reaction through an ecosystem triggered by a predator', value: 'chain reaction through ecosystem' },
+      { label: 'A method of planting trees', value: 'planting trees' },
+      { label: 'A government environmental policy', value: 'policy' }
+    ],
+    correctAnswer: 'chain reaction through ecosystem', points: 2, orderIndex: 72, tags: ['environment', 'ecology']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Rewilding',
+    passage: 'Critics argue that rewilding can create conflicts with agricultural communities and that ecosystems have already adapted to the absence of keystone species.',
+    questionText: 'What concern do critics of rewilding raise?',
+    options: [
+      { label: 'It is too expensive', value: 'too expensive' },
+      { label: 'Conflicts with agricultural communities', value: 'conflicts with agriculture' },
+      { label: 'Animals will go extinct again', value: 'extinction' },
+      { label: 'Tourists will damage the ecosystem', value: 'tourists' }
+    ],
+    correctAnswer: 'conflicts with agriculture', points: 2, orderIndex: 73, tags: ['environment', 'controversy']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'The reintroduction of wolves to Yellowstone National Park in 1995 is often cited as a landmark example of rewilding.',
+    questionText: 'Wolves were reintroduced to ___ National Park in 1995.',
+    correctAnswer: 'Yellowstone', points: 2, orderIndex: 74, tags: ['environment', 'facts']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The Attention Economy',
+    passage: 'In the attention economy, human attention is treated as a scarce commodity. Technology companies compete fiercely to capture and retain users\' attention through persuasive design techniques: infinite scrolling, autoplay videos, push notifications, and variable reward schedules borrowed from slot machine design. Former tech insiders have raised alarms about the psychological consequences, noting that these systems exploit cognitive vulnerabilities to create compulsive usage patterns that many users experience as addictive.',
+    questionText: 'What design technique from gambling is mentioned?',
+    options: [
+      { label: 'Card counting algorithms', value: 'card counting' },
+      { label: 'Variable reward schedules from slot machines', value: 'variable reward schedules' },
+      { label: 'Poker probability models', value: 'poker models' },
+      { label: 'Roulette randomization', value: 'roulette' }
+    ],
+    correctAnswer: 'variable reward schedules', points: 2, orderIndex: 75, tags: ['technology', 'psychology']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The Attention Economy',
+    passage: 'Former tech insiders have raised alarms about the psychological consequences, noting that these systems exploit cognitive vulnerabilities to create compulsive usage patterns that many users experience as addictive.',
+    questionText: 'What do the systems exploit, according to former tech insiders?',
+    options: [
+      { label: 'Financial vulnerabilities', value: 'financial' },
+      { label: 'Cognitive vulnerabilities', value: 'cognitive vulnerabilities' },
+      { label: 'Physical limitations', value: 'physical' },
+      { label: 'Social pressures', value: 'social pressures' }
+    ],
+    correctAnswer: 'cognitive vulnerabilities', points: 2, orderIndex: 76, tags: ['technology', 'psychology']
+  },
+
+  // ============================================================
+  // C2 — Proficiency (77-82)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The Ship of Theseus',
+    passage: 'The Ship of Theseus is a thought experiment in the metaphysics of identity. If a ship\'s planks are gradually replaced, one by one, until none of the original material remains, is it still the same ship? The paradox deepens if we further suppose that the removed planks are reassembled into a second vessel — which ship, if either, is the "real" Ship of Theseus? Thomas Hobbes extended this problem by noting its implications for personal identity: given that the cells in our bodies are constantly being replaced, are we the same person we were a decade ago? The question remains philosophically unresolved, exposing the tension between essentialist and nominalist conceptions of identity.',
+    questionText: 'What deepens the paradox of the Ship of Theseus?',
+    options: [
+      { label: 'The ship sinks', value: 'sinks' },
+      { label: 'The removed planks are reassembled into a second ship', value: 'reassembled into second ship' },
+      { label: 'Nobody remembers the original ship', value: 'nobody remembers' },
+      { label: 'The ship is painted a different color', value: 'different color' }
+    ],
+    correctAnswer: 'reassembled into second ship', points: 2, orderIndex: 77, tags: ['philosophy', 'identity']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The Ship of Theseus',
+    passage: 'Thomas Hobbes extended this problem by noting its implications for personal identity: given that the cells in our bodies are constantly being replaced, are we the same person we were a decade ago? The question remains philosophically unresolved, exposing the tension between essentialist and nominalist conceptions of identity.',
+    questionText: 'What philosophical tension does the paradox expose?',
+    options: [
+      { label: 'Between materialism and idealism', value: 'materialism vs idealism' },
+      { label: 'Between essentialist and nominalist conceptions of identity', value: 'essentialist vs nominalist' },
+      { label: 'Between empiricism and rationalism', value: 'empiricism vs rationalism' },
+      { label: 'Between determinism and free will', value: 'determinism vs free will' }
+    ],
+    correctAnswer: 'essentialist vs nominalist', points: 2, orderIndex: 78, tags: ['philosophy', 'metaphysics']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The Banality of Evil',
+    passage: 'Hannah Arendt\'s concept of "the banality of evil," formulated during her coverage of the Eichmann trial in Jerusalem, challenged prevailing assumptions about the nature of moral transgression. Arendt observed that Eichmann was not a monster driven by ideological fervor but rather a bureaucrat characterized by an inability or unwillingness to think critically about the moral implications of his actions. This "thoughtlessness," she argued, was far more dangerous than malice, because it enabled ordinary individuals to participate in systemic atrocities without experiencing moral conflict. The concept remains controversial: critics contend that Arendt underestimated Eichmann\'s ideological commitment and that her analysis risks trivializing the deliberate cruelty of the Holocaust.',
+    questionText: 'According to Arendt, what made Eichmann dangerous?',
+    options: [
+      { label: 'His extreme ideology', value: 'extreme ideology' },
+      { label: 'His thoughtlessness and failure to think critically', value: 'thoughtlessness' },
+      { label: 'His desire for power', value: 'desire for power' },
+      { label: 'His violent temperament', value: 'violent temperament' }
+    ],
+    correctAnswer: 'thoughtlessness', points: 2, orderIndex: 79, tags: ['philosophy', 'ethics', 'history']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The Banality of Evil',
+    passage: 'Critics contend that Arendt underestimated Eichmann\'s ideological commitment and that her analysis risks trivializing the deliberate cruelty of the Holocaust.',
+    questionText: 'What do critics say about Arendt\'s analysis?',
+    options: [
+      { label: 'It was too harsh on Eichmann', value: 'too harsh' },
+      { label: 'It risks trivializing the Holocaust\'s deliberate cruelty', value: 'risks trivializing' },
+      { label: 'It was factually inaccurate', value: 'factually inaccurate' },
+      { label: 'It was overly emotional', value: 'overly emotional' }
+    ],
+    correctAnswer: 'risks trivializing', points: 2, orderIndex: 80, tags: ['philosophy', 'ethics']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Hannah Arendt\'s concept of "the banality of evil" was formulated during her coverage of the Eichmann trial in Jerusalem.',
+    questionText: 'Arendt formulated her concept during the ___ trial in Jerusalem.',
+    correctAnswer: 'Eichmann', points: 2, orderIndex: 81, tags: ['philosophy', 'history']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Wittgenstein on Language',
+    passage: 'In his later work, "Philosophical Investigations," Wittgenstein repudiated much of his earlier "Tractatus Logico-Philosophicus," abandoning the picture theory of meaning in favor of a more pragmatic account. He introduced the concept of "language games" to illustrate that the meaning of a word is not a fixed entity but rather a function of its use within particular forms of life. The famous dictum "the meaning of a word is its use in the language" implies that understanding requires not just knowing definitions but grasping the social practices within which words operate. This insight has profoundly influenced pragmatics, sociolinguistics, and the philosophy of mind.',
+    questionText: 'What does Wittgenstein\'s concept of "language games" suggest about meaning?',
+    options: [
+      { label: 'Meaning is fixed and universal', value: 'fixed and universal' },
+      { label: 'Meaning is a function of use within forms of life', value: 'function of use' },
+      { label: 'Meaning can only be found in dictionaries', value: 'dictionaries' },
+      { label: 'Meaning is irrelevant to communication', value: 'irrelevant' }
+    ],
+    correctAnswer: 'function of use', points: 2, orderIndex: 82, tags: ['philosophy', 'linguistics']
+  },
 ]

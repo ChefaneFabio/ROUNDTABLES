@@ -92,4 +92,156 @@ export const germanSentenceTransformationQuestions: MultiSkillQuestionData[] = [
     correctAnswer: 'Sie könnte den Zug verpasst haben.|Sie dürfte den Zug verpasst haben.|Sie mag den Zug verpasst haben.',
     points: 1, orderIndex: 10, tags: ['Modalverben', 'Vermutung']
   },
+
+  // ============================================================
+  // NEUE FRAGEN — 20 weitere (orderIndex 11-30)
+  // ============================================================
+
+  // A2 (5 Fragen)
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Das Buch ist sehr interessant.',
+    questionText: 'Schreiben Sie den Satz um mit: so ein',
+    correctAnswer: 'Das ist so ein interessantes Buch.|Es ist so ein interessantes Buch.',
+    points: 1, orderIndex: 11, tags: ['so ein', 'Adjektive']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Sie ist größer als ihr Bruder.',
+    questionText: 'Schreiben Sie den Satz um, beginnend mit: Ihr Bruder...',
+    correctAnswer: 'Ihr Bruder ist kleiner als sie.|Ihr Bruder ist nicht so groß wie sie.',
+    points: 1, orderIndex: 12, tags: ['Komparativ', 'Umkehrung']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Man hat dieses Haus 1990 gebaut.',
+    questionText: 'Schreiben Sie den Satz im Passiv um.',
+    correctAnswer: 'Dieses Haus wurde 1990 gebaut.',
+    points: 1, orderIndex: 13, tags: ['Passiv', 'Präteritum']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Hier darf man nicht parken.',
+    questionText: 'Schreiben Sie den Satz um mit: Es ist verboten...',
+    correctAnswer: 'Es ist verboten, hier zu parken.',
+    points: 1, orderIndex: 14, tags: ['Verbot', 'Infinitivsatz']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Ich mag Tee lieber als Kaffee.',
+    questionText: 'Schreiben Sie den Satz um mit: Ich bevorzuge...',
+    correctAnswer: 'Ich bevorzuge Tee gegenüber Kaffee.|Ich bevorzuge Tee.',
+    points: 1, orderIndex: 15, tags: ['bevorzugen', 'Präferenz']
+  },
+
+  // B1 (5 Fragen)
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Jemand hat gestern meine Brieftasche gestohlen.',
+    questionText: 'Schreiben Sie den Satz im Passiv um.',
+    correctAnswer: 'Meine Brieftasche wurde gestern gestohlen.|Gestern wurde meine Brieftasche gestohlen.',
+    points: 1, orderIndex: 16, tags: ['Passiv', 'Präteritum']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: '„Berührt das Gemälde nicht!", sagte uns der Wächter.',
+    questionText: 'Schreiben Sie den Satz in indirekter Rede um, beginnend mit: Der Wächter sagte uns...',
+    correctAnswer: 'Der Wächter sagte uns, wir sollten das Gemälde nicht berühren.|Der Wächter sagte uns, dass wir das Gemälde nicht berühren sollten.',
+    points: 1, orderIndex: 17, tags: ['indirekte Rede', 'Imperativ']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Es ist möglich, dass sie zu Hause sind.',
+    questionText: 'Schreiben Sie den Satz um mit einem Modalverb.',
+    correctAnswer: 'Sie könnten zu Hause sein.|Sie dürften zu Hause sein.',
+    points: 1, orderIndex: 18, tags: ['Modalverben', 'Möglichkeit']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Er ist zu jung, um Auto zu fahren.',
+    questionText: 'Schreiben Sie den Satz um mit: nicht alt genug',
+    correctAnswer: 'Er ist nicht alt genug, um Auto zu fahren.',
+    points: 1, orderIndex: 19, tags: ['zu/genug']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Sie hat vor drei Jahren angefangen, hier zu arbeiten.',
+    questionText: 'Schreiben Sie den Satz um, beginnend mit: Sie arbeitet...',
+    correctAnswer: 'Sie arbeitet seit drei Jahren hier.',
+    points: 1, orderIndex: 20, tags: ['seit', 'Dauer']
+  },
+
+  // B2 (5 Fragen)
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Ich habe ihn zuletzt 2019 gesehen.',
+    questionText: 'Schreiben Sie den Satz um, beginnend mit: Ich habe ihn seit...',
+    correctAnswer: 'Ich habe ihn seit 2019 nicht mehr gesehen.',
+    points: 1, orderIndex: 21, tags: ['seit', 'Negation']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Wir konnten nicht an den Strand gehen, weil es regnete.',
+    questionText: 'Schreiben Sie den Satz um, beginnend mit: Wenn es nicht...',
+    correctAnswer: 'Wenn es nicht geregnet hätte, hätten wir an den Strand gehen können.',
+    points: 1, orderIndex: 22, tags: ['Konjunktiv II', 'Plusquamperfekt']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Man sagt, dass die Firma nächstes Jahr schließen wird.',
+    questionText: 'Schreiben Sie den Satz um, beginnend mit: Die Firma soll...',
+    correctAnswer: 'Die Firma soll nächstes Jahr schließen.',
+    points: 1, orderIndex: 23, tags: ['Modalverben', 'Hörensagen']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Ich würde lieber zu Hause bleiben, als zur Party zu gehen.',
+    questionText: 'Schreiben Sie den Satz um mit: Anstatt...',
+    correctAnswer: 'Anstatt zur Party zu gehen, würde ich lieber zu Hause bleiben.',
+    points: 1, orderIndex: 24, tags: ['anstatt', 'Infinitivsatz']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Sie hat nicht genug gelernt, deshalb hat sie die Prüfung nicht bestanden.',
+    questionText: 'Schreiben Sie den Satz um, beginnend mit: Hätte sie...',
+    correctAnswer: 'Hätte sie genug gelernt, hätte sie die Prüfung bestanden.',
+    points: 1, orderIndex: 25, tags: ['Konjunktiv II', 'Plusquamperfekt']
+  },
+
+  // C1 (5 Fragen)
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Ich wusste nicht, dass sie krank war, deshalb habe ich sie nicht besucht.',
+    questionText: 'Schreiben Sie den Satz um, beginnend mit: Hätte ich...',
+    correctAnswer: 'Hätte ich gewusst, dass sie krank war, hätte ich sie besucht.',
+    points: 1, orderIndex: 26, tags: ['Inversion', 'Konjunktiv II']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Die Regierung sollte mehr in erneuerbare Energien investieren.',
+    questionText: 'Schreiben Sie den Satz um mit: Es wird höchste Zeit, dass...',
+    correctAnswer: 'Es wird höchste Zeit, dass die Regierung mehr in erneuerbare Energien investiert.',
+    points: 1, orderIndex: 27, tags: ['es wird Zeit', 'Konjunktiv']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Er erkannte die Wahrheit erst nach ihrer Abreise.',
+    questionText: 'Schreiben Sie den Satz um, beginnend mit: Erst nach...',
+    correctAnswer: 'Erst nach ihrer Abreise erkannte er die Wahrheit.',
+    points: 1, orderIndex: 28, tags: ['Inversion', 'erst nach']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Wir haben nie einen so schweren Sturm erlebt.',
+    questionText: 'Schreiben Sie den Satz um, beginnend mit: Nie zuvor...',
+    correctAnswer: 'Nie zuvor haben wir einen so schweren Sturm erlebt.',
+    points: 1, orderIndex: 29, tags: ['Inversion', 'nie zuvor']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
+    passage: 'Man glaubt, dass die antike Stadt durch ein Erdbeben zerstört wurde.',
+    questionText: 'Schreiben Sie den Satz um, beginnend mit: Die antike Stadt...',
+    correctAnswer: 'Die antike Stadt soll durch ein Erdbeben zerstört worden sein.',
+    points: 1, orderIndex: 30, tags: ['Modalverben', 'Passiv']
+  },
 ]

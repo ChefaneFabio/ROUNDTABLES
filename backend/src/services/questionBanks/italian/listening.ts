@@ -1,6 +1,6 @@
 import { MultiSkillQuestionData } from '../types'
 
-// Italian Listening Questions — ~7 per CEFR level (42 total)
+// Italian Listening Questions — ~7 per CEFR level (~72 total)
 // Types: LISTENING (multiple choice after audio), DICTATION
 // Each question includes ttsScript for TTS generation
 
@@ -431,5 +431,330 @@ export const italianListeningQuestions: MultiSkillQuestionData[] = [
     ttsLanguageCode: 'it-IT',
     questionText: 'Scrivi esattamente quello che senti.',
     correctAnswer: 'Nonostante l\'apparente democratizzazione dell\'informazione attraverso le tecnologie digitali, l\'accesso a una conoscenza affidabile e di alta qualità resta profondamente stratificato lungo linee socioeconomiche.', points: 3, orderIndex: 42, tags: ['dettato'], timeSuggested: 120
+  },
+
+  // ============================================================
+  // NEW QUESTIONS (43–72) — 5 per level, ~70% MC + ~30% DICTATION
+  // ============================================================
+
+  // A1 — Semplici dialoghi, presentazioni (43–47)
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Ciao, io sono Anna. Ho una sorella, si chiama Elena. Elena ha sette anni. Noi abitiamo a Firenze con i nostri genitori.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Dove abita Anna?',
+    options: [{ label: 'Roma', value: 'Roma' }, { label: 'Milano', value: 'Milano' }, { label: 'Firenze', value: 'Firenze' }, { label: 'Napoli', value: 'Napoli' }],
+    correctAnswer: 'Firenze', points: 1, orderIndex: 43, tags: ['presentazione', 'città'], timeSuggested: 30
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Ciao, io sono Anna. Ho una sorella, si chiama Elena. Elena ha sette anni. Noi abitiamo a Firenze con i nostri genitori.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quanti anni ha Elena?',
+    options: [{ label: '5', value: '5' }, { label: '6', value: '6' }, { label: '7', value: '7' }, { label: '8', value: '8' }],
+    correctAnswer: '7', points: 1, orderIndex: 44, tags: ['presentazione', 'numeri'], timeSuggested: 30
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Buongiorno, vorrei un gelato alla fragola e uno al cioccolato. Quanto costa? Sono tre euro in tutto.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quanto costano i gelati in tutto?',
+    options: [{ label: '2 euro', value: '2' }, { label: '3 euro', value: '3' }, { label: '4 euro', value: '4' }, { label: '5 euro', value: '5' }],
+    correctAnswer: '3', points: 1, orderIndex: 45, tags: ['spesa', 'cibo'], timeSuggested: 30
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'La mia casa è grande e bella.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Scrivi esattamente quello che senti.',
+    correctAnswer: 'La mia casa è grande e bella.', points: 1, orderIndex: 46, tags: ['dettato'], timeSuggested: 30
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Oggi è sabato. Non vado a scuola il sabato. Resto a casa e gioco con il mio gatto. Il mio gatto si chiama Micio.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Come si chiama il gatto?',
+    options: [{ label: 'Fufi', value: 'Fufi' }, { label: 'Micio', value: 'Micio' }, { label: 'Leo', value: 'Leo' }, { label: 'Felix', value: 'Felix' }],
+    correctAnswer: 'Micio', points: 1, orderIndex: 47, tags: ['animali', 'routine'], timeSuggested: 30
+  },
+
+  // A2 — Dialoghi quotidiani, indicazioni (48–52)
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Buongiorno, vorrei prenotare un tavolo per quattro persone per sabato sera alle venti. Va bene, a che nome? Rossi. Perfetto, signor Rossi, a sabato.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Per quante persone è la prenotazione?',
+    options: [{ label: '2', value: '2' }, { label: '3', value: '3' }, { label: '4', value: '4' }, { label: '5', value: '5' }],
+    correctAnswer: '4', points: 1, orderIndex: 48, tags: ['ristorante', 'prenotazione'], timeSuggested: 40
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Per andare alla stazione, deve prendere la seconda strada a destra, poi continuare dritto per circa duecento metri. La stazione è sulla sinistra, accanto al parco.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Dove si trova la stazione?',
+    options: [{ label: 'Accanto alla chiesa', value: 'accanto alla chiesa' }, { label: 'Accanto al parco', value: 'accanto al parco' }, { label: 'Accanto al mercato', value: 'accanto al mercato' }, { label: 'Accanto alla scuola', value: 'accanto alla scuola' }],
+    correctAnswer: 'accanto al parco', points: 1, orderIndex: 49, tags: ['indicazioni'], timeSuggested: 40
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Ieri ho comprato un vestito nuovo per il matrimonio di mia cugina. È un vestito blu molto elegante. È costato centocinquanta euro. Il matrimonio è il mese prossimo.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quanto è costato il vestito?',
+    options: [{ label: '100 euro', value: '100' }, { label: '120 euro', value: '120' }, { label: '150 euro', value: '150' }, { label: '200 euro', value: '200' }],
+    correctAnswer: '150', points: 1, orderIndex: 50, tags: ['shopping', 'numeri'], timeSuggested: 40
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Il fine settimana prossimo andremo a visitare i nonni in campagna.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Scrivi esattamente quello che senti.',
+    correctAnswer: 'Il fine settimana prossimo andremo a visitare i nonni in campagna.', points: 1, orderIndex: 51, tags: ['dettato', 'famiglia'], timeSuggested: 40
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Il dottore dice che devo riposare per tre giorni e prendere questa medicina due volte al giorno, una la mattina e una la sera, dopo i pasti.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quante volte al giorno deve prendere la medicina?',
+    options: [{ label: 'Una volta', value: '1' }, { label: 'Due volte', value: '2' }, { label: 'Tre volte', value: '3' }, { label: 'Quattro volte', value: '4' }],
+    correctAnswer: '2', points: 1, orderIndex: 52, tags: ['salute', 'dottore'], timeSuggested: 40
+  },
+
+  // B1 — Notizie, annunci, conversazioni (53–57)
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Buongiorno a tutti. Vi informiamo che la biblioteca comunale resterà chiusa dal quindici al venti agosto per lavori di ristrutturazione. Durante la chiusura, i libri potranno essere restituiti nella cassetta all\'ingresso. La biblioteca riaprirà il ventuno agosto con orario regolare.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quando riaprirà la biblioteca?',
+    options: [
+      { label: 'Il 15 agosto', value: '15 agosto' },
+      { label: 'Il 18 agosto', value: '18 agosto' },
+      { label: 'Il 20 agosto', value: '20 agosto' },
+      { label: 'Il 21 agosto', value: '21 agosto' }
+    ],
+    correctAnswer: '21 agosto', points: 1, orderIndex: 53, tags: ['annunci', 'comunità'], timeSuggested: 45
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Una nuova ricerca dell\'università di Padova ha scoperto che le persone che leggono almeno trenta minuti al giorno hanno livelli di stress più bassi e dormono meglio la notte. I ricercatori consigliano di leggere libri di carta piuttosto che schermi digitali prima di dormire.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Cosa consigliano i ricercatori?',
+    options: [
+      { label: 'Leggere su tablet', value: 'tablet' },
+      { label: 'Leggere libri di carta prima di dormire', value: 'libri di carta' },
+      { label: 'Leggere solo la mattina', value: 'solo la mattina' },
+      { label: 'Non leggere prima di dormire', value: 'non leggere' }
+    ],
+    correctAnswer: 'libri di carta', points: 1, orderIndex: 54, tags: ['salute', 'ricerca'], timeSuggested: 45
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Ciao Marco, ti chiamo per dirti che la festa di venerdì è stata spostata a sabato perché il locale non era disponibile. L\'orario rimane lo stesso, alle ventuno. Puoi portare qualcosa da bere? Fammi sapere se puoi venire.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Perché la festa è stata spostata?',
+    options: [
+      { label: 'Per il maltempo', value: 'maltempo' },
+      { label: 'Il locale non era disponibile', value: 'locale non disponibile' },
+      { label: 'Marco non poteva venire', value: 'Marco non poteva' },
+      { label: 'Mancavano le bevande', value: 'mancavano bevande' }
+    ],
+    correctAnswer: 'locale non disponibile', points: 1, orderIndex: 55, tags: ['comunicazione', 'eventi'], timeSuggested: 45
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Secondo gli esperti, imparare una lingua straniera da adulti richiede costanza e motivazione.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Scrivi esattamente quello che senti.',
+    correctAnswer: 'Secondo gli esperti, imparare una lingua straniera da adulti richiede costanza e motivazione.', points: 1, orderIndex: 56, tags: ['dettato', 'educazione'], timeSuggested: 60
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Oggi al telegiornale hanno detto che il prezzo della benzina aumenterà di cinque centesimi al litro a partire da lunedì prossimo. Il governo ha dichiarato che l\'aumento è dovuto alla crisi energetica internazionale.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Di quanto aumenterà il prezzo della benzina?',
+    options: [
+      { label: '3 centesimi', value: '3' },
+      { label: '5 centesimi', value: '5' },
+      { label: '10 centesimi', value: '10' },
+      { label: '15 centesimi', value: '15' }
+    ],
+    correctAnswer: '5', points: 1, orderIndex: 57, tags: ['notizie', 'economia'], timeSuggested: 45
+  },
+
+  // B2 — Discorsi, dibattiti, analisi (58–62)
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Il fenomeno dello spreco alimentare assume proporzioni allarmanti nei Paesi industrializzati. Secondo la FAO, circa un terzo di tutto il cibo prodotto nel mondo viene sprecato. In Italia, ogni famiglia butta via in media circa sessantacinque chili di cibo all\'anno. Per contrastare il fenomeno, il governo ha introdotto una legge che facilita la donazione di cibo invenduto ai bisognosi.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quanto cibo viene sprecato nel mondo secondo la FAO?',
+    options: [
+      { label: 'Un quarto', value: 'un quarto' },
+      { label: 'Un terzo', value: 'un terzo' },
+      { label: 'La metà', value: 'la metà' },
+      { label: 'Due terzi', value: 'due terzi' }
+    ],
+    correctAnswer: 'un terzo', points: 2, orderIndex: 58, tags: ['ambiente', 'cibo'], timeSuggested: 60
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'L\'ascesa del lavoro a distanza ha sollevato un dibattito interessante sul futuro degli spazi ufficio. Alcuni analisti prevedono che entro il duemilatrenta il trenta per cento degli spazi commerciali nelle grandi città verrà convertito in abitazioni o spazi comunitari. Altri sostengono che l\'ufficio fisico rimarrà fondamentale per la collaborazione creativa e la cultura aziendale.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Cosa prevedono alcuni analisti per il 2030?',
+    options: [
+      { label: 'Tutti lavoreranno da casa', value: 'tutti da casa' },
+      { label: 'Il 30% degli spazi commerciali verrà convertito', value: '30% convertito' },
+      { label: 'Gli uffici saranno più grandi', value: 'uffici più grandi' },
+      { label: 'Il lavoro a distanza sarà vietato', value: 'vietato' }
+    ],
+    correctAnswer: '30% convertito', points: 2, orderIndex: 59, tags: ['lavoro', 'urbanistica'], timeSuggested: 60
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La cosiddetta "economia della condivisione" ha profondamente modificato settori tradizionali come i trasporti e l\'ospitalità. Piattaforme come Airbnb e BlaBlaCar permettono ai privati di offrire servizi che un tempo erano prerogativa esclusiva delle imprese. Mentre i consumatori beneficiano di prezzi più bassi e maggiore scelta, le imprese tradizionali lamentano una concorrenza sleale dovuta alla minore regolamentazione.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Di cosa si lamentano le imprese tradizionali?',
+    options: [
+      { label: 'Della mancanza di clienti', value: 'mancanza clienti' },
+      { label: 'Della concorrenza sleale per la minore regolamentazione', value: 'concorrenza sleale' },
+      { label: 'Dei prezzi troppo alti', value: 'prezzi alti' },
+      { label: 'Della qualità dei servizi', value: 'qualità servizi' }
+    ],
+    correctAnswer: 'concorrenza sleale', points: 2, orderIndex: 60, tags: ['economia'], timeSuggested: 60
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'La globalizzazione ha reso i mercati più interconnessi, ma ha anche accentuato le disuguaglianze tra i Paesi sviluppati e quelli in via di sviluppo.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Scrivi esattamente quello che senti.',
+    correctAnswer: 'La globalizzazione ha reso i mercati più interconnessi, ma ha anche accentuato le disuguaglianze tra i Paesi sviluppati e quelli in via di sviluppo.', points: 2, orderIndex: 61, tags: ['dettato', 'economia'], timeSuggested: 90
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Un nuovo studio condotto dall\'Istituto Superiore di Sanità ha rivelato che il quarantacinque per cento degli adolescenti italiani trascorre più di quattro ore al giorno davanti agli schermi, escludendo il tempo dedicato allo studio. I ricercatori hanno riscontrato una correlazione significativa tra il tempo eccessivo davanti agli schermi e disturbi del sonno, ansia e difficoltà di concentrazione.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quale percentuale di adolescenti trascorre più di 4 ore al giorno davanti agli schermi?',
+    options: [{ label: '35%', value: '35' }, { label: '40%', value: '40' }, { label: '45%', value: '45' }, { label: '50%', value: '50' }],
+    correctAnswer: '45', points: 2, orderIndex: 62, tags: ['salute', 'giovani'], timeSuggested: 60
+  },
+
+  // C1 — Conferenze, analisi complesse (63–67)
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Il fenomeno dell\'epigenetica ha rivoluzionato la nostra comprensione dell\'ereditarietà. A differenza della genetica classica, l\'epigenetica studia le modificazioni dell\'espressione genica che non alterano la sequenza del DNA stesso. Queste modificazioni possono essere influenzate da fattori ambientali come la dieta, lo stress e l\'esposizione a sostanze tossiche, e in alcuni casi possono essere trasmesse alle generazioni successive, sfidando il dogma secondo cui solo le mutazioni del DNA sono ereditabili.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'In cosa differisce l\'epigenetica dalla genetica classica?',
+    options: [
+      { label: 'Studia le mutazioni del DNA', value: 'mutazioni DNA' },
+      { label: 'Studia modificazioni dell\'espressione genica senza alterare il DNA', value: 'espressione genica senza alterare DNA' },
+      { label: 'Si occupa solo di malattie ereditarie', value: 'malattie ereditarie' },
+      { label: 'Riguarda solo gli animali', value: 'solo animali' }
+    ],
+    correctAnswer: 'espressione genica senza alterare DNA', points: 2, orderIndex: 63, tags: ['scienza', 'biologia'], timeSuggested: 75
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Il concetto di "decrescita felice", propugnato in Italia dal filosofo Serge Latouche e dal movimento di Maurizio Pallante, contesta il paradigma della crescita economica illimitata come misura del progresso sociale. I sostenitori della decrescita argomentano che il PIL non riflette il benessere reale delle persone e che un\'economia orientata alla qualità della vita, alla sostenibilità ambientale e alla ridistribuzione delle risorse produrrebbe società più eque e resilienti.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Cosa contestano i sostenitori della decrescita?',
+    options: [
+      { label: 'La libertà di mercato', value: 'libertà di mercato' },
+      { label: 'La crescita economica illimitata come misura del progresso', value: 'crescita illimitata come progresso' },
+      { label: 'Il sistema democratico', value: 'sistema democratico' },
+      { label: 'L\'innovazione tecnologica', value: 'innovazione' }
+    ],
+    correctAnswer: 'crescita illimitata come progresso', points: 2, orderIndex: 64, tags: ['economia', 'filosofia'], timeSuggested: 75
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La teoria dell\'attaccamento, formulata dallo psicologo John Bowlby, sostiene che la qualità del legame tra il bambino e la figura di riferimento nei primi anni di vita influenza profondamente lo sviluppo emotivo e relazionale dell\'individuo per tutta l\'esistenza. I bambini con un attaccamento sicuro tendono a sviluppare maggiore autostima, migliori competenze sociali e una maggiore capacità di gestire lo stress in età adulta.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quali vantaggi hanno i bambini con attaccamento sicuro?',
+    options: [
+      { label: 'Migliori risultati scolastici', value: 'risultati scolastici' },
+      { label: 'Maggiore autostima e migliori competenze sociali', value: 'autostima e competenze sociali' },
+      { label: 'Maggiore intelligenza', value: 'intelligenza' },
+      { label: 'Migliore salute fisica', value: 'salute fisica' }
+    ],
+    correctAnswer: 'autostima e competenze sociali', points: 2, orderIndex: 65, tags: ['psicologia'], timeSuggested: 75
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'La complessità delle dinamiche geopolitiche contemporanee richiede un approccio multidisciplinare che integri prospettive economiche, culturali e strategiche.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Scrivi esattamente quello che senti.',
+    correctAnswer: 'La complessità delle dinamiche geopolitiche contemporanee richiede un approccio multidisciplinare che integri prospettive economiche, culturali e strategiche.', points: 2, orderIndex: 66, tags: ['dettato'], timeSuggested: 90
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Il fenomeno della fuga dei cervelli rappresenta una delle sfide più significative per l\'Italia contemporanea. Ogni anno, migliaia di giovani laureati e ricercatori altamente qualificati lasciano il Paese alla ricerca di migliori opportunità professionali e retributive all\'estero. Le cause principali includono la scarsità di investimenti nella ricerca, la rigidità del mercato del lavoro e il nepotismo che caratterizza molti ambienti accademici e professionali.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quale causa della fuga dei cervelli è menzionata?',
+    options: [
+      { label: 'Il clima sfavorevole', value: 'clima' },
+      { label: 'Il nepotismo negli ambienti accademici', value: 'nepotismo' },
+      { label: 'La mancanza di università', value: 'mancanza università' },
+      { label: 'L\'eccessiva tassazione', value: 'tassazione' }
+    ],
+    correctAnswer: 'nepotismo', points: 2, orderIndex: 67, tags: ['società', 'lavoro'], timeSuggested: 75
+  },
+
+  // C2 — Discorsi accademici, filosofici (68–72)
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Il concetto di "banalità del male", coniato dalla filosofa Hannah Arendt durante il processo ad Adolf Eichmann a Gerusalemme, suggerisce che le atrocità più devastanti non sono necessariamente perpetrate da individui intrinsecamente malvagi, ma da funzionari ordinari che eseguono ordini senza esercitare il pensiero critico. Arendt sostiene che l\'incapacità di pensare autonomamente, di mettersi nei panni dell\'altro e di giudicare le conseguenze delle proprie azioni costituisce una minaccia più insidiosa della malvagità deliberata.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Cosa intende Arendt con "banalità del male"?',
+    options: [
+      { label: 'Il male è sempre premeditato', value: 'premeditato' },
+      { label: 'Le atrocità sono compiute da persone ordinarie che non esercitano pensiero critico', value: 'persone ordinarie senza pensiero critico' },
+      { label: 'Il male non esiste veramente', value: 'non esiste' },
+      { label: 'Solo i leader sono responsabili del male', value: 'solo leader' }
+    ],
+    correctAnswer: 'persone ordinarie senza pensiero critico', points: 2, orderIndex: 68, tags: ['filosofia', 'etica'], timeSuggested: 90
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La cosiddetta "svolta linguistica" nella filosofia del ventesimo secolo ha spostato il focus dell\'indagine filosofica dalla metafisica tradizionale all\'analisi del linguaggio. Wittgenstein, nella sua opera più tarda, abbandona l\'idea che il linguaggio sia uno specchio della realtà e propone invece il concetto di "giochi linguistici": il significato delle parole non risiede in un riferimento fisso al mondo, ma emerge dall\'uso che ne facciamo all\'interno di specifiche forme di vita.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Cosa sono i "giochi linguistici" per Wittgenstein?',
+    options: [
+      { label: 'Esercizi per imparare le lingue', value: 'esercizi' },
+      { label: 'Il significato emerge dall\'uso delle parole in contesti specifici', value: 'significato dall\'uso in contesti' },
+      { label: 'Strutture grammaticali universali', value: 'strutture universali' },
+      { label: 'Giochi da tavolo basati sulle parole', value: 'giochi da tavolo' }
+    ],
+    correctAnswer: 'significato dall\'uso in contesti', points: 2, orderIndex: 69, tags: ['filosofia', 'linguistica'], timeSuggested: 90
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Il paradosso di Fermi pone una domanda tanto semplice quanto destabilizzante: se l\'universo è così vasto e antico, e se le condizioni per la vita non sono eccezionalmente rare, dove sono tutti gli altri? La Grande Filtro è una delle risposte più inquietanti: suggerisce che esista un passaggio evolutivo così improbabile o così distruttivo che praticamente nessuna civiltà riesce a superarlo. La questione cruciale è se questo filtro si trovi nel nostro passato, il che significherebbe che siamo straordinariamente fortunati, o nel nostro futuro, il che implicherebbe una prognosi molto meno rassicurante per l\'umanità.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Perché il Grande Filtro nel futuro sarebbe preoccupante?',
+    options: [
+      { label: 'Significherebbe che l\'universo si sta contraendo', value: 'universo si contrae' },
+      { label: 'Implicherebbe che l\'umanità potrebbe non sopravvivere', value: 'umanità potrebbe non sopravvivere' },
+      { label: 'Significherebbe che gli alieni ci osservano', value: 'alieni ci osservano' },
+      { label: 'Implicherebbe che la fisica è sbagliata', value: 'fisica sbagliata' }
+    ],
+    correctAnswer: 'umanità potrebbe non sopravvivere', points: 2, orderIndex: 70, tags: ['scienza', 'filosofia'], timeSuggested: 90
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'La tensione irrisolta tra l\'imperativo della crescita economica e la necessità di preservare gli ecosistemi costituisce il dilemma centrale della nostra epoca.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Scrivi esattamente quello che senti.',
+    correctAnswer: 'La tensione irrisolta tra l\'imperativo della crescita economica e la necessità di preservare gli ecosistemi costituisce il dilemma centrale della nostra epoca.', points: 2, orderIndex: 71, tags: ['dettato'], timeSuggested: 120
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Il concetto di rizoma, elaborato da Deleuze e Guattari nell\'opera "Mille piani", propone un modello di pensiero alternativo alla struttura arborescente e gerarchica della tradizione filosofica occidentale. Nel rizoma non esiste un punto di origine privilegiato né una struttura verticale: ogni punto può connettersi con qualsiasi altro, creando una rete eterogenea e non gerarchica di relazioni. Questo modello ha trovato applicazione nell\'analisi delle reti digitali, della cultura contemporanea e delle strutture organizzative post-burocratiche.',
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Qual è la caratteristica principale del modello rizomatico?',
+    options: [
+      { label: 'Ha una struttura gerarchica chiara', value: 'gerarchica' },
+      { label: 'Non ha punto di origine privilegiato e ogni punto si connette con ogni altro', value: 'nessun punto privilegiato, connessione totale' },
+      { label: 'Si sviluppa solo in linea retta', value: 'linea retta' },
+      { label: 'Ha un unico centro organizzativo', value: 'centro unico' }
+    ],
+    correctAnswer: 'nessun punto privilegiato, connessione totale', points: 2, orderIndex: 72, tags: ['filosofia'], timeSuggested: 90
   }
 ]

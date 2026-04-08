@@ -1,6 +1,6 @@
 import { MultiSkillQuestionData } from '../types'
 
-// German Listening Questions — ~7 per CEFR level (42 total)
+// German Listening Questions — ~7 per CEFR level + 30 additional (~72 total)
 // Types: LISTENING (multiple choice after audio), DICTATION
 // Each question includes ttsScript for TTS generation
 
@@ -431,5 +431,336 @@ export const germanListeningQuestions: MultiSkillQuestionData[] = [
     ttsLanguageCode: 'de-DE',
     questionText: 'Schreiben Sie genau, was Sie hören.',
     correctAnswer: 'Ungeachtet der vermeintlichen Demokratisierung von Informationen durch digitale Technologien bleibt der Zugang zu hochwertigem, verlässlichem Wissen tief entlang sozioökonomischer Linien geschichtet.', points: 3, orderIndex: 42, tags: ['Diktat'], timeSuggested: 120
-  }
+  },
+
+  // ============================================================
+  // NEW QUESTIONS — 30 additional (orderIndex 43–72)
+  // 5 per level (A1–C2), ~70% MC + ~30% DICTATION
+  // ============================================================
+
+  // --- A1 (43–47) ---
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Guten Morgen. Ich möchte bitte ein Brötchen und eine Tasse Tee. Das macht drei Euro fünfzig.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was bestellt die Person?',
+    options: [{ label: 'Kaffee und Kuchen', value: 'Kaffee und Kuchen' }, { label: 'Brötchen und Tee', value: 'Brötchen und Tee' }, { label: 'Brot und Milch', value: 'Brot und Milch' }, { label: 'Pizza und Cola', value: 'Pizza und Cola' }],
+    correctAnswer: 'Brötchen und Tee', points: 1, orderIndex: 43, tags: ['Einkaufen', 'Essen'], timeSuggested: 30
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Mein Name ist Anna. Ich wohne in Hamburg. Ich bin Lehrerin. Ich arbeite in einer Schule.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was ist Anna von Beruf?',
+    options: [{ label: 'Ärztin', value: 'Ärztin' }, { label: 'Lehrerin', value: 'Lehrerin' }, { label: 'Verkäuferin', value: 'Verkäuferin' }, { label: 'Köchin', value: 'Köchin' }],
+    correctAnswer: 'Lehrerin', points: 1, orderIndex: 44, tags: ['Vorstellung', 'Beruf'], timeSuggested: 30
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Es ist halb vier. Der Unterricht beginnt um vier Uhr. Wir haben noch dreißig Minuten Zeit.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wann beginnt der Unterricht?',
+    options: [{ label: 'Um drei Uhr', value: 'um drei Uhr' }, { label: 'Um halb vier', value: 'um halb vier' }, { label: 'Um vier Uhr', value: 'um vier Uhr' }, { label: 'Um halb fünf', value: 'um halb fünf' }],
+    correctAnswer: 'um vier Uhr', points: 1, orderIndex: 45, tags: ['Uhrzeit'], timeSuggested: 30
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Meine Schwester heißt Maria.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Schreiben Sie genau, was Sie hören.',
+    correctAnswer: 'Meine Schwester heißt Maria.', points: 1, orderIndex: 46, tags: ['Diktat', 'Familie'], timeSuggested: 30
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Im Kühlschrank sind Eier, Milch und Käse. Wir brauchen noch Brot und Butter.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was brauchen sie noch?',
+    options: [{ label: 'Eier und Milch', value: 'Eier und Milch' }, { label: 'Käse und Wurst', value: 'Käse und Wurst' }, { label: 'Brot und Butter', value: 'Brot und Butter' }, { label: 'Obst und Gemüse', value: 'Obst und Gemüse' }],
+    correctAnswer: 'Brot und Butter', points: 1, orderIndex: 47, tags: ['Einkaufen', 'Essen'], timeSuggested: 30
+  },
+
+  // --- A2 (48–52) ---
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Letzten Samstag bin ich mit meiner Familie an den See gefahren. Das Wetter war schön und wir haben ein Picknick gemacht. Mein Bruder ist im See geschwommen. Ich habe lieber ein Buch gelesen.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was hat der Bruder gemacht?',
+    options: [{ label: 'Ein Buch gelesen', value: 'ein Buch gelesen' }, { label: 'Im See geschwommen', value: 'im See geschwommen' }, { label: 'Fußball gespielt', value: 'Fußball gespielt' }, { label: 'Gekocht', value: 'gekocht' }],
+    correctAnswer: 'im See geschwommen', points: 1, orderIndex: 48, tags: ['Freizeit', 'Perfekt'], timeSuggested: 40
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Entschuldigung, ich suche die Bibliothek. Gehen Sie hier geradeaus, dann an der Ampel links. Die Bibliothek ist auf der rechten Seite, gegenüber vom Park.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wo ist die Bibliothek?',
+    options: [{ label: 'Neben dem Park', value: 'neben dem Park' }, { label: 'Gegenüber vom Park', value: 'gegenüber vom Park' }, { label: 'Hinter dem Park', value: 'hinter dem Park' }, { label: 'Im Park', value: 'im Park' }],
+    correctAnswer: 'gegenüber vom Park', points: 1, orderIndex: 49, tags: ['Wegbeschreibung'], timeSuggested: 40
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Meine Wohnung hat drei Zimmer: ein Schlafzimmer, ein Wohnzimmer und ein Arbeitszimmer. Die Küche ist klein, aber das Bad ist groß. Ich wohne im dritten Stock.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'In welchem Stock wohnt die Person?',
+    options: [{ label: 'Im ersten Stock', value: 'im ersten Stock' }, { label: 'Im zweiten Stock', value: 'im zweiten Stock' }, { label: 'Im dritten Stock', value: 'im dritten Stock' }, { label: 'Im vierten Stock', value: 'im vierten Stock' }],
+    correctAnswer: 'im dritten Stock', points: 1, orderIndex: 50, tags: ['Wohnung'], timeSuggested: 40
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Am Wochenende gehen wir oft im Wald spazieren.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Schreiben Sie genau, was Sie hören.',
+    correctAnswer: 'Am Wochenende gehen wir oft im Wald spazieren.', points: 1, orderIndex: 51, tags: ['Diktat', 'Freizeit'], timeSuggested: 40
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Ich habe letzte Woche einen Deutschkurs angefangen. Der Kurs ist jeden Dienstag und Donnerstag von achtzehn bis neunzehn Uhr dreißig. Die Lehrerin ist sehr nett und erklärt alles gut.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wann ist der Deutschkurs?',
+    options: [{ label: 'Montag und Mittwoch', value: 'Montag und Mittwoch' }, { label: 'Dienstag und Donnerstag', value: 'Dienstag und Donnerstag' }, { label: 'Mittwoch und Freitag', value: 'Mittwoch und Freitag' }, { label: 'Jeden Tag', value: 'jeden Tag' }],
+    correctAnswer: 'Dienstag und Donnerstag', points: 1, orderIndex: 52, tags: ['Bildung', 'Termine'], timeSuggested: 40
+  },
+
+  // --- B1 (53–57) ---
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Eine neue Studie der Universität München zeigt, dass Menschen, die regelmäßig Musik hören, weniger unter Stress leiden. Besonders klassische Musik und Naturgeräusche haben einen beruhigenden Effekt. Die Forscher empfehlen, täglich mindestens zwanzig Minuten bewusst Musik zu hören.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was empfehlen die Forscher?',
+    options: [
+      { label: 'Täglich Sport treiben', value: 'Sport treiben' },
+      { label: 'Täglich mindestens zwanzig Minuten Musik hören', value: 'zwanzig Minuten Musik hören' },
+      { label: 'Weniger arbeiten', value: 'weniger arbeiten' },
+      { label: 'Mehr schlafen', value: 'mehr schlafen' }
+    ],
+    correctAnswer: 'zwanzig Minuten Musik hören', points: 1, orderIndex: 53, tags: ['Gesundheit', 'Wissenschaft'], timeSuggested: 45
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Ab nächstem Monat wird die Busfahrkarte teurer. Der Einzelfahrschein kostet dann drei Euro statt zwei Euro fünfzig. Monatskarten steigen von fünfundsechzig auf fünfundsiebzig Euro. Die Verkehrsbetriebe begründen die Erhöhung mit gestiegenen Energiekosten.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Warum werden die Fahrpreise erhöht?',
+    options: [
+      { label: 'Wegen neuer Busse', value: 'neue Busse' },
+      { label: 'Wegen gestiegener Energiekosten', value: 'gestiegene Energiekosten' },
+      { label: 'Wegen mehr Fahrgästen', value: 'mehr Fahrgäste' },
+      { label: 'Wegen einer neuen Strecke', value: 'neue Strecke' }
+    ],
+    correctAnswer: 'gestiegene Energiekosten', points: 1, orderIndex: 54, tags: ['Verkehr', 'Wirtschaft'], timeSuggested: 45
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Sehr geehrte Mitarbeiterinnen und Mitarbeiter, wir möchten Sie darauf hinweisen, dass die Kantine ab nächster Woche ein vegetarisches Menü als feste Option anbieten wird. Außerdem werden wir die Öffnungszeiten um eine halbe Stunde verlängern. Die Kantine ist dann bis vierzehn Uhr dreißig geöffnet.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was ist die neue Änderung in der Kantine?',
+    options: [
+      { label: 'Sie wird geschlossen', value: 'geschlossen' },
+      { label: 'Ein vegetarisches Menü wird angeboten', value: 'vegetarisches Menü' },
+      { label: 'Die Preise steigen', value: 'Preise steigen' },
+      { label: 'Es gibt nur noch Salate', value: 'nur Salate' }
+    ],
+    correctAnswer: 'vegetarisches Menü', points: 1, orderIndex: 55, tags: ['Arbeit', 'Essen'], timeSuggested: 45
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Seit dem letzten Jahr arbeite ich in einer internationalen Firma und reise oft ins Ausland.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Schreiben Sie genau, was Sie hören.',
+    correctAnswer: 'Seit dem letzten Jahr arbeite ich in einer internationalen Firma und reise oft ins Ausland.', points: 1, orderIndex: 56, tags: ['Diktat', 'Arbeit'], timeSuggested: 60
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Das Jugendamt bietet in den Sommerferien ein kostenloses Ferienprogramm für Kinder zwischen sechs und zwölf Jahren an. Auf dem Programm stehen Ausflüge in den Zoo, Bastelworkshops und Sportaktivitäten. Die Anmeldung ist ab dem ersten Mai online möglich.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Für wen ist das Ferienprogramm?',
+    options: [
+      { label: 'Für Jugendliche ab dreizehn', value: 'Jugendliche ab 13' },
+      { label: 'Für Kinder zwischen sechs und zwölf', value: 'Kinder zwischen 6 und 12' },
+      { label: 'Für Erwachsene', value: 'Erwachsene' },
+      { label: 'Für die ganze Familie', value: 'ganze Familie' }
+    ],
+    correctAnswer: 'Kinder zwischen 6 und 12', points: 1, orderIndex: 57, tags: ['Kinder', 'Freizeit'], timeSuggested: 45
+  },
+
+  // --- B2 (58–62) ---
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Die zunehmende Verbreitung von Homeoffice hat nicht nur die Arbeitswelt verändert, sondern auch den Immobilienmarkt beeinflusst. Immer mehr Menschen ziehen aus den teuren Großstädten in ländlichere Regionen, da der tägliche Weg zur Arbeit entfällt. Dieser Trend hat die Immobilienpreise in Vororten und Kleinstädten deutlich ansteigen lassen, während die Nachfrage nach Büroflächen in den Innenstädten zurückgeht.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wie hat Homeoffice den Immobilienmarkt beeinflusst?',
+    options: [
+      { label: 'Preise in Großstädten steigen weiter', value: 'Großstadtpreise steigen' },
+      { label: 'Preise in Vororten steigen, Büronachfrage sinkt', value: 'Vorortpreise steigen, Büronachfrage sinkt' },
+      { label: 'Alle Preise sinken', value: 'alle Preise sinken' },
+      { label: 'Es gibt keinen Einfluss', value: 'kein Einfluss' }
+    ],
+    correctAnswer: 'Vorortpreise steigen, Büronachfrage sinkt', points: 2, orderIndex: 58, tags: ['Wirtschaft', 'Immobilien'], timeSuggested: 60
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Forscher der Technischen Universität Berlin haben einen neuartigen Werkstoff entwickelt, der sich selbst reparieren kann. Inspiriert von der Selbstheilung biologischer Gewebe, enthält das Material mikroskopische Kapseln mit einem speziellen Klebstoff. Wenn das Material beschädigt wird, platzen die Kapseln auf und der Klebstoff versiegelt den Riss automatisch.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wie funktioniert der selbstreparierende Werkstoff?',
+    options: [
+      { label: 'Durch Wärme wird er weich und formt sich neu', value: 'Wärme' },
+      { label: 'Kapseln platzen auf und versiegeln Risse mit Klebstoff', value: 'Kapseln versiegeln Risse' },
+      { label: 'Roboter reparieren ihn automatisch', value: 'Roboter' },
+      { label: 'Er besteht aus Flüssigmetall', value: 'Flüssigmetall' }
+    ],
+    correctAnswer: 'Kapseln versiegeln Risse', points: 2, orderIndex: 59, tags: ['Wissenschaft', 'Technologie'], timeSuggested: 60
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Die Debatte um ein allgemeines Tempolimit auf deutschen Autobahnen spaltet die Gesellschaft seit Jahrzehnten. Befürworter verweisen auf die Verringerung von Unfällen und CO2-Emissionen. Gegner sehen darin einen Eingriff in die persönliche Freiheit und bezweifeln die tatsächliche Wirksamkeit für den Klimaschutz.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was sagen die Gegner des Tempolimits?',
+    options: [
+      { label: 'Es würde die Wirtschaft stärken', value: 'Wirtschaft stärken' },
+      { label: 'Es sei ein Eingriff in die Freiheit und die Wirksamkeit sei fraglich', value: 'Eingriff in Freiheit, fraglich wirksam' },
+      { label: 'Es sei zu teuer umzusetzen', value: 'zu teuer' },
+      { label: 'Es bringe zu viele Vorteile', value: 'zu viele Vorteile' }
+    ],
+    correctAnswer: 'Eingriff in Freiheit, fraglich wirksam', points: 2, orderIndex: 60, tags: ['Politik', 'Gesellschaft'], timeSuggested: 60
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Die Verbraucherzentrale warnt vor betrügerischen Angeboten im Internet, die persönliche Daten abgreifen.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Schreiben Sie genau, was Sie hören.',
+    correctAnswer: 'Die Verbraucherzentrale warnt vor betrügerischen Angeboten im Internet, die persönliche Daten abgreifen.', points: 2, orderIndex: 61, tags: ['Diktat', 'Verbraucherschutz'], timeSuggested: 90
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Das Phänomen des sogenannten „Brain Drain" betrifft viele Entwicklungsländer. Hochqualifizierte Fachkräfte wandern in wohlhabendere Länder ab, weil sie dort bessere Arbeitsbedingungen und höhere Gehälter finden. Dies führt in den Herkunftsländern zu einem Mangel an Ärzten, Ingenieuren und Wissenschaftlern, der die wirtschaftliche Entwicklung zusätzlich bremst.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was verursacht der „Brain Drain" in Entwicklungsländern?',
+    options: [
+      { label: 'Mehr Arbeitsplätze', value: 'mehr Arbeitsplätze' },
+      { label: 'Einen Mangel an Fachkräften', value: 'Mangel an Fachkräften' },
+      { label: 'Höhere Löhne', value: 'höhere Löhne' },
+      { label: 'Bessere Bildung', value: 'bessere Bildung' }
+    ],
+    correctAnswer: 'Mangel an Fachkräften', points: 2, orderIndex: 62, tags: ['Wirtschaft', 'Migration'], timeSuggested: 60
+  },
+
+  // --- C1 (63–67) ---
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Die Debatte um die ethischen Grenzen der Genmanipulation hat durch die Entwicklung der CRISPR-Technologie eine neue Dringlichkeit erhalten. Während therapeutische Anwendungen zur Heilung genetischer Erkrankungen weitgehend befürwortet werden, stößt die Möglichkeit sogenannter Keimbahneingriffe — also Veränderungen, die an nachfolgende Generationen weitergegeben werden — auf erheblichen Widerstand. Kritiker warnen vor unvorhersehbaren Langzeitfolgen und der Gefahr einer genetischen Zwei-Klassen-Gesellschaft.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was sind Keimbahneingriffe?',
+    options: [
+      { label: 'Eingriffe, die nur den Patienten betreffen', value: 'nur Patient' },
+      { label: 'Veränderungen, die an nachfolgende Generationen weitergegeben werden', value: 'an Generationen weitergegeben' },
+      { label: 'Kosmetische Veränderungen', value: 'kosmetisch' },
+      { label: 'Medikamentöse Behandlungen', value: 'medikamentös' }
+    ],
+    correctAnswer: 'an Generationen weitergegeben', points: 2, orderIndex: 63, tags: ['Wissenschaft', 'Ethik'], timeSuggested: 75
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Der Soziologe Hartmut Rosa beschreibt die moderne Gesellschaft als eine „Beschleunigungsgesellschaft", in der technologische, soziale und kulturelle Veränderungen in immer kürzeren Abständen aufeinander folgen. Diese permanente Beschleunigung führt laut Rosa zu einem Verlust an Resonanzerfahrungen — jener tiefen, bedeutungsvollen Verbindung mit der Welt, die entsteht, wenn wir uns von etwas wirklich berühren lassen.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was geht laut Rosa durch die Beschleunigung verloren?',
+    options: [
+      { label: 'Wirtschaftliches Wachstum', value: 'Wachstum' },
+      { label: 'Resonanzerfahrungen — tiefe Verbindung mit der Welt', value: 'Resonanzerfahrungen' },
+      { label: 'Technologischer Fortschritt', value: 'Fortschritt' },
+      { label: 'Soziale Kontakte', value: 'soziale Kontakte' }
+    ],
+    correctAnswer: 'Resonanzerfahrungen', points: 2, orderIndex: 64, tags: ['Soziologie', 'Philosophie'], timeSuggested: 75
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Die Frage, ob Tiere ein Bewusstsein haben, ist in der Kognitionsforschung umstritten. Während lange argumentiert wurde, dass nur Menschen zu reflexivem Denken fähig seien, deuten neuere Experimente darauf hin, dass zumindest Menschenaffen, Delfine und bestimmte Vogelarten ein rudimentäres Selbstbewusstsein besitzen. Der sogenannte Spiegeltest, bei dem beobachtet wird, ob ein Tier sich im Spiegel erkennt, gilt dabei als klassisches, wenn auch nicht unumstrittenes Kriterium.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Welche Tiere zeigen Hinweise auf Selbstbewusstsein?',
+    options: [
+      { label: 'Nur Hunde und Katzen', value: 'Hunde und Katzen' },
+      { label: 'Menschenaffen, Delfine und bestimmte Vögel', value: 'Menschenaffen, Delfine, Vögel' },
+      { label: 'Alle Säugetiere', value: 'alle Säugetiere' },
+      { label: 'Nur Primaten', value: 'nur Primaten' }
+    ],
+    correctAnswer: 'Menschenaffen, Delfine, Vögel', points: 2, orderIndex: 65, tags: ['Wissenschaft', 'Kognition'], timeSuggested: 75
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Die zunehmende Ökonomisierung des Bildungswesens hat zu einer Verengung des Bildungsbegriffs auf rein verwertbare Kompetenzen geführt.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Schreiben Sie genau, was Sie hören.',
+    correctAnswer: 'Die zunehmende Ökonomisierung des Bildungswesens hat zu einer Verengung des Bildungsbegriffs auf rein verwertbare Kompetenzen geführt.', points: 2, orderIndex: 66, tags: ['Diktat', 'Bildung'], timeSuggested: 90
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Das Konzept der „negativen Freiheit" — die Abwesenheit äußerer Zwänge — unterscheidet sich fundamental von der „positiven Freiheit", die als Fähigkeit zur Selbstbestimmung und Selbstverwirklichung verstanden wird. Isaiah Berlin argumentierte, dass ein übermäßiger Fokus auf positive Freiheit historisch häufig zur Rechtfertigung autoritärer Regime missbraucht wurde.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was ist laut Berlin das Risiko eines Fokus auf positive Freiheit?',
+    options: [
+      { label: 'Er führt zu mehr Demokratie', value: 'mehr Demokratie' },
+      { label: 'Er wurde zur Rechtfertigung autoritärer Regime missbraucht', value: 'Rechtfertigung autoritärer Regime' },
+      { label: 'Er macht Menschen faul', value: 'Menschen faul' },
+      { label: 'Er ist zu abstrakt', value: 'zu abstrakt' }
+    ],
+    correctAnswer: 'Rechtfertigung autoritärer Regime', points: 2, orderIndex: 67, tags: ['Philosophie', 'Politik'], timeSuggested: 75
+  },
+
+  // --- C2 (68–72) ---
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Adornos berühmte Sentenz, nach Auschwitz ein Gedicht zu schreiben sei barbarisch, wird häufig als Verbot künstlerischer Äußerung missverstanden. Tatsächlich richtete sich Adornos Kritik weniger gegen die Kunst als solche als vielmehr gegen eine Kultur, die nach der Shoah zur Tagesordnung übergehen wollte. Die ästhetische Verarbeitung des Ungeheuerlichen dürfe nicht zur Versöhnung mit dem Unversöhnlichen führen.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wogegen richtete sich Adornos Kritik tatsächlich?',
+    options: [
+      { label: 'Gegen alle Formen der Lyrik', value: 'gegen Lyrik' },
+      { label: 'Gegen eine Kultur, die zur Tagesordnung übergehen wollte', value: 'Kultur der Tagesordnung' },
+      { label: 'Gegen die Philosophie', value: 'gegen Philosophie' },
+      { label: 'Gegen moderne Kunst', value: 'gegen moderne Kunst' }
+    ],
+    correctAnswer: 'Kultur der Tagesordnung', points: 2, orderIndex: 68, tags: ['Philosophie', 'Kultur'], timeSuggested: 90
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Die Frage, ob mathematische Strukturen entdeckt oder erfunden werden, berührt die Grundlagen der Erkenntnistheorie. Platonisten argumentieren, dass mathematische Objekte unabhängig vom menschlichen Geist existieren und lediglich von Mathematikern entdeckt werden. Konstruktivisten hingegen betrachten Mathematik als ein Produkt menschlicher Kognition und sozialer Konvention. Diese Debatte hat unmittelbare Konsequenzen für unser Verständnis der Beziehung zwischen Mathematik und physikalischer Realität.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was behaupten Platonisten über mathematische Objekte?',
+    options: [
+      { label: 'Sie sind menschliche Erfindungen', value: 'menschliche Erfindungen' },
+      { label: 'Sie existieren unabhängig vom menschlichen Geist', value: 'unabhängig vom menschlichen Geist' },
+      { label: 'Sie sind kulturabhängig', value: 'kulturabhängig' },
+      { label: 'Sie haben keine reale Bedeutung', value: 'keine reale Bedeutung' }
+    ],
+    correctAnswer: 'unabhängig vom menschlichen Geist', points: 2, orderIndex: 69, tags: ['Philosophie', 'Mathematik'], timeSuggested: 90
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Hannah Arendts Konzept der „Banalität des Bösen", geprägt anlässlich des Eichmann-Prozesses in Jerusalem, beschreibt die Möglichkeit, dass gewöhnliche Menschen ohne erkennbare sadistische Neigungen zu Handlangern systematischen Unrechts werden können. Nicht dämonische Bosheit, sondern Gedankenlosigkeit und blinder Gehorsam gegenüber bürokratischen Strukturen ermöglichten die Mittäterschaft an Verbrechen unvorstellbaren Ausmaßes.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was ermöglichte laut Arendt die Mittäterschaft?',
+    options: [
+      { label: 'Ideologische Überzeugung', value: 'ideologische Überzeugung' },
+      { label: 'Gedankenlosigkeit und blinder Gehorsam', value: 'Gedankenlosigkeit und Gehorsam' },
+      { label: 'Persönliche Grausamkeit', value: 'persönliche Grausamkeit' },
+      { label: 'Finanzielle Anreize', value: 'finanzielle Anreize' }
+    ],
+    correctAnswer: 'Gedankenlosigkeit und Gehorsam', points: 2, orderIndex: 70, tags: ['Philosophie', 'Geschichte'], timeSuggested: 90
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Die Verschränkung von ästhetischer Erfahrung und ethischer Reflexion bildet den Kerngedanken einer philosophischen Tradition, die von Kant bis zur Gegenwart reicht.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Schreiben Sie genau, was Sie hören.',
+    correctAnswer: 'Die Verschränkung von ästhetischer Erfahrung und ethischer Reflexion bildet den Kerngedanken einer philosophischen Tradition, die von Kant bis zur Gegenwart reicht.', points: 2, orderIndex: 71, tags: ['Diktat', 'Philosophie'], timeSuggested: 120
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Das Paradoxon der Toleranz, formuliert von Karl Popper, besagt, dass eine unbegrenzt tolerante Gesellschaft letztlich von intoleranten Kräften zerstört werden wird. Wenn eine Gesellschaft tolerant gegenüber denjenigen ist, die die Toleranz selbst abschaffen wollen, wird sie ihre eigene Grundlage untergraben. Popper folgerte daraus, dass eine tolerante Gesellschaft das Recht und die Pflicht habe, die Intoleranz nicht zu tolerieren.',
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was besagt das Paradoxon der Toleranz?',
+    options: [
+      { label: 'Toleranz ist immer gut', value: 'immer gut' },
+      { label: 'Unbegrenzte Toleranz führt zur Zerstörung der Toleranz selbst', value: 'unbegrenzte Toleranz zerstört sich selbst' },
+      { label: 'Toleranz und Demokratie sind unvereinbar', value: 'unvereinbar' },
+      { label: 'Intoleranz ist natürlich', value: 'natürlich' }
+    ],
+    correctAnswer: 'unbegrenzte Toleranz zerstört sich selbst', points: 2, orderIndex: 72, tags: ['Philosophie', 'Politik'], timeSuggested: 90
+  },
 ]

@@ -1,6 +1,6 @@
 import { MultiSkillQuestionData } from '../types'
 
-// Spanish Grammar MCQ Questions — 40 questions
+// Spanish Grammar MCQ Questions — 100 questions
 // Distributed across A1-C2 levels
 
 export const spanishGrammarQuestions: MultiSkillQuestionData[] = [
@@ -266,5 +266,381 @@ export const spanishGrammarQuestions: MultiSkillQuestionData[] = [
     questionText: 'A no ser que se ___ medidas urgentes, la situación empeorará.',
     options: [{ label: 'toman', value: 'toman' }, { label: 'tomen', value: 'tomen' }, { label: 'tomarán', value: 'tomarán' }, { label: 'tomaron', value: 'tomaron' }],
     correctAnswer: 'tomen', points: 1, orderIndex: 40, tags: ['a no ser que', 'subjunctive', 'formal register']
+  },
+
+  // ============================================================
+  // NEW QUESTIONS — 60 additional (orderIndex 41–100)
+  // ============================================================
+
+  // ── A1 — 10 more questions (41–50) ──────────────────────────
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Yo ___ de México.',
+    options: [{ label: 'soy', value: 'soy' }, { label: 'estoy', value: 'estoy' }, { label: 'es', value: 'es' }, { label: 'está', value: 'está' }],
+    correctAnswer: 'soy', points: 1, orderIndex: 41, tags: ['ser', 'origin']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'La manzana ___ roja.',
+    options: [{ label: 'es', value: 'es' }, { label: 'está', value: 'está' }, { label: 'son', value: 'son' }, { label: 'están', value: 'están' }],
+    correctAnswer: 'es', points: 1, orderIndex: 42, tags: ['ser', 'description']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '¿Tú ___ café o té?',
+    options: [{ label: 'quieres', value: 'quieres' }, { label: 'quiere', value: 'quiere' }, { label: 'quiero', value: 'quiero' }, { label: 'queremos', value: 'queremos' }],
+    correctAnswer: 'quieres', points: 1, orderIndex: 43, tags: ['present', 'querer']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Nosotros ___ en una casa grande.',
+    options: [{ label: 'vive', value: 'vive' }, { label: 'vivimos', value: 'vivimos' }, { label: 'viven', value: 'viven' }, { label: 'vives', value: 'vives' }],
+    correctAnswer: 'vivimos', points: 1, orderIndex: 44, tags: ['present', 'regular -ir verbs']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '___ silla es cómoda.',
+    options: [{ label: 'El', value: 'El' }, { label: 'La', value: 'La' }, { label: 'Los', value: 'Los' }, { label: 'Las', value: 'Las' }],
+    correctAnswer: 'La', points: 1, orderIndex: 45, tags: ['articles', 'gender']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'María ___ contenta hoy.',
+    options: [{ label: 'es', value: 'es' }, { label: 'está', value: 'está' }, { label: 'son', value: 'son' }, { label: 'están', value: 'están' }],
+    correctAnswer: 'está', points: 1, orderIndex: 46, tags: ['estar', 'emotions']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Yo ___ español y francés.',
+    options: [{ label: 'hablo', value: 'hablo' }, { label: 'habla', value: 'habla' }, { label: 'hablas', value: 'hablas' }, { label: 'hablan', value: 'hablan' }],
+    correctAnswer: 'hablo', points: 1, orderIndex: 47, tags: ['present', 'regular -ar verbs']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '¿ ___ se llama tu profesor?',
+    options: [{ label: 'Cómo', value: 'Cómo' }, { label: 'Dónde', value: 'Dónde' }, { label: 'Cuándo', value: 'Cuándo' }, { label: 'Qué', value: 'Qué' }],
+    correctAnswer: 'Cómo', points: 1, orderIndex: 48, tags: ['questions', 'interrogatives']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'El agua ___ fría.',
+    options: [{ label: 'es', value: 'es' }, { label: 'está', value: 'está' }, { label: 'son', value: 'son' }, { label: 'están', value: 'están' }],
+    correctAnswer: 'está', points: 1, orderIndex: 49, tags: ['estar', 'temporary states']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Mis padres ___ en el jardín.',
+    options: [{ label: 'es', value: 'es' }, { label: 'está', value: 'está' }, { label: 'son', value: 'son' }, { label: 'están', value: 'están' }],
+    correctAnswer: 'están', points: 1, orderIndex: 50, tags: ['estar', 'location', 'plural']
+  },
+
+  // ── A2 — 10 more questions (51–60) ──────────────────────────
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'El año pasado ___ mucho.',
+    options: [{ label: 'llovió', value: 'llovió' }, { label: 'llovía', value: 'llovía' }, { label: 'llueve', value: 'llueve' }, { label: 'lloverá', value: 'lloverá' }],
+    correctAnswer: 'llovió', points: 1, orderIndex: 51, tags: ['preterite', 'weather']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'De niño, yo ___ mucho helado.',
+    options: [{ label: 'comí', value: 'comí' }, { label: 'comía', value: 'comía' }, { label: 'como', value: 'como' }, { label: 'comeré', value: 'comeré' }],
+    correctAnswer: 'comía', points: 1, orderIndex: 52, tags: ['imperfect', 'habitual past']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '___ doy el regalo a mi madre.',
+    options: [{ label: 'Le', value: 'Le' }, { label: 'La', value: 'La' }, { label: 'Lo', value: 'Lo' }, { label: 'Les', value: 'Les' }],
+    correctAnswer: 'Le', points: 1, orderIndex: 53, tags: ['indirect object pronouns']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'María es ___ alta ___ su hermana.',
+    options: [{ label: 'tan / como', value: 'tan / como' }, { label: 'más / como', value: 'más / como' }, { label: 'tan / que', value: 'tan / que' }, { label: 'más / de', value: 'más / de' }],
+    correctAnswer: 'tan / como', points: 1, orderIndex: 54, tags: ['comparatives', 'equality']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Ya ___ comido cuando llamaste.',
+    options: [{ label: 'he', value: 'he' }, { label: 'había', value: 'había' }, { label: 'hemos', value: 'hemos' }, { label: 'habré', value: 'habré' }],
+    correctAnswer: 'había', points: 1, orderIndex: 55, tags: ['pluperfect']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '¿ ___ quién es este libro?',
+    options: [{ label: 'De', value: 'De' }, { label: 'A', value: 'A' }, { label: 'En', value: 'En' }, { label: 'Por', value: 'Por' }],
+    correctAnswer: 'De', points: 1, orderIndex: 56, tags: ['prepositions', 'possession']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Estoy ___ a cocinar.',
+    options: [{ label: 'aprendiendo', value: 'aprendiendo' }, { label: 'aprendido', value: 'aprendido' }, { label: 'aprender', value: 'aprender' }, { label: 'aprendo', value: 'aprendo' }],
+    correctAnswer: 'aprendiendo', points: 1, orderIndex: 57, tags: ['present progressive', 'gerund']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'El libro ___ compré es muy bueno.',
+    options: [{ label: 'que', value: 'que' }, { label: 'quien', value: 'quien' }, { label: 'cual', value: 'cual' }, { label: 'donde', value: 'donde' }],
+    correctAnswer: 'que', points: 1, orderIndex: 58, tags: ['relative pronouns']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Voy ___ estudiar esta noche.',
+    options: [{ label: 'a', value: 'a' }, { label: 'de', value: 'de' }, { label: 'en', value: 'en' }, { label: 'por', value: 'por' }],
+    correctAnswer: 'a', points: 1, orderIndex: 59, tags: ['ir a + infinitive', 'future']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Anoche ___ una película muy interesante.',
+    options: [{ label: 'vi', value: 'vi' }, { label: 'veía', value: 'veía' }, { label: 'veo', value: 'veo' }, { label: 'veré', value: 'veré' }],
+    correctAnswer: 'vi', points: 1, orderIndex: 60, tags: ['preterite', 'irregular verbs']
+  },
+
+  // ── B1 — 10 more questions (61–70) ──────────────────────────
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Quiero que ___ la verdad.',
+    options: [{ label: 'dices', value: 'dices' }, { label: 'digas', value: 'digas' }, { label: 'dirás', value: 'dirás' }, { label: 'dijiste', value: 'dijiste' }],
+    correctAnswer: 'digas', points: 1, orderIndex: 61, tags: ['present subjunctive', 'querer que']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Si ___ tiempo, iré al gimnasio.',
+    options: [{ label: 'tengo', value: 'tengo' }, { label: 'tuviera', value: 'tuviera' }, { label: 'tendré', value: 'tendré' }, { label: 'tenga', value: 'tenga' }],
+    correctAnswer: 'tengo', points: 1, orderIndex: 62, tags: ['first conditional', 'si + present']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Me alegro de que ___ venido.',
+    options: [{ label: 'has', value: 'has' }, { label: 'hayas', value: 'hayas' }, { label: 'habías', value: 'habías' }, { label: 'habrás', value: 'habrás' }],
+    correctAnswer: 'hayas', points: 1, orderIndex: 63, tags: ['present perfect subjunctive', 'emotions']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Si fuera rico, ___ por todo el mundo.',
+    options: [{ label: 'viajo', value: 'viajo' }, { label: 'viajaría', value: 'viajaría' }, { label: 'viajaré', value: 'viajaré' }, { label: 'viajé', value: 'viajé' }],
+    correctAnswer: 'viajaría', points: 1, orderIndex: 64, tags: ['conditional', 'si clauses']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'El profesor nos dijo que ___ el capítulo tres.',
+    options: [{ label: 'leemos', value: 'leemos' }, { label: 'leyéramos', value: 'leyéramos' }, { label: 'leeremos', value: 'leeremos' }, { label: 'leímos', value: 'leímos' }],
+    correctAnswer: 'leyéramos', points: 1, orderIndex: 65, tags: ['imperfect subjunctive', 'reported speech']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '___ lo hice yo solo.',
+    options: [{ label: 'Se', value: 'Se' }, { label: 'Me', value: 'Me' }, { label: 'Lo', value: 'Lo' }, { label: 'Le', value: 'Le' }],
+    correctAnswer: 'Lo', points: 1, orderIndex: 66, tags: ['direct object pronouns']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Busco un piso que ___ cerca del centro.',
+    options: [{ label: 'está', value: 'está' }, { label: 'esté', value: 'esté' }, { label: 'estará', value: 'estará' }, { label: 'estaba', value: 'estaba' }],
+    correctAnswer: 'esté', points: 1, orderIndex: 67, tags: ['subjunctive', 'relative clauses']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Mientras ___ , sonó el teléfono.',
+    options: [{ label: 'cociné', value: 'cociné' }, { label: 'cocinaba', value: 'cocinaba' }, { label: 'cocino', value: 'cocino' }, { label: 'cocinaré', value: 'cocinaré' }],
+    correctAnswer: 'cocinaba', points: 1, orderIndex: 68, tags: ['imperfect', 'while']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Estos documentos deben ___ firmados por el director.',
+    options: [{ label: 'ser', value: 'ser' }, { label: 'estar', value: 'estar' }, { label: 'haber', value: 'haber' }, { label: 'tener', value: 'tener' }],
+    correctAnswer: 'ser', points: 1, orderIndex: 69, tags: ['passive voice', 'ser']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Te lo explico ___ que lo entiendas.',
+    options: [{ label: 'para', value: 'para' }, { label: 'por', value: 'por' }, { label: 'de', value: 'de' }, { label: 'a', value: 'a' }],
+    correctAnswer: 'para', points: 1, orderIndex: 70, tags: ['prepositions', 'para vs por']
+  },
+
+  // ── B2 — 10 more questions (71–80) ──────────────────────────
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Si hubieras llegado a tiempo, no ___ perdido el tren.',
+    options: [{ label: 'habrías', value: 'habrías' }, { label: 'hubieras', value: 'hubieras' }, { label: 'habías', value: 'habías' }, { label: 'habrás', value: 'habrás' }],
+    correctAnswer: 'habrías', points: 2, orderIndex: 71, tags: ['conditional perfect', 'si clauses']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'La carta ___ escrita por el abogado ayer.',
+    options: [{ label: 'fue', value: 'fue' }, { label: 'era', value: 'era' }, { label: 'ha sido', value: 'ha sido' }, { label: 'es', value: 'es' }],
+    correctAnswer: 'fue', points: 2, orderIndex: 72, tags: ['passive voice', 'preterite']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Me dijo que ___ al médico la semana siguiente.',
+    options: [{ label: 'va', value: 'va' }, { label: 'iría', value: 'iría' }, { label: 'fue', value: 'fue' }, { label: 'iba', value: 'iba' }],
+    correctAnswer: 'iría', points: 2, orderIndex: 73, tags: ['reported speech', 'conditional']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'La persona ___ hablé ayer es la directora.',
+    options: [{ label: 'con la que', value: 'con la que' }, { label: 'que', value: 'que' }, { label: 'la que', value: 'la que' }, { label: 'con que', value: 'con que' }],
+    correctAnswer: 'con la que', points: 2, orderIndex: 74, tags: ['relative clauses', 'preposition + relative']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Es posible que mañana ___ .',
+    options: [{ label: 'llueve', value: 'llueve' }, { label: 'llueva', value: 'llueva' }, { label: 'llovió', value: 'llovió' }, { label: 'lloverá', value: 'lloverá' }],
+    correctAnswer: 'llueva', points: 2, orderIndex: 75, tags: ['subjunctive', 'impersonal expressions']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'No habría ido de vacaciones ___ hubiera sabido lo caro que era.',
+    options: [{ label: 'si', value: 'si' }, { label: 'cuando', value: 'cuando' }, { label: 'aunque', value: 'aunque' }, { label: 'porque', value: 'porque' }],
+    correctAnswer: 'si', points: 2, orderIndex: 76, tags: ['si clauses', 'conditional perfect']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Se ___ muchos libros en esa librería.',
+    options: [{ label: 'vende', value: 'vende' }, { label: 'venden', value: 'venden' }, { label: 'vendió', value: 'vendió' }, { label: 'vendía', value: 'vendía' }],
+    correctAnswer: 'venden', points: 2, orderIndex: 77, tags: ['passive se', 'plural agreement']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Aunque ___ cansado, seguí trabajando.',
+    options: [{ label: 'estaba', value: 'estaba' }, { label: 'estuviera', value: 'estuviera' }, { label: 'esté', value: 'esté' }, { label: 'estaré', value: 'estaré' }],
+    correctAnswer: 'estaba', points: 2, orderIndex: 78, tags: ['concessive clauses', 'although + indicative']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Le rogué que ___ pronto.',
+    options: [{ label: 'vuelve', value: 'vuelve' }, { label: 'volviera', value: 'volviera' }, { label: 'volverá', value: 'volverá' }, { label: 'volvió', value: 'volvió' }],
+    correctAnswer: 'volviera', points: 2, orderIndex: 79, tags: ['imperfect subjunctive', 'reported speech']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Esta es la ciudad ___ nací.',
+    options: [{ label: 'donde', value: 'donde' }, { label: 'que', value: 'que' }, { label: 'cual', value: 'cual' }, { label: 'quien', value: 'quien' }],
+    correctAnswer: 'donde', points: 2, orderIndex: 80, tags: ['relative clauses', 'donde']
+  },
+
+  // ── C1 — 10 more questions (81–90) ──────────────────────────
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'A no ser que ___ una solución, tendremos que cancelar el evento.',
+    options: [{ label: 'encontramos', value: 'encontramos' }, { label: 'encontremos', value: 'encontremos' }, { label: 'encontraremos', value: 'encontraremos' }, { label: 'encontrábamos', value: 'encontrábamos' }],
+    correctAnswer: 'encontremos', points: 2, orderIndex: 81, tags: ['subjunctive', 'a no ser que']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Habría preferido que me lo ___ antes.',
+    options: [{ label: 'dijeras', value: 'dijeras' }, { label: 'hubieras dicho', value: 'hubieras dicho' }, { label: 'dirías', value: 'dirías' }, { label: 'digas', value: 'digas' }],
+    correctAnswer: 'hubieras dicho', points: 2, orderIndex: 82, tags: ['pluperfect subjunctive', 'preferences']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Cuanto más lo pienso, menos ___ entiendo.',
+    options: [{ label: 'le', value: 'le' }, { label: 'lo', value: 'lo' }, { label: 'la', value: 'la' }, { label: 'se', value: 'se' }],
+    correctAnswer: 'lo', points: 2, orderIndex: 83, tags: ['direct object pronouns', 'correlative comparatives']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'El proyecto se llevó a cabo ___ grandes dificultades.',
+    options: [{ label: 'a pesar de', value: 'a pesar de' }, { label: 'gracias a', value: 'gracias a' }, { label: 'en vez de', value: 'en vez de' }, { label: 'a causa de', value: 'a causa de' }],
+    correctAnswer: 'a pesar de', points: 2, orderIndex: 84, tags: ['prepositions', 'concessive']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Se lo explicaré ___ que lo comprenda bien.',
+    options: [{ label: 'con tal de', value: 'con tal de' }, { label: 'a fin de', value: 'a fin de' }, { label: 'de modo', value: 'de modo' }, { label: 'siempre y cuando', value: 'siempre y cuando' }],
+    correctAnswer: 'a fin de', points: 2, orderIndex: 85, tags: ['purpose clauses', 'prepositions']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Hizo como si no ___ nada.',
+    options: [{ label: 'pasa', value: 'pasa' }, { label: 'pasara', value: 'pasara' }, { label: 'pasó', value: 'pasó' }, { label: 'pasará', value: 'pasará' }],
+    correctAnswer: 'pasara', points: 2, orderIndex: 86, tags: ['como si', 'imperfect subjunctive']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'La reunión fue cancelada ___ a la falta de participantes.',
+    options: [{ label: 'debido', value: 'debido' }, { label: 'por culpa', value: 'por culpa' }, { label: 'a causa', value: 'a causa' }, { label: 'gracias', value: 'gracias' }],
+    correctAnswer: 'debido', points: 2, orderIndex: 87, tags: ['prepositions', 'cause']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Quien ___ interesado puede inscribirse antes del viernes.',
+    options: [{ label: 'está', value: 'está' }, { label: 'esté', value: 'esté' }, { label: 'estará', value: 'estará' }, { label: 'estuviera', value: 'estuviera' }],
+    correctAnswer: 'esté', points: 2, orderIndex: 88, tags: ['subjunctive', 'relative clauses']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Según ___ informado el periódico, habrá cambios importantes.',
+    options: [{ label: 'ha', value: 'ha' }, { label: 'haya', value: 'haya' }, { label: 'hubiera', value: 'hubiera' }, { label: 'habría', value: 'habría' }],
+    correctAnswer: 'ha', points: 2, orderIndex: 89, tags: ['reported speech', 'present perfect']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Por más que ___, no conseguirás convencerla.',
+    options: [{ label: 'insistes', value: 'insistes' }, { label: 'insistas', value: 'insistas' }, { label: 'insistirás', value: 'insistirás' }, { label: 'insistías', value: 'insistías' }],
+    correctAnswer: 'insistas', points: 2, orderIndex: 90, tags: ['concessive clauses', 'subjunctive']
+  },
+
+  // ── C2 — 10 more questions (91–100) ─────────────────────────
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Comoquiera que ___ la cuestión, siempre llegamos a la misma conclusión.',
+    options: [{ label: 'abordemos', value: 'abordemos' }, { label: 'abordamos', value: 'abordamos' }, { label: 'abordaremos', value: 'abordaremos' }, { label: 'abordábamos', value: 'abordábamos' }],
+    correctAnswer: 'abordemos', points: 2, orderIndex: 91, tags: ['comoquiera que', 'subjunctive']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Si bien la propuesta ___ aprobada, aún quedan obstáculos.',
+    options: [{ label: 'fue', value: 'fue' }, { label: 'fuera', value: 'fuera' }, { label: 'sea', value: 'sea' }, { label: 'sería', value: 'sería' }],
+    correctAnswer: 'fue', points: 2, orderIndex: 92, tags: ['si bien', 'concessive', 'indicative']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'No ya que la solución ___ correcta, sino que además es elegante.',
+    options: [{ label: 'es', value: 'es' }, { label: 'sea', value: 'sea' }, { label: 'fuera', value: 'fuera' }, { label: 'será', value: 'será' }],
+    correctAnswer: 'sea', points: 2, orderIndex: 93, tags: ['no ya que', 'subjunctive', 'formal register']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Se las arregla ___ para salir adelante sin ayuda.',
+    options: [{ label: 'como puede', value: 'como puede' }, { label: 'como sea', value: 'como sea' }, { label: 'como quiera', value: 'como quiera' }, { label: 'como pueda', value: 'como pueda' }],
+    correctAnswer: 'como puede', points: 2, orderIndex: 94, tags: ['como', 'indicative vs subjunctive']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Diérase el caso de que ___ necesario, acudiríamos al tribunal.',
+    options: [{ label: 'fuera', value: 'fuera' }, { label: 'fuese', value: 'fuese' }, { label: 'sea', value: 'sea' }, { label: 'es', value: 'es' }],
+    correctAnswer: 'fuese', points: 2, orderIndex: 95, tags: ['literary subjunctive', 'formal register']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Todo cuanto ___ dicho carece de fundamento jurídico.',
+    options: [{ label: 'ha sido', value: 'ha sido' }, { label: 'haya sido', value: 'haya sido' }, { label: 'hubiera sido', value: 'hubiera sido' }, { label: 'habría sido', value: 'habría sido' }],
+    correctAnswer: 'ha sido', points: 2, orderIndex: 96, tags: ['relative clauses', 'todo cuanto']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'La inversión, ___ cuantiosa que parezca, resultará rentable a largo plazo.',
+    options: [{ label: 'por', value: 'por' }, { label: 'tan', value: 'tan' }, { label: 'aunque', value: 'aunque' }, { label: 'por más', value: 'por más' }],
+    correctAnswer: 'por', points: 2, orderIndex: 97, tags: ['concessive', 'por + adj + que']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Hubiere quien hubiere cometido el delito, será juzgado con imparcialidad.',
+    options: [{ label: 'La frase usa el futuro de subjuntivo correctamente', value: 'La frase usa el futuro de subjuntivo correctamente' }, { label: 'La frase usa el presente de subjuntivo', value: 'La frase usa el presente de subjuntivo' }, { label: 'La frase usa el condicional', value: 'La frase usa el condicional' }, { label: 'La frase usa el pretérito indefinido', value: 'La frase usa el pretérito indefinido' }],
+    correctAnswer: 'La frase usa el futuro de subjuntivo correctamente', points: 2, orderIndex: 98, tags: ['future subjunctive', 'legal register', 'metalinguistic']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Se mostró reacio ___ aceptar las nuevas condiciones.',
+    options: [{ label: 'a', value: 'a' }, { label: 'de', value: 'de' }, { label: 'en', value: 'en' }, { label: 'por', value: 'por' }],
+    correctAnswer: 'a', points: 2, orderIndex: 99, tags: ['prepositions', 'adjective + preposition']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: 'Bien ___ verdad que la situación ha mejorado, no podemos cantar victoria.',
+    options: [{ label: 'es', value: 'es' }, { label: 'sea', value: 'sea' }, { label: 'será', value: 'será' }, { label: 'fuera', value: 'fuera' }],
+    correctAnswer: 'es', points: 2, orderIndex: 100, tags: ['bien es verdad que', 'concessive', 'formal register']
   },
 ]

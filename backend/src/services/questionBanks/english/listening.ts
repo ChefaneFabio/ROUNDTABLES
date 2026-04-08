@@ -431,5 +431,338 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
     ttsLanguageCode: 'en-US',
     questionText: 'Write exactly what you hear.',
     correctAnswer: 'Notwithstanding the ostensible democratization of information through digital technologies, access to high-quality, reliable knowledge remains deeply stratified along socioeconomic lines.', points: 3, orderIndex: 42, tags: ['dictation'], timeSuggested: 120
-  }
+  },
+
+  // ============================================================
+  // NEW QUESTIONS 43-72 (30 additional, 5 per level)
+  // Mix: ~70% MULTIPLE_CHOICE, ~30% DICTATION
+  // ============================================================
+
+  // ============================================================
+  // A1 — Beginner (43-47)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'I have a red bag. My bag is big. I put my books in my bag. I take my bag to school every day.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What color is the bag?',
+    options: [{ label: 'Blue', value: 'blue' }, { label: 'Red', value: 'red' }, { label: 'Green', value: 'green' }, { label: 'Yellow', value: 'yellow' }],
+    correctAnswer: 'red', points: 1, orderIndex: 43, tags: ['colors', 'possessions'], timeSuggested: 30
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'I have a red bag. My bag is big. I put my books in my bag. I take my bag to school every day.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'Where does the person take the bag?',
+    options: [{ label: 'To work', value: 'to work' }, { label: 'To school', value: 'to school' }, { label: 'To the park', value: 'to the park' }, { label: 'To the shop', value: 'to the shop' }],
+    correctAnswer: 'to school', points: 1, orderIndex: 44, tags: ['school', 'daily routine'], timeSuggested: 30
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'My sister likes fruit. She eats an apple every day. She also likes oranges and bananas. She does not like grapes.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'Which fruit does the sister NOT like?',
+    options: [{ label: 'Apples', value: 'apples' }, { label: 'Oranges', value: 'oranges' }, { label: 'Bananas', value: 'bananas' }, { label: 'Grapes', value: 'grapes' }],
+    correctAnswer: 'grapes', points: 1, orderIndex: 45, tags: ['food', 'preferences'], timeSuggested: 30
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'She has two brothers and one sister.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'Write exactly what you hear.',
+    correctAnswer: 'She has two brothers and one sister.', points: 1, orderIndex: 46, tags: ['dictation', 'family'], timeSuggested: 30
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Good morning! The time is nine o\'clock. It is a sunny day. The temperature is twenty degrees.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What is the temperature?',
+    options: [{ label: '10 degrees', value: '10' }, { label: '15 degrees', value: '15' }, { label: '20 degrees', value: '20' }, { label: '25 degrees', value: '25' }],
+    correctAnswer: '20', points: 1, orderIndex: 47, tags: ['weather', 'numbers'], timeSuggested: 30
+  },
+
+  // ============================================================
+  // A2 — Elementary (48-52)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Last weekend, I went to a friend\'s birthday party. There were about twenty people. We ate cake and danced. The party finished at midnight. I had a great time.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What time did the party finish?',
+    options: [{ label: '10 PM', value: '10 PM' }, { label: '11 PM', value: '11 PM' }, { label: 'Midnight', value: 'midnight' }, { label: '1 AM', value: '1 AM' }],
+    correctAnswer: 'midnight', points: 1, orderIndex: 48, tags: ['social', 'time'], timeSuggested: 40
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Last weekend, I went to a friend\'s birthday party. There were about twenty people. We ate cake and danced. The party finished at midnight. I had a great time.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'How many people were at the party?',
+    options: [{ label: 'About 10', value: '10' }, { label: 'About 20', value: '20' }, { label: 'About 30', value: '30' }, { label: 'About 50', value: '50' }],
+    correctAnswer: '20', points: 1, orderIndex: 49, tags: ['social', 'numbers'], timeSuggested: 40
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Excuse me, I would like to return this shirt. I bought it yesterday, but it is too small. Do you have a larger size? Yes, we do. Would you like to try a medium or a large?',
+    ttsLanguageCode: 'en-US',
+    questionText: 'Why does the customer want to return the shirt?',
+    options: [{ label: 'It is too expensive', value: 'too expensive' }, { label: 'It is the wrong color', value: 'wrong color' }, { label: 'It is too small', value: 'too small' }, { label: 'It is damaged', value: 'damaged' }],
+    correctAnswer: 'too small', points: 1, orderIndex: 50, tags: ['shopping', 'complaints'], timeSuggested: 40
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'They are going to visit their grandparents next weekend.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'Write exactly what you hear.',
+    correctAnswer: 'They are going to visit their grandparents next weekend.', points: 1, orderIndex: 51, tags: ['dictation', 'family'], timeSuggested: 40
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'The library is on the second floor of the building. It is open from Monday to Saturday, from nine in the morning to seven in the evening. You can borrow up to five books at a time.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'How many books can you borrow at a time?',
+    options: [{ label: '3', value: '3' }, { label: '4', value: '4' }, { label: '5', value: '5' }, { label: '6', value: '6' }],
+    correctAnswer: '5', points: 1, orderIndex: 52, tags: ['library', 'rules'], timeSuggested: 40
+  },
+
+  // ============================================================
+  // B1 — Intermediate (53-57)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'A new study from the University of Cambridge suggests that learning a musical instrument as a child can improve academic performance. Children who had at least two years of music lessons scored higher in reading and mathematics tests compared to those who did not. Researchers believe that music training enhances concentration and working memory.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What does music training enhance according to researchers?',
+    options: [
+      { label: 'Physical fitness', value: 'physical fitness' },
+      { label: 'Concentration and working memory', value: 'concentration and working memory' },
+      { label: 'Social skills', value: 'social skills' },
+      { label: 'Artistic creativity', value: 'artistic creativity' }
+    ],
+    correctAnswer: 'concentration and working memory', points: 1, orderIndex: 53, tags: ['education', 'music'], timeSuggested: 45
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'A new study from the University of Cambridge suggests that learning a musical instrument as a child can improve academic performance. Children who had at least two years of music lessons scored higher in reading and mathematics tests.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'How long did children need to study music to show improvement?',
+    options: [
+      { label: 'At least one year', value: 'one year' },
+      { label: 'At least two years', value: 'two years' },
+      { label: 'At least three years', value: 'three years' },
+      { label: 'At least five years', value: 'five years' }
+    ],
+    correctAnswer: 'two years', points: 1, orderIndex: 54, tags: ['education', 'research'], timeSuggested: 45
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Good afternoon, and welcome to City Tours. Today\'s walking tour will take approximately two hours. We will visit the old town, the cathedral, and the riverside market. Please stay with the group and feel free to ask questions at any time. We will have a fifteen-minute break at the market where you can buy refreshments.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'How long will the tour take?',
+    options: [
+      { label: 'One hour', value: 'one hour' },
+      { label: 'Ninety minutes', value: 'ninety minutes' },
+      { label: 'Two hours', value: 'two hours' },
+      { label: 'Three hours', value: 'three hours' }
+    ],
+    correctAnswer: 'two hours', points: 1, orderIndex: 55, tags: ['tourism', 'announcements'], timeSuggested: 45
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'If you have any questions about the assignment, please do not hesitate to contact me by email.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'Write exactly what you hear.',
+    correctAnswer: 'If you have any questions about the assignment, please do not hesitate to contact me by email.', points: 1, orderIndex: 56, tags: ['dictation', 'formal'], timeSuggested: 60
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Recent figures show that cycling to work has increased by thirty-five percent in major European cities over the past five years. City planners attribute this growth to improved cycling infrastructure, including dedicated bike lanes and bike-sharing programs. Health experts say this trend could help reduce obesity rates and improve air quality.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'By how much has cycling to work increased?',
+    options: [{ label: '15%', value: '15' }, { label: '25%', value: '25' }, { label: '35%', value: '35' }, { label: '45%', value: '45' }],
+    correctAnswer: '35', points: 1, orderIndex: 57, tags: ['transport', 'statistics'], timeSuggested: 45
+  },
+
+  // ============================================================
+  // B2 — Upper Intermediate (58-62)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'The sharing economy — exemplified by platforms such as Airbnb and car-sharing services — has disrupted traditional business models across multiple sectors. While consumers benefit from lower prices and greater convenience, established businesses complain of unfair competition, arguing that sharing economy platforms often operate in regulatory gray areas. Governments are now struggling to create frameworks that protect consumers and workers without stifling innovation.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What complaint do established businesses have?',
+    options: [
+      { label: 'Sharing platforms are too expensive', value: 'too expensive' },
+      { label: 'Sharing platforms operate in regulatory gray areas', value: 'regulatory gray areas' },
+      { label: 'Sharing platforms offer poor quality', value: 'poor quality' },
+      { label: 'Sharing platforms do not advertise enough', value: 'not enough advertising' }
+    ],
+    correctAnswer: 'regulatory gray areas', points: 2, orderIndex: 58, tags: ['economics', 'technology'], timeSuggested: 60
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'A growing body of research indicates that prolonged exposure to social media can have detrimental effects on mental health, particularly among adolescents. Studies have linked heavy social media use to increased rates of anxiety, depression, and poor self-image. However, some researchers caution against oversimplifying the relationship, noting that social media can also provide valuable social support and a sense of community for marginalized groups.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What positive aspect of social media is mentioned?',
+    options: [
+      { label: 'It improves academic performance', value: 'academic performance' },
+      { label: 'It provides social support for marginalized groups', value: 'social support for marginalized groups' },
+      { label: 'It helps people earn money', value: 'earn money' },
+      { label: 'It replaces the need for therapy', value: 'replaces therapy' }
+    ],
+    correctAnswer: 'social support for marginalized groups', points: 2, orderIndex: 59, tags: ['mental health', 'social media'], timeSuggested: 60
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Microplastics — tiny particles of plastic less than five millimeters in diameter — have been found in virtually every environment on Earth, from the deep ocean to Arctic ice. Recent studies have even detected them in human blood and lung tissue. While the long-term health implications remain unclear, scientists are calling for urgent research into the potential risks of microplastic accumulation in the human body.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'Where have microplastics been detected recently?',
+    options: [
+      { label: 'Only in the ocean', value: 'only ocean' },
+      { label: 'In human blood and lung tissue', value: 'human blood and lung tissue' },
+      { label: 'Only in food products', value: 'only food' },
+      { label: 'Only in rivers', value: 'only rivers' }
+    ],
+    correctAnswer: 'human blood and lung tissue', points: 2, orderIndex: 60, tags: ['environment', 'health'], timeSuggested: 60
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Although the initial findings were promising, further research is needed before any definitive conclusions can be drawn.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'Write exactly what you hear.',
+    correctAnswer: 'Although the initial findings were promising, further research is needed before any definitive conclusions can be drawn.', points: 2, orderIndex: 61, tags: ['dictation', 'academic'], timeSuggested: 90
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'The concept of emotional intelligence, popularized by Daniel Goleman in the nineteen nineties, refers to the ability to recognize, understand, and manage both one\'s own emotions and those of others. Research suggests that emotional intelligence is at least as important as cognitive intelligence in predicting professional success, particularly in leadership roles.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'Who popularized the concept of emotional intelligence?',
+    options: [
+      { label: 'Howard Gardner', value: 'Howard Gardner' },
+      { label: 'Daniel Goleman', value: 'Daniel Goleman' },
+      { label: 'Abraham Maslow', value: 'Abraham Maslow' },
+      { label: 'Carl Rogers', value: 'Carl Rogers' }
+    ],
+    correctAnswer: 'Daniel Goleman', points: 2, orderIndex: 62, tags: ['psychology', 'leadership'], timeSuggested: 60
+  },
+
+  // ============================================================
+  // C1 — Advanced (63-67)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'The concept of "nudging," developed by behavioral economists Richard Thaler and Cass Sunstein, refers to designing choice architectures that subtly guide people toward better decisions without restricting their freedom. Examples include placing healthier food options at eye level in cafeterias or making organ donation the default option on driver\'s license applications. Critics argue that nudging is paternalistic and manipulative, while proponents contend that it merely corrects for well-documented cognitive biases.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What is an example of nudging mentioned in the passage?',
+    options: [
+      { label: 'Banning unhealthy food', value: 'banning food' },
+      { label: 'Making organ donation the default option', value: 'organ donation default' },
+      { label: 'Increasing taxes on sugar', value: 'sugar tax' },
+      { label: 'Requiring exercise in schools', value: 'exercise in schools' }
+    ],
+    correctAnswer: 'organ donation default', points: 2, orderIndex: 63, tags: ['behavioral economics', 'policy'], timeSuggested: 75
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Impostor syndrome — the persistent feeling that one\'s success is undeserved and that one will eventually be exposed as a fraud — affects an estimated seventy percent of people at some point in their lives. Paradoxically, it tends to be most prevalent among high achievers. Psychologists attribute this to the Dunning-Kruger effect in reverse: the more competent individuals become, the more acutely aware they are of how much they do not know.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What percentage of people experience impostor syndrome at some point?',
+    options: [{ label: '30%', value: '30' }, { label: '50%', value: '50' }, { label: '70%', value: '70' }, { label: '90%', value: '90' }],
+    correctAnswer: '70', points: 2, orderIndex: 64, tags: ['psychology'], timeSuggested: 75
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'The phenomenon known as "brain drain" — the emigration of highly skilled professionals from developing to developed countries — poses a significant challenge to economic development. While remittances sent back by emigrants contribute to the home economy, the loss of doctors, engineers, and scientists diminishes the domestic capacity for innovation and public service delivery. Some nations have attempted to address this through "brain circulation" policies that encourage temporary migration and knowledge transfer.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What are "brain circulation" policies designed to encourage?',
+    options: [
+      { label: 'Permanent emigration', value: 'permanent emigration' },
+      { label: 'Temporary migration and knowledge transfer', value: 'temporary migration and knowledge transfer' },
+      { label: 'Banning skilled workers from leaving', value: 'banning departure' },
+      { label: 'Reducing university enrollment', value: 'reducing enrollment' }
+    ],
+    correctAnswer: 'temporary migration and knowledge transfer', points: 2, orderIndex: 65, tags: ['economics', 'migration'], timeSuggested: 75
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'The interdisciplinary nature of the research necessitates collaboration between experts in fields as diverse as neuroscience, philosophy, and computer science.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'Write exactly what you hear.',
+    correctAnswer: 'The interdisciplinary nature of the research necessitates collaboration between experts in fields as diverse as neuroscience, philosophy, and computer science.', points: 2, orderIndex: 66, tags: ['dictation', 'academic'], timeSuggested: 90
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'The Overton window — a concept from political theory — describes the range of policies that are considered politically acceptable at any given time. Ideas that fall outside this window are deemed too radical for mainstream discourse. However, the window can shift dramatically in response to crises, social movements, or technological change. What was once unthinkable can become common sense within a generation.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What can cause the Overton window to shift?',
+    options: [
+      { label: 'Only elections', value: 'only elections' },
+      { label: 'Crises, social movements, or technological change', value: 'crises, movements, or technology' },
+      { label: 'Only academic research', value: 'only research' },
+      { label: 'Only economic growth', value: 'only growth' }
+    ],
+    correctAnswer: 'crises, movements, or technology', points: 2, orderIndex: 67, tags: ['politics', 'theory'], timeSuggested: 75
+  },
+
+  // ============================================================
+  // C2 — Proficiency (68-72)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'The concept of "moral luck," introduced by philosophers Bernard Williams and Thomas Nagel, challenges the intuition that moral judgments should be based solely on factors within an agent\'s control. Consider two equally reckless drivers: one arrives home safely, while the other kills a pedestrian. Despite identical choices and intentions, we judge the latter far more harshly. This asymmetry suggests that our moral assessments are influenced by outcomes that are, by definition, beyond the agent\'s control — a conclusion that sits uncomfortably with foundational principles of moral responsibility.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What does the concept of "moral luck" challenge?',
+    options: [
+      { label: 'The idea that all people are equally moral', value: 'equally moral' },
+      { label: 'The intuition that moral judgments should depend only on factors within one\'s control', value: 'judgments based on controllable factors' },
+      { label: 'The belief that luck does not exist', value: 'luck does not exist' },
+      { label: 'The principle that laws should be fair', value: 'fair laws' }
+    ],
+    correctAnswer: 'judgments based on controllable factors', points: 2, orderIndex: 68, tags: ['philosophy', 'ethics'], timeSuggested: 90
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'The phenomenon of semantic satiation — whereby a word temporarily loses its meaning through rapid repetition — offers a window into the neurological underpinnings of language processing. When a word is repeated thirty or more times in quick succession, speakers report that it begins to feel like a meaningless sound. Neurolinguists hypothesize that this occurs because the neural pathways connecting phonological form to semantic content become temporarily fatigued, disrupting the automatic retrieval of meaning.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What causes semantic satiation according to neurolinguists?',
+    options: [
+      { label: 'Damage to the language centers of the brain', value: 'damage' },
+      { label: 'Temporary fatigue of neural pathways connecting sound to meaning', value: 'neural pathway fatigue' },
+      { label: 'Loss of hearing sensitivity', value: 'hearing loss' },
+      { label: 'Emotional overload', value: 'emotional overload' }
+    ],
+    correctAnswer: 'neural pathway fatigue', points: 2, orderIndex: 69, tags: ['linguistics', 'neuroscience'], timeSuggested: 90
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Gödel\'s incompleteness theorems, published in nineteen thirty-one, demonstrated that any sufficiently powerful formal mathematical system contains true statements that cannot be proven within the system itself. This result shattered the ambitions of the formalist program championed by David Hilbert, which sought to establish mathematics on a complete and consistent axiomatic foundation. The implications extend beyond mathematics: the theorems suggest fundamental limits to what can be known through formal reasoning alone.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'Whose program did Gödel\'s theorems undermine?',
+    options: [
+      { label: 'Bertrand Russell', value: 'Russell' },
+      { label: 'David Hilbert', value: 'David Hilbert' },
+      { label: 'Albert Einstein', value: 'Einstein' },
+      { label: 'Alan Turing', value: 'Turing' }
+    ],
+    correctAnswer: 'David Hilbert', points: 2, orderIndex: 70, tags: ['mathematics', 'philosophy'], timeSuggested: 90
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'The juxtaposition of the protagonist\'s outward composure with her inner turmoil exemplifies the narrative technique of unreliable focalization.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'Write exactly what you hear.',
+    correctAnswer: 'The juxtaposition of the protagonist\'s outward composure with her inner turmoil exemplifies the narrative technique of unreliable focalization.', points: 2, orderIndex: 71, tags: ['dictation', 'literary criticism'], timeSuggested: 120
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'The philosophical zombie thought experiment — conceived by David Chalmers — posits a being physically identical to a conscious human but entirely devoid of subjective experience. If such a being is conceivable, Chalmers argues, then consciousness cannot be reduced to physical processes alone. This constitutes what he calls the "hard problem of consciousness" — explaining why and how physical processes give rise to subjective experience. Physicalists counter that conceivability does not entail metaphysical possibility.',
+    ttsLanguageCode: 'en-US',
+    questionText: 'What is the "hard problem of consciousness"?',
+    options: [
+      { label: 'Building artificial intelligence', value: 'building AI' },
+      { label: 'Explaining why physical processes give rise to subjective experience', value: 'why physical processes create experience' },
+      { label: 'Understanding how the brain stores memories', value: 'memory storage' },
+      { label: 'Measuring intelligence accurately', value: 'measuring intelligence' }
+    ],
+    correctAnswer: 'why physical processes create experience', points: 2, orderIndex: 72, tags: ['philosophy', 'consciousness'], timeSuggested: 90
+  },
 ]

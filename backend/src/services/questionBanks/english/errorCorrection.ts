@@ -92,4 +92,156 @@ export const englishErrorCorrectionQuestions: MultiSkillQuestionData[] = [
     correctAnswer: 'The research, along with its implications, has been widely discussed.',
     points: 1, orderIndex: 10, tags: ['subject-verb agreement', 'parenthetical']
   },
+
+  // ============================================================
+  // NEW QUESTIONS — 20 more (orderIndex 11-30)
+  // ============================================================
+
+  // A2 — Elementary (5 questions)
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'I am agree with you.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'I agree with you.',
+    points: 1, orderIndex: 11, tags: ['verb patterns', 'agree']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'There is many people in the park.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'There are many people in the park.',
+    points: 1, orderIndex: 12, tags: ['there is/are', 'subject-verb agreement']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'She can to swim very well.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'She can swim very well.',
+    points: 1, orderIndex: 13, tags: ['modal verbs', 'infinitive']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'I have visited Paris last year.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'I visited Paris last year.',
+    points: 1, orderIndex: 14, tags: ['present perfect vs past simple']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'He always is late for class.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'He is always late for class.',
+    points: 1, orderIndex: 15, tags: ['adverb position', 'frequency']
+  },
+
+  // B1 — Intermediate (5 questions)
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'I am used to wake up early every morning.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'I am used to waking up early every morning.',
+    points: 1, orderIndex: 16, tags: ['used to', 'gerund']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'He told me that he will come tomorrow.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'He told me that he would come the next day.|He told me that he would come tomorrow.',
+    points: 1, orderIndex: 17, tags: ['reported speech', 'tense shift']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'I look forward to hear from you.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'I look forward to hearing from you.',
+    points: 1, orderIndex: 18, tags: ['phrasal verbs', 'gerund']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Although it was raining, but we went out.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'Although it was raining, we went out.|It was raining, but we went out.',
+    points: 1, orderIndex: 19, tags: ['conjunctions', 'although/but']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'She suggested him to take a taxi.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'She suggested that he take a taxi.|She suggested taking a taxi.|She suggested he take a taxi.',
+    points: 1, orderIndex: 20, tags: ['suggest', 'verb patterns']
+  },
+
+  // B2 — Upper Intermediate (5 questions)
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'He denied to have stolen the money.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'He denied having stolen the money.|He denied stealing the money.',
+    points: 1, orderIndex: 21, tags: ['deny', 'gerund']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'The more you practice, more you improve.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'The more you practice, the more you improve.',
+    points: 1, orderIndex: 22, tags: ['comparative', 'the...the']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'I wish I can speak French fluently.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'I wish I could speak French fluently.',
+    points: 1, orderIndex: 23, tags: ['wish', 'subjunctive']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'She is one of the kindest person I have ever met.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'She is one of the kindest people I have ever met.',
+    points: 1, orderIndex: 24, tags: ['plural', 'superlative']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Despite of being tired, she continued working.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'Despite being tired, she continued working.|In spite of being tired, she continued working.',
+    points: 1, orderIndex: 25, tags: ['despite', 'prepositions']
+  },
+
+  // C1 — Advanced (5 questions)
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Hardly he had arrived when the meeting started.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'Hardly had he arrived when the meeting started.',
+    points: 1, orderIndex: 26, tags: ['inversion', 'hardly']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'The committee have not yet reached their decision, despite they have been deliberating for hours.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'The committee have not yet reached their decision, despite having been deliberating for hours.|The committee has not yet reached its decision, despite having been deliberating for hours.',
+    points: 1, orderIndex: 27, tags: ['despite', 'gerund clause']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'Were it not for his help, I would have been failed the exam.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'Were it not for his help, I would have failed the exam.',
+    points: 1, orderIndex: 28, tags: ['conditional', 'inversion', 'passive']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'The number of students who has enrolled this year has increased significantly.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'The number of students who have enrolled this year has increased significantly.',
+    points: 1, orderIndex: 29, tags: ['subject-verb agreement', 'relative clause']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
+    passage: 'It is essential that every employee submits their report by Friday.',
+    questionText: 'Find and correct the error in this sentence.',
+    correctAnswer: 'It is essential that every employee submit their report by Friday.',
+    points: 1, orderIndex: 30, tags: ['subjunctive', 'mandative']
+  },
 ]

@@ -107,5 +107,133 @@ export const italianWritingQuestions: MultiSkillQuestionData[] = [
     correctAnswer: '', points: 3, orderIndex: 14,
     rubric: { minWords: 200, maxWords: 300, criteria: ['profondità filosofica', 'analisi equilibrata', 'consapevolezza politica', 'prosa elegante', 'coerenza logica'] },
     tags: ['tecnologia', 'politica', 'etica'], timeSuggested: 720
+  },
+
+  // ============================================================
+  // NUOVE DOMANDE — 16 in più (orderIndex 15-30)
+  // ============================================================
+
+  // A1 (20-50 parole)
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Scrivi una breve cartolina a un amico. Digli dove sei e com\'è il tempo.',
+    correctAnswer: '', points: 1, orderIndex: 15,
+    rubric: { minWords: 20, maxWords: 50, criteria: ['formula di saluto', 'frasi semplici', 'vocabolario del meteo'] },
+    tags: ['cartolina', 'meteo'], timeSuggested: 180
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Descrivi la tua casa o il tuo appartamento. Quante stanze ha? Qual è la tua stanza preferita?',
+    correctAnswer: '', points: 1, orderIndex: 16,
+    rubric: { minWords: 20, maxWords: 50, criteria: ['vocabolario della casa', 'c\'è/ci sono', 'aggettivi semplici'] },
+    tags: ['casa', 'descrizione'], timeSuggested: 180
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Cosa ti piace mangiare e bere? Scrivi dei tuoi pasti preferiti.',
+    correctAnswer: '', points: 1, orderIndex: 17,
+    rubric: { minWords: 20, maxWords: 50, criteria: ['vocabolario alimentare', 'piacere/preferire', 'frasi semplici'] },
+    tags: ['cibo', 'preferenze'], timeSuggested: 180
+  },
+
+  // A2 (40-80 parole)
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Scrivi un\'email a un amico per invitarlo a una festa. Indica la data, l\'ora, il luogo e cosa portare.',
+    correctAnswer: '', points: 1, orderIndex: 18,
+    rubric: { minWords: 40, maxWords: 80, criteria: ['formato email', 'piani futuri', 'linguaggio di invito', 'dettagli'] },
+    tags: ['email', 'invito'], timeSuggested: 240
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Descrivi il tuo migliore amico / la tua migliore amica. Com\'è fisicamente? Cosa vi piace fare insieme?',
+    correctAnswer: '', points: 1, orderIndex: 19,
+    rubric: { minWords: 40, maxWords: 80, criteria: ['descrizione fisica', 'aggettivi di personalità', 'presente indicativo', 'piacere + infinito'] },
+    tags: ['amico', 'descrizione'], timeSuggested: 240
+  },
+
+  // B1 (80-150 parole)
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Scrivi una lettera di reclamo al direttore di un albergo riguardo a un problema che hai avuto durante il soggiorno.',
+    correctAnswer: '', points: 2, orderIndex: 20,
+    rubric: { minWords: 80, maxWords: 150, criteria: ['formato lettera formale', 'linguaggio di reclamo', 'racconto al passato', 'richieste cortesi'] },
+    tags: ['reclamo', 'lettera formale'], timeSuggested: 360
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Pensi che i compiti a casa siano utili per gli studenti? Dai la tua opinione con ragioni ed esempi.',
+    correctAnswer: '', points: 2, orderIndex: 21,
+    rubric: { minWords: 80, maxWords: 150, criteria: ['espressione dell\'opinione', 'ragioni a sostegno', 'esempi', 'struttura del paragrafo'] },
+    tags: ['opinione', 'educazione'], timeSuggested: 360
+  },
+
+  // B2 (150-250 parole)
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Scrivi un rapporto sull\'impatto del turismo sulle comunità locali. Considera sia gli effetti positivi che quelli negativi e suggerisci delle soluzioni.',
+    correctAnswer: '', points: 2, orderIndex: 22,
+    rubric: { minWords: 150, maxWords: 250, criteria: ['struttura del rapporto', 'analisi equilibrata', 'raccomandazioni', 'registro formale', 'dispositivi coesivi'] },
+    tags: ['rapporto', 'turismo'], timeSuggested: 480
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Alcuni ritengono che lo sport agonistico insegni competenze di vita importanti, altri pensano che metta troppa pressione sui giovani. Discuti entrambi i punti di vista.',
+    correctAnswer: '', points: 2, orderIndex: 23,
+    rubric: { minWords: 150, maxWords: 250, criteria: ['tesi chiara', 'argomentazione equilibrata', 'esempi specifici', 'vocabolario formale', 'struttura logica'] },
+    tags: ['argomentativo', 'sport'], timeSuggested: 480
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Scrivi un saggio discutendo se gli influencer dei social media hanno un impatto positivo o negativo sull\'autostima e sui valori dei giovani.',
+    correctAnswer: '', points: 2, orderIndex: 24,
+    rubric: { minWords: 150, maxWords: 250, criteria: ['struttura argomentativa', 'consapevolezza del controargomento', 'esempi', 'vocabolario accademico'] },
+    tags: ['argomentativo', 'social media'], timeSuggested: 480
+  },
+
+  // C1 (200-350 parole)
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Scrivi una proposta per la tua azienda o istituzione suggerendo modi per ridurre la sua impronta ecologica. Includi misure specifiche e giustifica la loro fattibilità.',
+    correctAnswer: '', points: 3, orderIndex: 25,
+    rubric: { minWords: 200, maxWords: 350, criteria: ['formato di proposta', 'argomentazione persuasiva', 'analisi di fattibilità', 'vocabolario sofisticato', 'registro formale'] },
+    tags: ['proposta', 'ambiente'], timeSuggested: 600
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Analizza criticamente il ruolo dei test standardizzati nell\'istruzione. Misurano l\'apprendimento in modo efficace, o ostacolano un autentico sviluppo intellettuale?',
+    correctAnswer: '', points: 3, orderIndex: 26,
+    rubric: { minWords: 200, maxWords: 350, criteria: ['analisi critica', 'argomentazione basata su prove', 'posizione sfumata', 'dispositivi retorici', 'registro accademico'] },
+    tags: ['analisi critica', 'educazione'], timeSuggested: 600
+  },
+
+  // C2 (250-400 parole)
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Scrivi un saggio filosofico esplorando se le verità morali sono fatti oggettivi o costruzioni sociali. Fai riferimento ad almeno due tradizioni filosofiche.',
+    correctAnswer: '', points: 3, orderIndex: 27,
+    rubric: { minWords: 250, maxWords: 400, criteria: ['profondità filosofica', 'riferimenti interdisciplinari', 'ragionamento astratto', 'padronanza quasi nativa', 'prosa elegante'] },
+    tags: ['filosofia', 'etica'], timeSuggested: 720
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Scrivi una critica letteraria di un romanzo o di un\'opera teatrale che hai letto, analizzandone i temi, le tecniche narrative e il significato culturale.',
+    correctAnswer: '', points: 3, orderIndex: 28,
+    rubric: { minWords: 250, maxWords: 400, criteria: ['analisi letteraria', 'argomentazione sofisticata', 'valutazione critica', 'vocabolario preciso', 'varietà stilistica'] },
+    tags: ['critica letteraria', 'cultura'], timeSuggested: 720
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Esamina il paradosso della tolleranza: una società veramente tollerante può tollerare l\'intolleranza? Discuti con riferimento alla filosofia politica e a esempi contemporanei.',
+    correctAnswer: '', points: 3, orderIndex: 29,
+    rubric: { minWords: 250, maxWords: 400, criteria: ['ragionamento filosofico', 'conclusione sfumata', 'registro accademico', 'gestione dei controargomenti', 'coerenza logica'] },
+    tags: ['filosofia', 'politica'], timeSuggested: 720
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'La nozione di meritocrazia è un ideale utile o un mito pericoloso? Analizza le dimensioni sociologiche e filosofiche di questa domanda.',
+    correctAnswer: '', points: 3, orderIndex: 30,
+    rubric: { minWords: 250, maxWords: 400, criteria: ['argomentazione sofisticata', 'analisi interdisciplinare', 'ragionamento astratto', 'espressione elegante', 'posizione sfumata'] },
+    tags: ['sociologia', 'filosofia', 'economia'], timeSuggested: 720
   }
 ]

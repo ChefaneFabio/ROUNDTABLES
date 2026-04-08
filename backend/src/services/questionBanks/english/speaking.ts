@@ -121,5 +121,149 @@ export const englishSpeakingQuestions: MultiSkillQuestionData[] = [
     correctAnswer: '', points: 3, orderIndex: 14,
     rubric: { criteria: ['philosophical reasoning', 'counterargument consideration', 'eloquent expression', 'sustained argument', 'natural prosody'], maxDuration: 150 },
     tags: ['abstract', 'AI', 'creativity'], timeSuggested: 150
+  },
+
+  // ============================================================
+  // NEW QUESTIONS — 16 more (orderIndex 15-30)
+  // ============================================================
+
+  // A1 — Introduce yourself, describe pictures
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Look at the picture and describe what you see. Use simple words.',
+    speakingPrompt: 'Describe the picture: There is a family in a kitchen. What are they doing?',
+    correctAnswer: '', points: 1, orderIndex: 15,
+    rubric: { criteria: ['basic vocabulary', 'simple sentences', 'comprehensible speech'], maxDuration: 30 },
+    tags: ['describe picture', 'family'], timeSuggested: 30
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Tell me about yourself. Speak for about 15-20 seconds.',
+    speakingPrompt: 'What is your job? Where do you work? Do you like your job?',
+    correctAnswer: '', points: 1, orderIndex: 16,
+    rubric: { criteria: ['comprehensible response', 'basic vocabulary', 'relevant content'], maxDuration: 30 },
+    tags: ['introduction', 'work'], timeSuggested: 30
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Answer the following question. Speak for about 15-20 seconds:',
+    speakingPrompt: 'What is your favourite colour? What things do you have in that colour?',
+    correctAnswer: '', points: 1, orderIndex: 17,
+    rubric: { criteria: ['basic vocabulary', 'simple sentences', 'comprehensible speech'], maxDuration: 30 },
+    tags: ['simple question', 'colours'], timeSuggested: 30
+  },
+
+  // A2 — Describe routines, tell a story
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Describe your morning routine. Speak for about 30 seconds.',
+    speakingPrompt: 'What do you do every morning? Tell me from when you wake up to when you leave home.',
+    correctAnswer: '', points: 1, orderIndex: 18,
+    rubric: { criteria: ['time expressions', 'present simple', 'sequence words', 'clear pronunciation'], maxDuration: 45 },
+    tags: ['routine', 'daily life'], timeSuggested: 45
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Tell a short story about something that happened to you recently. Speak for about 30 seconds.',
+    speakingPrompt: 'Tell me about something funny or interesting that happened to you last week.',
+    correctAnswer: '', points: 1, orderIndex: 19,
+    rubric: { criteria: ['past tense', 'narrative sequence', 'basic fluency', 'relevant content'], maxDuration: 45 },
+    tags: ['story', 'past tense'], timeSuggested: 45
+  },
+
+  // B1 — Give opinions, explain plans
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Talk about the following topic for about 45-60 seconds. Give your opinion.',
+    speakingPrompt: 'Do you think children should have mobile phones? At what age? Why or why not?',
+    correctAnswer: '', points: 1, orderIndex: 20,
+    rubric: { criteria: ['coherent opinion', 'supporting reasons', 'linking words', 'fluency'], maxDuration: 60 },
+    tags: ['opinion', 'technology'], timeSuggested: 60
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Explain your plans for the future. Speak for about 45-60 seconds.',
+    speakingPrompt: 'What are your plans for the next five years? What would you like to achieve and why?',
+    correctAnswer: '', points: 1, orderIndex: 21,
+    rubric: { criteria: ['future tenses', 'conditional structures', 'coherent plan', 'appropriate vocabulary'], maxDuration: 60 },
+    tags: ['plans', 'future'], timeSuggested: 60
+  },
+
+  // B2 — Debate topics, analyse situations
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Discuss the following topic for about 60-90 seconds. Present multiple perspectives.',
+    speakingPrompt: 'Should university education be free for everyone? What are the economic and social implications?',
+    correctAnswer: '', points: 2, orderIndex: 22,
+    rubric: { criteria: ['balanced discussion', 'sophisticated vocabulary', 'discourse markers', 'fluency and coherence'], maxDuration: 90 },
+    tags: ['debate', 'education'], timeSuggested: 90
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Analyse the following situation. Speak for about 60-90 seconds.',
+    speakingPrompt: 'Many companies are adopting a four-day working week. Analyse the possible effects on productivity, employee wellbeing, and the economy.',
+    correctAnswer: '', points: 2, orderIndex: 23,
+    rubric: { criteria: ['analysis', 'cause and effect', 'examples', 'coherent argument', 'pronunciation accuracy'], maxDuration: 90 },
+    tags: ['analysis', 'work'], timeSuggested: 90
+  },
+
+  // C1 — Present arguments, discuss abstract ideas
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Present and defend a position. Speak for about 90-120 seconds.',
+    speakingPrompt: 'Is economic growth compatible with environmental sustainability, or must one be sacrificed for the other? Justify your position with evidence.',
+    correctAnswer: '', points: 2, orderIndex: 24,
+    rubric: { criteria: ['sophisticated argumentation', 'nuanced position', 'hedging and qualification', 'academic vocabulary', 'sustained fluency'], maxDuration: 120 },
+    tags: ['argumentation', 'environment', 'economics'], timeSuggested: 120
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Discuss the following abstract idea. Speak for about 90-120 seconds.',
+    speakingPrompt: 'What role does empathy play in effective leadership? Can empathy be taught, or is it an innate quality?',
+    correctAnswer: '', points: 2, orderIndex: 25,
+    rubric: { criteria: ['critical thinking', 'abstract reasoning', 'complex sentence structures', 'idiomatic language', 'coherent extended speech'], maxDuration: 120 },
+    tags: ['abstract', 'leadership'], timeSuggested: 120
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Analyse and discuss. Speak for about 90-120 seconds.',
+    speakingPrompt: 'To what extent has the digital revolution widened or narrowed the gap between developed and developing nations? Provide concrete examples.',
+    correctAnswer: '', points: 2, orderIndex: 26,
+    rubric: { criteria: ['critical analysis', 'specific examples', 'academic register', 'sustained argumentation', 'natural intonation'], maxDuration: 120 },
+    tags: ['analysis', 'technology', 'inequality'], timeSuggested: 120
+  },
+
+  // C2 — Philosophical discussion, nuanced argumentation
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Discuss the following philosophical question in depth. Speak for about 2 minutes.',
+    speakingPrompt: 'Can a society that prioritises individual freedom ever achieve true equality? Explore the inherent tensions between liberty and equality.',
+    correctAnswer: '', points: 2, orderIndex: 27,
+    rubric: { criteria: ['philosophical depth', 'abstract reasoning', 'near-native fluency', 'sophisticated register', 'rhetorical skill'], maxDuration: 150 },
+    tags: ['philosophy', 'politics', 'abstract'], timeSuggested: 150
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Present a nuanced argument on the following topic. Speak for about 2 minutes.',
+    speakingPrompt: 'Is the concept of "progress" culturally relative, or are there universal measures by which we can judge whether humanity is moving forward?',
+    correctAnswer: '', points: 2, orderIndex: 28,
+    rubric: { criteria: ['intellectual depth', 'cross-cultural references', 'precise vocabulary', 'natural discourse flow', 'elegant expression'], maxDuration: 150 },
+    tags: ['abstract', 'culture', 'philosophy'], timeSuggested: 150
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Respond to the following ethical dilemma. Speak for about 2 minutes.',
+    speakingPrompt: 'Should there be limits to scientific research in fields such as genetic engineering and human enhancement? Where should those limits lie and who should set them?',
+    correctAnswer: '', points: 2, orderIndex: 29,
+    rubric: { criteria: ['ethical reasoning', 'counterargument consideration', 'eloquent expression', 'sustained argument', 'natural prosody'], maxDuration: 150 },
+    tags: ['ethics', 'science', 'abstract'], timeSuggested: 150
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Discuss the following topic with philosophical depth. Speak for about 2 minutes.',
+    speakingPrompt: 'Does the pursuit of happiness as a life goal lead to a meaningful existence, or is meaning found through suffering and sacrifice? Discuss with reference to philosophical traditions.',
+    correctAnswer: '', points: 2, orderIndex: 30,
+    rubric: { criteria: ['philosophical reasoning', 'literary/philosophical references', 'sophisticated register', 'sustained fluency', 'nuanced conclusion'], maxDuration: 150 },
+    tags: ['philosophy', 'abstract', 'existentialism'], timeSuggested: 150
   }
 ]

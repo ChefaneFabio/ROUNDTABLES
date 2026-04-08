@@ -431,5 +431,334 @@ export const frenchListeningQuestions: MultiSkillQuestionData[] = [
     ttsLanguageCode: 'fr-FR',
     questionText: 'Écrivez exactement ce que vous entendez.',
     correctAnswer: 'Nonobstant l\'apparente démocratisation de l\'information par les technologies numériques, l\'accès à un savoir fiable et de haute qualité reste profondément stratifié selon des lignes socio-économiques.', points: 3, orderIndex: 42, tags: ['dictée'], timeSuggested: 120
+  },
+
+  // ============================================================
+  // ADDITIONAL QUESTIONS (30 more — orderIndex 43–72)
+  // ============================================================
+
+  // --- A1 — Débutant (5 questions) ---
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Je m\'appelle Marie. J\'habite à Paris. J\'ai un chien. Il s\'appelle Rex.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Comment s\'appelle le chien de Marie ?',
+    options: [{ label: 'Max', value: 'Max' }, { label: 'Rex', value: 'Rex' }, { label: 'Léo', value: 'Léo' }, { label: 'Médor', value: 'Médor' }],
+    correctAnswer: 'Rex', points: 1, orderIndex: 43, tags: ['animaux', 'présentation'], timeSuggested: 30
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Il fait beau aujourd\'hui. Le soleil brille. Il fait vingt degrés.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Quelle température fait-il ?',
+    options: [{ label: '15 degrés', value: '15' }, { label: '20 degrés', value: '20' }, { label: '25 degrés', value: '25' }, { label: '30 degrés', value: '30' }],
+    correctAnswer: '20', points: 1, orderIndex: 44, tags: ['météo', 'nombres'], timeSuggested: 30
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Ma mère travaille dans un hôpital. Elle est infirmière. Elle commence à huit heures.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Quel est le métier de la mère ?',
+    options: [{ label: 'Docteur', value: 'docteur' }, { label: 'Infirmière', value: 'infirmière' }, { label: 'Professeur', value: 'professeur' }, { label: 'Secrétaire', value: 'secrétaire' }],
+    correctAnswer: 'infirmière', points: 1, orderIndex: 45, tags: ['métiers', 'famille'], timeSuggested: 30
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Mon frère a trois ans.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Écrivez exactement ce que vous entendez.',
+    correctAnswer: 'Mon frère a trois ans.', points: 1, orderIndex: 46, tags: ['dictée', 'famille'], timeSuggested: 30
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Au marché, je veux acheter des pommes, du pain et du fromage.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Qu\'est-ce que la personne veut acheter ?',
+    options: [
+      { label: 'Des oranges, du riz et du beurre', value: 'oranges riz beurre' },
+      { label: 'Des pommes, du pain et du fromage', value: 'pommes pain fromage' },
+      { label: 'Des bananes, du lait et du chocolat', value: 'bananes lait chocolat' },
+      { label: 'Des tomates, du poisson et du sel', value: 'tomates poisson sel' }
+    ],
+    correctAnswer: 'pommes pain fromage', points: 1, orderIndex: 47, tags: ['courses', 'nourriture'], timeSuggested: 30
+  },
+
+  // --- A2 — Élémentaire (5 questions) ---
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Le week-end dernier, Sophie est allée à la plage avec ses amis. Ils ont nagé dans la mer et ont joué au volleyball. Le soir, ils ont fait un barbecue.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Qu\'ont-ils fait le soir ?',
+    options: [{ label: 'Ils ont regardé un film', value: 'film' }, { label: 'Ils ont fait un barbecue', value: 'barbecue' }, { label: 'Ils sont rentrés chez eux', value: 'rentrés' }, { label: 'Ils ont dîné au restaurant', value: 'restaurant' }],
+    correctAnswer: 'barbecue', points: 1, orderIndex: 48, tags: ['loisirs', 'passé composé'], timeSuggested: 40
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Je cherche un appartement. Je voudrais deux chambres, un salon et un balcon. Mon budget est de six cents euros par mois maximum.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Quel est le budget maximum par mois ?',
+    options: [{ label: '400 euros', value: '400' }, { label: '500 euros', value: '500' }, { label: '600 euros', value: '600' }, { label: '700 euros', value: '700' }],
+    correctAnswer: '600', points: 1, orderIndex: 49, tags: ['logement', 'nombres'], timeSuggested: 40
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Il pleut beaucoup en automne dans cette région.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Écrivez exactement ce que vous entendez.',
+    correctAnswer: 'Il pleut beaucoup en automne dans cette région.', points: 1, orderIndex: 50, tags: ['dictée', 'météo'], timeSuggested: 40
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Pour aller à la gare, prenez la première rue à droite, puis continuez tout droit pendant cinq minutes. La gare est en face de la pharmacie.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Où se trouve la gare ?',
+    options: [
+      { label: 'À côté de la boulangerie', value: 'boulangerie' },
+      { label: 'Derrière l\'école', value: 'école' },
+      { label: 'En face de la pharmacie', value: 'en face de la pharmacie' },
+      { label: 'Près du parc', value: 'parc' }
+    ],
+    correctAnswer: 'en face de la pharmacie', points: 1, orderIndex: 51, tags: ['directions'], timeSuggested: 40
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Ce matin, j\'ai raté mon bus. J\'ai dû marcher jusqu\'au bureau. Je suis arrivé en retard de vingt minutes. Mon chef n\'était pas content.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Pourquoi la personne est-elle arrivée en retard ?',
+    options: [
+      { label: 'Sa voiture est tombée en panne', value: 'voiture' },
+      { label: 'Elle a raté son bus', value: 'raté son bus' },
+      { label: 'Le métro était en grève', value: 'métro' },
+      { label: 'Elle s\'est réveillée tard', value: 'réveillée tard' }
+    ],
+    correctAnswer: 'raté son bus', points: 1, orderIndex: 52, tags: ['transport', 'travail'], timeSuggested: 40
+  },
+
+  // --- B1 — Intermédiaire (5 questions) ---
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Mesdames et messieurs, bienvenue à bord du TGV numéro huit cent quarante-deux à destination de Marseille. Nous effectuerons un arrêt à Lyon à onze heures quarante-cinq. Le wagon-restaurant se trouve en voiture sept. Nous vous souhaitons un agréable voyage.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'À quelle heure le train s\'arrête-t-il à Lyon ?',
+    options: [
+      { label: '10h30', value: '10h30' },
+      { label: '11h15', value: '11h15' },
+      { label: '11h45', value: '11h45' },
+      { label: '12h00', value: '12h00' }
+    ],
+    correctAnswer: '11h45', points: 1, orderIndex: 53, tags: ['transport', 'annonce'], timeSuggested: 45
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'J\'ai travaillé dans cette entreprise pendant cinq ans en tant que comptable. J\'ai décidé de démissionner parce que je voulais changer de carrière. Maintenant, je suis une formation en informatique et j\'espère devenir développeur web.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Que veut devenir cette personne ?',
+    options: [
+      { label: 'Comptable', value: 'comptable' },
+      { label: 'Professeur d\'informatique', value: 'professeur' },
+      { label: 'Développeur web', value: 'développeur web' },
+      { label: 'Chef de projet', value: 'chef de projet' }
+    ],
+    correctAnswer: 'développeur web', points: 1, orderIndex: 54, tags: ['carrière', 'travail'], timeSuggested: 45
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Les résultats de l\'enquête montrent que la majorité des employés préfèrent le télétravail deux jours par semaine.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Écrivez exactement ce que vous entendez.',
+    correctAnswer: 'Les résultats de l\'enquête montrent que la majorité des employés préfèrent le télétravail deux jours par semaine.', points: 1, orderIndex: 55, tags: ['dictée', 'travail'], timeSuggested: 60
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La mairie a organisé une réunion publique hier soir pour discuter de la construction d\'une nouvelle bibliothèque dans le quartier. Environ cent cinquante personnes étaient présentes. La plupart des habitants étaient favorables au projet, mais certains ont soulevé des questions sur le financement et le stationnement.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Quelles préoccupations certains habitants ont-ils soulevées ?',
+    options: [
+      { label: 'Le bruit et la pollution', value: 'bruit pollution' },
+      { label: 'Le financement et le stationnement', value: 'financement et stationnement' },
+      { label: 'Les horaires d\'ouverture', value: 'horaires' },
+      { label: 'La sécurité du quartier', value: 'sécurité' }
+    ],
+    correctAnswer: 'financement et stationnement', points: 1, orderIndex: 56, tags: ['communauté', 'urbanisme'], timeSuggested: 45
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Selon un rapport publié ce matin, le nombre de touristes étrangers en France a augmenté de quinze pour cent par rapport à l\'année dernière. Les visiteurs viennent principalement d\'Allemagne, du Royaume-Uni et des États-Unis. Paris reste la destination la plus populaire, suivie de Nice et de Lyon.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Quelle est la deuxième destination la plus populaire ?',
+    options: [
+      { label: 'Lyon', value: 'Lyon' },
+      { label: 'Marseille', value: 'Marseille' },
+      { label: 'Nice', value: 'Nice' },
+      { label: 'Bordeaux', value: 'Bordeaux' }
+    ],
+    correctAnswer: 'Nice', points: 1, orderIndex: 57, tags: ['tourisme', 'statistiques'], timeSuggested: 45
+  },
+
+  // --- B2 — Intermédiaire supérieur (5 questions) ---
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Une étude menée par l\'INSERM révèle que les personnes qui dorment moins de six heures par nuit ont un risque accru de développer des maladies cardiovasculaires. Les chercheurs recommandent entre sept et huit heures de sommeil pour les adultes. Ils soulignent également que la qualité du sommeil est aussi importante que sa durée, et que l\'utilisation des écrans avant le coucher perturbe significativement le cycle du sommeil.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Combien d\'heures de sommeil les chercheurs recommandent-ils ?',
+    options: [
+      { label: '5 à 6 heures', value: '5 à 6' },
+      { label: '6 à 7 heures', value: '6 à 7' },
+      { label: '7 à 8 heures', value: '7 à 8' },
+      { label: '8 à 9 heures', value: '8 à 9' }
+    ],
+    correctAnswer: '7 à 8', points: 2, orderIndex: 58, tags: ['santé', 'science'], timeSuggested: 60
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Le marché de l\'emploi connaît une transformation profonde avec l\'essor de l\'intelligence artificielle. Si certains secteurs voient des suppressions de postes, d\'autres en créent massivement. Les métiers liés à l\'analyse de données, à la cybersécurité et à l\'éthique de l\'IA sont particulièrement recherchés. Les experts estiment que d\'ici cinq ans, trente pour cent des emplois actuels seront significativement modifiés.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Quel pourcentage d\'emplois sera significativement modifié d\'ici cinq ans ?',
+    options: [{ label: '10 %', value: '10' }, { label: '20 %', value: '20' }, { label: '30 %', value: '30' }, { label: '50 %', value: '50' }],
+    correctAnswer: '30', points: 2, orderIndex: 59, tags: ['emploi', 'technologie'], timeSuggested: 60
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Les scientifiques ont découvert que la pollution atmosphérique affecte non seulement la santé respiratoire, mais aussi les capacités cognitives des populations urbaines.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Écrivez exactement ce que vous entendez.',
+    correctAnswer: 'Les scientifiques ont découvert que la pollution atmosphérique affecte non seulement la santé respiratoire, mais aussi les capacités cognitives des populations urbaines.', points: 2, orderIndex: 60, tags: ['dictée', 'environnement'], timeSuggested: 90
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Le débat sur la semaine de quatre jours prend de l\'ampleur en France. Plusieurs entreprises pilotes ont testé ce modèle pendant un an. Les résultats montrent une augmentation de la productivité de douze pour cent et une réduction significative de l\'absentéisme. Néanmoins, les syndicats insistent sur le fait que la charge de travail ne doit pas être comprimée en quatre jours, mais réellement réduite.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Quelle est la condition posée par les syndicats ?',
+    options: [
+      { label: 'Une augmentation de salaire', value: 'salaire' },
+      { label: 'Que la charge de travail soit réellement réduite', value: 'charge réduite' },
+      { label: 'Plus de jours de congé', value: 'congés' },
+      { label: 'Le maintien du télétravail', value: 'télétravail' }
+    ],
+    correctAnswer: 'charge réduite', points: 2, orderIndex: 61, tags: ['travail', 'société'], timeSuggested: 60
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La gastronomie française a été inscrite au patrimoine culturel immatériel de l\'UNESCO en deux mille dix. Cette reconnaissance concerne non seulement la cuisine elle-même, mais aussi l\'art de la table, la convivialité et le rituel social du repas. Aujourd\'hui, les chefs français s\'efforcent de concilier cette tradition avec les enjeux contemporains : alimentation durable, réduction du gaspillage alimentaire et accessibilité à tous les budgets.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'En quelle année la gastronomie française a-t-elle été inscrite à l\'UNESCO ?',
+    options: [{ label: '2005', value: '2005' }, { label: '2008', value: '2008' }, { label: '2010', value: '2010' }, { label: '2015', value: '2015' }],
+    correctAnswer: '2010', points: 2, orderIndex: 62, tags: ['culture', 'gastronomie'], timeSuggested: 60
+  },
+
+  // --- C1 — Avancé (5 questions) ---
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'L\'essor des théories du complot sur les réseaux sociaux pose un défi inédit aux démocraties contemporaines. Les algorithmes de recommandation, conçus pour maximiser l\'engagement, tendent à enfermer les utilisateurs dans des bulles informationnelles qui renforcent leurs convictions préexistantes. Ce phénomène, connu sous le nom d\'« effet de chambre d\'écho », réduit l\'exposition à des points de vue divergents et peut radicaliser les opinions politiques.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Comment s\'appelle le phénomène décrit dans le passage ?',
+    options: [
+      { label: 'L\'effet papillon', value: 'effet papillon' },
+      { label: 'L\'effet de chambre d\'écho', value: 'effet de chambre d\'écho' },
+      { label: 'L\'effet boule de neige', value: 'effet boule de neige' },
+      { label: 'L\'effet Streisand', value: 'effet Streisand' }
+    ],
+    correctAnswer: 'effet de chambre d\'écho', points: 2, orderIndex: 63, tags: ['médias', 'société'], timeSuggested: 75
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'L\'architecture haussmannienne, qui caractérise une grande partie du paysage urbain parisien, résulte des travaux de rénovation entrepris sous le Second Empire par le baron Haussmann entre mille huit cent cinquante-trois et mille huit cent soixante-dix. Ces travaux visaient à moderniser Paris en créant de larges boulevards, des places et des espaces verts, tout en améliorant l\'assainissement. Cependant, cette transformation a aussi entraîné l\'expropriation de milliers de résidents des classes populaires, contribuant à la ségrégation socio-spatiale qui perdure encore aujourd\'hui.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Quelle conséquence négative des travaux haussmanniens est mentionnée ?',
+    options: [
+      { label: 'La destruction de monuments historiques', value: 'monuments' },
+      { label: 'L\'expropriation des résidents populaires et la ségrégation socio-spatiale', value: 'expropriation et ségrégation' },
+      { label: 'L\'augmentation de la pollution', value: 'pollution' },
+      { label: 'La perte des espaces verts', value: 'espaces verts' }
+    ],
+    correctAnswer: 'expropriation et ségrégation', points: 2, orderIndex: 64, tags: ['histoire', 'urbanisme'], timeSuggested: 75
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'La prolifération des données massives soulève des enjeux éthiques considérables, notamment en ce qui concerne le respect de la vie privée et le consentement éclairé des individus.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Écrivez exactement ce que vous entendez.',
+    correctAnswer: 'La prolifération des données massives soulève des enjeux éthiques considérables, notamment en ce qui concerne le respect de la vie privée et le consentement éclairé des individus.', points: 2, orderIndex: 65, tags: ['dictée', 'technologie'], timeSuggested: 90
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Le principe de précaution, inscrit dans la Charte de l\'environnement française depuis deux mille cinq, stipule que l\'absence de certitude scientifique ne doit pas retarder l\'adoption de mesures visant à prévenir un risque de dommage grave et irréversible à l\'environnement. Ce principe fait l\'objet de vifs débats, ses partisans y voyant un garde-fou nécessaire, tandis que ses détracteurs l\'accusent de freiner l\'innovation et le progrès technologique.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Que reprochent les détracteurs au principe de précaution ?',
+    options: [
+      { label: 'Il coûte trop cher à appliquer', value: 'coût' },
+      { label: 'Il freine l\'innovation et le progrès technologique', value: 'freine innovation' },
+      { label: 'Il est trop vague juridiquement', value: 'vague' },
+      { label: 'Il ne protège pas suffisamment l\'environnement', value: 'insuffisant' }
+    ],
+    correctAnswer: 'freine innovation', points: 2, orderIndex: 66, tags: ['environnement', 'droit'], timeSuggested: 75
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Le phénomène de gentrification, observé dans de nombreuses métropoles françaises, se caractérise par l\'installation progressive de populations aisées dans des quartiers populaires, entraînant une hausse des loyers et un déplacement des habitants d\'origine. Si ce processus s\'accompagne souvent d\'une rénovation du bâti et d\'une amélioration des commerces et des services, il contribue néanmoins à une homogénéisation sociale et à l\'effacement des identités culturelles locales.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Quel effet négatif de la gentrification est souligné ?',
+    options: [
+      { label: 'La dégradation des bâtiments', value: 'dégradation' },
+      { label: 'L\'homogénéisation sociale et l\'effacement des identités culturelles', value: 'homogénéisation et effacement culturel' },
+      { label: 'L\'augmentation de la criminalité', value: 'criminalité' },
+      { label: 'La fermeture des commerces', value: 'fermeture commerces' }
+    ],
+    correctAnswer: 'homogénéisation et effacement culturel', points: 2, orderIndex: 67, tags: ['sociologie', 'urbanisme'], timeSuggested: 75
+  },
+
+  // --- C2 — Maîtrise (5 questions) ---
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'L\'hypothèse de Sapir-Whorf, dans sa version forte, postule que la structure d\'une langue détermine fondamentalement la pensée de ses locuteurs. Bien que cette version déterministe ait été largement réfutée, des recherches récentes en linguistique cognitive ont ravivé l\'intérêt pour sa version faible, selon laquelle la langue influencerait — sans le déterminer — le mode de perception et de catégorisation du réel. Des expériences sur la perception des couleurs chez des locuteurs de langues possédant des lexiques chromatiques distincts ont fourni des preuves empiriques en faveur de cette thèse.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Quel domaine de recherche a fourni des preuves pour la version faible de l\'hypothèse ?',
+    options: [
+      { label: 'La perception du temps', value: 'temps' },
+      { label: 'La perception des couleurs', value: 'perception des couleurs' },
+      { label: 'La mémoire auditive', value: 'mémoire' },
+      { label: 'La résolution de problèmes mathématiques', value: 'mathématiques' }
+    ],
+    correctAnswer: 'perception des couleurs', points: 2, orderIndex: 68, tags: ['linguistique', 'cognition'], timeSuggested: 90
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La notion de « post-vérité », élue mot de l\'année par le dictionnaire Oxford en deux mille seize, désigne un contexte dans lequel les faits objectifs ont moins d\'influence sur la formation de l\'opinion publique que les appels à l\'émotion et aux croyances personnelles. Ce phénomène, amplifié par la viralité des réseaux sociaux et la fragmentation du paysage médiatique, remet en cause les fondements mêmes de la délibération démocratique, qui présuppose un socle commun de réalité partagée.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Que présuppose la délibération démocratique selon le passage ?',
+    options: [
+      { label: 'Des médias indépendants', value: 'médias indépendants' },
+      { label: 'Un socle commun de réalité partagée', value: 'réalité partagée' },
+      { label: 'La liberté d\'expression absolue', value: 'liberté expression' },
+      { label: 'Un système éducatif performant', value: 'éducation' }
+    ],
+    correctAnswer: 'réalité partagée', points: 2, orderIndex: 69, tags: ['médias', 'philosophie'], timeSuggested: 90
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'L\'enchevêtrement des facteurs géopolitiques, économiques et climatiques rend toute prévision à long terme hasardeuse, contraignant les décideurs à naviguer dans un brouillard d\'incertitudes irréductibles.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Écrivez exactement ce que vous entendez.',
+    correctAnswer: 'L\'enchevêtrement des facteurs géopolitiques, économiques et climatiques rend toute prévision à long terme hasardeuse, contraignant les décideurs à naviguer dans un brouillard d\'incertitudes irréductibles.', points: 2, orderIndex: 70, tags: ['dictée', 'géopolitique'], timeSuggested: 120
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Le paradoxe de la tolérance, formulé par Karl Popper en mille neuf cent quarante-cinq, affirme qu\'une société illimitément tolérante finira inévitablement par être submergée par les intolérants. En d\'autres termes, si nous étendons une tolérance illimitée même à ceux qui sont intolérants, et si nous ne sommes pas disposés à défendre une société tolérante contre les assauts de l\'intolérant, alors le tolérant sera détruit et la tolérance avec lui. Popper en concluait que nous devons revendiquer, au nom de la tolérance, le droit de ne pas tolérer l\'intolérance.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Selon Popper, que doit revendiquer une société tolérante ?',
+    options: [
+      { label: 'Le droit à la liberté absolue', value: 'liberté absolue' },
+      { label: 'Le droit de ne pas tolérer l\'intolérance', value: 'ne pas tolérer l\'intolérance' },
+      { label: 'Le droit de censurer toute opposition', value: 'censure' },
+      { label: 'Le droit d\'imposer ses valeurs', value: 'imposer valeurs' }
+    ],
+    correctAnswer: 'ne pas tolérer l\'intolérance', points: 2, orderIndex: 71, tags: ['philosophie', 'politique'], timeSuggested: 90
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'La juxtaposition de paradigmes épistémologiques apparemment irréconciliables constitue l\'un des défis les plus stimulants auxquels se confronte la philosophie des sciences contemporaine.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Écrivez exactement ce que vous entendez.',
+    correctAnswer: 'La juxtaposition de paradigmes épistémologiques apparemment irréconciliables constitue l\'un des défis les plus stimulants auxquels se confronte la philosophie des sciences contemporaine.', points: 2, orderIndex: 72, tags: ['dictée', 'philosophie'], timeSuggested: 120
   }
 ]

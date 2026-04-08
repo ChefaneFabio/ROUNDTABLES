@@ -121,5 +121,149 @@ export const italianSpeakingQuestions: MultiSkillQuestionData[] = [
     correctAnswer: '', points: 3, orderIndex: 14,
     rubric: { criteria: ['ragionamento filosofico', 'considerazione del controargomento', 'espressione eloquente', 'argomentazione sostenuta', 'prosodia naturale'], maxDuration: 150 },
     tags: ['astratto', 'IA', 'creatività'], timeSuggested: 150
+  },
+
+  // ============================================================
+  // NUOVE DOMANDE — 16 in più (orderIndex 15-30)
+  // ============================================================
+
+  // A1
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Guarda l\'immagine e descrivi quello che vedi. Usa parole semplici.',
+    speakingPrompt: 'Descrivi l\'immagine: c\'è una famiglia in cucina. Cosa stanno facendo?',
+    correctAnswer: '', points: 1, orderIndex: 15,
+    rubric: { criteria: ['vocabolario di base', 'frasi semplici', 'discorso comprensibile'], maxDuration: 30 },
+    tags: ['descrivere immagine', 'famiglia'], timeSuggested: 30
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Parla di te stesso. Parla per circa 15-20 secondi.',
+    speakingPrompt: 'Qual è il tuo lavoro? Dove lavori? Ti piace il tuo lavoro?',
+    correctAnswer: '', points: 1, orderIndex: 16,
+    rubric: { criteria: ['risposta comprensibile', 'vocabolario di base', 'contenuto pertinente'], maxDuration: 30 },
+    tags: ['presentazione', 'lavoro'], timeSuggested: 30
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Rispondi alla seguente domanda. Parla per circa 15-20 secondi:',
+    speakingPrompt: 'Qual è il tuo colore preferito? Quali oggetti hai di quel colore?',
+    correctAnswer: '', points: 1, orderIndex: 17,
+    rubric: { criteria: ['vocabolario di base', 'frasi semplici', 'discorso comprensibile'], maxDuration: 30 },
+    tags: ['domanda semplice', 'colori'], timeSuggested: 30
+  },
+
+  // A2
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Descrivi la tua routine mattutina. Parla per circa 30 secondi.',
+    speakingPrompt: 'Cosa fai ogni mattina? Racconta dal momento in cui ti svegli fino a quando esci di casa.',
+    correctAnswer: '', points: 1, orderIndex: 18,
+    rubric: { criteria: ['espressioni temporali', 'presente indicativo', 'parole di sequenza', 'pronuncia chiara'], maxDuration: 45 },
+    tags: ['routine', 'vita quotidiana'], timeSuggested: 45
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Racconta una breve storia su qualcosa che ti è successo di recente. Parla per circa 30 secondi.',
+    speakingPrompt: 'Raccontami qualcosa di divertente o interessante che ti è successo la settimana scorsa.',
+    correctAnswer: '', points: 1, orderIndex: 19,
+    rubric: { criteria: ['passato prossimo', 'sequenza narrativa', 'fluenza di base', 'contenuto pertinente'], maxDuration: 45 },
+    tags: ['racconto', 'passato prossimo'], timeSuggested: 45
+  },
+
+  // B1
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Parla del seguente argomento per circa 45-60 secondi. Dai la tua opinione.',
+    speakingPrompt: 'Pensi che i bambini dovrebbero avere un telefono cellulare? A che età? Perché sì o perché no?',
+    correctAnswer: '', points: 1, orderIndex: 20,
+    rubric: { criteria: ['opinione coerente', 'ragioni a sostegno', 'connettivi', 'fluenza'], maxDuration: 60 },
+    tags: ['opinione', 'tecnologia'], timeSuggested: 60
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Spiega i tuoi progetti per il futuro. Parla per circa 45-60 secondi.',
+    speakingPrompt: 'Quali sono i tuoi progetti per i prossimi cinque anni? Cosa vorresti raggiungere e perché?',
+    correctAnswer: '', points: 1, orderIndex: 21,
+    rubric: { criteria: ['futuro semplice', 'strutture condizionali', 'piano coerente', 'vocabolario appropriato'], maxDuration: 60 },
+    tags: ['progetti', 'futuro'], timeSuggested: 60
+  },
+
+  // B2
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Discuti il seguente argomento per circa 60-90 secondi. Presenta diverse prospettive.',
+    speakingPrompt: 'L\'istruzione universitaria dovrebbe essere gratuita per tutti? Quali sono le implicazioni economiche e sociali?',
+    correctAnswer: '', points: 2, orderIndex: 22,
+    rubric: { criteria: ['discussione equilibrata', 'vocabolario sofisticato', 'segnali discorsivi', 'fluenza e coerenza'], maxDuration: 90 },
+    tags: ['dibattito', 'educazione'], timeSuggested: 90
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Analizza la seguente situazione. Parla per circa 60-90 secondi.',
+    speakingPrompt: 'Molte aziende stanno adottando la settimana lavorativa di quattro giorni. Analizza i possibili effetti sulla produttività, il benessere dei dipendenti e l\'economia.',
+    correctAnswer: '', points: 2, orderIndex: 23,
+    rubric: { criteria: ['analisi', 'causa ed effetto', 'esempi', 'argomentazione coerente', 'accuratezza della pronuncia'], maxDuration: 90 },
+    tags: ['analisi', 'lavoro'], timeSuggested: 90
+  },
+
+  // C1
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Presenta e difendi una posizione. Parla per circa 90-120 secondi.',
+    speakingPrompt: 'La crescita economica è compatibile con la sostenibilità ambientale, o bisogna sacrificare l\'una per l\'altra? Giustifica la tua posizione con prove concrete.',
+    correctAnswer: '', points: 2, orderIndex: 24,
+    rubric: { criteria: ['argomentazione sofisticata', 'posizione sfumata', 'attenuazione e qualificazione', 'vocabolario accademico', 'fluenza sostenuta'], maxDuration: 120 },
+    tags: ['argomentazione', 'ambiente', 'economia'], timeSuggested: 120
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Discuti la seguente idea astratta. Parla per circa 90-120 secondi.',
+    speakingPrompt: 'Quale ruolo svolge l\'empatia in una leadership efficace? L\'empatia può essere insegnata o è una qualità innata?',
+    correctAnswer: '', points: 2, orderIndex: 25,
+    rubric: { criteria: ['pensiero critico', 'ragionamento astratto', 'strutture di frasi complesse', 'linguaggio idiomatico', 'discorso esteso coerente'], maxDuration: 120 },
+    tags: ['astratto', 'leadership'], timeSuggested: 120
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Analizza e discuti. Parla per circa 90-120 secondi.',
+    speakingPrompt: 'In che misura la rivoluzione digitale ha ampliato o ridotto il divario tra paesi sviluppati e paesi in via di sviluppo? Fornisci esempi concreti.',
+    correctAnswer: '', points: 2, orderIndex: 26,
+    rubric: { criteria: ['analisi critica', 'esempi specifici', 'registro accademico', 'argomentazione sostenuta', 'intonazione naturale'], maxDuration: 120 },
+    tags: ['analisi', 'tecnologia', 'disuguaglianze'], timeSuggested: 120
+  },
+
+  // C2
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Discuti in profondità la seguente questione filosofica. Parla per circa 2 minuti.',
+    speakingPrompt: 'Una società che privilegia la libertà individuale può mai raggiungere una vera uguaglianza? Esplora le tensioni intrinseche tra libertà e uguaglianza.',
+    correctAnswer: '', points: 2, orderIndex: 27,
+    rubric: { criteria: ['profondità filosofica', 'ragionamento astratto', 'fluenza quasi nativa', 'registro sofisticato', 'abilità retorica'], maxDuration: 150 },
+    tags: ['filosofia', 'politica', 'astratto'], timeSuggested: 150
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Presenta un argomento sfumato sul seguente tema. Parla per circa 2 minuti.',
+    speakingPrompt: 'Il concetto di "progresso" è culturalmente relativo, o esistono misure universali per giudicare se l\'umanità sta avanzando?',
+    correctAnswer: '', points: 2, orderIndex: 28,
+    rubric: { criteria: ['profondità intellettuale', 'riferimenti interculturali', 'vocabolario preciso', 'flusso discorsivo naturale', 'espressione elegante'], maxDuration: 150 },
+    tags: ['astratto', 'cultura', 'filosofia'], timeSuggested: 150
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Rispondi al seguente dilemma etico. Parla per circa 2 minuti.',
+    speakingPrompt: 'Dovrebbero esserci limiti alla ricerca scientifica in campi come l\'ingegneria genetica e il potenziamento umano? Dove dovrebbero essere questi limiti e chi dovrebbe stabilirli?',
+    correctAnswer: '', points: 2, orderIndex: 29,
+    rubric: { criteria: ['ragionamento etico', 'considerazione del controargomento', 'espressione eloquente', 'argomentazione sostenuta', 'prosodia naturale'], maxDuration: 150 },
+    tags: ['etica', 'scienza', 'astratto'], timeSuggested: 150
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Discuti il seguente tema con profondità filosofica. Parla per circa 2 minuti.',
+    speakingPrompt: 'La ricerca della felicità come obiettivo di vita porta a un\'esistenza significativa, o il senso si trova nella sofferenza e nel sacrificio? Discuti facendo riferimento alle tradizioni filosofiche.',
+    correctAnswer: '', points: 2, orderIndex: 30,
+    rubric: { criteria: ['ragionamento filosofico', 'riferimenti letterari/filosofici', 'registro sofisticato', 'fluenza sostenuta', 'conclusione sfumata'], maxDuration: 150 },
+    tags: ['filosofia', 'astratto', 'esistenzialismo'], timeSuggested: 150
   }
 ]

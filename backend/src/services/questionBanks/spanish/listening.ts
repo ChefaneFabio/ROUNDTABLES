@@ -1,6 +1,6 @@
 import { MultiSkillQuestionData } from '../types'
 
-// Spanish Listening Questions — 7 per CEFR level (42 total)
+// Spanish Listening Questions — ~72 total (42 original + 30 new)
 // Types: LISTENING (multiple choice after audio), DICTATION
 // Each question includes ttsScript for TTS generation
 
@@ -431,5 +431,321 @@ export const spanishListeningQuestions: MultiSkillQuestionData[] = [
     ttsLanguageCode: 'es-ES',
     questionText: 'Escribe exactamente lo que oyes.',
     correctAnswer: 'Pese a la ostensible democratización de la información a través de las tecnologías digitales, el acceso al conocimiento fiable y de alta calidad sigue profundamente estratificado en función de las líneas socioeconómicas.', points: 3, orderIndex: 42, tags: ['dictado'], timeSuggested: 120
-  }
+  },
+
+  // ============================================================
+  // NEW QUESTIONS — 30 additional (orderIndex 43–72)
+  // 70% MULTIPLE_CHOICE (LISTENING) + 30% DICTATION
+  // ============================================================
+
+  // ── A1 — 5 questions (43–47) ────────────────────────────────
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Buenos días. Quiero una habitación para dos personas, por favor. Para tres noches. ¿Cuánto cuesta?',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Cuántas noches quiere quedarse?',
+    options: [{ label: '1', value: '1' }, { label: '2', value: '2' }, { label: '3', value: '3' }, { label: '4', value: '4' }],
+    correctAnswer: '3', points: 1, orderIndex: 43, tags: ['hotel', 'números'], timeSuggested: 30
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Me llamo Ana. Soy profesora. Trabajo en una escuela. Tengo treinta y dos años. Vivo en Sevilla.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Cuál es la profesión de Ana?',
+    options: [{ label: 'Médica', value: 'médica' }, { label: 'Profesora', value: 'profesora' }, { label: 'Abogada', value: 'abogada' }, { label: 'Enfermera', value: 'enfermera' }],
+    correctAnswer: 'profesora', points: 1, orderIndex: 44, tags: ['presentación', 'profesiones'], timeSuggested: 30
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'En mi habitación hay una cama, un armario y una mesa. También hay una ventana grande. Me gusta mucho.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Qué hay en la habitación además de la cama y el armario?',
+    options: [{ label: 'Una silla', value: 'una silla' }, { label: 'Una mesa', value: 'una mesa' }, { label: 'Un sofá', value: 'un sofá' }, { label: 'Una estantería', value: 'una estantería' }],
+    correctAnswer: 'una mesa', points: 1, orderIndex: 45, tags: ['casa', 'objetos'], timeSuggested: 30
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Hoy es martes y hace sol.',
+    ttsLanguageCode: 'es-ES',
+    questionText: 'Escribe exactamente lo que oyes.',
+    correctAnswer: 'Hoy es martes y hace sol.', points: 1, orderIndex: 46, tags: ['dictado', 'días', 'tiempo'], timeSuggested: 30
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Mi madre cocina muy bien. Su plato favorito es la paella. Los domingos cocinamos juntos.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Cuándo cocinan juntos?',
+    options: [{ label: 'Los lunes', value: 'los lunes' }, { label: 'Los sábados', value: 'los sábados' }, { label: 'Los domingos', value: 'los domingos' }, { label: 'Todos los días', value: 'todos los días' }],
+    correctAnswer: 'los domingos', points: 1, orderIndex: 47, tags: ['familia', 'comida'], timeSuggested: 30
+  },
+
+  // ── A2 — 5 questions (48–52) ────────────────────────────────
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'El fin de semana pasado fui de excursión a la montaña con mis amigos. Salimos temprano por la mañana y caminamos durante cuatro horas. El paisaje era precioso. Comimos un bocadillo junto a un río.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Cuántas horas caminaron?',
+    options: [{ label: '2 horas', value: '2' }, { label: '3 horas', value: '3' }, { label: '4 horas', value: '4' }, { label: '5 horas', value: '5' }],
+    correctAnswer: '4', points: 1, orderIndex: 48, tags: ['ocio', 'naturaleza'], timeSuggested: 40
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Quisiera comprar un billete de ida y vuelta a Granada, por favor. El tren sale a las diez y cuarenta y cinco. ¿Prefiere ventanilla o pasillo? Ventanilla, por favor.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Qué tipo de asiento prefiere?',
+    options: [{ label: 'Pasillo', value: 'pasillo' }, { label: 'Ventanilla', value: 'ventanilla' }, { label: 'Primera clase', value: 'primera clase' }, { label: 'No importa', value: 'no importa' }],
+    correctAnswer: 'ventanilla', points: 1, orderIndex: 49, tags: ['transporte', 'tren'], timeSuggested: 40
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Tengo un perro que se llama Toby. Es grande y marrón. Le gusta correr en el parque y jugar con la pelota. Siempre paseo con él por las tardes.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Cuándo pasea con su perro?',
+    options: [{ label: 'Por las mañanas', value: 'por las mañanas' }, { label: 'Por las tardes', value: 'por las tardes' }, { label: 'Por las noches', value: 'por las noches' }, { label: 'Al mediodía', value: 'al mediodía' }],
+    correctAnswer: 'por las tardes', points: 1, orderIndex: 50, tags: ['mascotas', 'rutina'], timeSuggested: 40
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Mi hermano estudia medicina en la universidad de Barcelona.',
+    ttsLanguageCode: 'es-ES',
+    questionText: 'Escribe exactamente lo que oyes.',
+    correctAnswer: 'Mi hermano estudia medicina en la universidad de Barcelona.', points: 1, orderIndex: 51, tags: ['dictado', 'familia', 'estudios'], timeSuggested: 40
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'El doctor dice que debo descansar más y beber mucha agua. También me ha recetado unas pastillas que tengo que tomar dos veces al día durante una semana.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Cuántas veces al día tiene que tomar las pastillas?',
+    options: [{ label: 'Una vez', value: '1' }, { label: 'Dos veces', value: '2' }, { label: 'Tres veces', value: '3' }, { label: 'Cuatro veces', value: '4' }],
+    correctAnswer: '2', points: 1, orderIndex: 52, tags: ['salud', 'médico'], timeSuggested: 40
+  },
+
+  // ── B1 — 5 questions (53–57) ────────────────────────────────
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'El ayuntamiento ha decidido prohibir los coches en el centro histórico los fines de semana. La medida busca reducir la contaminación y fomentar el uso de la bicicleta y el transporte público. Los comerciantes del centro han mostrado su desacuerdo, ya que temen perder clientes.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Por qué están en desacuerdo los comerciantes?',
+    options: [
+      { label: 'Porque no les gustan las bicicletas', value: 'no les gustan las bicicletas' },
+      { label: 'Porque temen perder clientes', value: 'porque temen perder clientes' },
+      { label: 'Porque prefieren más coches', value: 'prefieren más coches' },
+      { label: 'Porque no hay transporte público', value: 'no hay transporte público' }
+    ],
+    correctAnswer: 'porque temen perder clientes', points: 1, orderIndex: 53, tags: ['ciudad', 'medioambiente'], timeSuggested: 45
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'En la entrevista de trabajo me preguntaron sobre mi experiencia anterior, mis puntos fuertes y mis expectativas salariales. Creo que me fue bien, pero no estoy seguro. Me dijeron que me llamarían en dos semanas para comunicarme la decisión.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Cuándo le comunicarán la decisión?',
+    options: [
+      { label: 'En una semana', value: 'en una semana' },
+      { label: 'En dos semanas', value: 'en dos semanas' },
+      { label: 'Al día siguiente', value: 'al día siguiente' },
+      { label: 'En un mes', value: 'en un mes' }
+    ],
+    correctAnswer: 'en dos semanas', points: 1, orderIndex: 54, tags: ['trabajo', 'entrevista'], timeSuggested: 45
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La exposición de Frida Kahlo estará abierta en el Museo Reina Sofía desde el quince de marzo hasta el treinta de junio. Las entradas cuestan doce euros y se pueden comprar en línea. Los menores de dieciocho años entran gratis.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Quiénes entran gratis a la exposición?',
+    options: [
+      { label: 'Los estudiantes universitarios', value: 'universitarios' },
+      { label: 'Los menores de dieciocho años', value: 'los menores de dieciocho años' },
+      { label: 'Los jubilados', value: 'jubilados' },
+      { label: 'Nadie', value: 'nadie' }
+    ],
+    correctAnswer: 'los menores de dieciocho años', points: 1, orderIndex: 55, tags: ['cultura', 'museo'], timeSuggested: 45
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Los expertos recomiendan desconectar del trabajo al menos una hora antes de acostarse para dormir mejor.',
+    ttsLanguageCode: 'es-ES',
+    questionText: 'Escribe exactamente lo que oyes.',
+    correctAnswer: 'Los expertos recomiendan desconectar del trabajo al menos una hora antes de acostarse para dormir mejor.', points: 1, orderIndex: 56, tags: ['dictado', 'salud'], timeSuggested: 60
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'He cambiado de opinión sobre el teletrabajo. Al principio pensaba que era más cómodo, pero ahora echo de menos la oficina. Me siento más motivado cuando trabajo con mis compañeros y separar el espacio de trabajo del hogar me ayuda a concentrarme.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Por qué prefiere ahora la oficina?',
+    options: [
+      { label: 'Porque gana más dinero', value: 'gana más dinero' },
+      { label: 'Porque se siente más motivado con sus compañeros', value: 'porque se siente más motivado con sus compañeros' },
+      { label: 'Porque su jefe se lo exige', value: 'se lo exige el jefe' },
+      { label: 'Porque no tiene internet en casa', value: 'no tiene internet' }
+    ],
+    correctAnswer: 'porque se siente más motivado con sus compañeros', points: 1, orderIndex: 57, tags: ['trabajo', 'opinión'], timeSuggested: 45
+  },
+
+  // ── B2 — 5 questions (58–62) ────────────────────────────────
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La inteligencia artificial generativa plantea dilemas éticos complejos en el ámbito educativo. Por un lado, herramientas como los chatbots pueden personalizar el aprendizaje y ofrecer retroalimentación inmediata. Por otro, existe el riesgo de que los estudiantes deleguen el pensamiento crítico en la máquina, lo que podría mermar su capacidad analítica a largo plazo.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Cuál es el riesgo que se menciona sobre la IA en la educación?',
+    options: [
+      { label: 'Que los profesores pierdan su empleo', value: 'profesores sin empleo' },
+      { label: 'Que los estudiantes deleguen el pensamiento crítico en la máquina', value: 'que los estudiantes deleguen el pensamiento crítico en la máquina' },
+      { label: 'Que la tecnología sea demasiado cara', value: 'demasiado cara' },
+      { label: 'Que los exámenes desaparezcan', value: 'exámenes desaparezcan' }
+    ],
+    correctAnswer: 'que los estudiantes deleguen el pensamiento crítico en la máquina', points: 2, orderIndex: 58, tags: ['educación', 'tecnología'], timeSuggested: 60
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'El fenómeno de la "gran renuncia" que se observó en Estados Unidos tras la pandemia ha empezado a manifestarse también en Europa. Muchos profesionales, especialmente en el sector tecnológico y sanitario, están reconsiderando sus prioridades laborales, valorando más el equilibrio entre la vida personal y profesional que el salario. Las empresas se ven obligadas a ofrecer mayor flexibilidad y mejores condiciones para retener el talento.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Qué valoran más los profesionales según el texto?',
+    options: [
+      { label: 'Un salario más alto', value: 'salario más alto' },
+      { label: 'El equilibrio entre la vida personal y profesional', value: 'el equilibrio entre la vida personal y profesional' },
+      { label: 'Más vacaciones', value: 'más vacaciones' },
+      { label: 'Trabajar menos horas', value: 'menos horas' }
+    ],
+    correctAnswer: 'el equilibrio entre la vida personal y profesional', points: 2, orderIndex: 59, tags: ['trabajo', 'tendencias'], timeSuggested: 60
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La reforma educativa propuesta incluye la reducción del número de alumnos por aula a un máximo de veinte, la incorporación de la educación emocional como asignatura obligatoria y la evaluación continua en sustitución de los exámenes finales. Los sindicatos de profesores la apoyan, aunque exigen una mayor inversión en recursos humanos.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Cuántos alumnos habrá como máximo por aula según la reforma?',
+    options: [{ label: '15', value: '15' }, { label: '20', value: '20' }, { label: '25', value: '25' }, { label: '30', value: '30' }],
+    correctAnswer: '20', points: 2, orderIndex: 60, tags: ['educación', 'política'], timeSuggested: 60
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'Los avances en biotecnología han abierto un debate sobre los límites éticos de la manipulación genética en seres humanos.',
+    ttsLanguageCode: 'es-ES',
+    questionText: 'Escribe exactamente lo que oyes.',
+    correctAnswer: 'Los avances en biotecnología han abierto un debate sobre los límites éticos de la manipulación genética en seres humanos.', points: 2, orderIndex: 61, tags: ['dictado', 'ciencia'], timeSuggested: 90
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La brecha digital de género sigue siendo un problema significativo. A pesar de los avances, las mujeres representan solo el veintiséis por ciento de los profesionales del sector tecnológico en Europa. Las causas son múltiples: estereotipos de género desde la infancia, falta de referentes femeninos y ambientes laborales que no favorecen la conciliación.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Qué porcentaje de profesionales tecnológicos en Europa son mujeres?',
+    options: [{ label: '16%', value: '16' }, { label: '26%', value: '26' }, { label: '36%', value: '36' }, { label: '46%', value: '46' }],
+    correctAnswer: '26', points: 2, orderIndex: 62, tags: ['igualdad', 'tecnología'], timeSuggested: 60
+  },
+
+  // ── C1 — 5 questions (63–67) ────────────────────────────────
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La noción de justicia restaurativa supone un cambio de paradigma respecto al sistema penal retributivo tradicional. Mientras que el modelo retributivo se centra en castigar al infractor, la justicia restaurativa prioriza la reparación del daño causado a la víctima y la comunidad. Los programas de mediación entre víctima y agresor han demostrado tasas de reincidencia significativamente menores, aunque los críticos cuestionan su aplicabilidad en casos de delitos graves.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿En qué se diferencia la justicia restaurativa de la retributiva?',
+    options: [
+      { label: 'La restaurativa impone castigos más severos', value: 'castigos más severos' },
+      { label: 'La restaurativa prioriza la reparación del daño sobre el castigo', value: 'la restaurativa prioriza la reparación del daño sobre el castigo' },
+      { label: 'Son esencialmente iguales', value: 'son iguales' },
+      { label: 'La restaurativa solo se aplica a menores', value: 'solo menores' }
+    ],
+    correctAnswer: 'la restaurativa prioriza la reparación del daño sobre el castigo', points: 2, orderIndex: 63, tags: ['derecho', 'sociología'], timeSuggested: 75
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'El concepto de "capital social", desarrollado por Pierre Bourdieu, se refiere al conjunto de recursos reales o potenciales vinculados a la posesión de una red duradera de relaciones. A diferencia del capital económico, el capital social no puede transferirse directamente, sino que se acumula mediante la inversión continuada en relaciones sociales. Investigaciones recientes han demostrado que el capital social es un predictor más fiable del bienestar subjetivo que los ingresos económicos.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Qué predice mejor el bienestar subjetivo según las investigaciones?',
+    options: [
+      { label: 'El capital económico', value: 'capital económico' },
+      { label: 'El capital social', value: 'el capital social' },
+      { label: 'El nivel educativo', value: 'nivel educativo' },
+      { label: 'La salud física', value: 'salud física' }
+    ],
+    correctAnswer: 'el capital social', points: 2, orderIndex: 64, tags: ['sociología', 'bienestar'], timeSuggested: 75
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La arquitectura bioclimática integra el diseño constructivo con las condiciones climáticas del entorno para optimizar el confort térmico sin recurrir excesivamente a sistemas de climatización artificial. Estrategias como la orientación solar adecuada, la ventilación cruzada natural y el uso de materiales con alta inercia térmica permiten reducir el consumo energético hasta en un sesenta por ciento respecto a los edificios convencionales.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Cuánto puede reducirse el consumo energético con la arquitectura bioclimática?',
+    options: [{ label: '30%', value: '30' }, { label: '40%', value: '40' }, { label: '50%', value: '50' }, { label: '60%', value: '60' }],
+    correctAnswer: '60', points: 2, orderIndex: 65, tags: ['arquitectura', 'medioambiente'], timeSuggested: 75
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'La interrelación entre factores genéticos y ambientales en el desarrollo cognitivo sigue siendo objeto de un intenso debate en la comunidad científica.',
+    ttsLanguageCode: 'es-ES',
+    questionText: 'Escribe exactamente lo que oyes.',
+    correctAnswer: 'La interrelación entre factores genéticos y ambientales en el desarrollo cognitivo sigue siendo objeto de un intenso debate en la comunidad científica.', points: 2, orderIndex: 66, tags: ['dictado', 'ciencia'], timeSuggested: 90
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'El principio de precaución establece que, ante la incertidumbre científica sobre los posibles efectos nocivos de una actividad o producto, las autoridades deben adoptar medidas preventivas sin esperar a que el daño se materialice. Este principio, consagrado en el derecho ambiental europeo, ha sido invocado en debates sobre organismos modificados genéticamente, pesticidas y campos electromagnéticos.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿En qué ámbito del derecho europeo está consagrado el principio de precaución?',
+    options: [
+      { label: 'Derecho penal', value: 'derecho penal' },
+      { label: 'Derecho ambiental', value: 'derecho ambiental' },
+      { label: 'Derecho mercantil', value: 'derecho mercantil' },
+      { label: 'Derecho laboral', value: 'derecho laboral' }
+    ],
+    correctAnswer: 'derecho ambiental', points: 2, orderIndex: 67, tags: ['derecho', 'medioambiente'], timeSuggested: 75
+  },
+
+  // ── C2 — 5 questions (68–72) ────────────────────────────────
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La hermenéutica gadameriana sostiene que la comprensión de un texto no es un acto de reproducción del sentido original del autor, sino un acontecimiento productivo en el que el horizonte del intérprete se fusiona con el del texto. Esta "fusión de horizontes" implica que toda interpretación está históricamente condicionada y que la pretensión de una lectura objetiva y definitiva es, en última instancia, ilusoria.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Qué es la "fusión de horizontes" según Gadamer?',
+    options: [
+      { label: 'La reproducción exacta del sentido original del autor', value: 'reproducción exacta' },
+      { label: 'La unión del horizonte del intérprete con el del texto', value: 'la unión del horizonte del intérprete con el del texto' },
+      { label: 'Un método de traducción literal', value: 'traducción literal' },
+      { label: 'La eliminación de la subjetividad del lector', value: 'eliminación de subjetividad' }
+    ],
+    correctAnswer: 'la unión del horizonte del intérprete con el del texto', points: 2, orderIndex: 68, tags: ['filosofía', 'hermenéutica'], timeSuggested: 90
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La teoría de la performatividad de Judith Butler cuestiona la noción de que el género es una expresión de una identidad preexistente. Según Butler, el género no es algo que se es, sino algo que se hace: se constituye mediante la repetición estilizada de actos corporales, gestos y enunciados performativos. Esta concepción desestabiliza la distinción convencional entre sexo biológico y género social, sugiriendo que ambas categorías son construcciones discursivas.',
+    ttsLanguageCode: 'es-ES',
+    questionText: 'Según Butler, ¿cómo se constituye el género?',
+    options: [
+      { label: 'Es determinado biológicamente al nacer', value: 'determinado biológicamente' },
+      { label: 'Mediante la repetición estilizada de actos performativos', value: 'mediante la repetición estilizada de actos performativos' },
+      { label: 'Por elección consciente en la adolescencia', value: 'elección consciente' },
+      { label: 'A través de la educación formal', value: 'educación formal' }
+    ],
+    correctAnswer: 'mediante la repetición estilizada de actos performativos', points: 2, orderIndex: 69, tags: ['filosofía', 'género'], timeSuggested: 90
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'El fenómeno de la aporofobia — el rechazo, la aversión o el desprecio hacia las personas pobres — fue acuñado como término por la filósofa Adela Cortina. A diferencia de la xenofobia, que se dirige contra los extranjeros, la aporofobia discrimina específicamente a quienes carecen de recursos económicos, independientemente de su origen. Cortina argumenta que esta forma de discriminación es la más extendida y la menos reconocida socialmente.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿En qué se diferencia la aporofobia de la xenofobia?',
+    options: [
+      { label: 'La aporofobia rechaza a los extranjeros', value: 'rechaza extranjeros' },
+      { label: 'La aporofobia discrimina por pobreza, no por origen', value: 'la aporofobia discrimina por pobreza, no por origen' },
+      { label: 'Son sinónimos', value: 'son sinónimos' },
+      { label: 'La aporofobia es menos grave', value: 'menos grave' }
+    ],
+    correctAnswer: 'la aporofobia discrimina por pobreza, no por origen', points: 2, orderIndex: 70, tags: ['filosofía', 'sociedad'], timeSuggested: 90
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
+    ttsScript: 'La interseccionalidad constituye un marco analítico indispensable para comprender cómo las distintas formas de opresión se entrelazan y refuerzan mutuamente.',
+    ttsLanguageCode: 'es-ES',
+    questionText: 'Escribe exactamente lo que oyes.',
+    correctAnswer: 'La interseccionalidad constituye un marco analítico indispensable para comprender cómo las distintas formas de opresión se entrelazan y refuerzan mutuamente.', points: 2, orderIndex: 71, tags: ['dictado', 'sociología'], timeSuggested: 120
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'La paradoja de la tolerancia, formulada por Karl Popper, plantea que una sociedad ilimitadamente tolerante terminará siendo destruida por los intolerantes. Popper concluye que, paradójicamente, para preservar la tolerancia es necesario reservarse el derecho de no tolerar la intolerancia. Este argumento se invoca frecuentemente en los debates contemporáneos sobre los límites de la libertad de expresión y la regulación del discurso de odio.',
+    ttsLanguageCode: 'es-ES',
+    questionText: '¿Cuál es la conclusión de Popper sobre la tolerancia?',
+    options: [
+      { label: 'Toda expresión debe ser permitida sin excepción', value: 'todo permitido' },
+      { label: 'Para preservar la tolerancia hay que no tolerar la intolerancia', value: 'para preservar la tolerancia hay que no tolerar la intolerancia' },
+      { label: 'La tolerancia es siempre negativa', value: 'siempre negativa' },
+      { label: 'Solo el Estado puede ser tolerante', value: 'solo el Estado' }
+    ],
+    correctAnswer: 'para preservar la tolerancia hay que no tolerar la intolerancia', points: 2, orderIndex: 72, tags: ['filosofía', 'política'], timeSuggested: 90
+  },
 ]

@@ -107,5 +107,133 @@ export const englishWritingQuestions: MultiSkillQuestionData[] = [
     correctAnswer: '', points: 3, orderIndex: 14,
     rubric: { minWords: 200, maxWords: 300, criteria: ['philosophical depth', 'balanced analysis', 'policy awareness', 'elegant prose', 'logical coherence'] },
     tags: ['technology', 'politics', 'ethics'], timeSuggested: 720
+  },
+
+  // ============================================================
+  // NEW QUESTIONS — 16 more (orderIndex 15-30)
+  // ============================================================
+
+  // A1 (20-50 words)
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Write a short postcard to a friend. Tell them where you are and what the weather is like.',
+    correctAnswer: '', points: 1, orderIndex: 15,
+    rubric: { minWords: 20, maxWords: 50, criteria: ['basic greeting', 'simple sentences', 'weather vocabulary'] },
+    tags: ['postcard', 'weather'], timeSuggested: 180
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Describe your house or flat. How many rooms does it have? What is your favourite room?',
+    correctAnswer: '', points: 1, orderIndex: 16,
+    rubric: { minWords: 20, maxWords: 50, criteria: ['house vocabulary', 'there is/are', 'simple adjectives'] },
+    tags: ['home', 'description'], timeSuggested: 180
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'What do you like to eat and drink? Write about your favourite meals.',
+    correctAnswer: '', points: 1, orderIndex: 17,
+    rubric: { minWords: 20, maxWords: 50, criteria: ['food vocabulary', 'like/prefer', 'simple sentences'] },
+    tags: ['food', 'preferences'], timeSuggested: 180
+  },
+
+  // A2 (40-80 words)
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Write an email to a friend inviting them to a party. Include the date, time, place, and what to bring.',
+    correctAnswer: '', points: 1, orderIndex: 18,
+    rubric: { minWords: 40, maxWords: 80, criteria: ['email format', 'future plans', 'invitation language', 'details'] },
+    tags: ['email', 'invitation'], timeSuggested: 240
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Describe your best friend. What do they look like? What do you like to do together?',
+    correctAnswer: '', points: 1, orderIndex: 19,
+    rubric: { minWords: 40, maxWords: 80, criteria: ['physical description', 'personality adjectives', 'present simple', 'like + gerund'] },
+    tags: ['friend', 'description'], timeSuggested: 240
+  },
+
+  // B1 (80-150 words)
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Write a letter of complaint to a hotel manager about a problem you had during your stay.',
+    correctAnswer: '', points: 2, orderIndex: 20,
+    rubric: { minWords: 80, maxWords: 150, criteria: ['formal letter format', 'complaint language', 'past tense narrative', 'polite requests'] },
+    tags: ['complaint', 'formal letter'], timeSuggested: 360
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
+    questionText: 'Do you think homework is useful for students? Give your opinion with reasons and examples.',
+    correctAnswer: '', points: 2, orderIndex: 21,
+    rubric: { minWords: 80, maxWords: 150, criteria: ['opinion expression', 'supporting reasons', 'examples', 'paragraph structure'] },
+    tags: ['opinion', 'education'], timeSuggested: 360
+  },
+
+  // B2 (150-250 words)
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Write a report on the impact of tourism on local communities. Consider both positive and negative effects and suggest how problems can be addressed.',
+    correctAnswer: '', points: 2, orderIndex: 22,
+    rubric: { minWords: 150, maxWords: 250, criteria: ['report structure', 'balanced analysis', 'recommendations', 'formal register', 'cohesive devices'] },
+    tags: ['report', 'tourism'], timeSuggested: 480
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Some people believe that competitive sports teach important life skills, while others think they put too much pressure on young people. Discuss both views.',
+    correctAnswer: '', points: 2, orderIndex: 23,
+    rubric: { minWords: 150, maxWords: 250, criteria: ['clear thesis', 'balanced argument', 'specific examples', 'formal vocabulary', 'logical structure'] },
+    tags: ['argumentative', 'sports'], timeSuggested: 480
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Write an essay discussing whether social media influencers have a positive or negative impact on young people\'s self-esteem and values.',
+    correctAnswer: '', points: 2, orderIndex: 24,
+    rubric: { minWords: 150, maxWords: 250, criteria: ['argumentative structure', 'counterargument awareness', 'examples', 'academic vocabulary'] },
+    tags: ['argumentative', 'social media'], timeSuggested: 480
+  },
+
+  // C1 (200-350 words)
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Write a proposal for your company or institution suggesting ways to reduce its environmental footprint. Include specific measures and justify their feasibility.',
+    correctAnswer: '', points: 3, orderIndex: 25,
+    rubric: { minWords: 200, maxWords: 350, criteria: ['proposal format', 'persuasive argumentation', 'feasibility analysis', 'sophisticated vocabulary', 'formal register'] },
+    tags: ['proposal', 'environment'], timeSuggested: 600
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Critically analyse the role of standardised testing in education. Does it measure learning effectively, or does it hinder genuine intellectual development?',
+    correctAnswer: '', points: 3, orderIndex: 26,
+    rubric: { minWords: 200, maxWords: 350, criteria: ['critical analysis', 'evidence-based argument', 'nuanced position', 'rhetorical devices', 'academic register'] },
+    tags: ['critical analysis', 'education'], timeSuggested: 600
+  },
+
+  // C2 (250-400 words)
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Write a philosophical essay exploring whether moral truths are objective facts or social constructs. Reference at least two philosophical traditions in your argument.',
+    correctAnswer: '', points: 3, orderIndex: 27,
+    rubric: { minWords: 250, maxWords: 400, criteria: ['philosophical depth', 'interdisciplinary references', 'abstract reasoning', 'near-native fluency', 'elegant prose'] },
+    tags: ['philosophy', 'ethics'], timeSuggested: 720
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Write a literary critique of a novel or play you have read, analysing its themes, narrative techniques, and cultural significance.',
+    correctAnswer: '', points: 3, orderIndex: 28,
+    rubric: { minWords: 250, maxWords: 400, criteria: ['literary analysis', 'sophisticated argumentation', 'critical evaluation', 'precise vocabulary', 'stylistic range'] },
+    tags: ['literary critique', 'culture'], timeSuggested: 720
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Examine the paradox of tolerance: can a truly tolerant society tolerate intolerance? Discuss with reference to political philosophy and contemporary examples.',
+    correctAnswer: '', points: 3, orderIndex: 29,
+    rubric: { minWords: 250, maxWords: 400, criteria: ['philosophical reasoning', 'nuanced conclusion', 'academic register', 'counterargument handling', 'logical coherence'] },
+    tags: ['philosophy', 'politics'], timeSuggested: 720
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'ESSAY', skill: 'WRITING',
+    questionText: 'Is the notion of meritocracy a useful ideal or a dangerous myth? Analyse the sociological and philosophical dimensions of this question.',
+    correctAnswer: '', points: 3, orderIndex: 30,
+    rubric: { minWords: 250, maxWords: 400, criteria: ['sophisticated argumentation', 'interdisciplinary analysis', 'abstract reasoning', 'elegant expression', 'nuanced position'] },
+    tags: ['sociology', 'philosophy', 'economics'], timeSuggested: 720
   }
 ]

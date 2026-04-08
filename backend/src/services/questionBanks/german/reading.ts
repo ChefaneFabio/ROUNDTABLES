@@ -1,6 +1,6 @@
 import { MultiSkillQuestionData } from '../types'
 
-// German Reading Questions — ~7 per CEFR level (42 total)
+// German Reading Questions — ~7 per CEFR level + 40 additional (~82 total)
 // Types: READING, MULTIPLE_CHOICE, FILL_BLANK with passages
 
 export const germanReadingQuestions: MultiSkillQuestionData[] = [
@@ -438,5 +438,415 @@ export const germanReadingQuestions: MultiSkillQuestionData[] = [
     passage: 'Die Kuuk Thaayorre verwenden Himmelsrichtungen anstelle von egozentrischen Raumbegriffen.',
     questionText: 'Die Kuuk Thaayorre verwenden ___ anstelle von egozentrischen Raumbegriffen.',
     correctAnswer: 'Himmelsrichtungen', points: 3, orderIndex: 42, tags: ['Linguistik']
-  }
+  },
+
+  // ============================================================
+  // NEW QUESTIONS — 40 additional (orderIndex 43–82)
+  // ~7 per level (A1–C2)
+  // ============================================================
+
+  // --- A1 (43–49) ---
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Speisekarte',
+    passage: 'Café Sonnenschein — Speisekarte. Frühstück: Brötchen mit Käse — 3,50 €. Müsli mit Milch — 4,00 €. Kaffee — 2,50 €. Tee — 2,00 €. Orangensaft — 2,80 €.',
+    questionText: 'Was kostet ein Kaffee?',
+    options: [{ label: '2,00 €', value: '2,00' }, { label: '2,50 €', value: '2,50' }, { label: '2,80 €', value: '2,80' }, { label: '3,50 €', value: '3,50' }],
+    correctAnswer: '2,50', points: 1, orderIndex: 43, tags: ['Speisekarte', 'Zahlen']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Speisekarte',
+    passage: 'Café Sonnenschein — Speisekarte. Frühstück: Brötchen mit Käse — 3,50 €. Müsli mit Milch — 4,00 €. Kaffee — 2,50 €. Tee — 2,00 €. Orangensaft — 2,80 €.',
+    questionText: 'Was ist das billigste Getränk?',
+    options: [{ label: 'Kaffee', value: 'Kaffee' }, { label: 'Tee', value: 'Tee' }, { label: 'Orangensaft', value: 'Orangensaft' }, { label: 'Milch', value: 'Milch' }],
+    correctAnswer: 'Tee', points: 1, orderIndex: 44, tags: ['Speisekarte', 'Vergleich']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Schilder',
+    passage: 'Schild 1: „Eingang". Schild 2: „Ausgang". Schild 3: „Kein Zutritt — nur für Personal". Schild 4: „Öffnungszeiten: Montag bis Freitag, 9:00–18:00 Uhr".',
+    questionText: 'Wann ist das Gebäude geöffnet?',
+    options: [{ label: 'Jeden Tag', value: 'jeden Tag' }, { label: 'Montag bis Freitag', value: 'Montag bis Freitag' }, { label: 'Nur am Wochenende', value: 'nur am Wochenende' }, { label: 'Montag bis Samstag', value: 'Montag bis Samstag' }],
+    correctAnswer: 'Montag bis Freitag', points: 1, orderIndex: 45, tags: ['Schilder', 'Uhrzeit']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Schild 3: „Kein Zutritt — nur für Personal".',
+    questionText: 'Kein ___ — nur für Personal.',
+    correctAnswer: 'Zutritt', points: 1, orderIndex: 46, tags: ['Schilder']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Mein Zimmer',
+    passage: 'Mein Zimmer ist klein, aber schön. Ich habe ein Bett, einen Tisch und einen Stuhl. An der Wand hängt ein Bild. Auf dem Tisch steht mein Computer. Ich lerne jeden Tag am Tisch.',
+    questionText: 'Was steht auf dem Tisch?',
+    options: [{ label: 'Ein Bild', value: 'ein Bild' }, { label: 'Ein Computer', value: 'ein Computer' }, { label: 'Ein Buch', value: 'ein Buch' }, { label: 'Eine Lampe', value: 'eine Lampe' }],
+    correctAnswer: 'ein Computer', points: 1, orderIndex: 47, tags: ['Wohnung', 'Möbel']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Mein Zimmer',
+    passage: 'Mein Zimmer ist klein, aber schön. Ich habe ein Bett, einen Tisch und einen Stuhl. An der Wand hängt ein Bild. Auf dem Tisch steht mein Computer. Ich lerne jeden Tag am Tisch.',
+    questionText: 'Wie ist das Zimmer?',
+    options: [{ label: 'Groß und dunkel', value: 'groß und dunkel' }, { label: 'Klein aber schön', value: 'klein aber schön' }, { label: 'Alt und leer', value: 'alt und leer' }, { label: 'Neu und modern', value: 'neu und modern' }],
+    correctAnswer: 'klein aber schön', points: 1, orderIndex: 48, tags: ['Wohnung', 'Adjektive']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Mein Zimmer ist klein, aber schön. Ich habe ein Bett, einen Tisch und einen Stuhl.',
+    questionText: 'An der Wand hängt ein ___.',
+    correctAnswer: 'Bild', points: 1, orderIndex: 49, tags: ['Wohnung']
+  },
+
+  // --- A2 (50–55) ---
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Der Wetterbericht',
+    passage: 'Der Wetterbericht für morgen: Im Norden regnet es den ganzen Tag. Die Temperaturen liegen bei zehn Grad. Im Süden scheint die Sonne und es wird bis zu zwanzig Grad warm. Im Osten ist es bewölkt, aber trocken. Im Westen gibt es am Nachmittag Gewitter.',
+    questionText: 'Wo scheint morgen die Sonne?',
+    options: [{ label: 'Im Norden', value: 'im Norden' }, { label: 'Im Süden', value: 'im Süden' }, { label: 'Im Osten', value: 'im Osten' }, { label: 'Im Westen', value: 'im Westen' }],
+    correctAnswer: 'im Süden', points: 1, orderIndex: 50, tags: ['Wetter', 'Himmelsrichtungen']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Der Wetterbericht',
+    passage: 'Der Wetterbericht für morgen: Im Norden regnet es den ganzen Tag. Die Temperaturen liegen bei zehn Grad. Im Süden scheint die Sonne und es wird bis zu zwanzig Grad warm. Im Osten ist es bewölkt, aber trocken. Im Westen gibt es am Nachmittag Gewitter.',
+    questionText: 'Was passiert am Nachmittag im Westen?',
+    options: [{ label: 'Regen', value: 'Regen' }, { label: 'Sonnenschein', value: 'Sonnenschein' }, { label: 'Gewitter', value: 'Gewitter' }, { label: 'Schnee', value: 'Schnee' }],
+    correctAnswer: 'Gewitter', points: 1, orderIndex: 51, tags: ['Wetter']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Anzeige: Flohmarkt',
+    passage: 'Großer Flohmarkt! Am Samstag, den 15. Juni, von 8 bis 16 Uhr auf dem Marktplatz. Verkaufen Sie Ihre alten Sachen! Ein Tisch kostet 10 Euro. Anmeldung bis zum 10. Juni per E-Mail an flohmarkt@stadt.de. Essen und Getränke vor Ort erhältlich.',
+    questionText: 'Bis wann muss man sich anmelden?',
+    options: [{ label: 'Bis zum 8. Juni', value: 'bis zum 8. Juni' }, { label: 'Bis zum 10. Juni', value: 'bis zum 10. Juni' }, { label: 'Bis zum 15. Juni', value: 'bis zum 15. Juni' }, { label: 'Bis zum 20. Juni', value: 'bis zum 20. Juni' }],
+    correctAnswer: 'bis zum 10. Juni', points: 1, orderIndex: 52, tags: ['Veranstaltung', 'Datum']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Anzeige: Flohmarkt',
+    passage: 'Großer Flohmarkt! Am Samstag, den 15. Juni, von 8 bis 16 Uhr auf dem Marktplatz. Verkaufen Sie Ihre alten Sachen! Ein Tisch kostet 10 Euro. Anmeldung bis zum 10. Juni per E-Mail an flohmarkt@stadt.de.',
+    questionText: 'Wie viel kostet ein Verkaufstisch?',
+    options: [{ label: '5 Euro', value: '5 Euro' }, { label: '10 Euro', value: '10 Euro' }, { label: '15 Euro', value: '15 Euro' }, { label: '20 Euro', value: '20 Euro' }],
+    correctAnswer: '10 Euro', points: 1, orderIndex: 53, tags: ['Veranstaltung', 'Zahlen']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Großer Flohmarkt am Samstag auf dem Marktplatz. Essen und Getränke vor Ort erhältlich.',
+    questionText: 'Essen und ___ sind vor Ort erhältlich.',
+    correctAnswer: 'Getränke', points: 1, orderIndex: 54, tags: ['Veranstaltung']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Brief an die Vermieterin',
+    passage: 'Sehr geehrte Frau Schmidt, seit gestern funktioniert die Heizung in meiner Wohnung nicht mehr. Es ist sehr kalt. Könnten Sie bitte einen Handwerker schicken? Ich bin jeden Nachmittag nach 14 Uhr zu Hause. Vielen Dank im Voraus. Mit freundlichen Grüßen, Thomas Berger',
+    questionText: 'Was ist das Problem?',
+    options: [{ label: 'Das Wasser funktioniert nicht', value: 'das Wasser funktioniert nicht' }, { label: 'Die Heizung funktioniert nicht', value: 'die Heizung funktioniert nicht' }, { label: 'Die Tür ist kaputt', value: 'die Tür ist kaputt' }, { label: 'Das Licht ist kaputt', value: 'das Licht ist kaputt' }],
+    correctAnswer: 'die Heizung funktioniert nicht', points: 1, orderIndex: 55, tags: ['Wohnen', 'Brief']
+  },
+
+  // --- B1 (56–62) ---
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Gesund essen im Alltag',
+    passage: 'Viele Deutsche essen zu viel Fleisch und zu wenig Gemüse. Ernährungsexperten empfehlen, mindestens fünf Portionen Obst und Gemüse am Tag zu essen. Außerdem sollte man genug Wasser trinken — mindestens anderthalb Liter pro Tag. Fertiggerichte enthalten oft zu viel Salz und Zucker. Wer selbst kocht, kann seine Ernährung besser kontrollieren und lebt gesünder.',
+    questionText: 'Wie viele Portionen Obst und Gemüse werden empfohlen?',
+    options: [
+      { label: 'Drei pro Tag', value: 'drei pro Tag' },
+      { label: 'Fünf pro Tag', value: 'fünf pro Tag' },
+      { label: 'Sieben pro Tag', value: 'sieben pro Tag' },
+      { label: 'Zehn pro Woche', value: 'zehn pro Woche' }
+    ],
+    correctAnswer: 'fünf pro Tag', points: 1, orderIndex: 56, tags: ['Ernährung', 'Gesundheit']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Gesund essen im Alltag',
+    passage: 'Fertiggerichte enthalten oft zu viel Salz und Zucker. Wer selbst kocht, kann seine Ernährung besser kontrollieren und lebt gesünder.',
+    questionText: 'Warum ist Selbstkochen gesünder?',
+    options: [
+      { label: 'Es ist billiger', value: 'es ist billiger' },
+      { label: 'Man kann die Ernährung besser kontrollieren', value: 'man kann die Ernährung besser kontrollieren' },
+      { label: 'Es schmeckt besser', value: 'es schmeckt besser' },
+      { label: 'Es geht schneller', value: 'es geht schneller' }
+    ],
+    correctAnswer: 'man kann die Ernährung besser kontrollieren', points: 1, orderIndex: 57, tags: ['Ernährung']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Ehrenamt in Deutschland',
+    passage: 'In Deutschland engagieren sich rund 30 Millionen Menschen ehrenamtlich. Sie arbeiten in Sportvereinen, bei der Feuerwehr, in Hilfsorganisationen oder in der Nachbarschaftshilfe. Ehrenamtliche Arbeit wird nicht bezahlt, aber viele Freiwillige berichten, dass sie dadurch neue Fähigkeiten erlernen, soziale Kontakte knüpfen und ein Gefühl der Zufriedenheit empfinden. Der Staat fördert das Ehrenamt durch steuerliche Vergünstigungen und die sogenannte Ehrenamtspauschale.',
+    questionText: 'Wie viele Menschen engagieren sich in Deutschland ehrenamtlich?',
+    options: [
+      { label: 'Rund 10 Millionen', value: 'rund 10 Millionen' },
+      { label: 'Rund 20 Millionen', value: 'rund 20 Millionen' },
+      { label: 'Rund 30 Millionen', value: 'rund 30 Millionen' },
+      { label: 'Rund 50 Millionen', value: 'rund 50 Millionen' }
+    ],
+    correctAnswer: 'rund 30 Millionen', points: 1, orderIndex: 58, tags: ['Gesellschaft', 'Ehrenamt']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Ehrenamt in Deutschland',
+    passage: 'Ehrenamtliche Arbeit wird nicht bezahlt, aber viele Freiwillige berichten, dass sie dadurch neue Fähigkeiten erlernen, soziale Kontakte knüpfen und ein Gefühl der Zufriedenheit empfinden.',
+    questionText: 'Welcher Vorteil wird NICHT genannt?',
+    options: [
+      { label: 'Neue Fähigkeiten erlernen', value: 'neue Fähigkeiten erlernen' },
+      { label: 'Bessere Karrierechancen', value: 'bessere Karrierechancen' },
+      { label: 'Soziale Kontakte knüpfen', value: 'soziale Kontakte knüpfen' },
+      { label: 'Zufriedenheit empfinden', value: 'Zufriedenheit empfinden' }
+    ],
+    correctAnswer: 'bessere Karrierechancen', points: 1, orderIndex: 59, tags: ['Gesellschaft']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Der Staat fördert das Ehrenamt durch steuerliche Vergünstigungen und die sogenannte Ehrenamtspauschale.',
+    questionText: 'Der Staat fördert das Ehrenamt durch steuerliche ___ und die Ehrenamtspauschale.',
+    correctAnswer: 'Vergünstigungen', points: 1, orderIndex: 60, tags: ['Gesellschaft']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Fahrradstadt Münster',
+    passage: 'Münster gilt als die Fahrradhauptstadt Deutschlands. Etwa 40 Prozent aller Wege in der Stadt werden mit dem Fahrrad zurückgelegt. Es gibt ein gut ausgebautes Netz von Fahrradwegen und viele Fahrradparkplätze. Die Stadt investiert jedes Jahr Millionen in die Fahrradinfrastruktur. Kritiker sagen jedoch, dass die Radwege in manchen Bereichen zu schmal sind und es an Sicherheit mangelt.',
+    questionText: 'Wie viel Prozent der Wege werden in Münster mit dem Fahrrad zurückgelegt?',
+    options: [
+      { label: '20 Prozent', value: '20 Prozent' },
+      { label: '30 Prozent', value: '30 Prozent' },
+      { label: '40 Prozent', value: '40 Prozent' },
+      { label: '50 Prozent', value: '50 Prozent' }
+    ],
+    correctAnswer: '40 Prozent', points: 1, orderIndex: 61, tags: ['Verkehr', 'Stadt']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Kritiker sagen, dass die Radwege in manchen Bereichen zu schmal sind und es an Sicherheit mangelt.',
+    questionText: 'Die Radwege sind in manchen Bereichen zu ___.',
+    correctAnswer: 'schmal', points: 1, orderIndex: 62, tags: ['Verkehr']
+  },
+
+  // --- B2 (63–69) ---
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Digitale Bildung',
+    passage: 'Die Digitalisierung der Schulen schreitet in Deutschland nur langsam voran. Während skandinavische Länder bereits frühzeitig Tablets und digitale Lernplattformen in den Unterricht integriert haben, kämpfen viele deutsche Schulen noch mit unzureichender Internetanbindung und fehlender technischer Ausstattung. Der Digitalpakt Schule, ein Förderprogramm des Bundes mit einem Volumen von fünf Milliarden Euro, soll Abhilfe schaffen. Dennoch kritisieren Lehrerverbände, dass die bürokratischen Hürden bei der Mittelbeantragung zu hoch seien und die Gelder zu langsam fließen.',
+    questionText: 'Was ist der Digitalpakt Schule?',
+    options: [
+      { label: 'Ein neues Schulfach', value: 'ein neues Schulfach' },
+      { label: 'Ein Förderprogramm des Bundes', value: 'ein Förderprogramm des Bundes' },
+      { label: 'Eine private Initiative', value: 'eine private Initiative' },
+      { label: 'Ein europäisches Projekt', value: 'ein europäisches Projekt' }
+    ],
+    correctAnswer: 'ein Förderprogramm des Bundes', points: 2, orderIndex: 63, tags: ['Bildung', 'Digitalisierung']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Digitale Bildung',
+    passage: 'Lehrerverbände kritisieren, dass die bürokratischen Hürden bei der Mittelbeantragung zu hoch seien und die Gelder zu langsam fließen.',
+    questionText: 'Woran kritisieren Lehrerverbände den Digitalpakt?',
+    options: [
+      { label: 'Zu wenig Geld', value: 'zu wenig Geld' },
+      { label: 'Zu hohe bürokratische Hürden', value: 'zu hohe bürokratische Hürden' },
+      { label: 'Falsche Technologie', value: 'falsche Technologie' },
+      { label: 'Mangelnde Lehrerfortbildung', value: 'mangelnde Lehrerfortbildung' }
+    ],
+    correctAnswer: 'zu hohe bürokratische Hürden', points: 2, orderIndex: 64, tags: ['Bildung', 'Politik']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Gentrifizierung in deutschen Großstädten',
+    passage: 'In vielen deutschen Großstädten wie Berlin, München und Hamburg steigen die Mieten seit Jahren rasant. Alteingesessene Bewohner werden durch zahlungskräftigere Mieter verdrängt. Sanierungen und der Zuzug einkommensstarker Bevölkerungsgruppen verändern das soziale Gefüge ganzer Stadtviertel. Während Befürworter argumentieren, dass Gentrifizierung zur Aufwertung vernachlässigter Gebiete beiträgt, sehen Kritiker darin eine Bedrohung für die soziale Durchmischung und die kulturelle Vielfalt der Städte.',
+    questionText: 'Was verstehen Kritiker unter dem Hauptproblem der Gentrifizierung?',
+    options: [
+      { label: 'Mangelnde Infrastruktur', value: 'mangelnde Infrastruktur' },
+      { label: 'Bedrohung der sozialen Durchmischung und kulturellen Vielfalt', value: 'Bedrohung der sozialen Durchmischung und kulturellen Vielfalt' },
+      { label: 'Zu viele Neubauten', value: 'zu viele Neubauten' },
+      { label: 'Höhere Steuern', value: 'höhere Steuern' }
+    ],
+    correctAnswer: 'Bedrohung der sozialen Durchmischung und kulturellen Vielfalt', points: 2, orderIndex: 65, tags: ['Gesellschaft', 'Stadt']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Gentrifizierung in deutschen Großstädten',
+    passage: 'Alteingesessene Bewohner werden durch zahlungskräftigere Mieter verdrängt. Sanierungen und der Zuzug einkommensstarker Bevölkerungsgruppen verändern das soziale Gefüge ganzer Stadtviertel.',
+    questionText: 'Wer verdrängt die alteingesessenen Bewohner?',
+    options: [
+      { label: 'Studenten', value: 'Studenten' },
+      { label: 'Zahlungskräftigere Mieter', value: 'zahlungskräftigere Mieter' },
+      { label: 'Touristen', value: 'Touristen' },
+      { label: 'Die Stadtverwaltung', value: 'die Stadtverwaltung' }
+    ],
+    correctAnswer: 'zahlungskräftigere Mieter', points: 2, orderIndex: 66, tags: ['Gesellschaft']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Sanierungen und der Zuzug einkommensstarker Bevölkerungsgruppen verändern das soziale Gefüge ganzer Stadtviertel.',
+    questionText: 'Der Zuzug einkommensstarker Bevölkerungsgruppen verändert das soziale ___ ganzer Stadtviertel.',
+    correctAnswer: 'Gefüge', points: 2, orderIndex: 67, tags: ['Gesellschaft', 'Wortschatz']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Energiewende',
+    passage: 'Deutschland hat sich zum Ziel gesetzt, bis 2045 klimaneutral zu werden. Der Ausbau erneuerbarer Energien — insbesondere Wind- und Solarenergie — ist ein zentraler Bestandteil dieser Strategie. Gleichzeitig hat Deutschland beschlossen, aus der Kernenergie auszusteigen. Kritiker dieser Entscheidung argumentieren, dass Atomkraft eine CO2-arme Energiequelle sei und der gleichzeitige Ausstieg aus Kohle und Kernkraft die Versorgungssicherheit gefährde.',
+    questionText: 'Was kritisieren Gegner des Atomausstiegs?',
+    options: [
+      { label: 'Atomkraft sei zu teuer', value: 'Atomkraft sei zu teuer' },
+      { label: 'Der Ausstieg gefährde die Versorgungssicherheit', value: 'der Ausstieg gefährde die Versorgungssicherheit' },
+      { label: 'Erneuerbare Energien seien besser', value: 'erneuerbare Energien seien besser' },
+      { label: 'Deutschland brauche mehr Kohlekraftwerke', value: 'Deutschland brauche mehr Kohlekraftwerke' }
+    ],
+    correctAnswer: 'der Ausstieg gefährde die Versorgungssicherheit', points: 2, orderIndex: 68, tags: ['Energie', 'Politik']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Deutschland hat sich zum Ziel gesetzt, bis 2045 klimaneutral zu werden.',
+    questionText: 'Deutschland will bis 2045 ___ werden.',
+    correctAnswer: 'klimaneutral', points: 2, orderIndex: 69, tags: ['Energie', 'Umwelt']
+  },
+
+  // --- C1 (70–76) ---
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Die Rolle der Medien in der Demokratie',
+    passage: 'In einer funktionierenden Demokratie kommt den Medien die essenzielle Aufgabe zu, als „vierte Gewalt" die Regierung zu kontrollieren und die Öffentlichkeit zu informieren. Der zunehmende ökonomische Druck auf traditionelle Medienhäuser hat jedoch zu einer Erosion investigativer Berichterstattung geführt. Gleichzeitig hat die Fragmentierung der Medienlandschaft durch soziale Netzwerke dazu beigetragen, dass sich Bürger zunehmend in Informationsblasen bewegen, in denen ihre bestehenden Ansichten bestätigt und selten hinterfragt werden.',
+    questionText: 'Was hat der ökonomische Druck auf Medienhäuser bewirkt?',
+    options: [
+      { label: 'Mehr investigative Berichterstattung', value: 'mehr investigative Berichterstattung' },
+      { label: 'Eine Erosion investigativer Berichterstattung', value: 'eine Erosion investigativer Berichterstattung' },
+      { label: 'Höhere Auflagen', value: 'höhere Auflagen' },
+      { label: 'Bessere Qualität', value: 'bessere Qualität' }
+    ],
+    correctAnswer: 'eine Erosion investigativer Berichterstattung', points: 2, orderIndex: 70, tags: ['Medien', 'Demokratie']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Die Rolle der Medien in der Demokratie',
+    passage: 'Die Fragmentierung der Medienlandschaft durch soziale Netzwerke hat dazu beigetragen, dass sich Bürger zunehmend in Informationsblasen bewegen, in denen ihre bestehenden Ansichten bestätigt und selten hinterfragt werden.',
+    questionText: 'Was sind „Informationsblasen"?',
+    options: [
+      { label: 'Nachrichtenagenturen', value: 'Nachrichtenagenturen' },
+      { label: 'Umgebungen, in denen nur bestätigende Ansichten zirkulieren', value: 'Umgebungen mit nur bestätigenden Ansichten' },
+      { label: 'Regierungspropaganda', value: 'Regierungspropaganda' },
+      { label: 'Wissenschaftliche Studien', value: 'wissenschaftliche Studien' }
+    ],
+    correctAnswer: 'Umgebungen mit nur bestätigenden Ansichten', points: 2, orderIndex: 71, tags: ['Medien', 'Gesellschaft']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Philosophie der Zeit',
+    passage: 'Augustinus stellte in seinen „Confessiones" die berühmte Frage: „Was also ist die Zeit? Wenn mich niemand danach fragt, weiß ich es; will ich es einem Fragenden erklären, weiß ich es nicht." Diese paradoxe Formulierung verweist auf die fundamentale Schwierigkeit, Zeit als philosophisches Konzept zu fassen. Während die Physik Zeit als messbare Dimension behandelt, erleben wir sie subjektiv als fließend und dehnbar — eine Stunde der Langeweile kann sich endlos anfühlen, während eine Stunde der Freude wie Minuten vergeht.',
+    questionText: 'Was meint Augustinus mit seiner paradoxen Aussage über die Zeit?',
+    options: [
+      { label: 'Zeit existiert nicht wirklich', value: 'Zeit existiert nicht' },
+      { label: 'Zeit ist intuitiv verständlich, aber schwer zu erklären', value: 'intuitiv verständlich, schwer zu erklären' },
+      { label: 'Nur Physiker können Zeit verstehen', value: 'nur Physiker verstehen Zeit' },
+      { label: 'Zeit ist eine Illusion', value: 'Zeit ist eine Illusion' }
+    ],
+    correctAnswer: 'intuitiv verständlich, schwer zu erklären', points: 2, orderIndex: 72, tags: ['Philosophie']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Die Physik behandelt Zeit als messbare Dimension, während wir sie subjektiv als fließend und dehnbar erleben.',
+    questionText: 'Wir erleben Zeit subjektiv als fließend und ___.',
+    correctAnswer: 'dehnbar', points: 2, orderIndex: 73, tags: ['Philosophie', 'Wortschatz']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Algorithmen und Vorurteile',
+    passage: 'Algorithmen, die in Bereichen wie der Kreditvergabe, der Strafzumessung oder der Personalauswahl eingesetzt werden, spiegeln häufig die Vorurteile ihrer Trainingsdaten wider. Wenn historische Daten systematische Benachteiligungen bestimmter Bevölkerungsgruppen enthalten, reproduziert ein darauf trainiertes System diese Ungerechtigkeiten. Forscher plädieren daher für sogenannte Fairness-Audits, bei denen Algorithmen regelmäßig auf diskriminierende Muster überprüft werden.',
+    questionText: 'Warum können Algorithmen diskriminierend sein?',
+    options: [
+      { label: 'Sie werden absichtlich programmiert', value: 'absichtlich programmiert' },
+      { label: 'Ihre Trainingsdaten enthalten bereits Vorurteile', value: 'Trainingsdaten enthalten Vorurteile' },
+      { label: 'Computer haben eigene Meinungen', value: 'Computer haben Meinungen' },
+      { label: 'Die Software ist veraltet', value: 'Software ist veraltet' }
+    ],
+    correctAnswer: 'Trainingsdaten enthalten Vorurteile', points: 2, orderIndex: 74, tags: ['Technologie', 'Ethik']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Algorithmen und Vorurteile',
+    passage: 'Forscher plädieren für sogenannte Fairness-Audits, bei denen Algorithmen regelmäßig auf diskriminierende Muster überprüft werden.',
+    questionText: 'Was sind Fairness-Audits?',
+    options: [
+      { label: 'Neue Programmiersprachen', value: 'neue Programmiersprachen' },
+      { label: 'Regelmäßige Überprüfungen auf Diskriminierung', value: 'regelmäßige Überprüfungen auf Diskriminierung' },
+      { label: 'Marketingstrategien', value: 'Marketingstrategien' },
+      { label: 'Finanzprüfungen', value: 'Finanzprüfungen' }
+    ],
+    correctAnswer: 'regelmäßige Überprüfungen auf Diskriminierung', points: 2, orderIndex: 75, tags: ['Technologie']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Wenn historische Daten systematische Benachteiligungen enthalten, reproduziert ein darauf trainiertes System diese Ungerechtigkeiten.',
+    questionText: 'Ein auf verzerrten Daten trainiertes System ___ bestehende Ungerechtigkeiten.',
+    correctAnswer: 'reproduziert', points: 2, orderIndex: 76, tags: ['Technologie', 'Wortschatz']
+  },
+
+  // --- C2 (77–82) ---
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Die Paradoxie des Fortschritts',
+    passage: 'Walter Benjamins Engel der Geschichte, inspiriert von Paul Klees „Angelus Novus", blickt auf eine einzige Katastrophe, die unablässig Trümmer auf Trümmer häuft, während ihn der Sturm des Fortschritts unaufhaltsam in die Zukunft treibt. Diese Allegorie verdeutlicht eine tiefgreifende Ambivalenz: Was wir als linearen Fortschritt begreifen, hinterlässt unweigerlich Verwüstung, und die Opfer der Geschichte werden durch die triumphale Erzählung der Sieger unsichtbar gemacht. Benjamins Geschichtsphilosophie mahnt, die Geschichte „gegen den Strich zu bürsten" — die unterdrückten Stimmen hörbar zu machen und die vermeintliche Notwendigkeit historischer Entwicklungen zu hinterfragen.',
+    questionText: 'Was symbolisiert der „Sturm" in Benjamins Allegorie?',
+    options: [
+      { label: 'Naturkatastrophen', value: 'Naturkatastrophen' },
+      { label: 'Den unaufhaltsamen Fortschritt', value: 'den unaufhaltsamen Fortschritt' },
+      { label: 'Den Krieg', value: 'den Krieg' },
+      { label: 'Die Revolution', value: 'die Revolution' }
+    ],
+    correctAnswer: 'den unaufhaltsamen Fortschritt', points: 2, orderIndex: 77, tags: ['Philosophie', 'Literatur']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Die Paradoxie des Fortschritts',
+    passage: 'Benjamins Geschichtsphilosophie mahnt, die Geschichte „gegen den Strich zu bürsten" — die unterdrückten Stimmen hörbar zu machen und die vermeintliche Notwendigkeit historischer Entwicklungen zu hinterfragen.',
+    questionText: 'Was bedeutet es, die Geschichte „gegen den Strich zu bürsten"?',
+    options: [
+      { label: 'Die Geschichte chronologisch ordnen', value: 'chronologisch ordnen' },
+      { label: 'Dominante Erzählungen hinterfragen und unterdrückte Stimmen hören', value: 'dominante Erzählungen hinterfragen' },
+      { label: 'Geschichte als Wissenschaft aufgeben', value: 'Geschichte aufgeben' },
+      { label: 'Historische Fakten korrigieren', value: 'Fakten korrigieren' }
+    ],
+    correctAnswer: 'dominante Erzählungen hinterfragen', points: 2, orderIndex: 78, tags: ['Philosophie']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Sprachliche Manipulation',
+    passage: 'Victor Klemperers Studie „LTI — Notizbuch eines Philologen" dokumentiert, wie das nationalsozialistische Regime die deutsche Sprache systematisch instrumentalisierte, um Ideologie zu transportieren und kritisches Denken zu untergraben. Klemperer identifizierte sprachliche Muster wie die inflationäre Verwendung von Superlativen, die Biologisierung sozialer Phänomene und die Euphemisierung von Gewalt. Seine Analyse bleibt erschreckend aktuell: Auch in der Gegenwart werden sprachliche Strategien eingesetzt, um politische Realitäten zu verschleiern und öffentliche Meinung zu lenken.',
+    questionText: 'Welches sprachliche Muster identifizierte Klemperer NICHT?',
+    options: [
+      { label: 'Inflationäre Verwendung von Superlativen', value: 'Superlative' },
+      { label: 'Biologisierung sozialer Phänomene', value: 'Biologisierung' },
+      { label: 'Systematische Verwendung von Fremdwörtern', value: 'systematische Fremdwörter' },
+      { label: 'Euphemisierung von Gewalt', value: 'Euphemisierung' }
+    ],
+    correctAnswer: 'systematische Fremdwörter', points: 2, orderIndex: 79, tags: ['Linguistik', 'Geschichte']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Klemperers Analyse zeigt, wie das Regime die Sprache instrumentalisierte, um Ideologie zu transportieren und kritisches Denken zu untergraben.',
+    questionText: 'Sprache wurde instrumentalisiert, um kritisches ___ zu untergraben.',
+    correctAnswer: 'Denken', points: 2, orderIndex: 80, tags: ['Linguistik']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Ästhetik des Scheiterns',
+    passage: 'Samuel Becketts berühmtes Diktum „Wieder versuchen. Wieder scheitern. Besser scheitern" wurde in der populären Rezeption zu einem Motivationsspruch umgedeutet — eine Ironie, die Beckett selbst vermutlich amüsiert hätte. Im Original verweist die Passage auf die fundamentale Unmöglichkeit menschlichen Gelingens, nicht auf die Tugend der Ausdauer. Diese Fehlinterpretation illustriert ein wiederkehrendes Muster: Komplexe philosophische und literarische Ideen werden für den Massenkonsum vereinfacht und dabei ihres subversiven Gehalts beraubt.',
+    questionText: 'Was kritisiert der Text an der populären Rezeption von Becketts Zitat?',
+    options: [
+      { label: 'Das Zitat wird falsch übersetzt', value: 'falsch übersetzt' },
+      { label: 'Es wird seines subversiven Gehalts beraubt und zum Motivationsspruch umgedeutet', value: 'subversiver Gehalt geht verloren' },
+      { label: 'Beckett wird nicht als Autor genannt', value: 'Autor nicht genannt' },
+      { label: 'Das Zitat ist zu lang', value: 'zu lang' }
+    ],
+    correctAnswer: 'subversiver Gehalt geht verloren', points: 2, orderIndex: 81, tags: ['Literatur', 'Philosophie']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Komplexe philosophische und literarische Ideen werden für den Massenkonsum vereinfacht und dabei ihres subversiven Gehalts beraubt.',
+    questionText: 'Komplexe Ideen werden für den ___ vereinfacht.',
+    correctAnswer: 'Massenkonsum', points: 2, orderIndex: 82, tags: ['Literatur', 'Wortschatz']
+  },
 ]
