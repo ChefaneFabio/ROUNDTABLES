@@ -29,7 +29,7 @@ export const frenchListeningQuestions: MultiSkillQuestionData[] = [
     ttsScript: 'Excusez-moi, où est la banque ? Allez tout droit, puis tournez à gauche. La banque est à côté du supermarché.',
     ttsLanguageCode: 'fr-FR',
     questionText: 'Où est la banque ?',
-    options: [{ label: 'À côté de l\'école', value: 'à côté de l\'école' }, { label: 'À côté du supermarché', value: 'à côté du supermarché' }, { label: 'À côté du parc', value: 'à côté du parc' }, { label: 'À côté de l\'hôpital', value: 'à côté de l\'hôpital' }],
+    options: [{ label: 'À côté de la poste', value: 'à côté de la poste' }, { label: 'À côté du supermarché', value: 'à côté du supermarché' }, { label: 'À côté de la gare', value: 'à côté de la gare' }, { label: 'À côté de l\'hôpital', value: 'à côté de l\'hôpital' }],
     correctAnswer: 'à côté du supermarché', points: 1, orderIndex: 3, tags: ['directions'], timeSuggested: 30
   },
   {
@@ -57,10 +57,10 @@ export const frenchListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'Le chat est sur la table.',
+    ttsScript: 'Le dossier est sur le bureau.',
     ttsLanguageCode: 'fr-FR',
     questionText: 'Écrivez exactement ce que vous entendez.',
-    correctAnswer: 'Le chat est sur la table.', points: 1, orderIndex: 7, tags: ['dictée'], timeSuggested: 30
+    correctAnswer: 'Le dossier est sur le bureau.', points: 1, orderIndex: 7, tags: ['dictée'], timeSuggested: 30
   },
 
   // ============================================================
@@ -440,11 +440,11 @@ export const frenchListeningQuestions: MultiSkillQuestionData[] = [
   // --- A1 — Débutant (5 questions) ---
   {
     language: 'French', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Je m\'appelle Marie. J\'habite à Paris. J\'ai un chien. Il s\'appelle Rex.',
+    ttsScript: 'Je m\'appelle Marie. J\'habite à Paris. Je travaille chez Renault. Mon poste est assistante de direction.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Comment s\'appelle le chien de Marie ?',
-    options: [{ label: 'Max', value: 'Max' }, { label: 'Rex', value: 'Rex' }, { label: 'Léo', value: 'Léo' }, { label: 'Médor', value: 'Médor' }],
-    correctAnswer: 'Rex', points: 1, orderIndex: 43, tags: ['animaux', 'présentation'], timeSuggested: 30
+    questionText: 'Où travaille Marie ?',
+    options: [{ label: 'Chez Peugeot', value: 'Peugeot' }, { label: 'Chez Renault', value: 'Renault' }, { label: 'Chez Total', value: 'Total' }, { label: 'Chez Airbus', value: 'Airbus' }],
+    correctAnswer: 'Renault', points: 1, orderIndex: 43, tags: ['travail', 'présentation'], timeSuggested: 30
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
@@ -456,18 +456,18 @@ export const frenchListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Ma mère travaille dans un hôpital. Elle est infirmière. Elle commence à huit heures.',
+    ttsScript: 'Ma collègue travaille dans un hôpital. Elle est infirmière. Elle commence à huit heures.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Quel est le métier de la mère ?',
+    questionText: 'Quel est le métier de la collègue ?',
     options: [{ label: 'Docteur', value: 'docteur' }, { label: 'Infirmière', value: 'infirmière' }, { label: 'Professeur', value: 'professeur' }, { label: 'Secrétaire', value: 'secrétaire' }],
-    correctAnswer: 'infirmière', points: 1, orderIndex: 45, tags: ['métiers', 'famille'], timeSuggested: 30
+    correctAnswer: 'infirmière', points: 1, orderIndex: 45, tags: ['métiers', 'travail'], timeSuggested: 30
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'Mon frère a trois ans.',
+    ttsScript: 'Mon contrat a trois mois.',
     ttsLanguageCode: 'fr-FR',
     questionText: 'Écrivez exactement ce que vous entendez.',
-    correctAnswer: 'Mon frère a trois ans.', points: 1, orderIndex: 46, tags: ['dictée', 'famille'], timeSuggested: 30
+    correctAnswer: 'Mon contrat a trois mois.', points: 1, orderIndex: 46, tags: ['dictée', 'travail'], timeSuggested: 30
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
@@ -760,5 +760,117 @@ export const frenchListeningQuestions: MultiSkillQuestionData[] = [
     ttsLanguageCode: 'fr-FR',
     questionText: 'Écrivez exactement ce que vous entendez.',
     correctAnswer: 'La juxtaposition de paradigmes épistémologiques apparemment irréconciliables constitue l\'un des défis les plus stimulants auxquels se confronte la philosophie des sciences contemporaine.', points: 2, orderIndex: 72, tags: ['dictée', 'philosophie'], timeSuggested: 120
-  }
+  },
+
+  // ============================================================
+  // VARIED SPOKEN CONTEXTS — 12 questions (orderIndex 73-84)
+  // ============================================================
+
+  // A1 — Varied Spoken Contexts
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Messagerie vocale] Vous entendez un message vocal d\'un collègue. À quelle heure est la réunion ?',
+    ttsScript: 'Bonjour, c\'est Marc du service commercial. Je vous appelle pour confirmer notre réunion de demain à dix heures. N\'oubliez pas d\'apporter le dossier. À demain.',
+    ttsLanguageCode: 'fr-FR',
+    options: [{ label: '9h00', value: '9h00' }, { label: '10h00', value: '10h00' }, { label: '11h00', value: '11h00' }, { label: '14h00', value: '14h00' }],
+    correctAnswer: '10h00', points: 1, orderIndex: 73, tags: ['messagerie', 'travail', 'register-varied'], timeSuggested: 30
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Annonce aéroport] Vous entendez une annonce à l\'aéroport. Quelle est la destination du vol ?',
+    ttsScript: 'Mesdames et messieurs, les passagers du vol Air France trois cent vingt-cinq à destination de Barcelone sont priés de se rendre porte dix-huit. Embarquement immédiat, porte dix-huit.',
+    ttsLanguageCode: 'fr-FR',
+    options: [{ label: 'Madrid', value: 'Madrid' }, { label: 'Barcelone', value: 'Barcelone' }, { label: 'Lisbonne', value: 'Lisbonne' }, { label: 'Rome', value: 'Rome' }],
+    correctAnswer: 'Barcelone', points: 1, orderIndex: 74, tags: ['aéroport', 'annonce', 'register-varied'], timeSuggested: 30
+  },
+
+  // A2 — Varied Spoken Contexts
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Réservation téléphonique] Vous entendez quelqu\'un réserver au restaurant. Pour quel jour ?',
+    ttsScript: 'Bonsoir, je voudrais réserver une table pour samedi soir, s\'il vous plaît. Nous serons cinq personnes, vers vingt heures. Est-ce que vous avez une table en terrasse ?',
+    ttsLanguageCode: 'fr-FR',
+    options: [{ label: 'Vendredi', value: 'Vendredi' }, { label: 'Samedi', value: 'Samedi' }, { label: 'Dimanche', value: 'Dimanche' }, { label: 'Lundi', value: 'Lundi' }],
+    correctAnswer: 'Samedi', points: 1, orderIndex: 75, tags: ['restaurant', 'réservation', 'register-varied'], timeSuggested: 40
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Message pour un client] Vous entendez un message laissé à un client. Que faut-il reporter ?',
+    ttsScript: 'Bonjour, c\'est Sophie de la société Duval et fils. Je vous appelle au sujet de notre rendez-vous de mercredi. Malheureusement, je dois reporter la livraison. Serait-il possible de la décaler à vendredi après-midi ? Merci de me rappeler dès que possible.',
+    ttsLanguageCode: 'fr-FR',
+    options: [{ label: 'Une réunion', value: 'Une réunion' }, { label: 'Une livraison', value: 'Une livraison' }, { label: 'Un paiement', value: 'Un paiement' }, { label: 'Une présentation', value: 'Une présentation' }],
+    correctAnswer: 'Une livraison', points: 1, orderIndex: 76, tags: ['client', 'message', 'register-varied'], timeSuggested: 40
+  },
+
+  // B1 — Varied Spoken Contexts
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Publicité radio] Vous entendez une publicité à la radio. Quelle offre est proposée ?',
+    ttsScript: 'Vous rêvez de parler anglais couramment ? Avec LinguaPro, l\'école de langues en ligne numéro un en France, c\'est possible. Plus de cinquante mille professionnels nous font déjà confiance. Inscrivez-vous cette semaine et bénéficiez du premier mois gratuit ! Rendez-vous sur linguapro point fr.',
+    ttsLanguageCode: 'fr-FR',
+    options: [{ label: 'Un voyage offert', value: 'Un voyage offert' }, { label: 'Le premier mois gratuit', value: 'Le premier mois gratuit' }, { label: 'Une réduction de 50%', value: 'Une réduction de 50%' }, { label: 'Un livre gratuit', value: 'Un livre gratuit' }],
+    correctAnswer: 'Le premier mois gratuit', points: 1, orderIndex: 77, tags: ['radio', 'publicité', 'register-varied'], timeSuggested: 45
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Réunion de bureau] Vous entendez un extrait de réunion. Quel est le problème principal ?',
+    ttsScript: 'Bon, avant de terminer, je voudrais aborder le calendrier du projet Mercier. Nous avons actuellement deux semaines de retard, et le client attend la première livraison pour le quinze mars. Il va falloir redistribuer les ressources. Des suggestions ?',
+    ttsLanguageCode: 'fr-FR',
+    options: [{ label: 'Le budget est dépassé', value: 'Le budget est dépassé' }, { label: 'Le projet est en retard', value: 'Le projet est en retard' }, { label: 'Un employé a démissionné', value: 'Un employé a démissionné' }, { label: 'Le client est mécontent', value: 'Le client est mécontent' }],
+    correctAnswer: 'Le projet est en retard', points: 1, orderIndex: 78, tags: ['réunion', 'bureau', 'register-varied'], timeSuggested: 45
+  },
+
+  // B2 — Varied Spoken Contexts
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Podcast] Vous entendez un extrait de podcast sur la reconversion professionnelle. Quel est le principal obstacle selon l\'intervenant ?',
+    ttsScript: 'Quand j\'accompagne des gens dans leur reconversion, ce qui les bloque le plus, ce n\'est pas le manque de compétences. C\'est la peur. La peur de l\'inconnu, la peur de l\'instabilité financière, et franchement, la peur du regard des autres. Une fois qu\'on surmonte ça, tout le reste suit naturellement.',
+    ttsLanguageCode: 'fr-FR',
+    options: [{ label: 'Le manque de compétences', value: 'Le manque de compétences' }, { label: 'Les problèmes financiers', value: 'Les problèmes financiers' }, { label: 'La peur', value: 'La peur' }, { label: 'L\'âge', value: 'L\'âge' }],
+    correctAnswer: 'La peur', points: 2, orderIndex: 79, tags: ['podcast', 'carrière', 'register-varied'], timeSuggested: 60
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Reportage] Vous entendez un reportage sur l\'économie. Qu\'a décidé la banque centrale ?',
+    ttsScript: 'Dans un geste largement anticipé, la Banque centrale européenne a annoncé une baisse des taux d\'intérêt d\'un quart de point, ramenant le taux directeur à trois virgule cinq pour cent. Les analystes estiment que cela traduit une inquiétude croissante face au ralentissement de la croissance dans la zone euro.',
+    ttsLanguageCode: 'fr-FR',
+    options: [{ label: 'Augmenter les taux', value: 'Augmenter les taux' }, { label: 'Baisser les taux', value: 'Baisser les taux' }, { label: 'Geler les taux', value: 'Geler les taux' }, { label: 'Supprimer les taux', value: 'Supprimer les taux' }],
+    correctAnswer: 'Baisser les taux', points: 2, orderIndex: 80, tags: ['reportage', 'économie', 'register-varied'], timeSuggested: 60
+  },
+
+  // C1 — Varied Spoken Contexts
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Conférence TED] Vous entendez un extrait de conférence sur l\'innovation. Selon l\'orateur, quel est le vrai moteur de l\'innovation ?',
+    ttsScript: 'On a tendance à romancer le génie solitaire dans son garage, mais les données racontent une tout autre histoire. L\'innovation est fondamentalement un phénomène social. Elle prospère à l\'intersection de perspectives diverses, là où les idées se heurtent et se recombinent. Le vrai moteur, ce n\'est pas le génie individuel, c\'est la densité des connexions humaines au sein d\'un écosystème.',
+    ttsLanguageCode: 'fr-FR',
+    options: [{ label: 'Le génie individuel', value: 'Le génie individuel' }, { label: 'Le financement public', value: 'Le financement public' }, { label: 'Les connexions humaines dans un écosystème', value: 'Les connexions humaines dans un écosystème' }, { label: 'La compétition entre entreprises', value: 'La compétition entre entreprises' }],
+    correctAnswer: 'Les connexions humaines dans un écosystème', points: 2, orderIndex: 81, tags: ['conférence', 'innovation', 'register-varied'], timeSuggested: 75
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Cours universitaire] Vous entendez un extrait de cours. Quel concept le professeur explique-t-il ?',
+    ttsScript: 'Ce que l\'on observe dans la littérature, c\'est un glissement du modèle traditionnel de causalité linéaire vers ce que les chercheurs appellent désormais la causalité circulaire. Autrement dit, l\'effet rétroagit sur la cause, créant une boucle auto-renforçante. C\'est particulièrement visible dans les systèmes climatiques, où le réchauffement des océans libère davantage de dioxyde de carbone, ce qui accélère à son tour le réchauffement.',
+    ttsLanguageCode: 'fr-FR',
+    options: [{ label: 'La causalité linéaire', value: 'La causalité linéaire' }, { label: 'La causalité circulaire', value: 'La causalité circulaire' }, { label: 'La variation aléatoire', value: 'La variation aléatoire' }, { label: 'L\'équilibre statique', value: 'L\'équilibre statique' }],
+    correctAnswer: 'La causalité circulaire', points: 2, orderIndex: 82, tags: ['cours', 'académique', 'register-varied'], timeSuggested: 75
+  },
+
+  // C2 — Varied Spoken Contexts
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Débat philosophique] Vous entendez un extrait de débat. Quelle position l\'orateur défend-il ?',
+    ttsScript: 'Je soutiens que le réalisme moral n\'est pas seulement défendable, mais nécessaire. Si nous concédons que les vérités éthiques sont purement construites, alors nous n\'avons aucun fondement pour condamner les atrocités. L\'acte même d\'indignation morale présuppose l\'existence de normes objectives à l\'aune desquelles les actions peuvent être évaluées, indépendamment du consensus culturel.',
+    ttsLanguageCode: 'fr-FR',
+    options: [{ label: 'Le relativisme moral', value: 'Le relativisme moral' }, { label: 'Le réalisme moral', value: 'Le réalisme moral' }, { label: 'Le nihilisme', value: 'Le nihilisme' }, { label: 'L\'utilitarisme', value: 'L\'utilitarisme' }],
+    correctAnswer: 'Le réalisme moral', points: 2, orderIndex: 83, tags: ['débat', 'philosophie', 'register-varied'], timeSuggested: 90
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Chronique satirique] Vous entendez une chronique satirique. Que critique réellement le chroniqueur ?',
+    ttsScript: 'Et dans l\'actualité du jour, une multinationale a généreusement promis d\'atteindre la neutralité carbone d\'ici deux mille soixante-quinze, juste à temps pour la mort thermique de l\'univers. Le PDG a rassuré les actionnaires en affirmant que si les profits à court terme restent la priorité absolue, l\'entreprise est profondément engagée en faveur du développement durable, à condition que cela ne coûte rien.',
+    ttsLanguageCode: 'fr-FR',
+    options: [{ label: 'Les réglementations environnementales', value: 'Les réglementations environnementales' }, { label: 'Le greenwashing des entreprises', value: 'Le greenwashing des entreprises' }, { label: 'L\'inaction du gouvernement', value: 'L\'inaction du gouvernement' }, { label: 'Le comportement des consommateurs', value: 'Le comportement des consommateurs' }],
+    correctAnswer: 'Le greenwashing des entreprises', points: 2, orderIndex: 84, tags: ['satire', 'chronique', 'register-varied'], timeSuggested: 90
+  },
 ]

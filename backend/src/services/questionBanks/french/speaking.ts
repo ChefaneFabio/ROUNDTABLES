@@ -25,7 +25,7 @@ export const frenchSpeakingQuestions: MultiSkillQuestionData[] = [
   {
     language: 'French', cefrLevel: 'A2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
     questionText: 'Lisez le texte suivant à voix haute clairement :',
-    speakingPrompt: 'Samedi dernier, je suis allé au parc avec mes amis. Le temps était ensoleillé et chaud. Nous avons fait un pique-nique et joué au football. C\'était une journée formidable.',
+    speakingPrompt: 'Samedi dernier, je suis allé à une conférence avec mes collègues. L\'hôtel était moderne et confortable. Nous avons assisté à trois ateliers et rencontré de nouveaux clients. C\'était une journée productive.',
     correctAnswer: '', points: 1, orderIndex: 3,
     rubric: { criteria: ['prononciation claire', 'rythme approprié', 'intonation', 'prononciation du passé composé'], maxDuration: 45 },
     tags: ['lecture à voix haute', 'passé composé'], timeSuggested: 45
@@ -131,10 +131,10 @@ export const frenchSpeakingQuestions: MultiSkillQuestionData[] = [
   {
     language: 'French', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
     questionText: 'Regardez l\'image et décrivez ce que vous voyez. Utilisez des mots simples.',
-    speakingPrompt: 'Décrivez l\'image : il y a une famille dans une cuisine. Que font-ils ?',
+    speakingPrompt: 'Décrivez l\'image : il y a des personnes dans un bureau. Que font-elles ?',
     correctAnswer: '', points: 1, orderIndex: 15,
     rubric: { criteria: ['vocabulaire de base', 'phrases simples', 'discours compréhensible'], maxDuration: 30 },
-    tags: ['décrire une image', 'famille'], timeSuggested: 30
+    tags: ['décrire une image', 'bureau'], timeSuggested: 30
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
@@ -175,7 +175,7 @@ export const frenchSpeakingQuestions: MultiSkillQuestionData[] = [
   {
     language: 'French', cefrLevel: 'B1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
     questionText: 'Parlez du sujet suivant pendant environ 45-60 secondes. Donnez votre opinion.',
-    speakingPrompt: 'Pensez-vous que les enfants devraient avoir un téléphone portable ? À quel âge ? Pourquoi ou pourquoi pas ?',
+    speakingPrompt: 'Pensez-vous que les employés devraient avoir le droit de télétravailler ? Combien de jours par semaine ? Pourquoi ou pourquoi pas ?',
     correctAnswer: '', points: 1, orderIndex: 20,
     rubric: { criteria: ['opinion cohérente', 'raisons à l\'appui', 'mots de liaison', 'fluidité'], maxDuration: 60 },
     tags: ['opinion', 'technologie'], timeSuggested: 60

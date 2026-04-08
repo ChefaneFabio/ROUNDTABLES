@@ -44,9 +44,9 @@ export const englishSentenceTransformationQuestions: MultiSkillQuestionData[] = 
   },
   {
     language: 'English', cefrLevel: 'B1', questionType: 'SENTENCE_TRANSFORMATION', skill: 'SENTENCE_TRANSFORMATION',
-    passage: 'I regret not studying harder at school.',
+    passage: 'I regret not studying harder at university.',
     questionText: 'Rewrite beginning with: I wish...',
-    correctAnswer: 'I wish I had studied harder at school.',
+    correctAnswer: 'I wish I had studied harder at university.',
     points: 1, orderIndex: 5, tags: ['wish', 'past perfect']
   },
 

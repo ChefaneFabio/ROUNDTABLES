@@ -399,4 +399,120 @@ export const italianVocabularyQuestions: MultiSkillQuestionData[] = [
     options: [{ label: 'suffragò', value: 'suffragò' }, { label: 'suggellò', value: 'suggellò' }, { label: 'soppiantò', value: 'soppiantò' }, { label: 'sovvenne', value: 'sovvenne' }],
     correctAnswer: 'suffragò', points: 2, orderIndex: 60, tags: ['accademico', 'verbi letterari']
   },
+
+  // ============================================================
+  // FILL_BLANK — Vocabolario (20 domande: 3-4 per livello QCER)
+  // ============================================================
+
+  // A1 — Contrari e definizioni di base
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Il contrario di "grande" è ___.',
+    correctAnswer: 'piccolo', points: 1, orderIndex: 61, tags: ['contrari', 'aggettivi']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Il contrario di "caldo" è ___.',
+    correctAnswer: 'freddo', points: 1, orderIndex: 62, tags: ['contrari', 'aggettivi']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'La mamma di mio padre è mia ___.',
+    correctAnswer: 'nonna', points: 1, orderIndex: 63, tags: ['famiglia', 'definizioni']
+  },
+
+  // A2 — Collocazioni e famiglie di parole
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Si compra il pane al ___.',
+    correctAnswer: 'panificio', points: 1, orderIndex: 64, tags: ['negozi', 'vita quotidiana']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Il contrario di "comprare" è ___.',
+    correctAnswer: 'vendere', points: 1, orderIndex: 65, tags: ['contrari', 'verbi']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Quando piove, si usa l\' ___.',
+    correctAnswer: 'ombrello', points: 1, orderIndex: 66, tags: ['tempo atmosferico', 'oggetti']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'La mattina faccio ___. (pasto del mattino)',
+    correctAnswer: 'colazione', points: 1, orderIndex: 67, tags: ['pasti', 'vita quotidiana']
+  },
+
+  // B1 — Sinonimi e collocazioni
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Un sinonimo di "iniziare" è ___.',
+    correctAnswer: 'cominciare', points: 1, orderIndex: 68, tags: ['sinonimi', 'verbi']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Per candidarsi a un lavoro si invia il ___. (documento con i dati personali)',
+    correctAnswer: 'curriculum', points: 1, orderIndex: 69, tags: ['lavoro', 'documenti']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'L\'aggettivo derivato da "pericolo" è ___.',
+    correctAnswer: 'pericoloso', points: 1, orderIndex: 70, tags: ['famiglie di parole', 'aggettivi']
+  },
+
+  // B2 — Vocabolario astratto e sostenuto
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'La ___ tra ricchi e poveri continua ad aumentare. (differenza sociale — nome astratto)',
+    correctAnswer: 'disuguaglianza', points: 2, orderIndex: 71, tags: ['società', 'concetti astratti']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Il nome derivato da "resiliente" è la ___.',
+    correctAnswer: 'resilienza', points: 2, orderIndex: 72, tags: ['famiglie di parole', 'nomi astratti']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Un argomento ___ è convincente e ben strutturato. (aggettivo)',
+    correctAnswer: 'convincente', points: 2, orderIndex: 73, tags: ['comunicazione', 'aggettivi']
+  },
+
+  // C1 — Vocabolario nuancé
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Le decisioni del governo hanno avuto gravi ___ sull\'economia. (conseguenze — nome sostenuto)',
+    correctAnswer: 'ripercussioni', points: 2, orderIndex: 74, tags: ['economia', 'concetti astratti']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Un discorso ___ colpisce e lascia il segno. (efficace — aggettivo sostenuto)',
+    correctAnswer: 'incisivo', points: 2, orderIndex: 75, tags: ['comunicazione', 'aggettivi avanzati']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Ha ___ le normative fiscali con astuzia. (evitare/aggirare — verbo avanzato)',
+    correctAnswer: 'eluso', points: 2, orderIndex: 76, tags: ['verbi avanzati', 'diritto']
+  },
+
+  // C2 — Vocabolario letterario
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Un testo ___ è oscuro e difficile da interpretare. (aggettivo letterario)',
+    correctAnswer: 'ermetico', points: 2, orderIndex: 77, tags: ['letteratura', 'aggettivi avanzati']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'La ___ dell\'autore rivela una mente brillante. (acutezza intellettuale — nome sostenuto)',
+    correctAnswer: 'perspicacia', points: 2, orderIndex: 78, tags: ['letteratura', 'sostantivi avanzati']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Un argomento ___ è apparentemente convincente ma fondamentalmente falso. (aggettivo letterario)',
+    correctAnswer: 'specioso', points: 2, orderIndex: 79, tags: ['accademico', 'aggettivi letterari']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Il filosofo ___ la tesi con prove inconfutabili. (sostenere/confermare — verbo letterario)',
+    correctAnswer: 'suffragò', points: 2, orderIndex: 80, tags: ['accademico', 'verbi letterari']
+  },
 ]

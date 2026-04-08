@@ -14,10 +14,10 @@ export const englishWritingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
-    questionText: 'Describe your family. How many people are in your family? What are their names?',
+    questionText: 'Describe your team at work. How many people are in your team? What do they do?',
     correctAnswer: '', points: 1, orderIndex: 2,
-    rubric: { minWords: 20, maxWords: 50, criteria: ['family vocabulary', 'numbers', 'simple sentences'] },
-    tags: ['family'], timeSuggested: 180
+    rubric: { minWords: 20, maxWords: 50, criteria: ['workplace vocabulary', 'numbers', 'simple sentences'] },
+    tags: ['workplace'], timeSuggested: 180
   },
   // A2 — Short answers (30-60 words)
   {
@@ -130,10 +130,10 @@ export const englishWritingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
-    questionText: 'What do you like to eat and drink? Write about your favourite meals.',
+    questionText: 'Where do you usually have lunch during the workday? What do you usually eat?',
     correctAnswer: '', points: 1, orderIndex: 17,
     rubric: { minWords: 20, maxWords: 50, criteria: ['food vocabulary', 'like/prefer', 'simple sentences'] },
-    tags: ['food', 'preferences'], timeSuggested: 180
+    tags: ['workplace lunch', 'preferences'], timeSuggested: 180
   },
 
   // A2 (40-80 words)
@@ -146,10 +146,10 @@ export const englishWritingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'SHORT_ANSWER', skill: 'WRITING',
-    questionText: 'Describe your best friend. What do they look like? What do you like to do together?',
+    questionText: 'Describe a colleague you work with closely. What is their role? What do you work on together?',
     correctAnswer: '', points: 1, orderIndex: 19,
-    rubric: { minWords: 40, maxWords: 80, criteria: ['physical description', 'personality adjectives', 'present simple', 'like + gerund'] },
-    tags: ['friend', 'description'], timeSuggested: 240
+    rubric: { minWords: 40, maxWords: 80, criteria: ['professional description', 'personality adjectives', 'present simple', 'like + gerund'] },
+    tags: ['colleague', 'description'], timeSuggested: 240
   },
 
   // B1 (80-150 words)
@@ -162,10 +162,10 @@ export const englishWritingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'B1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
-    questionText: 'Do you think homework is useful for students? Give your opinion with reasons and examples.',
+    questionText: 'Do you think flexible working hours improve productivity? Give your opinion with reasons and examples.',
     correctAnswer: '', points: 2, orderIndex: 21,
     rubric: { minWords: 80, maxWords: 150, criteria: ['opinion expression', 'supporting reasons', 'examples', 'paragraph structure'] },
-    tags: ['opinion', 'education'], timeSuggested: 360
+    tags: ['opinion', 'workplace'], timeSuggested: 360
   },
 
   // B2 (150-250 words)

@@ -496,9 +496,9 @@ export const frenchReadingQuestions: MultiSkillQuestionData[] = [
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'READING',
     passageTitle: 'Un message',
-    passage: 'Bonjour Paul, je suis malade aujourd\'hui. Je ne vais pas à l\'école. Peux-tu me donner les devoirs ? Merci. À demain. Julie.',
-    questionText: 'Pourquoi Julie n\'est pas à l\'école ?',
-    options: [{ label: 'Elle est en vacances', value: 'elle est en vacances' }, { label: 'Elle est malade', value: 'elle est malade' }, { label: 'Elle est en retard', value: 'elle est en retard' }, { label: 'Elle n\'aime pas l\'école', value: 'elle n\'aime pas l\'école' }],
+    passage: 'Bonjour Paul, je suis malade aujourd\'hui. Je ne vais pas au bureau. Peux-tu envoyer le rapport au client ? Merci. À demain. Julie.',
+    questionText: 'Pourquoi Julie n\'est pas au bureau ?',
+    options: [{ label: 'Elle est en vacances', value: 'elle est en vacances' }, { label: 'Elle est malade', value: 'elle est malade' }, { label: 'Elle est en retard', value: 'elle est en retard' }, { label: 'Elle est en réunion', value: 'elle est en réunion' }],
     correctAnswer: 'elle est malade', points: 1, orderIndex: 49, tags: ['communication', 'santé']
   },
 
@@ -904,5 +904,367 @@ export const frenchReadingQuestions: MultiSkillQuestionData[] = [
       { label: 'Que seuls les pays capitalistes sont responsables', value: 'seuls les pays capitalistes' }
     ],
     correctAnswer: 'rapports capitalistes, pas l\'humanité en soi', points: 2, orderIndex: 82, tags: ['environnement', 'économie']
-  }
+  },
+
+  // ===== QUESTIONS PROFESSIONNELLES / MILIEU DE TRAVAIL =====
+
+  // --- A1 : E-mail de bureau sur un changement d'horaire de réunion ---
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Changement d\'horaire de réunion',
+    passage: 'Bonjour à tous, La réunion de mercredi est maintenant à 15h00, pas à 14h00. La salle est la salle 3A. Merci d\'apporter votre ordinateur portable. Cordialement, Philippe.',
+    questionText: 'À quelle heure est la réunion maintenant ?',
+    options: [
+      { label: '14h00', value: '14h00' },
+      { label: '15h00', value: '15h00' },
+      { label: '16h00', value: '16h00' },
+      { label: '13h00', value: '13h00' }
+    ],
+    correctAnswer: '15h00', points: 1, orderIndex: 83, tags: ['e-mail professionnel', 'travail']
+  },
+
+  // --- A1 : Menu de restaurant pour un déjeuner d'affaires ---
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Menu du déjeuner d\'affaires',
+    passage: 'Menu du jour — Brasserie du Parc. Soupe du jour : Légumes — 5,00 €. Poulet grillé avec salade — 10,50 €. Pâtes aux champignons — 8,50 €. Café ou thé inclus avec chaque plat.',
+    questionText: 'Combien coûte le poulet grillé avec salade ?',
+    options: [
+      { label: '5,00 €', value: '5,00 €' },
+      { label: '8,50 €', value: '8,50 €' },
+      { label: '10,50 €', value: '10,50 €' },
+      { label: '12,00 €', value: '12,00 €' }
+    ],
+    correctAnswer: '10,50 €', points: 1, orderIndex: 84, tags: ['déjeuner d\'affaires', 'travail']
+  },
+
+  // --- A1 : Carte d'information d'hôtel ---
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Carte d\'accueil de l\'hôtel',
+    passage: 'Bienvenue à l\'Hôtel Central. Votre chambre est la 307. Le petit-déjeuner est de 7h00 à 10h00 au restaurant du rez-de-chaussée. Mot de passe Wi-Fi : CENTRAL2024. Le départ est à 11h00.',
+    questionText: 'Quel est le mot de passe Wi-Fi ?',
+    options: [
+      { label: 'HOTEL2024', value: 'HOTEL2024' },
+      { label: 'CENTRAL2024', value: 'CENTRAL2024' },
+      { label: 'CHAMBRE307', value: 'CHAMBRE307' },
+      { label: 'BIENVENUE', value: 'BIENVENUE' }
+    ],
+    correctAnswer: 'CENTRAL2024', points: 1, orderIndex: 85, tags: ['voyage d\'affaires', 'hôtel']
+  },
+
+  // --- A1 : Planning de travail simple ---
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Planning de la semaine',
+    passage: 'Planning de travail — Semaine 14. Lundi à mercredi : 9h00 – 17h00. Jeudi : Jour de repos. Vendredi : 9h00 – 13h00. Samedi et dimanche : Fermé.',
+    questionText: 'Quel jour est le jour de repos ?',
+    options: [
+      { label: 'Lundi', value: 'Lundi' },
+      { label: 'Mercredi', value: 'Mercredi' },
+      { label: 'Jeudi', value: 'Jeudi' },
+      { label: 'Vendredi', value: 'Vendredi' }
+    ],
+    correctAnswer: 'Jeudi', points: 1, orderIndex: 86, tags: ['planning', 'travail']
+  },
+
+  // --- A2 : Offre d'emploi pour un(e) réceptionniste ---
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Offre d\'emploi',
+    passage: 'Nous recherchons un(e) réceptionniste pour notre bureau à Lyon. Vous devez parler français et anglais. Les horaires sont du lundi au vendredi, de 8h30 à 17h30. Une expérience avec Microsoft Office est nécessaire. Envoyez votre CV à rh@eurotech.fr avant le 30 mars.',
+    questionText: 'Quelles langues le/la réceptionniste doit-il/elle parler ?',
+    options: [
+      { label: 'Français et allemand', value: 'Français et allemand' },
+      { label: 'Français et anglais', value: 'Français et anglais' },
+      { label: 'Anglais et espagnol', value: 'Anglais et espagnol' },
+      { label: 'Français et italien', value: 'Français et italien' }
+    ],
+    correctAnswer: 'Français et anglais', points: 1, orderIndex: 87, tags: ['offre d\'emploi', 'travail']
+  },
+
+  // --- A2 : E-mail pour décliner une invitation à une réunion ---
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Refus de réunion',
+    passage: 'Bonjour Sophie, Merci pour l\'invitation à la réunion commerciale de mardi à 10h00. Malheureusement, je ne peux pas y assister car j\'ai une visite client à ce moment-là. Pourriez-vous m\'envoyer le compte-rendu après ? Cordialement, Thomas Müller.',
+    questionText: 'Pourquoi Thomas ne peut-il pas assister à la réunion ?',
+    options: [
+      { label: 'Il est en vacances', value: 'Il est en vacances' },
+      { label: 'Il a une visite client', value: 'Il a une visite client' },
+      { label: 'Il est malade', value: 'Il est malade' },
+      { label: 'Il a une autre réunion avec son directeur', value: 'Il a une autre réunion avec son directeur' }
+    ],
+    correctAnswer: 'Il a une visite client', points: 1, orderIndex: 88, tags: ['e-mail professionnel', 'travail']
+  },
+
+  // --- A2 : Avis de fermeture du bureau ---
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Fermeture du bureau',
+    passage: 'Veuillez noter que le bureau sera fermé du 23 décembre au 2 janvier pour les fêtes. Le dernier jour de travail est le 22 décembre. Si vous avez besoin d\'aide pendant cette période, envoyez un e-mail à support@lumicorp.fr. Bonnes fêtes à tous.',
+    questionText: 'Quel est le dernier jour de travail avant les fêtes ?',
+    options: [
+      { label: 'Le 20 décembre', value: 'Le 20 décembre' },
+      { label: 'Le 22 décembre', value: 'Le 22 décembre' },
+      { label: 'Le 23 décembre', value: 'Le 23 décembre' },
+      { label: 'Le 2 janvier', value: 'Le 2 janvier' }
+    ],
+    correctAnswer: 'Le 22 décembre', points: 1, orderIndex: 89, tags: ['avis d\'entreprise', 'travail']
+  },
+
+  // --- A2 : Instructions pour la machine à café ---
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Instructions pour la machine à café',
+    passage: 'Comment utiliser la machine à café : 1. Placez votre tasse sous la buse. 2. Appuyez sur le bouton bleu pour un expresso ou le bouton vert pour un cappuccino. 3. Attendez 30 secondes. 4. Nettoyez le bac d\'égouttage à la fin de chaque jour. Si la machine affiche un voyant rouge, contactez le service technique au poste 220.',
+    questionText: 'Que faut-il faire si la machine affiche un voyant rouge ?',
+    options: [
+      { label: 'Appuyer sur le bouton bleu', value: 'Appuyer sur le bouton bleu' },
+      { label: 'Nettoyer le bac d\'égouttage', value: 'Nettoyer le bac d\'égouttage' },
+      { label: 'Contacter le service technique au poste 220', value: 'Contacter le service technique au poste 220' },
+      { label: 'Attendre 30 secondes', value: 'Attendre 30 secondes' }
+    ],
+    correctAnswer: 'Contacter le service technique au poste 220', points: 1, orderIndex: 90, tags: ['instructions bureau', 'travail']
+  },
+
+  // --- B1 : E-mail sur une prolongation de délai ---
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Mise à jour du projet',
+    passage: 'Cher(e)s collègues, Je vous informe que la date limite pour le rapport du troisième trimestre est repoussée au 15 octobre. Plusieurs membres de l\'équipe ont signalé des difficultés avec la collecte de données en raison de la migration du système la semaine dernière. Veuillez profiter de ce délai supplémentaire pour garantir l\'exactitude de vos soumissions. Pour toute question, contactez votre responsable de département. Cordialement, Claire Dubois, Cheffe de projet.',
+    questionText: 'Pourquoi la date limite du rapport a-t-elle été repoussée ?',
+    options: [
+      { label: 'La cheffe de projet était en vacances', value: 'La cheffe de projet était en vacances' },
+      { label: 'Il y a eu des difficultés de collecte de données à cause de la migration du système', value: 'Il y a eu des difficultés de collecte de données à cause de la migration du système' },
+      { label: 'Le client a demandé des modifications', value: 'Le client a demandé des modifications' },
+      { label: 'L\'équipe voulait plus de temps pour célébrer', value: 'L\'équipe voulait plus de temps pour célébrer' }
+    ],
+    correctAnswer: 'Il y a eu des difficultés de collecte de données à cause de la migration du système', points: 1, orderIndex: 91, tags: ['e-mail professionnel', 'travail']
+  },
+
+  // --- B1 : Article sur le télétravail ---
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Télétravail ou bureau ?',
+    passage: 'Une enquête récente auprès de 2 000 salariés a révélé que 65 % préfèrent un modèle hybride, combinant jours à domicile et jours au bureau. Les travailleurs ont déclaré être plus productifs chez eux grâce à moins d\'interruptions. Cependant, beaucoup ont aussi dit regretter les échanges en personne avec leurs collègues. Les entreprises expérimentent désormais des « journées de collaboration » où les équipes viennent au bureau les mêmes jours pour se réunir et planifier ensemble. Les experts estiment que la clé est la flexibilité.',
+    questionText: 'Que préfèrent la majorité des salariés selon l\'enquête ?',
+    options: [
+      { label: 'Travailler uniquement de chez eux', value: 'Travailler uniquement de chez eux' },
+      { label: 'Un modèle hybride', value: 'Un modèle hybride' },
+      { label: 'Travailler uniquement au bureau', value: 'Travailler uniquement au bureau' },
+      { label: 'Changer d\'emploi chaque année', value: 'Changer d\'emploi chaque année' }
+    ],
+    correctAnswer: 'Un modèle hybride', points: 1, orderIndex: 92, tags: ['télétravail', 'tendances']
+  },
+
+  // --- B1 : Newsletter d'entreprise sur un nouvel avantage ---
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Nouvel avantage bien-être',
+    passage: 'Nous avons le plaisir d\'annoncer un nouvel avantage bien-être pour tous les employés à temps plein à partir du 1er janvier. L\'entreprise prendra désormais en charge jusqu\'à 500 € par an pour des abonnements sportifs, des cours de yoga ou des consultations psychologiques. Pour bénéficier de cet avantage, les employés doivent soumettre leurs reçus via le portail RH dans les 30 jours suivant le paiement. Cette initiative s\'inscrit dans notre engagement en faveur du bien-être des collaborateurs.',
+    questionText: 'Comment les employés peuvent-ils bénéficier du nouvel avantage ?',
+    options: [
+      { label: 'En demandant l\'accord de leur manager', value: 'En demandant l\'accord de leur manager' },
+      { label: 'En soumettant leurs reçus via le portail RH', value: 'En soumettant leurs reçus via le portail RH' },
+      { label: 'En s\'inscrivant à la salle de sport de l\'entreprise', value: 'En s\'inscrivant à la salle de sport de l\'entreprise' },
+      { label: 'En participant à un atelier obligatoire', value: 'En participant à un atelier obligatoire' }
+    ],
+    correctAnswer: 'En soumettant leurs reçus via le portail RH', points: 1, orderIndex: 93, tags: ['avantages sociaux', 'travail']
+  },
+
+  // --- B1 : Politique de voyage d'affaires ---
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Politique de déplacements professionnels',
+    passage: 'Tout déplacement professionnel doit être approuvé par votre responsable hiérarchique au moins deux semaines avant le voyage. Les vols en classe économique doivent être réservés pour les trajets de moins de cinq heures. Les frais d\'hôtel ne doivent pas dépasser 150 € par nuit. Les employés doivent utiliser le portail de voyage de l\'entreprise pour réserver vols et hôtels. Les repas en déplacement sont remboursés jusqu\'à 45 € par jour. Tous les reçus doivent être soumis dans les 10 jours ouvrables suivant votre retour.',
+    questionText: 'Quel est le montant maximum autorisé par nuit d\'hôtel ?',
+    options: [
+      { label: '100 €', value: '100 €' },
+      { label: '120 €', value: '120 €' },
+      { label: '150 €', value: '150 €' },
+      { label: '200 €', value: '200 €' }
+    ],
+    correctAnswer: '150 €', points: 1, orderIndex: 94, tags: ['politique voyage', 'travail']
+  },
+
+  // --- B2 : Article sur les styles de leadership ---
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Les styles de leadership dans les entreprises modernes',
+    passage: 'Le modèle traditionnel de leadership autoritaire est de plus en plus remplacé par des approches collaboratives. Les leaders transformationnels, qui inspirent et motivent leurs équipes en articulant une vision convaincante, favorisent un engagement accru des employés. Le leadership serviteur, où le rôle principal du dirigeant est de soutenir le développement de ses collaborateurs, gagne en popularité dans les entreprises technologiques. Cependant, les recherches suggèrent qu\'aucun style unique n\'est universellement efficace ; les meilleurs leaders adaptent leur approche en fonction de la situation, de la maturité de l\'équipe et de la nature de la tâche. Ce concept, appelé leadership situationnel, exige intelligence émotionnelle et compréhension profonde des dynamiques d\'équipe.',
+    questionText: 'Selon l\'article, que requiert le leadership situationnel ?',
+    options: [
+      { label: 'Un ensemble strict de règles pour chaque situation', value: 'Un ensemble strict de règles pour chaque situation' },
+      { label: 'Intelligence émotionnelle et compréhension des dynamiques d\'équipe', value: 'Intelligence émotionnelle et compréhension des dynamiques d\'équipe' },
+      { label: 'Une expérience uniquement dans le secteur technologique', value: 'Une expérience uniquement dans le secteur technologique' },
+      { label: 'Une approche de leadership unique et constante', value: 'Une approche de leadership unique et constante' }
+    ],
+    correctAnswer: 'Intelligence émotionnelle et compréhension des dynamiques d\'équipe', points: 2, orderIndex: 95, tags: ['leadership', 'management']
+  },
+
+  // --- B2 : Résultats d'une enquête de satisfaction ---
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Résultats de l\'enquête de satisfaction des employés',
+    passage: 'L\'enquête annuelle de satisfaction, remplie par 87 % du personnel, révèle plusieurs tendances notables. La satisfaction globale est passée de 72 % à 78 % par rapport à l\'année dernière, principalement grâce aux améliorations de la communication managériale et des modalités de travail flexible. Cependant, les opportunités de développement de carrière restent la catégorie la moins bien notée à 58 %, de nombreux répondants exprimant leur frustration face au manque de parcours de promotion clairs. Le département RH a proposé un programme de mentorat et des ateliers trimestriels de développement de carrière. Par ailleurs, 40 % des répondants ont souligné que la répartition de la charge de travail reste inégale entre les départements.',
+    questionText: 'Quel est le domaine le moins bien noté dans l\'enquête ?',
+    options: [
+      { label: 'La communication managériale', value: 'La communication managériale' },
+      { label: 'Les modalités de travail flexible', value: 'Les modalités de travail flexible' },
+      { label: 'Les opportunités de développement de carrière', value: 'Les opportunités de développement de carrière' },
+      { label: 'La répartition de la charge de travail', value: 'La répartition de la charge de travail' }
+    ],
+    correctAnswer: 'Les opportunités de développement de carrière', points: 2, orderIndex: 96, tags: ['enquête satisfaction', 'RH']
+  },
+
+  // --- B2 : Tendances de l'équilibre vie professionnelle-vie personnelle ---
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'équilibre vie professionnelle-vie personnelle en Europe',
+    passage: 'Une étude approfondie de la Fondation européenne pour l\'amélioration des conditions de vie et de travail a révélé des variations significatives dans l\'équilibre travail-vie personnelle à travers les États membres de l\'UE. Les pays nordiques se classent systématiquement en tête, avec des heures de travail moyennes plus courtes et des politiques de congé parental généreuses. En revanche, les pays d\'Europe du Sud affichent des heures de travail plus longues mais bénéficient de réseaux de soutien familial plus solides. L\'étude a également identifié une tendance croissante vers la semaine de quatre jours, avec des programmes pilotes en Belgique, en Espagne et au Royaume-Uni montrant des résultats prometteurs — la productivité est restée stable ou a augmenté, tandis que l\'épuisement professionnel a diminué de 30 %.',
+    questionText: 'Qu\'ont montré les programmes pilotes de semaine de quatre jours ?',
+    options: [
+      { label: 'La productivité a baissé considérablement', value: 'La productivité a baissé considérablement' },
+      { label: 'La productivité est restée stable ou a augmenté et l\'épuisement a diminué', value: 'La productivité est restée stable ou a augmenté et l\'épuisement a diminué' },
+      { label: 'Les employés préféraient travailler cinq jours', value: 'Les employés préféraient travailler cinq jours' },
+      { label: 'Seules les entreprises industrielles en ont bénéficié', value: 'Seules les entreprises industrielles en ont bénéficié' }
+    ],
+    correctAnswer: 'La productivité est restée stable ou a augmenté et l\'épuisement a diminué', points: 2, orderIndex: 97, tags: ['équilibre travail-vie', 'tendances européennes']
+  },
+
+  // --- B2 : Résumé exécutif d'une proposition commerciale ---
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Résumé exécutif : Proposition d\'expansion',
+    passage: 'Cette proposition présente une stratégie d\'expansion dans la région DACH (Allemagne, Autriche et Suisse) sur les 18 prochains mois. L\'étude de marché indique une forte demande pour notre plateforme SaaS parmi les PME du secteur manufacturier, avec un marché adressable estimé à 45 millions d\'euros par an. L\'approche proposée comprend l\'ouverture d\'un bureau commercial régional à Munich, le recrutement d\'une équipe de cinq commerciaux locaux et un partenariat avec deux cabinets de conseil établis. L\'investissement total requis est de 1,2 million d\'euros, avec un point d\'équilibre prévu à 14 mois. Les principaux risques incluent les différences réglementaires entre les trois marchés et la concurrence des fournisseurs locaux établis.',
+    questionText: 'Quand est prévu le point d\'équilibre de cette expansion ?',
+    options: [
+      { label: '6 mois', value: '6 mois' },
+      { label: '14 mois', value: '14 mois' },
+      { label: '18 mois', value: '18 mois' },
+      { label: '24 mois', value: '24 mois' }
+    ],
+    correctAnswer: '14 mois', points: 2, orderIndex: 98, tags: ['proposition commerciale', 'stratégie']
+  },
+
+  // --- C1 : Stratégies de négociation interculturelle ---
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Stratégies de négociation interculturelle',
+    passage: 'Une négociation interculturelle efficace exige bien plus qu\'une maîtrise linguistique ; elle nécessite une compréhension des cadres culturels profondément ancrés qui façonnent la construction de la confiance, la prise de décisions et la conclusion d\'accords. Dans les cultures à contexte élevé, comme le Japon et de nombreux pays du Moyen-Orient, l\'établissement de relations précède souvent toute discussion sur les termes, et le silence pendant les négociations peut signifier la réflexion plutôt que le désaccord. À l\'inverse, les cultures à contexte faible, notamment les États-Unis et l\'Allemagne, tendent à privilégier la franchise, les arguments fondés sur les données et les contrats écrits. Les recherches d\'Erin Meyer à l\'INSEAD ont démontré que même au sein de l\'Europe, des différences significatives existent — les négociateurs français, par exemple, s\'engagent souvent dans un débat intellectuel dans le cadre du processus, tandis que leurs homologues scandinaves favorisent la recherche de consensus.',
+    questionText: 'Selon le passage, que peut signifier le silence pendant une négociation dans les cultures à contexte élevé ?',
+    options: [
+      { label: 'Un désaccord avec la proposition', value: 'Un désaccord avec la proposition' },
+      { label: 'Un souhait de mettre fin à la négociation', value: 'Un souhait de mettre fin à la négociation' },
+      { label: 'La réflexion plutôt que le désaccord', value: 'La réflexion plutôt que le désaccord' },
+      { label: 'Un manque de préparation', value: 'Un manque de préparation' }
+    ],
+    correctAnswer: 'La réflexion plutôt que le désaccord', points: 2, orderIndex: 99, tags: ['interculturel', 'négociation']
+  },
+
+  // --- C1 : Responsabilité sociale des entreprises ---
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'impact de la responsabilité sociale des entreprises',
+    passage: 'La responsabilité sociale des entreprises (RSE) est passée d\'un exercice périphérique de relations publiques à un impératif stratégique pour de nombreuses multinationales. Des études de la Harvard Business School ont montré que les entreprises dotées de programmes RSE robustes tendent à surperformer financièrement leurs pairs sur le long terme, en partie parce qu\'elles attirent et retiennent les meilleurs talents, qui recherchent de plus en plus un travail porteur de sens. Cependant, la montée de l\'« écoblanchiment » — des déclarations superficielles ou trompeuses sur les pratiques environnementales — a engendré un scepticisme croissant chez les consommateurs et les régulateurs. La directive européenne sur le reporting de durabilité des entreprises (CSRD), entrée en vigueur en 2024, impose aux grandes entreprises de divulguer des données détaillées sur les critères environnementaux, sociaux et de gouvernance (ESG). Les détracteurs de la RSE estiment qu\'elle peut détourner l\'attention des changements structurels fondamentaux nécessaires.',
+    questionText: 'Quelle est la principale préoccupation soulevée à propos de l\'« écoblanchiment » ?',
+    options: [
+      { label: 'Il augmente injustement les bénéfices des entreprises', value: 'Il augmente injustement les bénéfices des entreprises' },
+      { label: 'Il a engendré un scepticisme sur l\'authenticité des engagements RSE', value: 'Il a engendré un scepticisme sur l\'authenticité des engagements RSE' },
+      { label: 'Il ne concerne que les petites entreprises', value: 'Il ne concerne que les petites entreprises' },
+      { label: 'Il est imposé par la réglementation européenne', value: 'Il est imposé par la réglementation européenne' }
+    ],
+    correctAnswer: 'Il a engendré un scepticisme sur l\'authenticité des engagements RSE', points: 2, orderIndex: 100, tags: ['RSE', 'développement durable']
+  },
+
+  // --- C1 : Transformation numérique des PME ---
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Les défis de la transformation numérique des PME',
+    passage: 'Alors que les grandes entreprises ont généralement adopté la transformation numérique avec des budgets dédiés et des équipes spécialisées, les petites et moyennes entreprises (PME) font face à un ensemble distinct de défis. Un rapport de l\'OCDE de 2024 a révélé que seules 35 % des PME européennes avaient mis en œuvre des outils numériques avancés tels que le cloud computing, l\'analyse de données ou l\'automatisation. Les principaux freins cités étaient les ressources financières limitées, le manque d\'employés ayant des compétences numériques et la résistance au changement du personnel expérimenté habitué aux flux de travail établis. De plus, de nombreux dirigeants de PME ont exprimé leur incertitude quant aux technologies offrant un retour sur investissement tangible. Les programmes de numérisation soutenus par les pouvoirs publics ont obtenu des résultats mitigés ; si les subventions ont aidé certaines entreprises à adopter de nouveaux systèmes, le manque de support technique continu fait que les nouveaux outils sont souvent sous-utilisés.',
+    questionText: 'Selon le rapport de l\'OCDE, quel pourcentage de PME européennes avaient adopté des outils numériques avancés ?',
+    options: [
+      { label: '25 %', value: '25 %' },
+      { label: '35 %', value: '35 %' },
+      { label: '50 %', value: '50 %' },
+      { label: '65 %', value: '65 %' }
+    ],
+    correctAnswer: '35 %', points: 2, orderIndex: 101, tags: ['transformation numérique', 'PME']
+  },
+
+  // --- C1 : Rétention des talents ---
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La rétention des talents dans un marché compétitif',
+    passage: 'À une époque caractérisée par les pénuries de compétences et la « Grande Démission », les organisations sont contraintes de repenser leurs stratégies de rétention des talents. Les approches traditionnelles centrées sur des salaires compétitifs et des primes annuelles s\'avèrent insuffisantes, car les employés — en particulier les milléniaux et la génération Z — privilégient de plus en plus le sens, l\'autonomie et le développement de carrière plutôt que les récompenses purement financières. Les entreprises leaders investissent dans des parcours d\'apprentissage personnalisés, des programmes de mobilité interne et des critères de promotion transparents. Le rapport LinkedIn 2024 sur l\'apprentissage en entreprise a révélé que les employés qui estiment avoir des opportunités d\'apprentissage et de croissance sont 3,5 fois plus susceptibles de rester chez leur employeur. Toutefois, la rétention ne se résume pas aux incitations individuelles ; la culture organisationnelle, le leadership inclusif et la qualité de la relation manager-employé restent les meilleurs prédicteurs.',
+    questionText: 'Selon le rapport LinkedIn, qu\'est-ce qui rend les employés 3,5 fois plus susceptibles de rester ?',
+    options: [
+      { label: 'Des salaires plus élevés que la concurrence', value: 'Des salaires plus élevés que la concurrence' },
+      { label: 'Des opportunités d\'apprentissage et de croissance', value: 'Des opportunités d\'apprentissage et de croissance' },
+      { label: 'Moins d\'heures de travail par semaine', value: 'Moins d\'heures de travail par semaine' },
+      { label: 'Des primes annuelles', value: 'Des primes annuelles' }
+    ],
+    correctAnswer: 'Des opportunités d\'apprentissage et de croissance', points: 2, orderIndex: 102, tags: ['rétention talents', 'stratégie RH']
+  },
+
+  // --- C2 : IA éthique dans les décisions RH ---
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'IA éthique dans les décisions RH',
+    passage: 'Le déploiement de l\'intelligence artificielle dans les ressources humaines — des algorithmes de tri de CV aux modèles prédictifs d\'attrition — soulève des questions éthiques profondes que les organisations commencent à peine à appréhender. Si l\'IA promet de réduire les biais inconscients en standardisant les critères d\'évaluation, les données empiriques racontent une histoire plus nuancée. L\'outil de recrutement d\'Amazon, désormais abandonné, qui pénalisait systématiquement les CV contenant le mot « femmes », a démontré comment des algorithmes entraînés sur des données historiquement biaisées peuvent perpétuer et même amplifier les inégalités existantes. Le règlement européen sur l\'IA, adopté en 2024, classe les systèmes d\'IA liés à l\'emploi comme « à haut risque », les soumettant à des exigences strictes de transparence, de supervision humaine et d\'audit des biais. Pourtant, la conformité seule est insuffisante ; les organisations doivent cultiver ce que les chercheurs appellent la « littératie algorithmique » — la capacité des professionnels RH à évaluer de manière critique les résultats de l\'IA plutôt que de les traiter comme des vérités objectives.',
+    questionText: 'Selon le passage, qu\'est-ce qui est insuffisant à lui seul lors de l\'implémentation de l\'IA en RH ?',
+    options: [
+      { label: 'La formation technique des ingénieurs', value: 'La formation technique des ingénieurs' },
+      { label: 'La conformité réglementaire', value: 'La conformité réglementaire' },
+      { label: 'L\'augmentation du volume de données d\'entraînement', value: 'L\'augmentation du volume de données d\'entraînement' },
+      { label: 'La suppression de toute intervention humaine', value: 'La suppression de toute intervention humaine' }
+    ],
+    correctAnswer: 'La conformité réglementaire', points: 2, orderIndex: 103, tags: ['IA éthique', 'technologie RH']
+  },
+
+  // --- C2 : Capitalisme des parties prenantes vs primauté actionnariale ---
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Capitalisme des parties prenantes vs primauté actionnariale',
+    passage: 'Le débat entre le capitalisme des parties prenantes et la primauté actionnariale représente l\'une des lignes de fracture idéologiques les plus conséquentes de la pensée économique contemporaine. La doctrine de Milton Friedman de 1970 — selon laquelle la seule responsabilité sociale d\'une entreprise est d\'accroître ses profits — a dominé le capitalisme anglo-américain pendant des décennies. Le modèle des parties prenantes, défendu par des figures telles que Klaus Schwab du Forum économique mondial, soutient que les entreprises doivent équilibrer les intérêts des actionnaires, des employés, des clients, des communautés et de l\'environnement pour assurer la création de valeur à long terme. La déclaration du Business Roundtable de 2019, signée par 181 PDG de grandes entreprises américaines, a formellement adopté une finalité orientée vers les parties prenantes. Pourtant, les critiques ont qualifié ce virage de largement performatif, notant que les structures de rémunération des dirigeants restent massivement liées à la performance boursière.',
+    questionText: 'Pourquoi les critiques qualifient-ils l\'engagement du Business Roundtable de 2019 de « performatif » ?',
+    options: [
+      { label: 'Parce que les PDG n\'ont pas signé la déclaration volontairement', value: 'Parce que les PDG n\'ont pas signé la déclaration volontairement' },
+      { label: 'Parce que la rémunération des dirigeants reste liée à la performance boursière', value: 'Parce que la rémunération des dirigeants reste liée à la performance boursière' },
+      { label: 'Parce que le capitalisme des parties prenantes est illégal aux États-Unis', value: 'Parce que le capitalisme des parties prenantes est illégal aux États-Unis' },
+      { label: 'Parce que la déclaration a été retirée l\'année suivante', value: 'Parce que la déclaration a été retirée l\'année suivante' }
+    ],
+    correctAnswer: 'Parce que la rémunération des dirigeants reste liée à la performance boursière', points: 2, orderIndex: 104, tags: ['capitalisme parties prenantes', 'gouvernance']
+  },
+
+  // --- C2 : Résilience organisationnelle post-pandémie ---
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La résilience organisationnelle à l\'ère post-pandémique',
+    passage: 'La pandémie de COVID-19 a constitué un test de résistance sans précédent pour la résilience organisationnelle, révélant des vulnérabilités critiques dans les chaînes d\'approvisionnement, la gestion des effectifs et la planification stratégique. Les organisations ayant investi dans des réseaux d\'approvisionnement diversifiés, des infrastructures numériques et des cadres de leadership adaptatif ont mieux traversé la crise que celles reposant sur des modèles allégés, optimisés pour l\'efficience avec une redondance minimale. Cependant, le discours post-pandémique autour de la résilience risque de confondre véritable capacité d\'adaptation et simple survie à la crise. La véritable résilience organisationnelle, telle que définie par des chercheurs comme Kathleen Sutcliffe et Karl Weick, englobe non seulement la capacité d\'absorber les chocs et de s\'en remettre, mais aussi la capacité d\'anticiper les menaces émergentes et de se transformer face à des conditions fondamentalement modifiées. Cette distinction est cruciale : les entreprises qui ont simplement rétabli leurs opérations pré-pandémiques sans repenser leur modèle économique risquent de se retrouver mal préparées face aux incertitudes cumulées.',
+    questionText: 'Selon le passage, quel est le risque du discours post-pandémique sur la résilience ?',
+    options: [
+      { label: 'Que les entreprises investissent trop dans l\'infrastructure numérique', value: 'Que les entreprises investissent trop dans l\'infrastructure numérique' },
+      { label: 'Que la véritable capacité d\'adaptation soit confondue avec la simple survie à la crise', value: 'Que la véritable capacité d\'adaptation soit confondue avec la simple survie à la crise' },
+      { label: 'Que les employés résistent au retour au bureau', value: 'Que les employés résistent au retour au bureau' },
+      { label: 'Que les chaînes d\'approvisionnement deviennent trop diversifiées', value: 'Que les chaînes d\'approvisionnement deviennent trop diversifiées' }
+    ],
+    correctAnswer: 'Que la véritable capacité d\'adaptation soit confondue avec la simple survie à la crise', points: 2, orderIndex: 105, tags: ['résilience organisationnelle', 'stratégie']
+  },
+
+  // --- C2 : ROI du développement professionnel ---
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'économie du retour sur investissement de la formation professionnelle',
+    passage: 'Quantifier le retour sur investissement (ROI) des programmes de développement professionnel reste l\'un des défis les plus persistants de la gestion du capital humain. Les approches traditionnelles, comme le modèle d\'évaluation à quatre niveaux de Kirkpatrick, mesurent l\'impact de la formation à travers la satisfaction des apprenants, l\'acquisition de connaissances, le changement comportemental et les résultats commerciaux — mais chaque niveau successif présente des difficultés de mesure croissantes. Le problème d\'attribution causale est particulièrement aigu : isoler l\'impact d\'un programme de formation des variables confondantes telles que les conditions du marché, la qualité du management et la motivation individuelle nécessite des protocoles expérimentaux rigoureux que la plupart des organisations n\'ont ni les moyens ni la volonté de mettre en place. L\'extension du modèle de Kirkpatrick par Jack Phillips pour inclure un cinquième niveau — le ROI financier — a gagné du terrain, mais les critiques soutiennent que réduire des résultats développementaux complexes à des chiffres monétaires risque de sous-évaluer des bénéfices intangibles comme la capacité d\'innovation accrue et le renforcement des réseaux professionnels.',
+    questionText: 'Qu\'est-ce que le « problème d\'attribution causale » décrit dans le passage ?',
+    options: [
+      { label: 'La difficulté de trouver des formateurs qualifiés', value: 'La difficulté de trouver des formateurs qualifiés' },
+      { label: 'Le défi d\'isoler l\'impact d\'une formation des variables confondantes', value: 'Le défi d\'isoler l\'impact d\'une formation des variables confondantes' },
+      { label: 'Le problème des employés qui n\'assistent pas aux formations', value: 'Le problème des employés qui n\'assistent pas aux formations' },
+      { label: 'Le coût élevé de la mise en œuvre du modèle de Kirkpatrick', value: 'Le coût élevé de la mise en œuvre du modèle de Kirkpatrick' }
+    ],
+    correctAnswer: 'Le défi d\'isoler l\'impact d\'une formation des variables confondantes', points: 2, orderIndex: 106, tags: ['développement professionnel', 'ROI', 'stratégie RH']
+  },
 ]

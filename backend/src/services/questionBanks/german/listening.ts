@@ -763,4 +763,116 @@ export const germanListeningQuestions: MultiSkillQuestionData[] = [
     ],
     correctAnswer: 'unbegrenzte Toleranz zerstört sich selbst', points: 2, orderIndex: 72, tags: ['Philosophie', 'Politik'], timeSuggested: 90
   },
+
+  // ============================================================
+  // VARIED SPOKEN CONTEXTS — 12 questions (orderIndex 73-84)
+  // ============================================================
+
+  // A1 — Varied Spoken Contexts
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Mailboxnachricht] Sie hören eine Nachricht von einem Kollegen. Wann ist das Treffen?',
+    ttsScript: 'Hallo, hier ist Thomas aus der Marketingabteilung. Ich rufe an, um unser Treffen morgen um halb zehn zu bestätigen. Bringen Sie bitte den Bericht mit. Bis morgen!',
+    ttsLanguageCode: 'de-DE',
+    options: [{ label: '9:00', value: '9:00' }, { label: '9:30', value: '9:30' }, { label: '10:00', value: '10:00' }, { label: '10:30', value: '10:30' }],
+    correctAnswer: '9:30', points: 1, orderIndex: 73, tags: ['Mailbox', 'Arbeit', 'register-varied'], timeSuggested: 30
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Flughafenansage] Sie hören eine Durchsage am Flughafen. Wohin fliegt das Flugzeug?',
+    ttsScript: 'Achtung, Fluggäste des Fluges LH vierhundertzwei nach Wien. Ihr Flug wird jetzt am Gate zwölf eingestiegen. Bitte begeben Sie sich sofort zu Gate zwölf.',
+    ttsLanguageCode: 'de-DE',
+    options: [{ label: 'Berlin', value: 'Berlin' }, { label: 'Wien', value: 'Wien' }, { label: 'Zürich', value: 'Zürich' }, { label: 'München', value: 'München' }],
+    correctAnswer: 'Wien', points: 1, orderIndex: 74, tags: ['Flughafen', 'Ansage', 'register-varied'], timeSuggested: 30
+  },
+
+  // A2 — Varied Spoken Contexts
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Restaurantreservierung] Sie hören jemanden im Restaurant reservieren. Für wie viele Personen?',
+    ttsScript: 'Guten Abend, ich möchte gern einen Tisch reservieren für Samstagabend. Wir wären sechs Personen, so gegen zwanzig Uhr. Haben Sie vielleicht etwas auf der Terrasse?',
+    ttsLanguageCode: 'de-DE',
+    options: [{ label: '4 Personen', value: '4 Personen' }, { label: '5 Personen', value: '5 Personen' }, { label: '6 Personen', value: '6 Personen' }, { label: '8 Personen', value: '8 Personen' }],
+    correctAnswer: '6 Personen', points: 1, orderIndex: 75, tags: ['Restaurant', 'Reservierung', 'register-varied'], timeSuggested: 40
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Kundennachricht] Sie hören eine Nachricht für einen Kunden. Was soll verschoben werden?',
+    ttsScript: 'Hallo, hier spricht Frau Schneider von der Firma Weber und Partner. Ich rufe wegen unseres Termins am Mittwoch an. Leider muss ich die Lieferung verschieben. Könnten wir sie auf Freitagnachmittag verlegen? Bitte rufen Sie mich zurück.',
+    ttsLanguageCode: 'de-DE',
+    options: [{ label: 'Ein Meeting', value: 'Ein Meeting' }, { label: 'Eine Lieferung', value: 'Eine Lieferung' }, { label: 'Eine Zahlung', value: 'Eine Zahlung' }, { label: 'Eine Präsentation', value: 'Eine Präsentation' }],
+    correctAnswer: 'Eine Lieferung', points: 1, orderIndex: 76, tags: ['Kunde', 'Nachricht', 'register-varied'], timeSuggested: 40
+  },
+
+  // B1 — Varied Spoken Contexts
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Radiowerbung] Sie hören eine Radiowerbung. Was wird beworben?',
+    ttsScript: 'Sie möchten endlich fließend Englisch sprechen? Mit LinguaPro, der Online-Sprachschule Nummer eins in Deutschland, schaffen Sie das. Über fünfzigtausend Berufstätige vertrauen uns bereits. Melden Sie sich diese Woche an und erhalten Sie den ersten Monat kostenlos! Besuchen Sie linguapro punkt de.',
+    ttsLanguageCode: 'de-DE',
+    options: [{ label: 'Ein Übersetzungsbüro', value: 'Ein Übersetzungsbüro' }, { label: 'Eine Online-Sprachschule', value: 'Eine Online-Sprachschule' }, { label: 'Ein Grammatikbuch', value: 'Ein Grammatikbuch' }, { label: 'Eine Geschäftskonferenz', value: 'Eine Geschäftskonferenz' }],
+    correctAnswer: 'Eine Online-Sprachschule', points: 1, orderIndex: 77, tags: ['Radio', 'Werbung', 'register-varied'], timeSuggested: 45
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Bürobesprechung] Sie hören einen Ausschnitt aus einer Teambesprechung. Was ist das Hauptproblem?',
+    ttsScript: 'Gut, bevor wir Schluss machen, möchte ich den Zeitplan des Projekts Hartmann ansprechen. Wir liegen derzeit zwei Wochen hinter dem Zeitplan, und der Kunde erwartet die erste Lieferung bis zum fünfzehnten März. Wir müssen die Ressourcen umverteilen. Irgendwelche Vorschläge?',
+    ttsLanguageCode: 'de-DE',
+    options: [{ label: 'Das Budget ist überschritten', value: 'Das Budget ist überschritten' }, { label: 'Das Projekt liegt im Rückstand', value: 'Das Projekt liegt im Rückstand' }, { label: 'Ein Mitarbeiter hat gekündigt', value: 'Ein Mitarbeiter hat gekündigt' }, { label: 'Der Kunde ist unzufrieden', value: 'Der Kunde ist unzufrieden' }],
+    correctAnswer: 'Das Projekt liegt im Rückstand', points: 1, orderIndex: 78, tags: ['Besprechung', 'Büro', 'register-varied'], timeSuggested: 45
+  },
+
+  // B2 — Varied Spoken Contexts
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Podcast] Sie hören einen Podcast über Berufswechsel. Was ist laut dem Sprecher das größte Hindernis?',
+    ttsScript: 'Wenn ich Menschen bei ihrer beruflichen Neuorientierung begleite, ist das, was sie am meisten zurückhält, nicht der Mangel an Fähigkeiten oder Qualifikationen. Es ist die Angst. Die Angst vor dem Unbekannten, die Angst vor finanzieller Unsicherheit und ehrlich gesagt, die Angst davor, was andere Leute denken werden. Sobald man das überwindet, fügt sich alles andere zusammen.',
+    ttsLanguageCode: 'de-DE',
+    options: [{ label: 'Mangel an Fähigkeiten', value: 'Mangel an Fähigkeiten' }, { label: 'Finanzielle Probleme', value: 'Finanzielle Probleme' }, { label: 'Angst', value: 'Angst' }, { label: 'Altersdiskriminierung', value: 'Altersdiskriminierung' }],
+    correctAnswer: 'Angst', points: 2, orderIndex: 79, tags: ['Podcast', 'Karriere', 'register-varied'], timeSuggested: 60
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Nachrichtenbericht] Sie hören einen Wirtschaftsbericht. Was hat die Zentralbank entschieden?',
+    ttsScript: 'In einem weitgehend erwarteten Schritt hat die Europäische Zentralbank eine Zinssenkung um einen Viertelpunkt angekündigt, wodurch der Leitzins auf drei Komma fünf Prozent sinkt. Analysten sehen darin ein Zeichen wachsender Sorge über das schwache Wachstum in der Eurozone, insbesondere im verarbeitenden Gewerbe.',
+    ttsLanguageCode: 'de-DE',
+    options: [{ label: 'Die Zinsen erhöhen', value: 'Die Zinsen erhöhen' }, { label: 'Die Zinsen senken', value: 'Die Zinsen senken' }, { label: 'Die Zinsen einfrieren', value: 'Die Zinsen einfrieren' }, { label: 'Die Zinsen abschaffen', value: 'Die Zinsen abschaffen' }],
+    correctAnswer: 'Die Zinsen senken', points: 2, orderIndex: 80, tags: ['Nachrichten', 'Wirtschaft', 'register-varied'], timeSuggested: 60
+  },
+
+  // C1 — Varied Spoken Contexts
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[TED-Vortrag] Sie hören einen Ausschnitt über Innovation. Was ist laut dem Redner der wahre Motor der Innovation?',
+    ttsScript: 'Wir neigen dazu, das einsame Genie in seiner Garage zu romantisieren, aber die Daten erzählen eine ganz andere Geschichte. Innovation ist im Grunde ein soziales Phänomen. Sie gedeiht an der Schnittstelle vielfältiger Perspektiven, wo Ideen aufeinanderprallen und sich neu kombinieren. Der wahre Motor ist nicht individuelle Genialität, sondern die Dichte und Qualität menschlicher Verbindungen innerhalb eines Ökosystems.',
+    ttsLanguageCode: 'de-DE',
+    options: [{ label: 'Individuelle Genialität', value: 'Individuelle Genialität' }, { label: 'Staatliche Förderung', value: 'Staatliche Förderung' }, { label: 'Menschliche Verbindungen im Ökosystem', value: 'Menschliche Verbindungen im Ökosystem' }, { label: 'Wettbewerb zwischen Unternehmen', value: 'Wettbewerb zwischen Unternehmen' }],
+    correctAnswer: 'Menschliche Verbindungen im Ökosystem', points: 2, orderIndex: 81, tags: ['TED-Vortrag', 'Innovation', 'register-varied'], timeSuggested: 75
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Universitätsvorlesung] Sie hören einen Ausschnitt aus einer Vorlesung. Welches Konzept erklärt der Professor?',
+    ttsScript: 'Was wir in der Literatur beobachten, ist eine Verschiebung vom traditionellen Modell der linearen Kausalität hin zu dem, was Wissenschaftler heute als zirkuläre Kausalität bezeichnen. Mit anderen Worten: Die Wirkung wirkt auf die Ursache zurück und erzeugt eine sich selbst verstärkende Schleife. Das zeigt sich besonders deutlich in Klimasystemen, wo die Erwärmung der Ozeane mehr Kohlendioxid freisetzt, was wiederum die Erwärmung beschleunigt.',
+    ttsLanguageCode: 'de-DE',
+    options: [{ label: 'Lineare Kausalität', value: 'Lineare Kausalität' }, { label: 'Zirkuläre Kausalität', value: 'Zirkuläre Kausalität' }, { label: 'Zufällige Variation', value: 'Zufällige Variation' }, { label: 'Statisches Gleichgewicht', value: 'Statisches Gleichgewicht' }],
+    correctAnswer: 'Zirkuläre Kausalität', points: 2, orderIndex: 82, tags: ['Vorlesung', 'akademisch', 'register-varied'], timeSuggested: 75
+  },
+
+  // C2 — Varied Spoken Contexts
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Philosophische Debatte] Sie hören einen Ausschnitt einer Debatte. Welche Position vertritt der Redner?',
+    ttsScript: 'Ich vertrete die Auffassung, dass der moralische Realismus nicht nur vertretbar, sondern notwendig ist. Wenn wir zugestehen, dass ethische Wahrheiten rein konstruiert sind, dann haben wir keinerlei Grundlage, auf der wir Gräueltaten verurteilen können. Der bloße Akt der moralischen Empörung setzt voraus, dass es objektive Maßstäbe gibt, an denen Handlungen gemessen werden können, unabhängig vom kulturellen Konsens.',
+    ttsLanguageCode: 'de-DE',
+    options: [{ label: 'Moralischer Relativismus', value: 'Moralischer Relativismus' }, { label: 'Moralischer Realismus', value: 'Moralischer Realismus' }, { label: 'Nihilismus', value: 'Nihilismus' }, { label: 'Utilitarismus', value: 'Utilitarismus' }],
+    correctAnswer: 'Moralischer Realismus', points: 2, orderIndex: 83, tags: ['Debatte', 'Philosophie', 'register-varied'], timeSuggested: 90
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Satirischer Kommentar] Sie hören einen satirischen Kommentar. Was wird eigentlich kritisiert?',
+    ttsScript: 'Und in den heutigen Eilmeldungen: Ein multinationaler Konzern hat großzügig versprochen, bis zweitausendfünfundsiebzig klimaneutral zu werden, gerade rechtzeitig zum Wärmetod des Universums. Der Vorstandsvorsitzende versicherte den Aktionären, dass kurzfristige Gewinne zwar die absolute Priorität bleiben, das Unternehmen sich aber zutiefst der Nachhaltigkeit verpflichtet fühle, vorausgesetzt, es kostet nichts.',
+    ttsLanguageCode: 'de-DE',
+    options: [{ label: 'Umweltvorschriften', value: 'Umweltvorschriften' }, { label: 'Greenwashing von Unternehmen', value: 'Greenwashing von Unternehmen' }, { label: 'Untätigkeit der Regierung', value: 'Untätigkeit der Regierung' }, { label: 'Verbraucherverhalten', value: 'Verbraucherverhalten' }],
+    correctAnswer: 'Greenwashing von Unternehmen', points: 2, orderIndex: 84, tags: ['Satire', 'Kommentar', 'register-varied'], timeSuggested: 90
+  },
 ]

@@ -643,4 +643,294 @@ export const italianGrammarQuestions: MultiSkillQuestionData[] = [
     options: [{ label: 'vede', value: 'vede' }, { label: 'veda', value: 'veda' }, { label: 'vedrebbe', value: 'vedrebbe' }, { label: 'vedesse', value: 'vedesse' }],
     correctAnswer: 'veda', points: 2, orderIndex: 100, tags: ['congiuntivo presente', 'registro letterario']
   },
+
+  // ============================================================
+  // FILL_BLANK — Grammatica (30 domande: 5 per livello QCER)
+  // ============================================================
+
+  // A1 — Coniugazione di base & articoli
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Io ___ italiano. (parlare, presente indicativo)',
+    correctAnswer: 'parlo', points: 1, orderIndex: 101, tags: ['presente indicativo', 'prima coniugazione']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Noi ___ a Roma. (abitare, presente indicativo)',
+    correctAnswer: 'abitiamo', points: 1, orderIndex: 102, tags: ['presente indicativo', 'prima coniugazione']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Lei ___ un gatto. (avere, presente indicativo)',
+    correctAnswer: 'ha', points: 1, orderIndex: 103, tags: ['avere', 'presente indicativo']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Tu ___ molti libri. (leggere, presente indicativo)',
+    correctAnswer: 'leggi', points: 1, orderIndex: 104, tags: ['presente indicativo', 'seconda coniugazione']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Ho comprato ___ libro. (articolo indeterminativo maschile)',
+    correctAnswer: 'un', points: 1, orderIndex: 105, tags: ['articoli indeterminativi']
+  },
+
+  // A2 — Passato prossimo & pronomi
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Ieri Maria ___ andata al cinema. (essere, passato prossimo)',
+    correctAnswer: 'è', points: 1, orderIndex: 106, tags: ['passato prossimo', 'essere']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Noi abbiamo ___ una pizza. (mangiare, participio passato)',
+    correctAnswer: 'mangiato', points: 1, orderIndex: 107, tags: ['passato prossimo', 'participio passato']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: ___ telefono domani. (pronome indiretto, a lui)',
+    correctAnswer: 'Gli', points: 1, orderIndex: 108, tags: ['pronomi indiretti']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Da bambino ___ sempre al parco. (andare, imperfetto)',
+    correctAnswer: 'andavo', points: 1, orderIndex: 109, tags: ['imperfetto']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Domani ___ al mare. (andare, futuro semplice, noi)',
+    correctAnswer: 'andremo', points: 1, orderIndex: 110, tags: ['futuro semplice']
+  },
+
+  // B1 — Congiuntivo & condizionale
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Penso che lui ___ ragione. (avere, congiuntivo presente)',
+    correctAnswer: 'abbia', points: 1, orderIndex: 111, tags: ['congiuntivo presente']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Se avessi soldi, ___ una casa. (comprare, condizionale)',
+    correctAnswer: 'comprerei', points: 1, orderIndex: 112, tags: ['condizionale presente', 'periodo ipotetico']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Il libro ___ ho letto è interessante. (pronome relativo)',
+    correctAnswer: 'che', points: 1, orderIndex: 113, tags: ['pronomi relativi']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Dubito che Maria ___ la verità. (dire, congiuntivo presente)',
+    correctAnswer: 'dica', points: 1, orderIndex: 114, tags: ['congiuntivo presente', 'dubitare']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: L\'amico di ___ ti ho parlato si chiama Marco. (pronome relativo)',
+    correctAnswer: 'cui', points: 1, orderIndex: 115, tags: ['pronomi relativi', 'di cui']
+  },
+
+  // B2 — Strutture complesse
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Se avessi studiato, ___ superato l\'esame. (avere, condizionale passato)',
+    correctAnswer: 'avrei', points: 2, orderIndex: 116, tags: ['periodo ipotetico terzo tipo']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: La casa ___ costruita nel 1800. (essere, passato prossimo passivo)',
+    correctAnswer: 'è stata', points: 2, orderIndex: 117, tags: ['forma passiva', 'passato prossimo']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Mi ha detto che ___ venuto il giorno dopo. (essere, condizionale — discorso indiretto)',
+    correctAnswer: 'sarebbe', points: 2, orderIndex: 118, tags: ['discorso indiretto', 'condizionale']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Nonostante ___ tardi, ha continuato a lavorare. (essere, congiuntivo imperfetto)',
+    correctAnswer: 'fosse', points: 2, orderIndex: 119, tags: ['congiuntivo imperfetto', 'nonostante']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Dopo ___ mangiato, siamo usciti. (avere, infinito passato)',
+    correctAnswer: 'avere', points: 2, orderIndex: 120, tags: ['infinito passato']
+  },
+
+  // C1 — Forme letterarie
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Dante ___ la Divina Commedia nel XIV secolo. (scrivere, passato remoto)',
+    correctAnswer: 'scrisse', points: 2, orderIndex: 121, tags: ['passato remoto']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Qualora ___ necessario, vi contatteremo. (essere, congiuntivo imperfetto)',
+    correctAnswer: 'fosse', points: 2, orderIndex: 122, tags: ['congiuntivo imperfetto', 'qualora']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Per quanto ne ___, la situazione è migliorata. (sapere, congiuntivo presente)',
+    correctAnswer: 'sappia', points: 2, orderIndex: 123, tags: ['congiuntivo presente', 'per quanto']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: ___ finito il lavoro, andò a casa. (avere, gerundio composto)',
+    correctAnswer: 'Avendo', points: 2, orderIndex: 124, tags: ['gerundio composto']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Magari ___ venire con voi! (potere, congiuntivo imperfetto)',
+    correctAnswer: 'potessi', points: 2, orderIndex: 125, tags: ['congiuntivo imperfetto', 'magari']
+  },
+
+  // C2 — Distinzioni sottili
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Quand\'anche ___ vero, non cambierebbe nulla. (essere, congiuntivo imperfetto)',
+    correctAnswer: 'fosse', points: 2, orderIndex: 126, tags: ['congiuntivo imperfetto', 'quand\'anche']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Colombo ___ in America nel 1492. (sbarcare, passato remoto)',
+    correctAnswer: 'sbarcò', points: 2, orderIndex: 127, tags: ['passato remoto']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Posto che ___ vere le accuse, bisogna agire. (essere, congiuntivo presente, plurale)',
+    correctAnswer: 'siano', points: 2, orderIndex: 128, tags: ['congiuntivo presente', 'posto che']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: La legge ___ approvata dal Senato ieri. (venire, passato remoto — passivo letterario)',
+    correctAnswer: 'venne', points: 2, orderIndex: 129, tags: ['forma passiva', 'passato remoto', 'registro letterario']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completare: Non v\'è chi non ___ quanto sia importante. (vedere, congiuntivo presente)',
+    correctAnswer: 'veda', points: 2, orderIndex: 130, tags: ['congiuntivo presente', 'registro letterario']
+  },
+
+  // ============================================================
+  // VARIED LANGUAGE REGISTERS — 18 questions (orderIndex 131-148)
+  // ============================================================
+
+  // A1 — Varied Registers
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Email aziendale] "Gentile Sig. Rossi, Le ___ per confermare il nostro incontro di giovedì."',
+    options: [{ label: 'scrivo', value: 'scrivo' }, { label: 'scrive', value: 'scrive' }, { label: 'scrivere', value: 'scrivere' }, { label: 'scrivi', value: 'scrivi' }],
+    correctAnswer: 'scrivo', points: 1, orderIndex: 131, tags: ['presente indicativo', 'registro formale', 'email']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[SMS] "ciao, ___ stasera?"',
+    options: [{ label: 'vieni', value: 'vieni' }, { label: 'viene', value: 'viene' }, { label: 'venite', value: 'venite' }, { label: 'venire', value: 'venire' }],
+    correctAnswer: 'vieni', points: 1, orderIndex: 132, tags: ['presente indicativo', 'registro informale', 'SMS']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Parlato colloquiale] "e lei tipo ___ fatto: ma dai, scherzi!"',
+    options: [{ label: 'ha', value: 'ha' }, { label: 'è', value: 'è' }, { label: 'fa', value: 'fa' }, { label: 'aveva', value: 'aveva' }],
+    correctAnswer: 'ha', points: 1, orderIndex: 133, tags: ['passato prossimo', 'registro colloquiale', 'parlato']
+  },
+
+  // A2 — Varied Registers
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Reclamo formale] "Desidero ___ un reclamo riguardo al servizio ricevuto ieri."',
+    options: [{ label: 'presentare', value: 'presentare' }, { label: 'fare', value: 'fare' }, { label: 'dare', value: 'dare' }, { label: 'mettere', value: 'mettere' }],
+    correctAnswer: 'presentare', points: 1, orderIndex: 134, tags: ['infinito', 'registro formale', 'reclamo']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[WhatsApp] "appena ___ a casa, che fai?"',
+    options: [{ label: 'arrivato', value: 'arrivato' }, { label: 'arrivo', value: 'arrivo' }, { label: 'arrivare', value: 'arrivare' }, { label: 'arrivavo', value: 'arrivavo' }],
+    correctAnswer: 'arrivato', points: 1, orderIndex: 135, tags: ['passato prossimo', 'registro informale', 'chat']
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Telefonata] "Potrebbe ___ all\'ufficio commerciale, per favore?"',
+    options: [{ label: 'passarmi', value: 'passarmi' }, { label: 'portarmi', value: 'portarmi' }, { label: 'darmi', value: 'darmi' }, { label: 'prendermi', value: 'prendermi' }],
+    correctAnswer: 'passarmi', points: 1, orderIndex: 136, tags: ['infinito', 'registro formale', 'telefono']
+  },
+
+  // B1 — Varied Registers
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Presentazione aziendale] "Come potete vedere dai dati, le vendite ___ del 15% in questo trimestre."',
+    options: [{ label: 'sono aumentate', value: 'sono aumentate' }, { label: 'aumentavano', value: 'aumentavano' }, { label: 'aumentano', value: 'aumentano' }, { label: 'erano aumentate', value: 'erano aumentate' }],
+    correctAnswer: 'sono aumentate', points: 1, orderIndex: 137, tags: ['passato prossimo', 'registro formale', 'presentazione']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Social Media] "Non ci credo, ___ aumentato di nuovo il prezzo!! #inflazione"',
+    options: [{ label: 'hanno', value: 'hanno' }, { label: 'avevano', value: 'avevano' }, { label: 'avranno', value: 'avranno' }, { label: 'ebbero', value: 'ebbero' }],
+    correctAnswer: 'hanno', points: 1, orderIndex: 138, tags: ['passato prossimo', 'registro informale', 'social media']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Titolo di giornale] "Il ministro ___ a dimettersi dopo lo scandalo"',
+    options: [{ label: 'costretto', value: 'costretto' }, { label: 'è costretto', value: 'è costretto' }, { label: 'costringe', value: 'costringe' }, { label: 'costringeva', value: 'costringeva' }],
+    correctAnswer: 'costretto', points: 1, orderIndex: 139, tags: ['participio passato', 'registro giornalistico', 'titolo']
+  },
+
+  // B2 — Varied Registers
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Contratto legale] "L\'inquilino ___ con la presente di accettare i termini e le condizioni stabiliti nel presente contratto."',
+    options: [{ label: 'si impegna', value: 'si impegna' }, { label: 'impegna', value: 'impegna' }, { label: 'impegnerà', value: 'impegnerà' }, { label: 'impegnerebbe', value: 'impegnerebbe' }],
+    correctAnswer: 'si impegna', points: 2, orderIndex: 140, tags: ['presente indicativo', 'registro giuridico', 'contratto']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Giornalismo] "Non ___ stato per l\'intervento dell\'ultimo minuto, l\'accordo sarebbe crollato."',
+    options: [{ label: 'fosse', value: 'fosse' }, { label: 'era', value: 'era' }, { label: 'sarebbe', value: 'sarebbe' }, { label: 'è', value: 'è' }],
+    correctAnswer: 'fosse', points: 2, orderIndex: 141, tags: ['congiuntivo imperfetto', 'registro giornalistico', 'condizionale']
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Ironico/Sarcastico] "Ma certo, ___ tutti adorano le riunioni del lunedì mattina."',
+    options: [{ label: 'ovviamente', value: 'ovviamente' }, { label: 'apparentemente', value: 'apparentemente' }, { label: 'presumibilmente', value: 'presumibilmente' }, { label: 'sicuramente', value: 'sicuramente' }],
+    correctAnswer: 'ovviamente', points: 2, orderIndex: 142, tags: ['avverbi', 'registro sarcastico', 'parlato']
+  },
+
+  // C1 — Varied Registers
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Articolo accademico] "I risultati ___ confermati da tre studi successivi sottoposti a revisione paritaria."',
+    options: [{ label: 'sono stati', value: 'sono stati' }, { label: 'erano', value: 'erano' }, { label: 'furono', value: 'furono' }, { label: 'sarebbero', value: 'sarebbero' }],
+    correctAnswer: 'sono stati', points: 2, orderIndex: 143, tags: ['forma passiva', 'registro accademico', 'ricerca']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Diplomatico] "La delegazione ___ esprimere le proprie riserve riguardo all\'emendamento proposto."',
+    options: [{ label: 'desidera', value: 'desidera' }, { label: 'vuole', value: 'vuole' }, { label: 'preferisce', value: 'preferisce' }, { label: 'deve', value: 'deve' }],
+    correctAnswer: 'desidera', points: 2, orderIndex: 144, tags: ['presente indicativo', 'registro diplomatico', 'politica']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Letterario] "Non appena ___ pronunciato quelle parole, il cielo si oscurò."',
+    options: [{ label: 'ebbe', value: 'ebbe' }, { label: 'aveva', value: 'aveva' }, { label: 'ha', value: 'ha' }, { label: 'fu', value: 'fu' }],
+    correctAnswer: 'ebbe', points: 2, orderIndex: 145, tags: ['trapassato remoto', 'registro letterario', 'narrazione']
+  },
+
+  // C2 — Varied Registers
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Giuridico arcaico] "Fermo restando quanto sopra esposto, la parte ___ ritenuta responsabile per qualsiasi danno."',
+    options: [{ label: 'sarà', value: 'sarà' }, { label: 'sarebbe', value: 'sarebbe' }, { label: 'è', value: 'è' }, { label: 'verrà', value: 'verrà' }],
+    correctAnswer: 'sarà', points: 2, orderIndex: 146, tags: ['futuro semplice', 'registro giuridico arcaico', 'responsabilità']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Gergo/Dialettale] "Quello se n\'è proprio ___ senza manco salutare, ammazza!"',
+    options: [{ label: 'andato', value: 'andato' }, { label: 'ito', value: 'ito' }, { label: 'partito', value: 'partito' }, { label: 'scappato', value: 'scappato' }],
+    correctAnswer: 'andato', points: 2, orderIndex: 147, tags: ['passato prossimo', 'registro dialettale', 'romanesco']
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Retorico/Oratorio] "Non solo abbiamo ___, ma abbiamo fallito in modo spettacolare e senza rimorso."',
+    options: [{ label: 'fallito', value: 'fallito' }, { label: 'fallire', value: 'fallire' }, { label: 'fallendo', value: 'fallendo' }, { label: 'falliti', value: 'falliti' }],
+    correctAnswer: 'fallito', points: 2, orderIndex: 148, tags: ['participio passato', 'registro oratorio', 'retorica']
+  },
 ]

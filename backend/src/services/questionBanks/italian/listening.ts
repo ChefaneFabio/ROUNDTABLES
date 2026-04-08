@@ -756,5 +756,117 @@ export const italianListeningQuestions: MultiSkillQuestionData[] = [
       { label: 'Ha un unico centro organizzativo', value: 'centro unico' }
     ],
     correctAnswer: 'nessun punto privilegiato, connessione totale', points: 2, orderIndex: 72, tags: ['filosofia'], timeSuggested: 90
-  }
+  },
+
+  // ============================================================
+  // VARIED SPOKEN CONTEXTS — 12 questions (orderIndex 73-84)
+  // ============================================================
+
+  // A1 — Varied Spoken Contexts
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Segreteria telefonica] Ascolti un messaggio di un collega. A che ora è la riunione?',
+    ttsScript: 'Ciao, sono Marco dell\'ufficio vendite. Ti chiamo per confermare la riunione di domani alle dieci. Per favore porta il documento. A domani!',
+    ttsLanguageCode: 'it-IT',
+    options: [{ label: '9:00', value: '9:00' }, { label: '10:00', value: '10:00' }, { label: '11:00', value: '11:00' }, { label: '14:00', value: '14:00' }],
+    correctAnswer: '10:00', points: 1, orderIndex: 73, tags: ['segreteria', 'lavoro', 'register-varied'], timeSuggested: 30
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Annuncio aeroporto] Ascolti un annuncio in aeroporto. A quale gate devono andare i passeggeri?',
+    ttsScript: 'Attenzione, passeggeri del volo Alitalia trecentoquindici per Barcellona. L\'imbarco è ora in corso al gate sedici. Si prega di recarsi immediatamente al gate sedici.',
+    ttsLanguageCode: 'it-IT',
+    options: [{ label: 'Gate 6', value: 'Gate 6' }, { label: 'Gate 15', value: 'Gate 15' }, { label: 'Gate 16', value: 'Gate 16' }, { label: 'Gate 3', value: 'Gate 3' }],
+    correctAnswer: 'Gate 16', points: 1, orderIndex: 74, tags: ['aeroporto', 'annuncio', 'register-varied'], timeSuggested: 30
+  },
+
+  // A2 — Varied Spoken Contexts
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Prenotazione telefonica] Ascolti qualcuno prenotare al ristorante. Per quante persone?',
+    ttsScript: 'Buonasera, vorrei prenotare un tavolo per sabato sera, per favore. Saremo in quattro, verso le venti. Avete qualcosa disponibile in terrazza?',
+    ttsLanguageCode: 'it-IT',
+    options: [{ label: '2 persone', value: '2 persone' }, { label: '4 persone', value: '4 persone' }, { label: '6 persone', value: '6 persone' }, { label: '8 persone', value: '8 persone' }],
+    correctAnswer: '4 persone', points: 1, orderIndex: 75, tags: ['ristorante', 'prenotazione', 'register-varied'], timeSuggested: 40
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Messaggio per un cliente] Ascolti un messaggio lasciato a un cliente. Cosa vuole posticipare?',
+    ttsScript: 'Buongiorno, sono la signora Bianchi della ditta Verdi e associati. La chiamo riguardo al nostro appuntamento di mercoledì. Purtroppo devo posticipare la consegna. Sarebbe possibile spostarla a venerdì pomeriggio? La prego di richiamarmi appena possibile.',
+    ttsLanguageCode: 'it-IT',
+    options: [{ label: 'Una riunione', value: 'Una riunione' }, { label: 'Una consegna', value: 'Una consegna' }, { label: 'Un pagamento', value: 'Un pagamento' }, { label: 'Una presentazione', value: 'Una presentazione' }],
+    correctAnswer: 'Una consegna', points: 1, orderIndex: 76, tags: ['cliente', 'messaggio', 'register-varied'], timeSuggested: 40
+  },
+
+  // B1 — Varied Spoken Contexts
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Pubblicità radio] Ascolti una pubblicità alla radio. Cosa viene offerto?',
+    ttsScript: 'Sogni di parlare inglese con sicurezza? Con LinguaPro, la scuola di lingue online numero uno in Italia, è possibile. Più di cinquantamila professionisti si fidano già di noi. Iscriviti questa settimana e ottieni il primo mese gratis! Visita linguapro punto it.',
+    ttsLanguageCode: 'it-IT',
+    options: [{ label: 'Un viaggio gratis', value: 'Un viaggio gratis' }, { label: 'Il primo mese gratis', value: 'Il primo mese gratis' }, { label: 'Uno sconto del 50%', value: 'Uno sconto del 50%' }, { label: 'Un libro gratis', value: 'Un libro gratis' }],
+    correctAnswer: 'Il primo mese gratis', points: 1, orderIndex: 77, tags: ['radio', 'pubblicità', 'register-varied'], timeSuggested: 45
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Riunione d\'ufficio] Ascolti un estratto di una riunione di team. Qual è il problema principale?',
+    ttsScript: 'Bene, prima di chiudere, vorrei affrontare la questione dei tempi del progetto Martini. Siamo attualmente in ritardo di due settimane, e il cliente si aspetta la prima consegna entro il quindici marzo. Dobbiamo ridistribuire le risorse. Qualche suggerimento?',
+    ttsLanguageCode: 'it-IT',
+    options: [{ label: 'Il budget è sforato', value: 'Il budget è sforato' }, { label: 'Il progetto è in ritardo', value: 'Il progetto è in ritardo' }, { label: 'Un dipendente si è dimesso', value: 'Un dipendente si è dimesso' }, { label: 'Il cliente è insoddisfatto', value: 'Il cliente è insoddisfatto' }],
+    correctAnswer: 'Il progetto è in ritardo', points: 1, orderIndex: 78, tags: ['riunione', 'ufficio', 'register-varied'], timeSuggested: 45
+  },
+
+  // B2 — Varied Spoken Contexts
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Podcast] Ascolti un podcast sul cambio di carriera. Qual è il principale ostacolo secondo il relatore?',
+    ttsScript: 'Quando accompagno le persone nella riconversione professionale, la cosa che le blocca di più non è la mancanza di competenze o qualifiche. È la paura. La paura dell\'ignoto, la paura dell\'instabilità finanziaria e, onestamente, la paura del giudizio degli altri. Una volta superato questo, tutto il resto si sistema da solo.',
+    ttsLanguageCode: 'it-IT',
+    options: [{ label: 'La mancanza di competenze', value: 'La mancanza di competenze' }, { label: 'I problemi finanziari', value: 'I problemi finanziari' }, { label: 'La paura', value: 'La paura' }, { label: 'La discriminazione per età', value: 'La discriminazione per età' }],
+    correctAnswer: 'La paura', points: 2, orderIndex: 79, tags: ['podcast', 'carriera', 'register-varied'], timeSuggested: 60
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Notiziario] Ascolti un servizio sull\'economia. Cosa ha deciso la banca centrale?',
+    ttsScript: 'Con una mossa ampiamente attesa, la Banca Centrale Europea ha annunciato un taglio dei tassi di interesse di un quarto di punto, portando il tasso di riferimento al tre virgola cinque per cento. Gli analisti ritengono che ciò rifletta una crescente preoccupazione per la crescita debole nella zona euro, in particolare nel settore manifatturiero.',
+    ttsLanguageCode: 'it-IT',
+    options: [{ label: 'Aumentare i tassi', value: 'Aumentare i tassi' }, { label: 'Tagliare i tassi', value: 'Tagliare i tassi' }, { label: 'Congelare i tassi', value: 'Congelare i tassi' }, { label: 'Eliminare i tassi', value: 'Eliminare i tassi' }],
+    correctAnswer: 'Tagliare i tassi', points: 2, orderIndex: 80, tags: ['notiziario', 'economia', 'register-varied'], timeSuggested: 60
+  },
+
+  // C1 — Varied Spoken Contexts
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Conferenza TED] Ascolti un estratto di conferenza sull\'innovazione. Secondo il relatore, qual è il vero motore dell\'innovazione?',
+    ttsScript: 'Tendiamo a romanticizzare il genio solitario nel suo garage, ma i dati raccontano una storia molto diversa. L\'innovazione è fondamentalmente un fenomeno sociale. Prospera all\'intersezione di prospettive diverse, dove le idee si scontrano e si ricombinano. Il vero motore non è la genialità individuale, ma la densità e la qualità delle connessioni umane all\'interno di un ecosistema.',
+    ttsLanguageCode: 'it-IT',
+    options: [{ label: 'La genialità individuale', value: 'La genialità individuale' }, { label: 'Il finanziamento pubblico', value: 'Il finanziamento pubblico' }, { label: 'Le connessioni umane nell\'ecosistema', value: 'Le connessioni umane nell\'ecosistema' }, { label: 'La competizione tra aziende', value: 'La competizione tra aziende' }],
+    correctAnswer: 'Le connessioni umane nell\'ecosistema', points: 2, orderIndex: 81, tags: ['conferenza TED', 'innovazione', 'register-varied'], timeSuggested: 75
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Lezione universitaria] Ascolti un estratto di una lezione. Quale concetto spiega il professore?',
+    ttsScript: 'Ciò che osserviamo nella letteratura è un passaggio dal modello tradizionale di causalità lineare a quello che gli studiosi chiamano ormai causalità circolare. In altre parole, l\'effetto retroagisce sulla causa, creando un ciclo che si auto-rinforza. Questo è particolarmente evidente nei sistemi climatici, dove il riscaldamento degli oceani libera più anidride carbonica, che a sua volta accelera il riscaldamento.',
+    ttsLanguageCode: 'it-IT',
+    options: [{ label: 'Causalità lineare', value: 'Causalità lineare' }, { label: 'Causalità circolare', value: 'Causalità circolare' }, { label: 'Variazione casuale', value: 'Variazione casuale' }, { label: 'Equilibrio statico', value: 'Equilibrio statico' }],
+    correctAnswer: 'Causalità circolare', points: 2, orderIndex: 82, tags: ['lezione', 'accademico', 'register-varied'], timeSuggested: 75
+  },
+
+  // C2 — Varied Spoken Contexts
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Dibattito filosofico] Ascolti un estratto di un dibattito. Quale posizione difende il relatore?',
+    ttsScript: 'Sostengo che il realismo morale non sia soltanto difendibile, ma necessario. Se ammettiamo che le verità etiche sono puramente costruite, allora non abbiamo alcun fondamento su cui condannare le atrocità. L\'atto stesso dell\'indignazione morale presuppone l\'esistenza di standard oggettivi rispetto ai quali le azioni possono essere misurate, indipendentemente dal consenso culturale.',
+    ttsLanguageCode: 'it-IT',
+    options: [{ label: 'Relativismo morale', value: 'Relativismo morale' }, { label: 'Realismo morale', value: 'Realismo morale' }, { label: 'Nichilismo', value: 'Nichilismo' }, { label: 'Utilitarismo', value: 'Utilitarismo' }],
+    correctAnswer: 'Realismo morale', points: 2, orderIndex: 83, tags: ['dibattito', 'filosofia', 'register-varied'], timeSuggested: 90
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Commento satirico] Ascolti un commento satirico. Cosa viene realmente criticato?',
+    ttsScript: 'E nelle notizie di oggi, una multinazionale ha generosamente promesso di raggiungere la neutralità carbonica entro il duemilasettantacinque, giusto in tempo per la morte termica dell\'universo. L\'amministratore delegato ha rassicurato gli azionisti che, sebbene i profitti a breve termine rimangano la priorità assoluta, l\'azienda è profondamente impegnata nella sostenibilità, a patto che non costi nulla.',
+    ttsLanguageCode: 'it-IT',
+    options: [{ label: 'Le normative ambientali', value: 'Le normative ambientali' }, { label: 'Il greenwashing aziendale', value: 'Il greenwashing aziendale' }, { label: 'L\'inazione del governo', value: 'L\'inazione del governo' }, { label: 'Il comportamento dei consumatori', value: 'Il comportamento dei consumatori' }],
+    correctAnswer: 'Il greenwashing aziendale', points: 2, orderIndex: 84, tags: ['satira', 'commento', 'register-varied'], timeSuggested: 90
+  },
 ]

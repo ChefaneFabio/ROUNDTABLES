@@ -14,10 +14,10 @@ export const frenchWritingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
-    questionText: 'Décrivez votre famille. Combien de personnes y a-t-il dans votre famille ? Comment s\'appellent-elles ?',
+    questionText: 'Décrivez votre équipe de travail. Combien de personnes y a-t-il dans votre équipe ? Que font-elles ?',
     correctAnswer: '', points: 1, orderIndex: 2,
-    rubric: { minWords: 20, maxWords: 50, criteria: ['vocabulaire de la famille', 'nombres', 'phrases simples'] },
-    tags: ['famille'], timeSuggested: 180
+    rubric: { minWords: 20, maxWords: 50, criteria: ['vocabulaire professionnel', 'nombres', 'phrases simples'] },
+    tags: ['travail'], timeSuggested: 180
   },
   // A2 — Réponses courtes (30-60 mots)
   {
@@ -162,7 +162,7 @@ export const frenchWritingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'B1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
-    questionText: 'Pensez-vous que les devoirs sont utiles pour les élèves ? Donnez votre opinion avec des raisons et des exemples.',
+    questionText: 'Pensez-vous que les horaires flexibles améliorent la productivité ? Donnez votre opinion avec des raisons et des exemples.',
     correctAnswer: '', points: 2, orderIndex: 21,
     rubric: { minWords: 80, maxWords: 150, criteria: ['expression de l\'opinion', 'raisons à l\'appui', 'exemples', 'structure de paragraphe'] },
     tags: ['opinion', 'éducation'], timeSuggested: 360

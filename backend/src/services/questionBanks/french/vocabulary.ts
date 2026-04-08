@@ -345,9 +345,9 @@ export const frenchVocabularyQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'Le ___ est un animal domestique qui miaule.',
-    options: [{ label: 'chat', value: 'chat' }, { label: 'chien', value: 'chien' }, { label: 'oiseau', value: 'oiseau' }, { label: 'poisson', value: 'poisson' }],
-    correctAnswer: 'chat', points: 1, orderIndex: 49, tags: ['animaux', 'noms']
+    questionText: 'Le ___ est un document financier annuel.',
+    options: [{ label: 'bilan', value: 'bilan' }, { label: 'devis', value: 'devis' }, { label: 'contrat', value: 'contrat' }, { label: 'facture', value: 'facture' }],
+    correctAnswer: 'bilan', points: 1, orderIndex: 49, tags: ['business', 'noms']
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
@@ -414,5 +414,121 @@ export const frenchVocabularyQuestions: MultiSkillQuestionData[] = [
     questionText: 'En hiver, il fait ___.',
     options: [{ label: 'froid', value: 'froid' }, { label: 'chaud', value: 'chaud' }, { label: 'beau', value: 'beau' }, { label: 'bon', value: 'bon' }],
     correctAnswer: 'froid', points: 1, orderIndex: 60, tags: ['météo', 'saisons']
+  },
+
+  // ============================================================
+  // FILL_BLANK — Vocabulaire (20 questions : 3-4 par niveau CECR)
+  // ============================================================
+
+  // A1 — Contraires et définitions de base
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Le contraire de "grand" est ___.',
+    correctAnswer: 'petit', points: 1, orderIndex: 61, tags: ['contraires', 'adjectifs']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Le contraire de "chaud" est ___.',
+    correctAnswer: 'froid', points: 1, orderIndex: 62, tags: ['contraires', 'adjectifs']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Une personne qui soigne les malades est un ___.',
+    correctAnswer: 'médecin', points: 1, orderIndex: 63, tags: ['définitions', 'métiers']
+  },
+
+  // A2 — Collocations et familles de mots
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'On achète du pain à la ___.',
+    correctAnswer: 'boulangerie', points: 1, orderIndex: 64, tags: ['commerces', 'vie quotidienne']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Le contraire de "acheter" est ___.',
+    correctAnswer: 'vendre', points: 1, orderIndex: 65, tags: ['contraires', 'verbes']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Quand il pleut, on utilise un ___.',
+    correctAnswer: 'parapluie', points: 1, orderIndex: 66, tags: ['météo', 'objets']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Le matin, je prends mon petit ___.',
+    correctAnswer: 'déjeuner', points: 1, orderIndex: 67, tags: ['repas', 'vie quotidienne']
+  },
+
+  // B1 — Synonymes et collocations
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Un synonyme de "commencer" est ___.',
+    correctAnswer: 'débuter', points: 1, orderIndex: 68, tags: ['synonymes', 'verbes']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'On ___ un formulaire pour s\'inscrire. (verbe : écrire les informations)',
+    correctAnswer: 'remplit', points: 1, orderIndex: 69, tags: ['collocations', 'administratif']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Le nom dérivé de l\'adjectif "libre" est la ___.',
+    correctAnswer: 'liberté', points: 1, orderIndex: 70, tags: ['familles de mots', 'noms']
+  },
+
+  // B2 — Vocabulaire abstrait et soutenu
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'La situation économique s\'est ___ ces derniers mois. (empirer — verbe soutenu)',
+    correctAnswer: 'détériorée', points: 2, orderIndex: 71, tags: ['économie', 'verbes avancés']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Le nom dérivé de "résilient" est la ___.',
+    correctAnswer: 'résilience', points: 2, orderIndex: 72, tags: ['familles de mots', 'noms abstraits']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Un synonyme soutenu de "montrer" est ___.',
+    correctAnswer: 'démontrer', points: 2, orderIndex: 73, tags: ['synonymes', 'registre soutenu']
+  },
+
+  // C1 — Vocabulaire nuancé
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Les négociations ont ___ sur la question des salaires. (échouer — verbe soutenu)',
+    correctAnswer: 'achoppé', points: 2, orderIndex: 74, tags: ['négociations', 'verbes soutenus']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Un texte ___ est un texte trompeur en apparence. (adjectif : faussement convaincant)',
+    correctAnswer: 'spécieux', points: 2, orderIndex: 75, tags: ['adjectifs avancés', 'registre soutenu']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Le contraire de "concret" est ___.',
+    correctAnswer: 'abstrait', points: 2, orderIndex: 76, tags: ['contraires', 'adjectifs avancés']
+  },
+
+  // C2 — Vocabulaire littéraire
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Le style de cet auteur est d\'une grande ___ — chaque mot est choisi avec soin. (précision artistique)',
+    correctAnswer: 'ciselure', points: 2, orderIndex: 77, tags: ['littérature', 'noms littéraires']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'L\' ___ de son analyse impressionne les spécialistes. (finesse perceptive)',
+    correctAnswer: 'acuité', points: 2, orderIndex: 78, tags: ['philosophie', 'noms littéraires']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'La ___ de son discours a choqué l\'assemblée. (violence verbale)',
+    correctAnswer: 'virulence', points: 2, orderIndex: 79, tags: ['rhétorique', 'noms soutenus']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: '___ les normes sociales est le propre de l\'artiste avant-gardiste. (violer/dépasser — verbe littéraire)',
+    correctAnswer: 'Transgresser', points: 2, orderIndex: 80, tags: ['art', 'verbes littéraires']
   },
 ]

@@ -57,10 +57,10 @@ export const spanishListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Spanish', cefrLevel: 'A1', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'El gato está encima de la mesa.',
+    ttsScript: 'El informe está encima de la mesa.',
     ttsLanguageCode: 'es-ES',
     questionText: 'Escribe exactamente lo que oyes.',
-    correctAnswer: 'El gato está encima de la mesa.', points: 1, orderIndex: 7, tags: ['dictado'], timeSuggested: 30
+    correctAnswer: 'El informe está encima de la mesa.', points: 1, orderIndex: 7, tags: ['dictado'], timeSuggested: 30
   },
 
   // ============================================================
@@ -747,5 +747,117 @@ export const spanishListeningQuestions: MultiSkillQuestionData[] = [
       { label: 'Solo el Estado puede ser tolerante', value: 'solo el Estado' }
     ],
     correctAnswer: 'para preservar la tolerancia hay que no tolerar la intolerancia', points: 2, orderIndex: 72, tags: ['filosofía', 'política'], timeSuggested: 90
+  },
+
+  // ============================================================
+  // VARIED SPOKEN CONTEXTS — 12 questions (orderIndex 73-84)
+  // ============================================================
+
+  // A1 — Varied Spoken Contexts
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Buzón de voz] Escuchas un mensaje de voz de un compañero. ¿A qué hora es la reunión?',
+    ttsScript: 'Hola, soy María del departamento de marketing. Te llamo para confirmar nuestra reunión de mañana a las diez y media. Por favor trae el informe. ¡Hasta mañana!',
+    ttsLanguageCode: 'es-ES',
+    options: [{ label: '10:00', value: '10:00' }, { label: '10:30', value: '10:30' }, { label: '11:00', value: '11:00' }, { label: '11:30', value: '11:30' }],
+    correctAnswer: '10:30', points: 1, orderIndex: 73, tags: ['buzón de voz', 'trabajo', 'register-varied'], timeSuggested: 30
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Anuncio de aeropuerto] Escuchas un anuncio en el aeropuerto. ¿A qué puerta deben ir los pasajeros?',
+    ttsScript: 'Atención, pasajeros del vuelo Iberia doscientos quince con destino a Lisboa. Su vuelo está embarcando ahora por la puerta once. Por favor diríjanse inmediatamente a la puerta once.',
+    ttsLanguageCode: 'es-ES',
+    options: [{ label: 'Puerta 5', value: 'Puerta 5' }, { label: 'Puerta 11', value: 'Puerta 11' }, { label: 'Puerta 15', value: 'Puerta 15' }, { label: 'Puerta 2', value: 'Puerta 2' }],
+    correctAnswer: 'Puerta 11', points: 1, orderIndex: 74, tags: ['aeropuerto', 'anuncio', 'register-varied'], timeSuggested: 30
+  },
+
+  // A2 — Varied Spoken Contexts
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Reserva telefónica] Escuchas a alguien reservando en un restaurante. ¿Para qué día?',
+    ttsScript: 'Buenas noches, quisiera reservar una mesa para el sábado por la noche, por favor. Seríamos cinco personas, sobre las nueve. ¿Tienen algo disponible en la terraza?',
+    ttsLanguageCode: 'es-ES',
+    options: [{ label: 'Viernes', value: 'Viernes' }, { label: 'Sábado', value: 'Sábado' }, { label: 'Domingo', value: 'Domingo' }, { label: 'Lunes', value: 'Lunes' }],
+    correctAnswer: 'Sábado', points: 1, orderIndex: 75, tags: ['restaurante', 'reserva', 'register-varied'], timeSuggested: 40
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Mensaje para un cliente] Escuchas un mensaje dejado a un cliente. ¿Qué quiere aplazar?',
+    ttsScript: 'Buenos días, soy el señor García de la empresa Torres y asociados. Le llamo por nuestra cita del miércoles. Lamentablemente, necesito aplazar la entrega. ¿Podríamos pasarla al viernes por la tarde? Por favor, devuélvame la llamada lo antes posible.',
+    ttsLanguageCode: 'es-ES',
+    options: [{ label: 'Una reunión', value: 'Una reunión' }, { label: 'Una entrega', value: 'Una entrega' }, { label: 'Un pago', value: 'Un pago' }, { label: 'Una presentación', value: 'Una presentación' }],
+    correctAnswer: 'Una entrega', points: 1, orderIndex: 76, tags: ['cliente', 'mensaje', 'register-varied'], timeSuggested: 40
+  },
+
+  // B1 — Varied Spoken Contexts
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Anuncio de radio] Escuchas un anuncio en la radio. ¿Qué se promociona?',
+    ttsScript: '¿Cansado de luchar con la gramática inglesa? ¿Quieres hablar con confianza en las reuniones? Únete a LinguaPro, la escuela de idiomas online en la que confían más de cincuenta mil profesionales en todo el mundo. ¡Inscríbete esta semana y obtén el primer mes gratis! Visita linguapro punto es.',
+    ttsLanguageCode: 'es-ES',
+    options: [{ label: 'Un servicio de traducción', value: 'Un servicio de traducción' }, { label: 'Una escuela de idiomas online', value: 'Una escuela de idiomas online' }, { label: 'Un libro de gramática', value: 'Un libro de gramática' }, { label: 'Una conferencia de negocios', value: 'Una conferencia de negocios' }],
+    correctAnswer: 'Una escuela de idiomas online', points: 1, orderIndex: 77, tags: ['radio', 'anuncio', 'register-varied'], timeSuggested: 45
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Reunión de oficina] Escuchas un extracto de una reunión de equipo. ¿Cuál es la preocupación principal?',
+    ttsScript: 'Bien, antes de terminar, quiero hablar del calendario del proyecto Fernández. Actualmente llevamos dos semanas de retraso, y el cliente espera la primera entrega para el quince de marzo. Necesitamos reasignar recursos. ¿Alguna sugerencia?',
+    ttsLanguageCode: 'es-ES',
+    options: [{ label: 'El presupuesto se ha superado', value: 'El presupuesto se ha superado' }, { label: 'El proyecto va con retraso', value: 'El proyecto va con retraso' }, { label: 'Un empleado ha dimitido', value: 'Un empleado ha dimitido' }, { label: 'El cliente está insatisfecho', value: 'El cliente está insatisfecho' }],
+    correctAnswer: 'El proyecto va con retraso', points: 1, orderIndex: 78, tags: ['reunión', 'oficina', 'register-varied'], timeSuggested: 45
+  },
+
+  // B2 — Varied Spoken Contexts
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Podcast] Escuchas un podcast sobre cambio de carrera. ¿Cuál es el mayor obstáculo según el hablante?',
+    ttsScript: 'Cuando acompaño a personas en su transición profesional, lo que más les frena no es la falta de habilidades o cualificaciones. Es el miedo. El miedo a lo desconocido, el miedo a la inestabilidad financiera y, sinceramente, el miedo a lo que pensarán los demás. Una vez que superas eso, todo lo demás encaja.',
+    ttsLanguageCode: 'es-ES',
+    options: [{ label: 'Falta de habilidades', value: 'Falta de habilidades' }, { label: 'Problemas financieros', value: 'Problemas financieros' }, { label: 'El miedo', value: 'El miedo' }, { label: 'Discriminación por edad', value: 'Discriminación por edad' }],
+    correctAnswer: 'El miedo', points: 2, orderIndex: 79, tags: ['podcast', 'carrera', 'register-varied'], timeSuggested: 60
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Noticiario] Escuchas un informe económico. ¿Qué ha decidido el banco central?',
+    ttsScript: 'En un movimiento ampliamente esperado, el Banco Central Europeo ha anunciado un recorte de los tipos de interés de un cuarto de punto, situando el tipo de referencia en el tres coma cinco por ciento. Los analistas consideran que esto refleja una preocupación creciente por el débil crecimiento en la zona euro, especialmente en el sector manufacturero.',
+    ttsLanguageCode: 'es-ES',
+    options: [{ label: 'Subir los tipos', value: 'Subir los tipos' }, { label: 'Bajar los tipos', value: 'Bajar los tipos' }, { label: 'Congelar los tipos', value: 'Congelar los tipos' }, { label: 'Eliminar los tipos', value: 'Eliminar los tipos' }],
+    correctAnswer: 'Bajar los tipos', points: 2, orderIndex: 80, tags: ['noticiario', 'economía', 'register-varied'], timeSuggested: 60
+  },
+
+  // C1 — Varied Spoken Contexts
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Charla TED] Escuchas un extracto sobre innovación. Según el orador, ¿cuál es el verdadero motor de la innovación?',
+    ttsScript: 'Tendemos a romantizar al genio solitario en su garaje, pero los datos cuentan una historia muy diferente. La innovación es fundamentalmente un fenómeno social. Prospera en la intersección de perspectivas diversas, donde las ideas chocan y se recombinan. El verdadero motor no es la genialidad individual, sino la densidad y calidad de las conexiones humanas dentro de un ecosistema.',
+    ttsLanguageCode: 'es-ES',
+    options: [{ label: 'La genialidad individual', value: 'La genialidad individual' }, { label: 'La financiación pública', value: 'La financiación pública' }, { label: 'Las conexiones humanas en el ecosistema', value: 'Las conexiones humanas en el ecosistema' }, { label: 'La competencia entre empresas', value: 'La competencia entre empresas' }],
+    correctAnswer: 'Las conexiones humanas en el ecosistema', points: 2, orderIndex: 81, tags: ['charla TED', 'innovación', 'register-varied'], timeSuggested: 75
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Clase universitaria] Escuchas un fragmento de una clase. ¿Qué concepto explica el profesor?',
+    ttsScript: 'Lo que observamos en la literatura es un desplazamiento del modelo tradicional de causalidad lineal hacia lo que los investigadores llaman ahora causalidad circular. Dicho de otro modo, el efecto retroalimenta la causa, creando un bucle que se autorrefuerza. Esto es particularmente evidente en los sistemas climáticos, donde el calentamiento de los océanos libera más dióxido de carbono, lo que a su vez acelera el calentamiento.',
+    ttsLanguageCode: 'es-ES',
+    options: [{ label: 'Causalidad lineal', value: 'Causalidad lineal' }, { label: 'Causalidad circular', value: 'Causalidad circular' }, { label: 'Variación aleatoria', value: 'Variación aleatoria' }, { label: 'Equilibrio estático', value: 'Equilibrio estático' }],
+    correctAnswer: 'Causalidad circular', points: 2, orderIndex: 82, tags: ['clase', 'académico', 'register-varied'], timeSuggested: 75
+  },
+
+  // C2 — Varied Spoken Contexts
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Debate filosófico] Escuchas un extracto de un debate. ¿Qué posición defiende el orador?',
+    ttsScript: 'Sostengo que el realismo moral no es meramente sostenible, sino necesario. Si concedemos que las verdades éticas son puramente construidas, entonces no tenemos fundamento alguno para condenar las atrocidades. El acto mismo de la indignación moral presupone la existencia de estándares objetivos con los que se pueden medir las acciones, independientemente del consenso cultural.',
+    ttsLanguageCode: 'es-ES',
+    options: [{ label: 'Relativismo moral', value: 'Relativismo moral' }, { label: 'Realismo moral', value: 'Realismo moral' }, { label: 'Nihilismo', value: 'Nihilismo' }, { label: 'Utilitarismo', value: 'Utilitarismo' }],
+    correctAnswer: 'Realismo moral', points: 2, orderIndex: 83, tags: ['debate', 'filosofía', 'register-varied'], timeSuggested: 90
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Comentario satírico] Escuchas un comentario satírico. ¿Qué se critica realmente?',
+    ttsScript: 'Y en las noticias de hoy, una multinacional ha prometido generosamente alcanzar la neutralidad de carbono para el año dos mil setenta y cinco, justo a tiempo para la muerte térmica del universo. El director general tranquilizó a los accionistas asegurando que, si bien los beneficios a corto plazo siguen siendo la prioridad absoluta, la empresa está profundamente comprometida con la sostenibilidad, siempre que no cueste nada.',
+    ttsLanguageCode: 'es-ES',
+    options: [{ label: 'Las regulaciones ambientales', value: 'Las regulaciones ambientales' }, { label: 'El greenwashing corporativo', value: 'El greenwashing corporativo' }, { label: 'La inacción del gobierno', value: 'La inacción del gobierno' }, { label: 'El comportamiento del consumidor', value: 'El comportamiento del consumidor' }],
+    correctAnswer: 'El greenwashing corporativo', points: 2, orderIndex: 84, tags: ['sátira', 'comentario', 'register-varied'], timeSuggested: 90
   },
 ]

@@ -29,7 +29,7 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
     ttsScript: 'Excuse me, where is the bank? Go straight, then turn left. The bank is next to the supermarket.',
     ttsLanguageCode: 'en-US',
     questionText: 'Where is the bank?',
-    options: [{ label: 'Next to the school', value: 'next to the school' }, { label: 'Next to the supermarket', value: 'next to the supermarket' }, { label: 'Next to the park', value: 'next to the park' }, { label: 'Next to the hospital', value: 'next to the hospital' }],
+    options: [{ label: 'Next to the post office', value: 'next to the post office' }, { label: 'Next to the supermarket', value: 'next to the supermarket' }, { label: 'Next to the station', value: 'next to the station' }, { label: 'Next to the hospital', value: 'next to the hospital' }],
     correctAnswer: 'next to the supermarket', points: 1, orderIndex: 3, tags: ['directions'], timeSuggested: 30
   },
   {
@@ -57,10 +57,10 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'The cat is on the table.',
+    ttsScript: 'The report is on the desk.',
     ttsLanguageCode: 'en-US',
     questionText: 'Write exactly what you hear.',
-    correctAnswer: 'The cat is on the table.', points: 1, orderIndex: 7, tags: ['dictation'], timeSuggested: 30
+    correctAnswer: 'The report is on the desk.', points: 1, orderIndex: 7, tags: ['dictation'], timeSuggested: 30
   },
 
   // ============================================================
@@ -443,34 +443,34 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'I have a red bag. My bag is big. I put my books in my bag. I take my bag to school every day.',
+    ttsScript: 'I have a black laptop. My laptop is new. I put my files on my laptop. I take my laptop to work every day.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What color is the bag?',
-    options: [{ label: 'Blue', value: 'blue' }, { label: 'Red', value: 'red' }, { label: 'Green', value: 'green' }, { label: 'Yellow', value: 'yellow' }],
-    correctAnswer: 'red', points: 1, orderIndex: 43, tags: ['colors', 'possessions'], timeSuggested: 30
+    questionText: 'What color is the laptop?',
+    options: [{ label: 'Blue', value: 'blue' }, { label: 'Black', value: 'black' }, { label: 'Silver', value: 'silver' }, { label: 'White', value: 'white' }],
+    correctAnswer: 'black', points: 1, orderIndex: 43, tags: ['colors', 'possessions'], timeSuggested: 30
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'I have a red bag. My bag is big. I put my books in my bag. I take my bag to school every day.',
+    ttsScript: 'I have a black laptop. My laptop is new. I put my files on my laptop. I take my laptop to work every day.',
     ttsLanguageCode: 'en-US',
-    questionText: 'Where does the person take the bag?',
-    options: [{ label: 'To work', value: 'to work' }, { label: 'To school', value: 'to school' }, { label: 'To the park', value: 'to the park' }, { label: 'To the shop', value: 'to the shop' }],
-    correctAnswer: 'to school', points: 1, orderIndex: 44, tags: ['school', 'daily routine'], timeSuggested: 30
+    questionText: 'Where does the person take the laptop?',
+    options: [{ label: 'To work', value: 'to work' }, { label: 'To the gym', value: 'to the gym' }, { label: 'To the cafe', value: 'to the cafe' }, { label: 'To the shop', value: 'to the shop' }],
+    correctAnswer: 'to work', points: 1, orderIndex: 44, tags: ['workplace', 'daily routine'], timeSuggested: 30
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'My sister likes fruit. She eats an apple every day. She also likes oranges and bananas. She does not like grapes.',
+    ttsScript: 'My colleague likes coffee. She drinks a cup every morning. She also likes green tea and water. She does not like juice.',
     ttsLanguageCode: 'en-US',
-    questionText: 'Which fruit does the sister NOT like?',
-    options: [{ label: 'Apples', value: 'apples' }, { label: 'Oranges', value: 'oranges' }, { label: 'Bananas', value: 'bananas' }, { label: 'Grapes', value: 'grapes' }],
-    correctAnswer: 'grapes', points: 1, orderIndex: 45, tags: ['food', 'preferences'], timeSuggested: 30
+    questionText: 'Which drink does the colleague NOT like?',
+    options: [{ label: 'Coffee', value: 'coffee' }, { label: 'Green tea', value: 'green tea' }, { label: 'Water', value: 'water' }, { label: 'Juice', value: 'juice' }],
+    correctAnswer: 'juice', points: 1, orderIndex: 45, tags: ['drinks', 'preferences'], timeSuggested: 30
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'She has two brothers and one sister.',
+    ttsScript: 'She has two meetings and one presentation.',
     ttsLanguageCode: 'en-US',
     questionText: 'Write exactly what you hear.',
-    correctAnswer: 'She has two brothers and one sister.', points: 1, orderIndex: 46, tags: ['dictation', 'family'], timeSuggested: 30
+    correctAnswer: 'She has two meetings and one presentation.', points: 1, orderIndex: 46, tags: ['dictation', 'workplace'], timeSuggested: 30
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
@@ -486,17 +486,17 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Last weekend, I went to a friend\'s birthday party. There were about twenty people. We ate cake and danced. The party finished at midnight. I had a great time.',
+    ttsScript: 'Last weekend, I went to a colleague\'s farewell dinner. There were about twenty people from the office. We had a nice meal and gave speeches. The dinner finished at midnight. I had a great time.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What time did the party finish?',
+    questionText: 'What time did the dinner finish?',
     options: [{ label: '10 PM', value: '10 PM' }, { label: '11 PM', value: '11 PM' }, { label: 'Midnight', value: 'midnight' }, { label: '1 AM', value: '1 AM' }],
     correctAnswer: 'midnight', points: 1, orderIndex: 48, tags: ['social', 'time'], timeSuggested: 40
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Last weekend, I went to a friend\'s birthday party. There were about twenty people. We ate cake and danced. The party finished at midnight. I had a great time.',
+    ttsScript: 'Last weekend, I went to a colleague\'s farewell dinner. There were about twenty people from the office. We had a nice meal and gave speeches. The dinner finished at midnight. I had a great time.',
     ttsLanguageCode: 'en-US',
-    questionText: 'How many people were at the party?',
+    questionText: 'How many people were at the dinner?',
     options: [{ label: 'About 10', value: '10' }, { label: 'About 20', value: '20' }, { label: 'About 30', value: '30' }, { label: 'About 50', value: '50' }],
     correctAnswer: '20', points: 1, orderIndex: 49, tags: ['social', 'numbers'], timeSuggested: 40
   },
@@ -510,10 +510,10 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'They are going to visit their grandparents next weekend.',
+    ttsScript: 'They are going to attend the conference next weekend.',
     ttsLanguageCode: 'en-US',
     questionText: 'Write exactly what you hear.',
-    correctAnswer: 'They are going to visit their grandparents next weekend.', points: 1, orderIndex: 51, tags: ['dictation', 'family'], timeSuggested: 40
+    correctAnswer: 'They are going to attend the conference next weekend.', points: 1, orderIndex: 51, tags: ['dictation', 'business travel'], timeSuggested: 40
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
@@ -529,29 +529,29 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'A new study from the University of Cambridge suggests that learning a musical instrument as a child can improve academic performance. Children who had at least two years of music lessons scored higher in reading and mathematics tests compared to those who did not. Researchers believe that music training enhances concentration and working memory.',
+    ttsScript: 'A new study from the University of Cambridge suggests that regular exercise during the workday can improve employee productivity. Workers who exercised for at least thirty minutes during lunch breaks reported higher concentration and better problem-solving abilities compared to those who did not. Researchers believe that physical activity enhances focus and mental clarity.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What does music training enhance according to researchers?',
+    questionText: 'What does exercise during work enhance according to researchers?',
     options: [
       { label: 'Physical fitness', value: 'physical fitness' },
-      { label: 'Concentration and working memory', value: 'concentration and working memory' },
+      { label: 'Focus and mental clarity', value: 'focus and mental clarity' },
       { label: 'Social skills', value: 'social skills' },
       { label: 'Artistic creativity', value: 'artistic creativity' }
     ],
-    correctAnswer: 'concentration and working memory', points: 1, orderIndex: 53, tags: ['education', 'music'], timeSuggested: 45
+    correctAnswer: 'focus and mental clarity', points: 1, orderIndex: 53, tags: ['workplace', 'health'], timeSuggested: 45
   },
   {
     language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'A new study from the University of Cambridge suggests that learning a musical instrument as a child can improve academic performance. Children who had at least two years of music lessons scored higher in reading and mathematics tests.',
+    ttsScript: 'A new study from the University of Cambridge suggests that regular exercise during the workday can improve employee productivity. Workers who exercised for at least thirty minutes during lunch breaks reported higher concentration and better problem-solving abilities.',
     ttsLanguageCode: 'en-US',
-    questionText: 'How long did children need to study music to show improvement?',
+    questionText: 'How long did workers need to exercise to show improvement?',
     options: [
-      { label: 'At least one year', value: 'one year' },
-      { label: 'At least two years', value: 'two years' },
-      { label: 'At least three years', value: 'three years' },
-      { label: 'At least five years', value: 'five years' }
+      { label: 'At least fifteen minutes', value: 'fifteen minutes' },
+      { label: 'At least thirty minutes', value: 'thirty minutes' },
+      { label: 'At least forty-five minutes', value: 'forty-five minutes' },
+      { label: 'At least one hour', value: 'one hour' }
     ],
-    correctAnswer: 'two years', points: 1, orderIndex: 54, tags: ['education', 'research'], timeSuggested: 45
+    correctAnswer: 'thirty minutes', points: 1, orderIndex: 54, tags: ['workplace', 'research'], timeSuggested: 45
   },
   {
     language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
@@ -764,5 +764,117 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
       { label: 'Measuring intelligence accurately', value: 'measuring intelligence' }
     ],
     correctAnswer: 'why physical processes create experience', points: 2, orderIndex: 72, tags: ['philosophy', 'consciousness'], timeSuggested: 90
+  },
+
+  // ============================================================
+  // VARIED SPOKEN CONTEXTS — 12 questions (orderIndex 73-84)
+  // ============================================================
+
+  // A1 — Varied Spoken Contexts
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Voicemail] You hear a voicemail from a colleague. What time is the meeting?',
+    ttsScript: 'Hi, it\'s Sarah from the office. I\'m calling to confirm our meeting tomorrow at nine thirty. Please bring the report. See you then!',
+    ttsLanguageCode: 'en-US',
+    options: [{ label: '9:00', value: '9:00' }, { label: '9:30', value: '9:30' }, { label: '10:00', value: '10:00' }, { label: '10:30', value: '10:30' }],
+    correctAnswer: '9:30', points: 1, orderIndex: 73, tags: ['voicemail', 'workplace', 'register-varied'], timeSuggested: 30
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Airport Announcement] You hear an announcement at the airport. Which gate should passengers go to?',
+    ttsScript: 'Attention passengers on flight BA two four seven to Madrid. Your flight is now boarding at gate fourteen. Please proceed to gate fourteen immediately.',
+    ttsLanguageCode: 'en-US',
+    options: [{ label: 'Gate 4', value: 'Gate 4' }, { label: 'Gate 14', value: 'Gate 14' }, { label: 'Gate 24', value: 'Gate 24' }, { label: 'Gate 7', value: 'Gate 7' }],
+    correctAnswer: 'Gate 14', points: 1, orderIndex: 74, tags: ['airport', 'announcement', 'register-varied'], timeSuggested: 30
+  },
+
+  // A2 — Varied Spoken Contexts
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Phone Reservation] You hear someone making a restaurant reservation. For how many people?',
+    ttsScript: 'Good evening, I\'d like to book a table for this Saturday, please. It would be for four people, around eight o\'clock. Do you have anything available on the terrace?',
+    ttsLanguageCode: 'en-US',
+    options: [{ label: '2 people', value: '2 people' }, { label: '4 people', value: '4 people' }, { label: '6 people', value: '6 people' }, { label: '8 people', value: '8 people' }],
+    correctAnswer: '4 people', points: 1, orderIndex: 75, tags: ['restaurant', 'reservation', 'register-varied'], timeSuggested: 40
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Client Message] You hear a message left for a client. What does the caller want to reschedule?',
+    ttsScript: 'Hello, this is David from Greenfield Associates. I\'m calling about our appointment on Wednesday. Unfortunately, I need to reschedule the delivery. Could we move it to Friday afternoon instead? Please call me back at your earliest convenience.',
+    ttsLanguageCode: 'en-US',
+    options: [{ label: 'A meeting', value: 'A meeting' }, { label: 'A delivery', value: 'A delivery' }, { label: 'A payment', value: 'A payment' }, { label: 'A presentation', value: 'A presentation' }],
+    correctAnswer: 'A delivery', points: 1, orderIndex: 76, tags: ['client', 'message', 'register-varied'], timeSuggested: 40
+  },
+
+  // B1 — Varied Spoken Contexts
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Radio Ad] You hear a radio advertisement. What is being promoted?',
+    ttsScript: 'Tired of struggling with grammar? Want to speak with confidence in meetings? Join LinguaPro, the online language school trusted by over fifty thousand professionals worldwide. Sign up this week and get your first month free! Visit linguapro dot com.',
+    ttsLanguageCode: 'en-US',
+    options: [{ label: 'A translation service', value: 'A translation service' }, { label: 'An online language school', value: 'An online language school' }, { label: 'A grammar textbook', value: 'A grammar textbook' }, { label: 'A business conference', value: 'A business conference' }],
+    correctAnswer: 'An online language school', points: 1, orderIndex: 77, tags: ['radio', 'advertisement', 'register-varied'], timeSuggested: 45
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Office Meeting] You hear an excerpt from a team meeting. What is the main concern discussed?',
+    ttsScript: 'OK team, before we wrap up, I want to address the deadline for the Henderson project. We\'re currently two weeks behind schedule, and the client is expecting the first deliverable by March fifteenth. We need to reallocate resources. Any suggestions?',
+    ttsLanguageCode: 'en-US',
+    options: [{ label: 'Budget overruns', value: 'Budget overruns' }, { label: 'Being behind schedule', value: 'Being behind schedule' }, { label: 'Staff turnover', value: 'Staff turnover' }, { label: 'Client complaints', value: 'Client complaints' }],
+    correctAnswer: 'Being behind schedule', points: 1, orderIndex: 78, tags: ['meeting', 'office', 'register-varied'], timeSuggested: 45
+  },
+
+  // B2 — Varied Spoken Contexts
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Podcast] You hear an excerpt from a podcast about career change. What does the speaker say is the biggest obstacle?',
+    ttsScript: 'When I coach people through career transitions, the number one thing that holds them back isn\'t a lack of skills or qualifications. It\'s fear. Fear of the unknown, fear of financial instability, and honestly, fear of what other people will think. Once you address that, everything else falls into place.',
+    ttsLanguageCode: 'en-US',
+    options: [{ label: 'Lack of skills', value: 'Lack of skills' }, { label: 'Financial problems', value: 'Financial problems' }, { label: 'Fear', value: 'Fear' }, { label: 'Age discrimination', value: 'Age discrimination' }],
+    correctAnswer: 'Fear', points: 2, orderIndex: 79, tags: ['podcast', 'career', 'register-varied'], timeSuggested: 60
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[News Report] You hear a news report on the economy. What has the central bank decided?',
+    ttsScript: 'In a widely anticipated move, the European Central Bank has announced a quarter-point interest rate cut, bringing the benchmark rate to three point five percent. Analysts say this signals growing concern over sluggish growth in the eurozone, particularly in manufacturing sectors.',
+    ttsLanguageCode: 'en-US',
+    options: [{ label: 'To raise interest rates', value: 'To raise interest rates' }, { label: 'To cut interest rates', value: 'To cut interest rates' }, { label: 'To freeze interest rates', value: 'To freeze interest rates' }, { label: 'To eliminate interest rates', value: 'To eliminate interest rates' }],
+    correctAnswer: 'To cut interest rates', points: 2, orderIndex: 80, tags: ['news', 'economy', 'register-varied'], timeSuggested: 60
+  },
+
+  // C1 — Varied Spoken Contexts
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[TED Talk] You hear an excerpt from a talk about innovation. According to the speaker, what is the real driver of innovation?',
+    ttsScript: 'We tend to romanticize the lone genius in a garage, but the data tells a very different story. Innovation is fundamentally a social phenomenon. It thrives at the intersection of diverse perspectives, where ideas collide and recombine. The real driver isn\'t individual brilliance; it\'s the density and quality of human connections within an ecosystem.',
+    ttsLanguageCode: 'en-US',
+    options: [{ label: 'Individual brilliance', value: 'Individual brilliance' }, { label: 'Government funding', value: 'Government funding' }, { label: 'Human connections within an ecosystem', value: 'Human connections within an ecosystem' }, { label: 'Competition between companies', value: 'Competition between companies' }],
+    correctAnswer: 'Human connections within an ecosystem', points: 2, orderIndex: 81, tags: ['TED talk', 'innovation', 'register-varied'], timeSuggested: 75
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Academic Lecture] You hear part of a university lecture. What concept is the professor explaining?',
+    ttsScript: 'So what we see in the literature is a shift from the traditional model of linear causation to what scholars now call circular causality. In other words, the effect feeds back into the cause, creating a self-reinforcing loop. This is particularly evident in climate systems, where warming oceans release more carbon dioxide, which in turn accelerates warming.',
+    ttsLanguageCode: 'en-US',
+    options: [{ label: 'Linear causation', value: 'Linear causation' }, { label: 'Circular causality', value: 'Circular causality' }, { label: 'Random variation', value: 'Random variation' }, { label: 'Static equilibrium', value: 'Static equilibrium' }],
+    correctAnswer: 'Circular causality', points: 2, orderIndex: 82, tags: ['lecture', 'academic', 'register-varied'], timeSuggested: 75
+  },
+
+  // C2 — Varied Spoken Contexts
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Philosophical Debate] You hear part of a debate. What position does the speaker defend?',
+    ttsScript: 'I would argue that moral realism is not merely tenable but necessary. If we concede that ethical truths are purely constructed, then we have no grounds upon which to condemn atrocities. The very act of moral outrage presupposes that there exist objective standards against which actions can be measured, irrespective of cultural consensus.',
+    ttsLanguageCode: 'en-US',
+    options: [{ label: 'Moral relativism', value: 'Moral relativism' }, { label: 'Moral realism', value: 'Moral realism' }, { label: 'Nihilism', value: 'Nihilism' }, { label: 'Utilitarianism', value: 'Utilitarianism' }],
+    correctAnswer: 'Moral realism', points: 2, orderIndex: 83, tags: ['debate', 'philosophy', 'register-varied'], timeSuggested: 90
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    questionText: '[Satirical Commentary] You hear a satirical commentary. What is the speaker actually criticizing?',
+    ttsScript: 'And in today\'s breaking news, a multinational corporation has generously pledged to become carbon neutral by twenty seventy-five, just in time for the heat death of the universe. The CEO reassured stakeholders that while short-term profits remain the absolute priority, the company is deeply committed to sustainability, provided it doesn\'t cost anything.',
+    ttsLanguageCode: 'en-US',
+    options: [{ label: 'Environmental regulations', value: 'Environmental regulations' }, { label: 'Corporate greenwashing', value: 'Corporate greenwashing' }, { label: 'Government inaction', value: 'Government inaction' }, { label: 'Consumer behavior', value: 'Consumer behavior' }],
+    correctAnswer: 'Corporate greenwashing', points: 2, orderIndex: 84, tags: ['satire', 'commentary', 'register-varied'], timeSuggested: 90
   },
 ]

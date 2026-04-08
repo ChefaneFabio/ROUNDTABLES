@@ -644,4 +644,294 @@ export const germanGrammarQuestions: MultiSkillQuestionData[] = [
     options: [{ label: 'Was', value: 'Was' }, { label: 'Wie', value: 'Wie' }, { label: 'Wem', value: 'Wem' }, { label: 'Wo', value: 'Wo' }],
     correctAnswer: 'Wie', points: 2, orderIndex: 100, tags: ['Konjunktiv I', 'konzessive Formel']
   },
+
+  // ============================================================
+  // FILL_BLANK — Grammatik (30 Fragen: 5 pro GER-Stufe)
+  // ============================================================
+
+  // A1 — Grundlegende Konjugation & Artikel
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Ich ___ Studentin. (sein, Präsens)',
+    correctAnswer: 'bin', points: 1, orderIndex: 101, tags: ['sein', 'Präsens']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Er ___ Fußball. (spielen, Präsens)',
+    correctAnswer: 'spielt', points: 1, orderIndex: 102, tags: ['Präsens', 'Konjugation']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Ich trinke ___ Tee. (Artikel Akkusativ, maskulin)',
+    correctAnswer: 'den', points: 1, orderIndex: 103, tags: ['Akkusativ', 'Artikel']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Wir ___ aus Deutschland. (kommen, Präsens)',
+    correctAnswer: 'kommen', points: 1, orderIndex: 104, tags: ['Präsens', 'Konjugation']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: ___ du Deutsch? (sprechen, Präsens mit Vokalwechsel)',
+    correctAnswer: 'Sprichst', points: 1, orderIndex: 105, tags: ['Präsens', 'Vokalwechsel']
+  },
+
+  // A2 — Perfekt & Pronomen
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Ich ___ gestern ins Kino gegangen. (sein, Perfekt)',
+    correctAnswer: 'bin', points: 1, orderIndex: 106, tags: ['Perfekt', 'sein']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Er hat das Buch ___. (lesen, Partizip II)',
+    correctAnswer: 'gelesen', points: 1, orderIndex: 107, tags: ['Perfekt', 'Partizip II']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Ich gebe ___ Bruder das Geschenk. (Possessivartikel Dativ, mein)',
+    correctAnswer: 'meinem', points: 1, orderIndex: 108, tags: ['Dativ', 'Possessivartikel']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Das Bild hängt an ___ Wand. (Artikel Dativ, feminin)',
+    correctAnswer: 'der', points: 1, orderIndex: 109, tags: ['Dativ', 'Wechselpräposition']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Ich ___ Deutsch lernen. (wollen, Präsens)',
+    correctAnswer: 'will', points: 1, orderIndex: 110, tags: ['Modalverben', 'wollen']
+  },
+
+  // B1 — Konjunktiv II & Nebensätze
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Wenn ich reich wäre, ___ ich ein Haus kaufen. (werden, Konjunktiv II)',
+    correctAnswer: 'würde', points: 1, orderIndex: 111, tags: ['Konjunktiv II', 'irrealer Konditionalsatz']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Das ist der Mann, ___ ich gestern gesehen habe. (Relativpronomen Akkusativ)',
+    correctAnswer: 'den', points: 1, orderIndex: 112, tags: ['Relativsatz', 'Akkusativ']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Die Straße ___ repariert. (werden, Passiv Präsens)',
+    correctAnswer: 'wird', points: 1, orderIndex: 113, tags: ['Passiv', 'Präsens']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Ich wünschte, ich ___ mehr Zeit. (haben, Konjunktiv II)',
+    correctAnswer: 'hätte', points: 1, orderIndex: 114, tags: ['Konjunktiv II', 'Wunsch']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Obwohl es regnete, ___ wir spazieren. (gehen, Präteritum)',
+    correctAnswer: 'gingen', points: 1, orderIndex: 115, tags: ['Nebensatz', 'obwohl']
+  },
+
+  // B2 — Komplexe Strukturen
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Nachdem er die Prüfung ___ hatte, feierte er. (bestehen, Plusquamperfekt)',
+    correctAnswer: 'bestanden', points: 2, orderIndex: 116, tags: ['Plusquamperfekt', 'nachdem']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Er tat so, als ___ er nichts davon. (wissen, Konjunktiv II)',
+    correctAnswer: 'wüsste', points: 2, orderIndex: 117, tags: ['als ob', 'Konjunktiv II']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Die Frau, ___ Kinder hier spielen, ist meine Nachbarin. (Relativpronomen Genitiv)',
+    correctAnswer: 'deren', points: 2, orderIndex: 118, tags: ['Relativsatz', 'Genitiv']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Je mehr man übt, ___ besser wird man. (Korrelation)',
+    correctAnswer: 'desto', points: 2, orderIndex: 119, tags: ['je...desto', 'Komparativ']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: ___ der schlechten Wetterlage fand das Konzert statt. (Präposition + Genitiv)',
+    correctAnswer: 'Trotz', points: 2, orderIndex: 120, tags: ['Präposition', 'Genitiv']
+  },
+
+  // C1 — Gehobener Stil
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Er sagte, er ___ krank. (sein, Konjunktiv I — indirekte Rede)',
+    correctAnswer: 'sei', points: 2, orderIndex: 121, tags: ['Konjunktiv I', 'indirekte Rede']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Die von der Regierung ___ Maßnahmen waren umstritten. (ergreifen, Partizip II als Attribut)',
+    correctAnswer: 'ergriffenen', points: 2, orderIndex: 122, tags: ['erweitertes Attribut', 'Partizip II']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Er behauptete, er ___ das Problem bereits gelöst. (haben, Konjunktiv I Perfekt)',
+    correctAnswer: 'habe', points: 2, orderIndex: 123, tags: ['Konjunktiv I', 'Perfekt']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Anstatt zu lernen, ___ er den ganzen Tag fern. (sehen, Präteritum)',
+    correctAnswer: 'sah', points: 2, orderIndex: 124, tags: ['Infinitivkonstruktion', 'anstatt...zu']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: ___ nicht rechtzeitig gehandelt worden, wären die Folgen katastrophal gewesen. (Wäre/Hätte — Inversion)',
+    correctAnswer: 'Wäre', points: 2, orderIndex: 125, tags: ['Konjunktiv II', 'Inversion']
+  },
+
+  // C2 — Subtile Unterscheidungen
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Er erklärte, er ___ sich nicht beirren. (lassen, Konjunktiv I)',
+    correctAnswer: 'lasse', points: 2, orderIndex: 126, tags: ['Konjunktiv I', 'indirekte Rede']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: ___ der Tatsache, dass er Recht hatte, wurde er ignoriert. (Präposition + Genitiv, gehoben)',
+    correctAnswer: 'Ungeachtet', points: 2, orderIndex: 127, tags: ['Präposition', 'Genitiv', 'gehobener Stil']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Wie dem auch ___ — wir müssen weitermachen. (sein, Konjunktiv I, konzessive Formel)',
+    correctAnswer: 'sei', points: 2, orderIndex: 128, tags: ['Konjunktiv I', 'konzessive Formel']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: Die sich ___ verändernde Gesellschaft stellt uns vor Herausforderungen. (ständig — erweitertes Partizipialattribut)',
+    correctAnswer: 'ständig', points: 2, orderIndex: 129, tags: ['erweitertes Attribut', 'Partizip I']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Ergänzen Sie: ___ es auch schwierig sein mag, wir geben nicht auf. (Konzessive Formel)',
+    correctAnswer: 'So', points: 2, orderIndex: 130, tags: ['Konjunktiv I', 'konzessive Formel']
+  },
+
+  // ============================================================
+  // VARIED LANGUAGE REGISTERS — 18 questions (orderIndex 131-148)
+  // ============================================================
+
+  // A1 — Varied Registers
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Geschäfts-E-Mail] "Sehr geehrter Herr Müller, ich ___ Ihnen, um unser Treffen am Donnerstag zu bestätigen."',
+    options: [{ label: 'schreibe', value: 'schreibe' }, { label: 'schreibt', value: 'schreibt' }, { label: 'schreiben', value: 'schreiben' }, { label: 'schreibst', value: 'schreibst' }],
+    correctAnswer: 'schreibe', points: 1, orderIndex: 131, tags: ['Präsens', 'formelles Register', 'E-Mail']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[SMS] "hey, ___ du heute abend?"',
+    options: [{ label: 'kommst', value: 'kommst' }, { label: 'kommt', value: 'kommt' }, { label: 'kommen', value: 'kommen' }, { label: 'komme', value: 'komme' }],
+    correctAnswer: 'kommst', points: 1, orderIndex: 132, tags: ['Präsens', 'informelles Register', 'SMS']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Umgangssprache] "und dann ___ sie so: echt jetzt?!"',
+    options: [{ label: 'sagt', value: 'sagt' }, { label: 'sagte', value: 'sagte' }, { label: 'hat gesagt', value: 'hat gesagt' }, { label: 'sagen', value: 'sagen' }],
+    correctAnswer: 'sagt', points: 1, orderIndex: 133, tags: ['Präsens', 'umgangssprachliches Register', 'mündlich']
+  },
+
+  // A2 — Varied Registers
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Formelle Beschwerde] "Ich möchte eine Beschwerde über den Service ___, den ich gestern erhalten habe."',
+    options: [{ label: 'einreichen', value: 'einreichen' }, { label: 'machen', value: 'machen' }, { label: 'geben', value: 'geben' }, { label: 'nehmen', value: 'nehmen' }],
+    correctAnswer: 'einreichen', points: 1, orderIndex: 134, tags: ['Infinitiv', 'formelles Register', 'Beschwerde']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[WhatsApp] "bin grade zu hause ___, was machst du?"',
+    options: [{ label: 'gekommen', value: 'gekommen' }, { label: 'kommen', value: 'kommen' }, { label: 'komme', value: 'komme' }, { label: 'gekommt', value: 'gekommt' }],
+    correctAnswer: 'gekommen', points: 1, orderIndex: 135, tags: ['Perfekt', 'informelles Register', 'Chat']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Telefonat] "Könnten Sie mich bitte mit der Verkaufsabteilung ___?"',
+    options: [{ label: 'verbinden', value: 'verbinden' }, { label: 'bringen', value: 'bringen' }, { label: 'nehmen', value: 'nehmen' }, { label: 'geben', value: 'geben' }],
+    correctAnswer: 'verbinden', points: 1, orderIndex: 136, tags: ['Infinitiv', 'formelles Register', 'Telefon']
+  },
+
+  // B1 — Varied Registers
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Unternehmenspräsentation] "Wie Sie den Daten entnehmen können, ___ der Umsatz in diesem Quartal um 15% gestiegen."',
+    options: [{ label: 'ist', value: 'ist' }, { label: 'hat', value: 'hat' }, { label: 'war', value: 'war' }, { label: 'wird', value: 'wird' }],
+    correctAnswer: 'ist', points: 1, orderIndex: 137, tags: ['Perfekt', 'formelles Register', 'Präsentation']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Social Media] "Die haben echt schon wieder den Preis ___!! #Inflation"',
+    options: [{ label: 'erhöht', value: 'erhöht' }, { label: 'erhöhen', value: 'erhöhen' }, { label: 'erhöhte', value: 'erhöhte' }, { label: 'erhöhten', value: 'erhöhten' }],
+    correctAnswer: 'erhöht', points: 1, orderIndex: 138, tags: ['Perfekt', 'informelles Register', 'Social Media']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Schlagzeile] "Minister ___ wegen Skandal zum Rücktritt gezwungen"',
+    options: [{ label: 'wird', value: 'wird' }, { label: 'ist', value: 'ist' }, { label: 'wurde', value: 'wurde' }, { label: 'hat', value: 'hat' }],
+    correctAnswer: 'wird', points: 1, orderIndex: 139, tags: ['Passiv', 'Schlagzeilen-Register', 'Nachrichten']
+  },
+
+  // B2 — Varied Registers
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Vertrag] "Der Mieter ___ sich hiermit mit den in diesem Vertrag festgelegten Bedingungen einverstanden."',
+    options: [{ label: 'erklärt', value: 'erklärt' }, { label: 'macht', value: 'macht' }, { label: 'gibt', value: 'gibt' }, { label: 'sagt', value: 'sagt' }],
+    correctAnswer: 'erklärt', points: 2, orderIndex: 140, tags: ['Präsens', 'juristisches Register', 'Vertrag']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Journalismus] "___ es nicht zu der Intervention in letzter Minute gekommen, wäre das Abkommen gescheitert."',
+    options: [{ label: 'Wäre', value: 'Wäre' }, { label: 'Hätte', value: 'Hätte' }, { label: 'Würde', value: 'Würde' }, { label: 'Sei', value: 'Sei' }],
+    correctAnswer: 'Wäre', points: 2, orderIndex: 141, tags: ['Konjunktiv II', 'journalistisches Register', 'Inversion']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Ironisch/Sarkastisch] "Ja klar, ___ alle lieben Montagmorgen-Meetings."',
+    options: [{ label: 'natürlich', value: 'natürlich' }, { label: 'offensichtlich', value: 'offensichtlich' }, { label: 'angeblich', value: 'angeblich' }, { label: 'sicherlich', value: 'sicherlich' }],
+    correctAnswer: 'natürlich', points: 2, orderIndex: 142, tags: ['Adverbien', 'sarkastisches Register', 'mündlich']
+  },
+
+  // C1 — Varied Registers
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Wissenschaftlicher Aufsatz] "Die Ergebnisse ___ durch drei nachfolgende, von Fachkollegen begutachtete Studien bestätigt."',
+    options: [{ label: 'wurden', value: 'wurden' }, { label: 'waren', value: 'waren' }, { label: 'sind', value: 'sind' }, { label: 'hatten', value: 'hatten' }],
+    correctAnswer: 'wurden', points: 2, orderIndex: 143, tags: ['Passiv', 'akademisches Register', 'Forschung']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Diplomatisch] "Die Delegation ___ ihre Vorbehalte bezüglich des vorgeschlagenen Änderungsantrags zum Ausdruck bringen."',
+    options: [{ label: 'möchte', value: 'möchte' }, { label: 'will', value: 'will' }, { label: 'muss', value: 'muss' }, { label: 'kann', value: 'kann' }],
+    correctAnswer: 'möchte', points: 2, orderIndex: 144, tags: ['Modalverben', 'diplomatisches Register', 'Politik']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Literarisch] "Kaum ___ sie gesprochen, da verdunkelte sich der Himmel."',
+    options: [{ label: 'hatte', value: 'hatte' }, { label: 'hat', value: 'hat' }, { label: 'war', value: 'war' }, { label: 'ist', value: 'ist' }],
+    correctAnswer: 'hatte', points: 2, orderIndex: 145, tags: ['Plusquamperfekt', 'literarisches Register', 'Inversion']
+  },
+
+  // C2 — Varied Registers
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Juristisch archaisch] "Unbeschadet des Vorstehenden ___ die Partei für etwaige Schäden haftbar gemacht werden."',
+    options: [{ label: 'soll', value: 'soll' }, { label: 'wird', value: 'wird' }, { label: 'kann', value: 'kann' }, { label: 'darf', value: 'darf' }],
+    correctAnswer: 'soll', points: 2, orderIndex: 146, tags: ['Modalverben', 'juristisch archaisches Register', 'Haftung']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Umgangssprache/Dialekt] "Der hat voll den Stress ___, oder?"',
+    options: [{ label: 'geschoben', value: 'geschoben' }, { label: 'gemacht', value: 'gemacht' }, { label: 'gehabt', value: 'gehabt' }, { label: 'bekommen', value: 'bekommen' }],
+    correctAnswer: 'geschoben', points: 2, orderIndex: 147, tags: ['Perfekt', 'umgangssprachliches Register', 'Dialekt']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Rhetorisch/Rednerisch] "Nicht nur ___ wir gescheitert, sondern wir sind auf spektakuläre Weise gescheitert."',
+    options: [{ label: 'sind', value: 'sind' }, { label: 'haben', value: 'haben' }, { label: 'waren', value: 'waren' }, { label: 'werden', value: 'werden' }],
+    correctAnswer: 'sind', points: 2, orderIndex: 148, tags: ['Inversion', 'rhetorisches Register', 'Rede']
+  },
 ]

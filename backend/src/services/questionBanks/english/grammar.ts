@@ -33,7 +33,7 @@ export const englishGrammarQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'He ___ to school every day.',
+    questionText: 'He ___ to work every day.',
     options: [{ label: 'go', value: 'go' }, { label: 'goes', value: 'goes' }, { label: 'going', value: 'going' }, { label: 'gone', value: 'gone' }],
     correctAnswer: 'goes', points: 1, orderIndex: 5, tags: ['present simple', 'third person']
   },
@@ -283,13 +283,13 @@ export const englishGrammarQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'The children ___ in the park now.',
-    options: [{ label: 'play', value: 'play' }, { label: 'plays', value: 'plays' }, { label: 'are playing', value: 'are playing' }, { label: 'played', value: 'played' }],
-    correctAnswer: 'are playing', points: 1, orderIndex: 42, tags: ['present continuous']
+    questionText: 'The colleagues ___ in the meeting room now.',
+    options: [{ label: 'talk', value: 'talk' }, { label: 'talks', value: 'talks' }, { label: 'are talking', value: 'are talking' }, { label: 'talked', value: 'talked' }],
+    correctAnswer: 'are talking', points: 1, orderIndex: 42, tags: ['present continuous']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'My mother ___ not like fish.',
+    questionText: 'My manager ___ not like delays.',
     options: [{ label: 'do', value: 'do' }, { label: 'does', value: 'does' }, { label: 'is', value: 'is' }, { label: 'are', value: 'are' }],
     correctAnswer: 'does', points: 1, orderIndex: 43, tags: ['present simple', 'negation']
   },
@@ -301,7 +301,7 @@ export const englishGrammarQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'There ___ three cats in the garden.',
+    questionText: 'There ___ three meetings today.',
     options: [{ label: 'is', value: 'is' }, { label: 'are', value: 'are' }, { label: 'am', value: 'am' }, { label: 'be', value: 'be' }],
     correctAnswer: 'are', points: 1, orderIndex: 45, tags: ['there is/are']
   },
@@ -319,7 +319,7 @@ export const englishGrammarQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'I ___ a teacher. I work at a school.',
+    questionText: 'I ___ an accountant. I work at a firm.',
     options: [{ label: 'is', value: 'is' }, { label: 'am', value: 'am' }, { label: 'are', value: 'are' }, { label: 'be', value: 'be' }],
     correctAnswer: 'am', points: 1, orderIndex: 48, tags: ['verb to be']
   },
@@ -331,7 +331,7 @@ export const englishGrammarQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'I go to school ___ bus.',
+    questionText: 'I go to work ___ bus.',
     options: [{ label: 'in', value: 'in' }, { label: 'on', value: 'on' }, { label: 'by', value: 'by' }, { label: 'with', value: 'with' }],
     correctAnswer: 'by', points: 1, orderIndex: 50, tags: ['prepositions', 'transport']
   },
@@ -359,7 +359,7 @@ export const englishGrammarQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'I ___ my homework when my friend called.',
+    questionText: 'I ___ my report when my colleague called.',
     options: [{ label: 'did', value: 'did' }, { label: 'was doing', value: 'was doing' }, { label: 'do', value: 'do' }, { label: 'have done', value: 'have done' }],
     correctAnswer: 'was doing', points: 1, orderIndex: 54, tags: ['past continuous']
   },
@@ -654,5 +654,295 @@ export const englishGrammarQuestions: MultiSkillQuestionData[] = [
     questionText: 'Only by understanding the nuances of the language ___ one truly appreciate its literature.',
     options: [{ label: 'could', value: 'could' }, { label: 'can', value: 'can' }, { label: 'should', value: 'should' }, { label: 'would', value: 'would' }],
     correctAnswer: 'can', points: 2, orderIndex: 100, tags: ['inversion', 'only by']
+  },
+
+  // ============================================================
+  // FILL_BLANK — Grammar (30 questions: 5 per CEFR level)
+  // ============================================================
+
+  // A1 — Basic conjugation & articles
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: She ___ a teacher. (be, present simple)',
+    correctAnswer: 'is', points: 1, orderIndex: 101, tags: ['verb to be', 'present simple']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: They ___ from Italy. (be, present simple)',
+    correctAnswer: 'are', points: 1, orderIndex: 102, tags: ['verb to be', 'present simple']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: I ___ a meeting at 10. (have, present simple)',
+    correctAnswer: 'have', points: 1, orderIndex: 103, tags: ['have', 'present simple']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: He ___ to the office every day. (go, present simple)',
+    correctAnswer: 'goes', points: 1, orderIndex: 104, tags: ['present simple', 'third person']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: There ___ a book on the table. (be, present simple)',
+    correctAnswer: 'is', points: 1, orderIndex: 105, tags: ['there is', 'present simple']
+  },
+
+  // A2 — Past tense & pronouns
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: Yesterday I ___ to the cinema. (go, past simple)',
+    correctAnswer: 'went', points: 1, orderIndex: 106, tags: ['past simple', 'irregular verbs']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: She ___ watching TV when I called. (be, past continuous)',
+    correctAnswer: 'was', points: 1, orderIndex: 107, tags: ['past continuous', 'verb to be']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: This book belongs to ___. (I, object pronoun)',
+    correctAnswer: 'me', points: 1, orderIndex: 108, tags: ['object pronouns']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: My sister is ___ than me. (tall, comparative)',
+    correctAnswer: 'taller', points: 1, orderIndex: 109, tags: ['comparatives']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: I have never ___ sushi. (eat, past participle)',
+    correctAnswer: 'eaten', points: 1, orderIndex: 110, tags: ['present perfect', 'past participle']
+  },
+
+  // B1 — Conditional & modal verbs
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: If it rains, I ___ stay at home. (will/would)',
+    correctAnswer: 'will', points: 1, orderIndex: 111, tags: ['first conditional']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: You ___ see a doctor. You look terrible. (should/modal advice)',
+    correctAnswer: 'should', points: 1, orderIndex: 112, tags: ['modals', 'advice']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: By the time we arrived, the film ___ started. (have, past perfect)',
+    correctAnswer: 'had', points: 1, orderIndex: 113, tags: ['past perfect']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: She told me she ___ busy the day before. (be, reported speech)',
+    correctAnswer: 'had been', points: 1, orderIndex: 114, tags: ['reported speech', 'past perfect']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: I enjoy ___ with international clients. (work, gerund)',
+    correctAnswer: 'working', points: 1, orderIndex: 115, tags: ['gerund', 'verb patterns']
+  },
+
+  // B2 — Complex structures
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: If I had studied harder, I ___ passed the exam. (conditional perfect)',
+    correctAnswer: 'would have', points: 2, orderIndex: 116, tags: ['third conditional']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: The report is said ___ been leaked. (infinitive, passive reporting)',
+    correctAnswer: 'to have', points: 2, orderIndex: 117, tags: ['passive reporting', 'perfect infinitive']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: I wish I ___ more time to travel. (have, subjunctive)',
+    correctAnswer: 'had', points: 2, orderIndex: 118, tags: ['wish', 'subjunctive']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: The house ___ built in 1920. (be, passive voice past simple)',
+    correctAnswer: 'was', points: 2, orderIndex: 119, tags: ['passive voice', 'past simple']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: He denied ___ the window. (break, gerund)',
+    correctAnswer: 'breaking', points: 2, orderIndex: 120, tags: ['gerund', 'reporting verbs']
+  },
+
+  // C1 — Literary & advanced forms
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: Not only did she win, ___ she also broke the record. (conjunction)',
+    correctAnswer: 'but', points: 2, orderIndex: 121, tags: ['inversion', 'correlative conjunctions']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: Hardly ___ I sat down when the phone rang. (have, inversion)',
+    correctAnswer: 'had', points: 2, orderIndex: 122, tags: ['inversion', 'hardly']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: The CEO insisted that every employee ___ the training. (attend, subjunctive)',
+    correctAnswer: 'attend', points: 2, orderIndex: 123, tags: ['subjunctive', 'insist']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: She must ___ left already — her car is gone. (have, modal perfect)',
+    correctAnswer: 'have', points: 2, orderIndex: 124, tags: ['modal perfect', 'deduction']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: It is high time we ___ a decision. (make, subjunctive)',
+    correctAnswer: 'made', points: 2, orderIndex: 125, tags: ['it\'s time', 'subjunctive']
+  },
+
+  // C2 — Subtle distinctions
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: So remarkable ___ the discovery that it changed the field. (be, inversion)',
+    correctAnswer: 'was', points: 2, orderIndex: 126, tags: ['inversion', 'so...that']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: Were he ___ apologise, I might forgive him. (to, inversion conditional)',
+    correctAnswer: 'to', points: 2, orderIndex: 127, tags: ['inversion', 'conditional']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: The committee demanded that the proposal ___ revised. (be, subjunctive)',
+    correctAnswer: 'be', points: 2, orderIndex: 128, tags: ['subjunctive', 'demand']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: You ___ not have taken the risk — it was unnecessary. (need, modal perfect)',
+    correctAnswer: 'need', points: 2, orderIndex: 129, tags: ['modal perfect', 'needn\'t have']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complete: Under no circumstances ___ employees to leave early. (be, negative inversion)',
+    correctAnswer: 'are', points: 2, orderIndex: 130, tags: ['negative inversion', 'formal register']
+  },
+
+  // ============================================================
+  // VARIED LANGUAGE REGISTERS — 18 questions (orderIndex 131-148)
+  // ============================================================
+
+  // A1 — Varied Registers
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Business Email] "Dear Mr. Lopez, I ___ writing to confirm our meeting on Thursday."',
+    options: [{ label: 'am', value: 'am' }, { label: 'is', value: 'is' }, { label: 'are', value: 'are' }, { label: 'be', value: 'be' }],
+    correctAnswer: 'am', points: 1, orderIndex: 131, tags: ['verb to be', 'formal register', 'email']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Text Message] "hey, u ___ coming tonight?"',
+    options: [{ label: 'is', value: 'is' }, { label: 'are', value: 'are' }, { label: 'am', value: 'am' }, { label: 'be', value: 'be' }],
+    correctAnswer: 'are', points: 1, orderIndex: 132, tags: ['verb to be', 'informal register', 'text message']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Spoken Colloquial] "so basically she ___ like, no way!"',
+    options: [{ label: 'is', value: 'is' }, { label: 'was', value: 'was' }, { label: 'are', value: 'are' }, { label: 'were', value: 'were' }],
+    correctAnswer: 'was', points: 1, orderIndex: 133, tags: ['verb to be', 'colloquial register', 'spoken']
+  },
+
+  // A2 — Varied Registers
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Formal Complaint] "I would like to ___ a complaint about the service I received yesterday."',
+    options: [{ label: 'make', value: 'make' }, { label: 'do', value: 'do' }, { label: 'put', value: 'put' }, { label: 'give', value: 'give' }],
+    correctAnswer: 'make', points: 1, orderIndex: 134, tags: ['collocations', 'formal register', 'complaint']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[WhatsApp] "just ___ home, what r u doing?"',
+    options: [{ label: 'got', value: 'got' }, { label: 'getted', value: 'getted' }, { label: 'get', value: 'get' }, { label: 'getting', value: 'getting' }],
+    correctAnswer: 'got', points: 1, orderIndex: 135, tags: ['past simple', 'informal register', 'chat']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Phone Call] "Could you ___ me through to the sales department, please?"',
+    options: [{ label: 'put', value: 'put' }, { label: 'make', value: 'make' }, { label: 'take', value: 'take' }, { label: 'get', value: 'get' }],
+    correctAnswer: 'put', points: 1, orderIndex: 136, tags: ['phrasal verbs', 'formal register', 'phone']
+  },
+
+  // B1 — Varied Registers
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Corporate Presentation] "As you can see from the data, sales ___ by 15% this quarter."',
+    options: [{ label: 'have increased', value: 'have increased' }, { label: 'has increased', value: 'has increased' }, { label: 'are increasing', value: 'are increasing' }, { label: 'increased', value: 'increased' }],
+    correctAnswer: 'have increased', points: 1, orderIndex: 137, tags: ['present perfect', 'formal register', 'presentation']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Social Media] "Can\'t believe they ___ the price again!! #inflation"',
+    options: [{ label: 'raised', value: 'raised' }, { label: 'have raised', value: 'have raised' }, { label: 'rise', value: 'rise' }, { label: 'raising', value: 'raising' }],
+    correctAnswer: 'have raised', points: 1, orderIndex: 138, tags: ['present perfect', 'informal register', 'social media']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[News Headline] "Minister ___ to resign amid scandal"',
+    options: [{ label: 'expected', value: 'expected' }, { label: 'expects', value: 'expects' }, { label: 'expecting', value: 'expecting' }, { label: 'is expected', value: 'is expected' }],
+    correctAnswer: 'expected', points: 1, orderIndex: 139, tags: ['passive voice', 'headline register', 'news']
+  },
+
+  // B2 — Varied Registers
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Legal Contract] "The tenant ___ hereby agree to the terms and conditions set forth in this agreement."',
+    options: [{ label: 'does', value: 'does' }, { label: 'shall', value: 'shall' }, { label: 'will', value: 'will' }, { label: 'may', value: 'may' }],
+    correctAnswer: 'does', points: 2, orderIndex: 140, tags: ['modals', 'legal register', 'contract']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Journalism] "Had it not ___ for the last-minute intervention, the deal would have collapsed entirely."',
+    options: [{ label: 'been', value: 'been' }, { label: 'was', value: 'was' }, { label: 'be', value: 'be' }, { label: 'being', value: 'being' }],
+    correctAnswer: 'been', points: 2, orderIndex: 141, tags: ['inversion', 'third conditional', 'journalistic register']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Ironic/Sarcastic] "Oh sure, because ___ everyone just loves Monday morning meetings."',
+    options: [{ label: 'obviously', value: 'obviously' }, { label: 'apparently', value: 'apparently' }, { label: 'supposedly', value: 'supposedly' }, { label: 'clearly', value: 'clearly' }],
+    correctAnswer: 'obviously', points: 2, orderIndex: 142, tags: ['adverbs', 'sarcastic register', 'spoken']
+  },
+
+  // C1 — Varied Registers
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Academic Paper] "The findings ___ corroborated by three subsequent peer-reviewed studies."',
+    options: [{ label: 'were', value: 'were' }, { label: 'was', value: 'was' }, { label: 'have', value: 'have' }, { label: 'had', value: 'had' }],
+    correctAnswer: 'were', points: 2, orderIndex: 143, tags: ['passive voice', 'academic register', 'research']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Diplomatic] "The delegation ___ to express its reservations regarding the proposed amendment."',
+    options: [{ label: 'wishes', value: 'wishes' }, { label: 'wants', value: 'wants' }, { label: 'likes', value: 'likes' }, { label: 'needs', value: 'needs' }],
+    correctAnswer: 'wishes', points: 2, orderIndex: 144, tags: ['formal verbs', 'diplomatic register', 'politics']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Literary] "Scarcely ___ she spoken when the sky darkened and thunder rolled across the valley."',
+    options: [{ label: 'had', value: 'had' }, { label: 'has', value: 'has' }, { label: 'did', value: 'did' }, { label: 'was', value: 'was' }],
+    correctAnswer: 'had', points: 2, orderIndex: 145, tags: ['inversion', 'literary register', 'scarcely']
+  },
+
+  // C2 — Varied Registers
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Legal Archaic] "Notwithstanding the aforementioned, the party ___ be held liable for any damages incurred."',
+    options: [{ label: 'shall', value: 'shall' }, { label: 'will', value: 'will' }, { label: 'can', value: 'can' }, { label: 'may', value: 'may' }],
+    correctAnswer: 'shall', points: 2, orderIndex: 146, tags: ['modals', 'legal archaic register', 'liability']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Slang/Dialectal] "She\'s been proper ___ about that exam, ain\'t she?"',
+    options: [{ label: 'stressing', value: 'stressing' }, { label: 'stressed', value: 'stressed' }, { label: 'stress', value: 'stress' }, { label: 'stresses', value: 'stresses' }],
+    correctAnswer: 'stressing', points: 2, orderIndex: 147, tags: ['present perfect continuous', 'British slang', 'dialectal register']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Rhetorical/Oratory] "Not only ___ we failed, but we have failed spectacularly and without remorse."',
+    options: [{ label: 'have', value: 'have' }, { label: 'did', value: 'did' }, { label: 'had', value: 'had' }, { label: 'do', value: 'do' }],
+    correctAnswer: 'have', points: 2, orderIndex: 148, tags: ['inversion', 'rhetorical register', 'oratory']
   },
 ]

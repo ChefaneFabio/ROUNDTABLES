@@ -127,9 +127,9 @@ export const spanishVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'Los niños juegan en el ___.',
-    options: [{ label: 'parque', value: 'parque' }, { label: 'oficina', value: 'oficina' }, { label: 'hospital', value: 'hospital' }, { label: 'banco', value: 'banco' }],
-    correctAnswer: 'parque', points: 1, orderIndex: 17, tags: ['places', 'basic']
+    questionText: 'Los empleados trabajan en la ___.',
+    options: [{ label: 'oficina', value: 'oficina' }, { label: 'cocina', value: 'cocina' }, { label: 'playa', value: 'playa' }, { label: 'iglesia', value: 'iglesia' }],
+    correctAnswer: 'oficina', points: 1, orderIndex: 17, tags: ['places', 'basic']
   },
   {
     language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
@@ -398,5 +398,121 @@ export const spanishVocabularyQuestions: MultiSkillQuestionData[] = [
     questionText: 'El manuscrito fue hallado en un estado de ___ avanzado.',
     options: [{ label: 'deterioro', value: 'deterioro' }, { label: 'desarrollo', value: 'desarrollo' }, { label: 'despliegue', value: 'despliegue' }, { label: 'desempeño', value: 'desempeño' }],
     correctAnswer: 'deterioro', points: 2, orderIndex: 60, tags: ['literary', 'conservation']
+  },
+
+  // ============================================================
+  // FILL_BLANK — Vocabulario (20 preguntas: 3-4 por nivel MCER)
+  // ============================================================
+
+  // A1 — Contrarios y definiciones basicas
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'El contrario de "grande" es ___.',
+    correctAnswer: 'pequeño', points: 1, orderIndex: 61, tags: ['contrarios', 'adjetivos']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'El contrario de "caliente" es ___.',
+    correctAnswer: 'frío', points: 1, orderIndex: 62, tags: ['contrarios', 'adjetivos']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'La madre de mi padre es mi ___.',
+    correctAnswer: 'abuela', points: 1, orderIndex: 63, tags: ['familia', 'definiciones']
+  },
+
+  // A2 — Colocaciones y familias de palabras
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Se compra medicinas en la ___.',
+    correctAnswer: 'farmacia', points: 1, orderIndex: 64, tags: ['tiendas', 'salud']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'El contrario de "comprar" es ___.',
+    correctAnswer: 'vender', points: 1, orderIndex: 65, tags: ['contrarios', 'verbos']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Cuando llueve, necesitas un ___.',
+    correctAnswer: 'paraguas', points: 1, orderIndex: 66, tags: ['clima', 'objetos']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Por la manana tomamos el ___. (comida de la manana)',
+    correctAnswer: 'desayuno', points: 1, orderIndex: 67, tags: ['comidas', 'vida diaria']
+  },
+
+  // B1 — Sinonimos y colocaciones
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Un sinonimo de "empezar" es ___.',
+    correctAnswer: 'comenzar', points: 1, orderIndex: 68, tags: ['sinonimos', 'verbos']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'El dinero que recibes por tu trabajo es el ___.',
+    correctAnswer: 'sueldo', points: 1, orderIndex: 69, tags: ['trabajo', 'dinero']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'El adjetivo derivado de "peligro" es ___.',
+    correctAnswer: 'peligroso', points: 1, orderIndex: 70, tags: ['familias de palabras', 'adjetivos']
+  },
+
+  // B2 — Vocabulario abstracto y formal
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'La decision del gobierno ___ la confianza de los ciudadanos. (debilitar — verbo formal)',
+    correctAnswer: 'socava', points: 2, orderIndex: 71, tags: ['politica', 'verbos abstractos']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'El estudio ___ resultados sorprendentes. (producir/mostrar — verbo formal)',
+    correctAnswer: 'arrojó', points: 2, orderIndex: 72, tags: ['ciencia', 'colocaciones']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'El nombre derivado de "resiliente" es la ___.',
+    correctAnswer: 'resiliencia', points: 2, orderIndex: 73, tags: ['familias de palabras', 'nombres abstractos']
+  },
+
+  // C1 — Vocabulario matizado
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'La propuesta ___ una gran polemica. (provocar — verbo formal)',
+    correctAnswer: 'suscitó', points: 2, orderIndex: 74, tags: ['debate', 'verbos formales']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Una cuestion ___ es dificil y delicada de resolver. (adjetivo avanzado)',
+    correctAnswer: 'espinosa', points: 2, orderIndex: 75, tags: ['adjetivos avanzados', 'figurativo']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Rechazaron la propuesta ___. (completamente — adverbio enfatico)',
+    correctAnswer: 'rotundamente', points: 2, orderIndex: 76, tags: ['adverbios', 'enfasis']
+  },
+
+  // C2 — Vocabulario literario
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Una ___ es un discurso violento contra alguien o algo. (nombre literario)',
+    correctAnswer: 'diatriba', points: 2, orderIndex: 77, tags: ['literario', 'nombres avanzados']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'La ___ de su estilo refleja una gran maestria literaria. (brevedad elegante — nombre retorico)',
+    correctAnswer: 'concisión', points: 2, orderIndex: 78, tags: ['retorica', 'nombres avanzados']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Una critica ___ es incisiva y aguda. (adjetivo literario — tono cortante)',
+    correctAnswer: 'mordaz', points: 2, orderIndex: 79, tags: ['literario', 'tono']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'La ___ de estas ideas sigue siendo relevante hoy. (validez/actualidad — nombre avanzado)',
+    correctAnswer: 'vigencia', points: 2, orderIndex: 80, tags: ['filosofia', 'nombres avanzados']
   },
 ]

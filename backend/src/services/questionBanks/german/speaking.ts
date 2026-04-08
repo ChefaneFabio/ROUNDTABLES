@@ -25,7 +25,7 @@ export const germanSpeakingQuestions: MultiSkillQuestionData[] = [
   {
     language: 'German', cefrLevel: 'A2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
     questionText: 'Lesen Sie den folgenden Text deutlich vor:',
-    speakingPrompt: 'Letzten Samstag bin ich mit meinen Freunden in den Park gegangen. Das Wetter war sonnig und warm. Wir haben ein Picknick gemacht und Fußball gespielt. Es war ein toller Tag.',
+    speakingPrompt: 'Letzten Samstag bin ich mit meinen Kollegen zu einer Konferenz gefahren. Das Hotel war modern und komfortabel. Wir haben an drei Workshops teilgenommen und neue Kunden kennengelernt. Es war ein produktiver Tag.',
     correctAnswer: '', points: 1, orderIndex: 3,
     rubric: { criteria: ['deutliche Aussprache', 'angemessenes Tempo', 'Intonation', 'Aussprache der Vergangenheitsformen'], maxDuration: 45 },
     tags: ['Vorlesen', 'Perfekt'], timeSuggested: 45

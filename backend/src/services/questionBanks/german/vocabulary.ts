@@ -400,4 +400,120 @@ export const germanVocabularyQuestions: MultiSkillQuestionData[] = [
     options: [{ label: 'Stringenz', value: 'Stringenz' }, { label: 'Streitigkeit', value: 'Streitigkeit' }, { label: 'Strenge', value: 'Strenge' }, { label: 'Strapaze', value: 'Strapaze' }],
     correctAnswer: 'Stringenz', points: 2, orderIndex: 60, tags: ['Akademisch', 'Fachsprache']
   },
+
+  // ============================================================
+  // FILL_BLANK — Wortschatz (20 Fragen: 3-4 pro GER-Stufe)
+  // ============================================================
+
+  // A1 — Gegensätze und Grundbegriffe
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Das Gegenteil von "groß" ist ___.',
+    correctAnswer: 'klein', points: 1, orderIndex: 61, tags: ['Gegensätze', 'Adjektive']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Das Gegenteil von "heiß" ist ___.',
+    correctAnswer: 'kalt', points: 1, orderIndex: 62, tags: ['Gegensätze', 'Adjektive']
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Der Sohn meiner Mutter ist mein ___.',
+    correctAnswer: 'Bruder', points: 1, orderIndex: 63, tags: ['Familie', 'Nomen']
+  },
+
+  // A2 — Kollokationen und Wortfamilien
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Man kauft Brot in der ___.',
+    correctAnswer: 'Bäckerei', points: 1, orderIndex: 64, tags: ['Einkaufen', 'Nomen']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Das Gegenteil von "kaufen" ist ___.',
+    correctAnswer: 'verkaufen', points: 1, orderIndex: 65, tags: ['Gegensätze', 'Verben']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Bei Regen braucht man einen ___.',
+    correctAnswer: 'Regenschirm', points: 1, orderIndex: 66, tags: ['Wetter', 'Nomen']
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Am Morgen isst man das ___.',
+    correctAnswer: 'Frühstück', points: 1, orderIndex: 67, tags: ['Mahlzeiten', 'Nomen']
+  },
+
+  // B1 — Synonyme und Kollokationen
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Ein Synonym von "anfangen" ist ___.',
+    correctAnswer: 'beginnen', points: 1, orderIndex: 68, tags: ['Synonyme', 'Verben']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Man muss den ___ ausfüllen, um sich zu bewerben. (Dokument mit persönlichen Daten)',
+    correctAnswer: 'Lebenslauf', points: 1, orderIndex: 69, tags: ['Arbeit', 'Nomen']
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Das Adjektiv zu "Gefahr" ist ___.',
+    correctAnswer: 'gefährlich', points: 1, orderIndex: 70, tags: ['Wortfamilien', 'Adjektive']
+  },
+
+  // B2 — Gehobener Wortschatz
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Ein Synonym von "wichtig" im gehobenen Stil ist ___.',
+    correctAnswer: 'bedeutsam', points: 2, orderIndex: 71, tags: ['Synonyme', 'gehobener Stil']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Das Nomen zu "stichhaltig" (ein überzeugendes Argument) ist die ___.',
+    correctAnswer: 'Stichhaltigkeit', points: 2, orderIndex: 72, tags: ['Wortfamilien', 'abstrakte Begriffe']
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Das Gegenteil von "notwendig" ist ___.',
+    correctAnswer: 'überflüssig', points: 2, orderIndex: 73, tags: ['Gegensätze', 'Adjektive']
+  },
+
+  // C1 — Nuancierter Wortschatz
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Die Verhandlungen sind an der Gehaltsfrage ___. (scheitern — gehobenes Verb)',
+    correctAnswer: 'gescheitert', points: 2, orderIndex: 74, tags: ['Verhandlungen', 'gehobene Verben']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Ein Synonym von "genau" im wissenschaftlichen Kontext ist ___.',
+    correctAnswer: 'präzise', points: 2, orderIndex: 75, tags: ['Synonyme', 'Wissenschaft']
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Die ___ seiner Entscheidung wurde erst später deutlich. (Bedeutung/Ausmaß — gehobenes Nomen)',
+    correctAnswer: 'Tragweite', points: 2, orderIndex: 76, tags: ['gehobene Nomen', 'abstrakte Begriffe']
+  },
+
+  // C2 — Literarischer und Fachsprachlicher Wortschatz
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Die ___ Analyse des Textes offenbart verborgene Bedeutungsschichten. (Interpretation — Fachbegriff)',
+    correctAnswer: 'hermeneutische', points: 2, orderIndex: 77, tags: ['Literaturwissenschaft', 'Fachsprache']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Der Ton des Gedichts ist ___ — voller Wehmut und Sehnsucht. (klagend — literarisches Adjektiv)',
+    correctAnswer: 'elegisch', points: 2, orderIndex: 78, tags: ['Literatur', 'gehobene Adjektive']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Die ___ seiner Argumentation überzeugt selbst Kritiker. (logische Strenge — Fachbegriff)',
+    correctAnswer: 'Stringenz', points: 2, orderIndex: 79, tags: ['Akademisch', 'Fachsprache']
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Das Phänomen ___ sich einer einfachen Erklärung. (verweigern/entfliehen — gehobenes Verb)',
+    correctAnswer: 'entzieht', points: 2, orderIndex: 80, tags: ['Philosophie', 'gehobene Verben']
+  },
 ]

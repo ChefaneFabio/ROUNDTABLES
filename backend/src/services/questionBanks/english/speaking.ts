@@ -25,18 +25,18 @@ export const englishSpeakingQuestions: MultiSkillQuestionData[] = [
   {
     language: 'English', cefrLevel: 'A2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
     questionText: 'Read the following text aloud clearly:',
-    speakingPrompt: 'Last Saturday, I went to the park with my friends. The weather was sunny and warm. We had a picnic and played football. It was a great day.',
+    speakingPrompt: 'Last Saturday, I went to a conference with my colleagues. The hotel was modern and comfortable. We attended three workshops and met new clients. It was a productive day.',
     correctAnswer: '', points: 1, orderIndex: 3,
     rubric: { criteria: ['clear pronunciation', 'appropriate pace', 'intonation', 'past tense pronunciation'], maxDuration: 45 },
     tags: ['read aloud', 'past tense'], timeSuggested: 45
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
-    questionText: 'Describe your favorite food. What is it? Why do you like it? How often do you eat it? Speak for about 30 seconds.',
-    speakingPrompt: 'Tell me about your favorite food.',
+    questionText: 'Describe your typical business lunch. Where do you go? What do you usually order? Speak for about 30 seconds.',
+    speakingPrompt: 'Tell me about your typical business lunch.',
     correctAnswer: '', points: 1, orderIndex: 4,
     rubric: { criteria: ['descriptive vocabulary', 'simple sentences', 'relevant content', 'basic fluency'], maxDuration: 45 },
-    tags: ['describe', 'food'], timeSuggested: 45
+    tags: ['describe', 'business'], timeSuggested: 45
   },
   // B1 — Describe situation + opinion
   {
@@ -131,10 +131,10 @@ export const englishSpeakingQuestions: MultiSkillQuestionData[] = [
   {
     language: 'English', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
     questionText: 'Look at the picture and describe what you see. Use simple words.',
-    speakingPrompt: 'Describe the picture: There is a family in a kitchen. What are they doing?',
+    speakingPrompt: 'Describe the picture: There are people in an office. What are they doing?',
     correctAnswer: '', points: 1, orderIndex: 15,
     rubric: { criteria: ['basic vocabulary', 'simple sentences', 'comprehensible speech'], maxDuration: 30 },
-    tags: ['describe picture', 'family'], timeSuggested: 30
+    tags: ['describe picture', 'office'], timeSuggested: 30
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
@@ -147,10 +147,10 @@ export const englishSpeakingQuestions: MultiSkillQuestionData[] = [
   {
     language: 'English', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
     questionText: 'Answer the following question. Speak for about 15-20 seconds:',
-    speakingPrompt: 'What is your favourite colour? What things do you have in that colour?',
+    speakingPrompt: 'What is your daily commute like? How do you get to work?',
     correctAnswer: '', points: 1, orderIndex: 17,
     rubric: { criteria: ['basic vocabulary', 'simple sentences', 'comprehensible speech'], maxDuration: 30 },
-    tags: ['simple question', 'colours'], timeSuggested: 30
+    tags: ['simple question', 'commute'], timeSuggested: 30
   },
 
   // A2 — Describe routines, tell a story
@@ -175,7 +175,7 @@ export const englishSpeakingQuestions: MultiSkillQuestionData[] = [
   {
     language: 'English', cefrLevel: 'B1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
     questionText: 'Talk about the following topic for about 45-60 seconds. Give your opinion.',
-    speakingPrompt: 'Do you think children should have mobile phones? At what age? Why or why not?',
+    speakingPrompt: 'Do you think employees should be allowed to work from home? How often? Why or why not?',
     correctAnswer: '', points: 1, orderIndex: 20,
     rubric: { criteria: ['coherent opinion', 'supporting reasons', 'linking words', 'fluency'], maxDuration: 60 },
     tags: ['opinion', 'technology'], timeSuggested: 60

@@ -37,9 +37,9 @@ export const frenchErrorCorrectionQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'B1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
-    passage: 'Les enfants qui j\'ai vus jouaient dans le parc.',
+    passage: 'Les documents qui j\'ai reçus étaient incomplets.',
     questionText: 'Trouvez et corrigez l\'erreur dans cette phrase.',
-    correctAnswer: 'Les enfants que j\'ai vus jouaient dans le parc.',
+    correctAnswer: 'Les documents que j\'ai reçus étaient incomplets.',
     points: 1, orderIndex: 4, tags: ['pronoms relatifs', 'qui/que']
   },
   {

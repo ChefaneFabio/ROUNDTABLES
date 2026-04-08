@@ -15,7 +15,7 @@ export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'Nous ___ un chat et un chien.',
+    questionText: 'Nous ___ un bureau et une salle de réunion.',
     options: [{ label: 'a', value: 'a' }, { label: 'avons', value: 'avons' }, { label: 'avez', value: 'avez' }, { label: 'ont', value: 'ont' }],
     correctAnswer: 'avons', points: 1, orderIndex: 2, tags: ['avoir', 'présent']
   },
@@ -113,9 +113,9 @@ export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'Il faut que tu ___ tes devoirs avant de sortir.',
-    options: [{ label: 'fais', value: 'fais' }, { label: 'fasses', value: 'fasses' }, { label: 'faire', value: 'faire' }, { label: 'ferais', value: 'ferais' }],
-    correctAnswer: 'fasses', points: 1, orderIndex: 17, tags: ['subjonctif', 'il faut que']
+    questionText: 'Il faut que tu ___ ton rapport avant la réunion.',
+    options: [{ label: 'finis', value: 'finis' }, { label: 'finisses', value: 'finisses' }, { label: 'finir', value: 'finir' }, { label: 'finirais', value: 'finirais' }],
+    correctAnswer: 'finisses', points: 1, orderIndex: 17, tags: ['subjonctif', 'il faut que']
   },
   {
     language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
@@ -285,7 +285,7 @@ export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'Les enfants ___ dans le jardin.',
+    questionText: 'Les collègues ___ un rôle important dans le projet.',
     options: [{ label: 'joue', value: 'joue' }, { label: 'joues', value: 'joues' }, { label: 'jouent', value: 'jouent' }, { label: 'jouons', value: 'jouons' }],
     correctAnswer: 'jouent', points: 1, orderIndex: 43, tags: ['verbes en -er', 'présent', 'pluriel']
   },
@@ -385,9 +385,9 @@ export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'Les enfants se sont ___ dans le parc.',
-    options: [{ label: 'amusé', value: 'amusé' }, { label: 'amusés', value: 'amusés' }, { label: 'amusées', value: 'amusées' }, { label: 'amuser', value: 'amuser' }],
-    correctAnswer: 'amusés', points: 1, orderIndex: 59, tags: ['verbes pronominaux', 'accord', 'passé composé']
+    questionText: 'Les participants se sont ___ lors du séminaire.',
+    options: [{ label: 'retrouvé', value: 'retrouvé' }, { label: 'retrouvés', value: 'retrouvés' }, { label: 'retrouvées', value: 'retrouvées' }, { label: 'retrouver', value: 'retrouver' }],
+    correctAnswer: 'retrouvés', points: 1, orderIndex: 59, tags: ['verbes pronominaux', 'accord', 'passé composé']
   },
   {
     language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
@@ -650,5 +650,295 @@ export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
     questionText: 'Tant s\'en ___ qu\'il acceptât cette proposition.',
     options: [{ label: 'faut', value: 'faut' }, { label: 'fallut', value: 'fallut' }, { label: 'fallait', value: 'fallait' }, { label: 'fît', value: 'fît' }],
     correctAnswer: 'fallut', points: 2, orderIndex: 100, tags: ['tant s\'en faut', 'passé simple', 'expression littéraire']
+  },
+
+  // ============================================================
+  // FILL_BLANK — Grammaire (30 questions : 5 par niveau CECR)
+  // ============================================================
+
+  // A1 — Conjugaison de base & articles
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Je ___ français. (parler, présent)',
+    correctAnswer: 'parle', points: 1, orderIndex: 101, tags: ['présent', 'verbes en -er']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Nous ___ fatigués. (être, présent)',
+    correctAnswer: 'sommes', points: 1, orderIndex: 102, tags: ['être', 'présent']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Tu ___ un frère ? (avoir, présent)',
+    correctAnswer: 'as', points: 1, orderIndex: 103, tags: ['avoir', 'présent']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Ils ___ au cinéma. (aller, présent)',
+    correctAnswer: 'vont', points: 1, orderIndex: 104, tags: ['aller', 'présent']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Elle mange ___ pomme. (article indéfini féminin)',
+    correctAnswer: 'une', points: 1, orderIndex: 105, tags: ['articles indéfinis', 'genre']
+  },
+
+  // A2 — Passé composé & pronoms
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Hier, je ___ allé au marché. (être, passé composé)',
+    correctAnswer: 'suis', points: 1, orderIndex: 106, tags: ['passé composé', 'être']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Nous avons ___ un bon film. (voir, participe passé)',
+    correctAnswer: 'vu', points: 1, orderIndex: 107, tags: ['passé composé', 'participe passé']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Je ___ donne le livre. (pronom COI, à lui)',
+    correctAnswer: 'lui', points: 1, orderIndex: 108, tags: ['pronoms COI']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Quand j\'étais petit, je ___ beaucoup. (jouer, imparfait)',
+    correctAnswer: 'jouais', points: 1, orderIndex: 109, tags: ['imparfait']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Elle s\'est ___ à 7 heures. (lever, participe passé féminin)',
+    correctAnswer: 'levée', points: 1, orderIndex: 110, tags: ['verbes pronominaux', 'accord']
+  },
+
+  // B1 — Subjonctif & conditionnel
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Il faut que tu ___ ton travail. (finir, subjonctif présent)',
+    correctAnswer: 'finisses', points: 1, orderIndex: 111, tags: ['subjonctif', 'il faut que']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Si j\'avais de l\'argent, j\' ___ une maison. (acheter, conditionnel)',
+    correctAnswer: 'achèterais', points: 1, orderIndex: 112, tags: ['conditionnel', 'hypothèse']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Le livre ___ je t\'ai parlé est excellent. (pronom relatif)',
+    correctAnswer: 'dont', points: 1, orderIndex: 113, tags: ['pronoms relatifs', 'dont']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Je doute qu\'il ___ la vérité. (dire, subjonctif présent)',
+    correctAnswer: 'dise', points: 1, orderIndex: 114, tags: ['subjonctif', 'douter']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Bien qu\'il ___ fatigué, il continue à travailler. (être, subjonctif)',
+    correctAnswer: 'soit', points: 1, orderIndex: 115, tags: ['subjonctif', 'bien que']
+  },
+
+  // B2 — Structures complexes
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Si j\'avais su, je ___ venu plus tôt. (être, conditionnel passé)',
+    correctAnswer: 'serais', points: 2, orderIndex: 116, tags: ['conditionnel passé', 'irréel du passé']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : La maison ___ construite en 1900. (être, passé composé passif)',
+    correctAnswer: 'a été', points: 2, orderIndex: 117, tags: ['voix passive', 'passé composé']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Il m\'a dit qu\'il ___ le lendemain. (venir, conditionnel — discours indirect)',
+    correctAnswer: 'viendrait', points: 2, orderIndex: 118, tags: ['discours indirect', 'concordance']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Je cherche quelqu\'un qui ___ le chinois. (savoir, subjonctif)',
+    correctAnswer: 'sache', points: 2, orderIndex: 119, tags: ['subjonctif', 'antécédent indéterminé']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Après ___ mangé, il est parti. (avoir, infinitif passé)',
+    correctAnswer: 'avoir', points: 2, orderIndex: 120, tags: ['infinitif passé', 'après + infinitif']
+  },
+
+  // C1 — Formes littéraires
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : À peine fut-il arrivé qu\'il ___. (repartir, passé simple)',
+    correctAnswer: 'repartit', points: 2, orderIndex: 121, tags: ['passé simple', 'inversion']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Quoi qu\'il ___, je ne changerai pas d\'avis. (faire, subjonctif)',
+    correctAnswer: 'fasse', points: 2, orderIndex: 122, tags: ['subjonctif', 'quoi que']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Il aurait fallu que vous ___ plus tôt. (partir, subjonctif)',
+    correctAnswer: 'partiez', points: 2, orderIndex: 123, tags: ['subjonctif', 'il aurait fallu']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Non seulement il a réussi, ___ encore il a battu le record. (conjonction)',
+    correctAnswer: 'mais', points: 2, orderIndex: 124, tags: ['connecteurs', 'non seulement...mais encore']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Il prétend qu\'il ___ innocent. (être, subjonctif ou indicatif selon le verbe)',
+    correctAnswer: 'est', points: 2, orderIndex: 125, tags: ['indicatif', 'prétendre que']
+  },
+
+  // C2 — Distinctions subtiles
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Eût-il ___, il aurait agi différemment. (savoir, subjonctif plus-que-parfait)',
+    correctAnswer: 'su', points: 2, orderIndex: 126, tags: ['subjonctif plus-que-parfait', 'inversion']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Il exigea qu\'on l\' ___. (entendre, subjonctif imparfait)',
+    correctAnswer: 'entendît', points: 2, orderIndex: 127, tags: ['subjonctif imparfait', 'concordance des temps']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Sans que personne ne s\'en ___, il quitta la salle. (apercevoir, subj. imparfait)',
+    correctAnswer: 'aperçût', points: 2, orderIndex: 128, tags: ['subjonctif imparfait', 'sans que']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Plût au ciel qu\'il ___ raison ! (avoir, subjonctif plus-que-parfait)',
+    correctAnswer: 'eût', points: 2, orderIndex: 129, tags: ['subjonctif plus-que-parfait', 'plût au ciel']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Complétez : Encore ___-il que cette hypothèse soit vérifiable. (falloir, conditionnel)',
+    correctAnswer: 'faudrait', points: 2, orderIndex: 130, tags: ['conditionnel', 'encore faudrait-il']
+  },
+
+  // ============================================================
+  // VARIED LANGUAGE REGISTERS — 18 questions (orderIndex 131-148)
+  // ============================================================
+
+  // A1 — Varied Registers
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Email professionnel] "Cher Monsieur Dupont, je vous ___ pour confirmer notre rendez-vous de jeudi."',
+    options: [{ label: 'écris', value: 'écris' }, { label: 'écrit', value: 'écrit' }, { label: 'écrire', value: 'écrire' }, { label: 'écrivez', value: 'écrivez' }],
+    correctAnswer: 'écris', points: 1, orderIndex: 131, tags: ['présent', 'registre formel', 'email']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[SMS] "slt, tu ___ ce soir ?"',
+    options: [{ label: 'viens', value: 'viens' }, { label: 'vient', value: 'vient' }, { label: 'venez', value: 'venez' }, { label: 'venir', value: 'venir' }],
+    correctAnswer: 'viens', points: 1, orderIndex: 132, tags: ['présent', 'registre informel', 'SMS']
+  },
+  {
+    language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Oral familier] "en gros elle ___ genre, pas question !"',
+    options: [{ label: 'a dit', value: 'a dit' }, { label: 'dit', value: 'dit' }, { label: 'disait', value: 'disait' }, { label: 'dire', value: 'dire' }],
+    correctAnswer: 'a dit', points: 1, orderIndex: 133, tags: ['passé composé', 'registre familier', 'oral']
+  },
+
+  // A2 — Varied Registers
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Réclamation formelle] "Je souhaiterais ___ une réclamation concernant ma dernière commande."',
+    options: [{ label: 'faire', value: 'faire' }, { label: 'mettre', value: 'mettre' }, { label: 'donner', value: 'donner' }, { label: 'prendre', value: 'prendre' }],
+    correctAnswer: 'faire', points: 1, orderIndex: 134, tags: ['infinitif', 'registre formel', 'réclamation']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[WhatsApp] "je viens de ___ à la maison, tu fais quoi ?"',
+    options: [{ label: 'rentrer', value: 'rentrer' }, { label: 'rentré', value: 'rentré' }, { label: 'rentre', value: 'rentre' }, { label: 'rentrais', value: 'rentrais' }],
+    correctAnswer: 'rentrer', points: 1, orderIndex: 135, tags: ['venir de + infinitif', 'registre informel', 'chat']
+  },
+  {
+    language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Appel téléphonique] "Pourriez-vous me ___ au service commercial, s\'il vous plaît ?"',
+    options: [{ label: 'passer', value: 'passer' }, { label: 'mettre', value: 'mettre' }, { label: 'donner', value: 'donner' }, { label: 'prendre', value: 'prendre' }],
+    correctAnswer: 'passer', points: 1, orderIndex: 136, tags: ['infinitif', 'registre formel', 'téléphone']
+  },
+
+  // B1 — Varied Registers
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Présentation corporate] "Comme vous pouvez le constater, les ventes ___ de 15% ce trimestre."',
+    options: [{ label: 'ont augmenté', value: 'ont augmenté' }, { label: 'augmentaient', value: 'augmentaient' }, { label: 'augmentent', value: 'augmentent' }, { label: 'avaient augmenté', value: 'avaient augmenté' }],
+    correctAnswer: 'ont augmenté', points: 1, orderIndex: 137, tags: ['passé composé', 'registre formel', 'présentation']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Réseaux sociaux] "J\'y crois pas, ils ___ encore augmenté le prix !! #inflation"',
+    options: [{ label: 'ont', value: 'ont' }, { label: 'avaient', value: 'avaient' }, { label: 'auront', value: 'auront' }, { label: 'avaient eu', value: 'avaient eu' }],
+    correctAnswer: 'ont', points: 1, orderIndex: 138, tags: ['passé composé', 'registre informel', 'réseaux sociaux']
+  },
+  {
+    language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Titre de presse] "Le ministre ___ à démissionner suite au scandale"',
+    options: [{ label: 'contraint', value: 'contraint' }, { label: 'est contraint', value: 'est contraint' }, { label: 'a contraint', value: 'a contraint' }, { label: 'contraignait', value: 'contraignait' }],
+    correctAnswer: 'contraint', points: 1, orderIndex: 139, tags: ['participe passé', 'registre journalistique', 'titre']
+  },
+
+  // B2 — Varied Registers
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Contrat juridique] "Le locataire ___ par les présentes accepter les conditions stipulées dans ce contrat."',
+    options: [{ label: 's\'engage', value: 's\'engage' }, { label: 'engage', value: 'engage' }, { label: 'engagera', value: 'engagera' }, { label: 'engagerait', value: 'engagerait' }],
+    correctAnswer: 's\'engage', points: 2, orderIndex: 140, tags: ['présent', 'registre juridique', 'contrat']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Journalisme] "N\'___ été l\'intervention de dernière minute, l\'accord se serait effondré."',
+    options: [{ label: 'eût', value: 'eût' }, { label: 'avait', value: 'avait' }, { label: 'aurait', value: 'aurait' }, { label: 'a', value: 'a' }],
+    correctAnswer: 'eût', points: 2, orderIndex: 141, tags: ['subjonctif plus-que-parfait', 'registre journalistique', 'conditionnel']
+  },
+  {
+    language: 'French', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Ironique/Sarcastique] "Ah oui, ___ tout le monde adore les réunions du lundi matin."',
+    options: [{ label: 'évidemment', value: 'évidemment' }, { label: 'apparemment', value: 'apparemment' }, { label: 'soi-disant', value: 'soi-disant' }, { label: 'certainement', value: 'certainement' }],
+    correctAnswer: 'évidemment', points: 2, orderIndex: 142, tags: ['adverbes', 'registre sarcastique', 'oral']
+  },
+
+  // C1 — Varied Registers
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Article académique] "Les résultats ___ corroborés par trois études ultérieures évaluées par des pairs."',
+    options: [{ label: 'ont été', value: 'ont été' }, { label: 'étaient', value: 'étaient' }, { label: 'furent', value: 'furent' }, { label: 'seraient', value: 'seraient' }],
+    correctAnswer: 'ont été', points: 2, orderIndex: 143, tags: ['voix passive', 'registre académique', 'recherche']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Diplomatique] "La délégation ___ exprimer ses réserves quant à l\'amendement proposé."',
+    options: [{ label: 'souhaite', value: 'souhaite' }, { label: 'veut', value: 'veut' }, { label: 'aime', value: 'aime' }, { label: 'doit', value: 'doit' }],
+    correctAnswer: 'souhaite', points: 2, orderIndex: 144, tags: ['présent', 'registre diplomatique', 'politique']
+  },
+  {
+    language: 'French', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Littéraire] "À peine ___-elle prononcé ces mots que le ciel s\'assombrit."',
+    options: [{ label: 'eut', value: 'eut' }, { label: 'avait', value: 'avait' }, { label: 'a', value: 'a' }, { label: 'fut', value: 'fut' }],
+    correctAnswer: 'eut', points: 2, orderIndex: 145, tags: ['passé antérieur', 'registre littéraire', 'inversion']
+  },
+
+  // C2 — Varied Registers
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Juridique archaïque] "Nonobstant ce qui précède, la partie ___ tenue pour responsable de tout dommage."',
+    options: [{ label: 'sera', value: 'sera' }, { label: 'serait', value: 'serait' }, { label: 'est', value: 'est' }, { label: 'fut', value: 'fut' }],
+    correctAnswer: 'sera', points: 2, orderIndex: 146, tags: ['futur simple', 'registre juridique archaïque', 'responsabilité']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Argot/Familier] "Il a carrément ___ le truc sans rien demander à personne."',
+    options: [{ label: 'fait', value: 'fait' }, { label: 'faite', value: 'faite' }, { label: 'fais', value: 'fais' }, { label: 'faire', value: 'faire' }],
+    correctAnswer: 'fait', points: 2, orderIndex: 147, tags: ['passé composé', 'registre argotique', 'familier']
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Rhétorique/Oratoire] "Non seulement avons-nous ___, mais nous avons échoué de manière spectaculaire."',
+    options: [{ label: 'échoué', value: 'échoué' }, { label: 'échouer', value: 'échouer' }, { label: 'échouant', value: 'échouant' }, { label: 'échoués', value: 'échoués' }],
+    correctAnswer: 'échoué', points: 2, orderIndex: 148, tags: ['participe passé', 'registre oratoire', 'rhétorique']
   },
 ]

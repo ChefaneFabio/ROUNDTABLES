@@ -643,4 +643,294 @@ export const spanishGrammarQuestions: MultiSkillQuestionData[] = [
     options: [{ label: 'es', value: 'es' }, { label: 'sea', value: 'sea' }, { label: 'será', value: 'será' }, { label: 'fuera', value: 'fuera' }],
     correctAnswer: 'es', points: 2, orderIndex: 100, tags: ['bien es verdad que', 'concessive', 'formal register']
   },
+
+  // ============================================================
+  // FILL_BLANK — Gramatica (30 preguntas: 5 por nivel MCER)
+  // ============================================================
+
+  // A1 — Conjugacion basica & articulos
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Yo ___ estudiante. (ser, presente)',
+    correctAnswer: 'soy', points: 1, orderIndex: 101, tags: ['ser', 'presente']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Nosotros ___ en una casa grande. (vivir, presente)',
+    correctAnswer: 'vivimos', points: 1, orderIndex: 102, tags: ['presente', 'verbos regulares -ir']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Ella ___ dos hermanos. (tener, presente)',
+    correctAnswer: 'tiene', points: 1, orderIndex: 103, tags: ['tener', 'presente']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Ellos ___ al parque todos los dias. (ir, presente)',
+    correctAnswer: 'van', points: 1, orderIndex: 104, tags: ['ir', 'presente']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Me gusta ___ musica. (articulo determinado femenino)',
+    correctAnswer: 'la', points: 1, orderIndex: 105, tags: ['articulos', 'gustar']
+  },
+
+  // A2 — Preterito & pronombres
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Ayer ___ al cine con mis amigos. (ir, preterito indefinido, yo)',
+    correctAnswer: 'fui', points: 1, orderIndex: 106, tags: ['preterito', 'ir']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Cuando era nino, ___ al parque todos los dias. (ir, imperfecto)',
+    correctAnswer: 'iba', points: 1, orderIndex: 107, tags: ['imperfecto', 'pasado habitual']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: A mi hermana ___ gusta el chocolate. (pronombre indirecto)',
+    correctAnswer: 'le', points: 1, orderIndex: 108, tags: ['gustar', 'pronombres indirectos']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Mi casa es ___ grande que la tuya. (comparativo)',
+    correctAnswer: 'más', points: 1, orderIndex: 109, tags: ['comparativos']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: El proximo verano ___ a la playa. (ir, futuro simple, nosotros)',
+    correctAnswer: 'iremos', points: 1, orderIndex: 110, tags: ['futuro simple', 'ir']
+  },
+
+  // B1 — Subjuntivo & condicional
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Espero que tu ___ pronto. (venir, presente de subjuntivo)',
+    correctAnswer: 'vengas', points: 1, orderIndex: 111, tags: ['subjuntivo presente', 'esperar que']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Si tuviera dinero, ___ un coche. (comprar, condicional)',
+    correctAnswer: 'compraría', points: 1, orderIndex: 112, tags: ['condicional', 'si + imperfecto subjuntivo']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: No creo que ___ razon. (tener, presente de subjuntivo)',
+    correctAnswer: 'tenga', points: 1, orderIndex: 113, tags: ['subjuntivo', 'duda']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Me pidio que le ___ la verdad. (decir, imperfecto de subjuntivo)',
+    correctAnswer: 'dijera', points: 1, orderIndex: 114, tags: ['imperfecto de subjuntivo', 'discurso indirecto']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Cuando ___ a casa, te llamo. (llegar, presente de subjuntivo)',
+    correctAnswer: 'llegue', points: 1, orderIndex: 115, tags: ['subjuntivo', 'clausulas temporales']
+  },
+
+  // B2 — Estructuras complejas
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Si hubiera estudiado, ___ aprobado el examen. (haber, condicional perfecto)',
+    correctAnswer: 'habría', points: 2, orderIndex: 116, tags: ['condicional perfecto', 'si + pluscuamperfecto subjuntivo']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: El puente ___ construido en 1950. (ser, preterito — voz pasiva)',
+    correctAnswer: 'fue', points: 2, orderIndex: 117, tags: ['voz pasiva', 'preterito']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Me dijo que ___ al dia siguiente. (venir, condicional — discurso indirecto)',
+    correctAnswer: 'vendría', points: 2, orderIndex: 118, tags: ['discurso indirecto', 'condicional']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Ojala ___ mas tiempo libre. (tener, imperfecto de subjuntivo)',
+    correctAnswer: 'tuviera', points: 2, orderIndex: 119, tags: ['ojala', 'imperfecto de subjuntivo']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: No creo que ___ terminado a tiempo. (haber, presente perfecto de subjuntivo)',
+    correctAnswer: 'hayan', points: 2, orderIndex: 120, tags: ['presente perfecto de subjuntivo']
+  },
+
+  // C1 — Formas literarias
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: De haberlo sabido, no ___ actuado asi. (haber, condicional perfecto)',
+    correctAnswer: 'habría', points: 2, orderIndex: 121, tags: ['de + infinitivo', 'condicional perfecto']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Sea como ___, debemos continuar. (ser, subjuntivo reduplicativo)',
+    correctAnswer: 'sea', points: 2, orderIndex: 122, tags: ['subjuntivo reduplicativo', 'concesivo']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: A no ser que ___ medidas, la situacion empeorara. (tomar, presente de subjuntivo, ellos)',
+    correctAnswer: 'tomen', points: 2, orderIndex: 123, tags: ['a no ser que', 'subjuntivo']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Por mas que ___, no lo consiguio. (intentar, imperfecto de subjuntivo)',
+    correctAnswer: 'intentara', points: 2, orderIndex: 124, tags: ['concesivo', 'por mas que']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Dicho ___ de paso, no estoy de acuerdo. (ser, presente de subjuntivo)',
+    correctAnswer: 'sea', points: 2, orderIndex: 125, tags: ['dicho sea', 'expresiones fijas']
+  },
+
+  // C2 — Distinciones sutiles
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Quienquiera que ___ responsable, debera responder. (ser, presente de subjuntivo)',
+    correctAnswer: 'sea', points: 2, orderIndex: 126, tags: ['quienquiera que', 'subjuntivo']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Si bien la economia ___ mejorado, quedan desafios. (haber, indicativo — concesivo)',
+    correctAnswer: 'ha', points: 2, orderIndex: 127, tags: ['si bien', 'concesivo', 'indicativo']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Comoquiera que ___ el asunto, la verdad prevalecera. (abordar, presente de subjuntivo, nosotros)',
+    correctAnswer: 'abordemos', points: 2, orderIndex: 128, tags: ['comoquiera que', 'subjuntivo']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: Por ___ que parezca, asi sucedio. (adjetivo + que + subjuntivo — concesion)',
+    correctAnswer: 'extraño', points: 2, orderIndex: 129, tags: ['concesivo', 'por + adj + que']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'GRAMMAR',
+    questionText: 'Completar: No bien ___ la noticia, acudio de inmediato. (saber, preterito indefinido)',
+    correctAnswer: 'supo', points: 2, orderIndex: 130, tags: ['no bien', 'preterito', 'clausulas temporales']
+  },
+
+  // ============================================================
+  // VARIED LANGUAGE REGISTERS — 18 questions (orderIndex 131-148)
+  // ============================================================
+
+  // A1 — Varied Registers
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Email comercial] "Estimado Sr. Lopez, le ___ para confirmar nuestra reunión del jueves."',
+    options: [{ label: 'escribo', value: 'escribo' }, { label: 'escribe', value: 'escribe' }, { label: 'escribir', value: 'escribir' }, { label: 'escribes', value: 'escribes' }],
+    correctAnswer: 'escribo', points: 1, orderIndex: 131, tags: ['presente', 'registro formal', 'email']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[SMS] "ey, ___ esta noche?"',
+    options: [{ label: 'vienes', value: 'vienes' }, { label: 'viene', value: 'viene' }, { label: 'vienen', value: 'vienen' }, { label: 'venir', value: 'venir' }],
+    correctAnswer: 'vienes', points: 1, orderIndex: 132, tags: ['presente', 'registro informal', 'SMS']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Oral coloquial] "y ella va y ___ tipo: ¡ni de broma!"',
+    options: [{ label: 'dice', value: 'dice' }, { label: 'dijo', value: 'dijo' }, { label: 'decía', value: 'decía' }, { label: 'decir', value: 'decir' }],
+    correctAnswer: 'dice', points: 1, orderIndex: 133, tags: ['presente histórico', 'registro coloquial', 'oral']
+  },
+
+  // A2 — Varied Registers
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Reclamación formal] "Desearía ___ una reclamación sobre el servicio recibido ayer."',
+    options: [{ label: 'presentar', value: 'presentar' }, { label: 'hacer', value: 'hacer' }, { label: 'dar', value: 'dar' }, { label: 'poner', value: 'poner' }],
+    correctAnswer: 'presentar', points: 1, orderIndex: 134, tags: ['infinitivo', 'registro formal', 'reclamación']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[WhatsApp] "acabo de ___ a casa, qué haces?"',
+    options: [{ label: 'llegar', value: 'llegar' }, { label: 'llegado', value: 'llegado' }, { label: 'llego', value: 'llego' }, { label: 'llegaba', value: 'llegaba' }],
+    correctAnswer: 'llegar', points: 1, orderIndex: 135, tags: ['acabar de + infinitivo', 'registro informal', 'chat']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Llamada telefónica] "¿Podría ___ con el departamento de ventas, por favor?"',
+    options: [{ label: 'pasarme', value: 'pasarme' }, { label: 'llevarme', value: 'llevarme' }, { label: 'darme', value: 'darme' }, { label: 'ponerme', value: 'ponerme' }],
+    correctAnswer: 'pasarme', points: 1, orderIndex: 136, tags: ['infinitivo', 'registro formal', 'teléfono']
+  },
+
+  // B1 — Varied Registers
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Presentación corporativa] "Como pueden ver en los datos, las ventas ___ un 15% este trimestre."',
+    options: [{ label: 'han aumentado', value: 'han aumentado' }, { label: 'aumentaban', value: 'aumentaban' }, { label: 'aumentan', value: 'aumentan' }, { label: 'habían aumentado', value: 'habían aumentado' }],
+    correctAnswer: 'han aumentado', points: 1, orderIndex: 137, tags: ['pretérito perfecto', 'registro formal', 'presentación']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Redes sociales] "No me lo puedo creer, ¡otra vez ___ subido el precio! #inflación"',
+    options: [{ label: 'han', value: 'han' }, { label: 'habían', value: 'habían' }, { label: 'habrán', value: 'habrán' }, { label: 'hubieron', value: 'hubieron' }],
+    correctAnswer: 'han', points: 1, orderIndex: 138, tags: ['pretérito perfecto', 'registro informal', 'redes sociales']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Titular de prensa] "El ministro, ___ a dimitir tras el escándalo"',
+    options: [{ label: 'obligado', value: 'obligado' }, { label: 'es obligado', value: 'es obligado' }, { label: 'obliga', value: 'obliga' }, { label: 'obligaba', value: 'obligaba' }],
+    correctAnswer: 'obligado', points: 1, orderIndex: 139, tags: ['participio', 'registro periodístico', 'titular']
+  },
+
+  // B2 — Varied Registers
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Contrato legal] "El arrendatario ___ por la presente aceptar los términos y condiciones establecidos en el presente contrato."',
+    options: [{ label: 'se compromete a', value: 'se compromete a' }, { label: 'compromete', value: 'compromete' }, { label: 'comprometerá', value: 'comprometerá' }, { label: 'comprometería', value: 'comprometería' }],
+    correctAnswer: 'se compromete a', points: 2, orderIndex: 140, tags: ['presente', 'registro jurídico', 'contrato']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Periodismo] "De no ___ sido por la intervención de última hora, el acuerdo se habría desmoronado."',
+    options: [{ label: 'haber', value: 'haber' }, { label: 'ser', value: 'ser' }, { label: 'estar', value: 'estar' }, { label: 'tener', value: 'tener' }],
+    correctAnswer: 'haber', points: 2, orderIndex: 141, tags: ['infinitivo compuesto', 'registro periodístico', 'condicional']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Irónico/Sarcástico] "Sí claro, ___ a todos nos encantan las reuniones del lunes por la mañana."',
+    options: [{ label: 'obviamente', value: 'obviamente' }, { label: 'aparentemente', value: 'aparentemente' }, { label: 'supuestamente', value: 'supuestamente' }, { label: 'ciertamente', value: 'ciertamente' }],
+    correctAnswer: 'obviamente', points: 2, orderIndex: 142, tags: ['adverbios', 'registro sarcástico', 'oral']
+  },
+
+  // C1 — Varied Registers
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Artículo académico] "Los hallazgos ___ corroborados por tres estudios posteriores revisados por pares."',
+    options: [{ label: 'fueron', value: 'fueron' }, { label: 'eran', value: 'eran' }, { label: 'han sido', value: 'han sido' }, { label: 'serían', value: 'serían' }],
+    correctAnswer: 'fueron', points: 2, orderIndex: 143, tags: ['voz pasiva', 'registro académico', 'investigación']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Diplomático] "La delegación ___ expresar sus reservas respecto a la enmienda propuesta."',
+    options: [{ label: 'desea', value: 'desea' }, { label: 'quiere', value: 'quiere' }, { label: 'prefiere', value: 'prefiere' }, { label: 'necesita', value: 'necesita' }],
+    correctAnswer: 'desea', points: 2, orderIndex: 144, tags: ['presente', 'registro diplomático', 'política']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Literario] "Apenas ___ pronunciado esas palabras cuando el cielo se oscureció."',
+    options: [{ label: 'hubo', value: 'hubo' }, { label: 'había', value: 'había' }, { label: 'ha', value: 'ha' }, { label: 'fue', value: 'fue' }],
+    correctAnswer: 'hubo', points: 2, orderIndex: 145, tags: ['pretérito anterior', 'registro literario', 'narración']
+  },
+
+  // C2 — Varied Registers
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Jurídico arcaico] "No obstante lo anteriormente expuesto, la parte ___ considerada responsable de cualquier daño."',
+    options: [{ label: 'será', value: 'será' }, { label: 'sería', value: 'sería' }, { label: 'es', value: 'es' }, { label: 'fuere', value: 'fuere' }],
+    correctAnswer: 'será', points: 2, orderIndex: 146, tags: ['futuro simple', 'registro jurídico arcaico', 'responsabilidad']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Jerga/Coloquial] "Tío, ese pavo se ha ___ sin pagar, ¡qué morro!"',
+    options: [{ label: 'pirado', value: 'pirado' }, { label: 'ido', value: 'ido' }, { label: 'largado', value: 'largado' }, { label: 'marchado', value: 'marchado' }],
+    correctAnswer: 'pirado', points: 2, orderIndex: 147, tags: ['pretérito perfecto', 'registro coloquial', 'jerga española']
+  },
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
+    questionText: '[Retórico/Oratorio] "No solo ___ fracasado, sino que hemos fracasado de manera espectacular y sin remordimiento."',
+    options: [{ label: 'hemos', value: 'hemos' }, { label: 'habíamos', value: 'habíamos' }, { label: 'hubiéramos', value: 'hubiéramos' }, { label: 'habremos', value: 'habremos' }],
+    correctAnswer: 'hemos', points: 2, orderIndex: 148, tags: ['pretérito perfecto', 'registro oratorio', 'retórica']
+  },
 ]

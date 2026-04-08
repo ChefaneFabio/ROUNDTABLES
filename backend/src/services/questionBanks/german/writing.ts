@@ -14,10 +14,10 @@ export const germanWritingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'German', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
-    questionText: 'Beschreiben Sie Ihre Familie. Wie viele Personen gehören zu Ihrer Familie? Wie heißen sie?',
+    questionText: 'Beschreiben Sie Ihr Team bei der Arbeit. Wie viele Personen gehören zu Ihrem Team? Was machen sie?',
     correctAnswer: '', points: 1, orderIndex: 2,
-    rubric: { minWords: 20, maxWords: 50, criteria: ['Familienwortschatz', 'Zahlen', 'einfache Sätze'] },
-    tags: ['Familie'], timeSuggested: 180
+    rubric: { minWords: 20, maxWords: 50, criteria: ['Berufswortschatz', 'Zahlen', 'einfache Sätze'] },
+    tags: ['Arbeit'], timeSuggested: 180
   },
   // A2 — Short answers (30-60 words)
   {
@@ -162,7 +162,7 @@ export const germanWritingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'German', cefrLevel: 'B1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
-    questionText: 'Sind Hausaufgaben nützlich für Schüler? Geben Sie Ihre Meinung mit Gründen und Beispielen an.',
+    questionText: 'Verbessern flexible Arbeitszeiten die Produktivität? Geben Sie Ihre Meinung mit Gründen und Beispielen an.',
     correctAnswer: '', points: 2, orderIndex: 21,
     rubric: { minWords: 80, maxWords: 150, criteria: ['Meinungsäußerung', 'Begründung', 'Beispiele', 'Absatzstruktur'] },
     tags: ['Meinung', 'Bildung'], timeSuggested: 360

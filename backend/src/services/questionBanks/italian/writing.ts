@@ -14,10 +14,10 @@ export const italianWritingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Italian', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
-    questionText: 'Descrivi la tua famiglia. Quante persone ci sono nella tua famiglia? Come si chiamano?',
+    questionText: 'Descrivi il tuo team di lavoro. Quante persone ci sono nel tuo team? Cosa fanno?',
     correctAnswer: '', points: 1, orderIndex: 2,
-    rubric: { minWords: 20, maxWords: 50, criteria: ['vocabolario della famiglia', 'numeri', 'frasi semplici'] },
-    tags: ['famiglia'], timeSuggested: 180
+    rubric: { minWords: 20, maxWords: 50, criteria: ['vocabolario lavorativo', 'numeri', 'frasi semplici'] },
+    tags: ['lavoro'], timeSuggested: 180
   },
   // A2 — Short answers (30-60 words)
   {
@@ -162,10 +162,10 @@ export const italianWritingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Italian', cefrLevel: 'B1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
-    questionText: 'Pensi che i compiti a casa siano utili per gli studenti? Dai la tua opinione con ragioni ed esempi.',
+    questionText: 'Pensi che l\'orario flessibile migliori la produttività? Dai la tua opinione con ragioni ed esempi.',
     correctAnswer: '', points: 2, orderIndex: 21,
     rubric: { minWords: 80, maxWords: 150, criteria: ['espressione dell\'opinione', 'ragioni a sostegno', 'esempi', 'struttura del paragrafo'] },
-    tags: ['opinione', 'educazione'], timeSuggested: 360
+    tags: ['opinione', 'lavoro'], timeSuggested: 360
   },
 
   // B2 (150-250 parole)

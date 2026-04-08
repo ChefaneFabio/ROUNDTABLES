@@ -14,10 +14,10 @@ export const spanishWritingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Spanish', cefrLevel: 'A1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
-    questionText: 'Describe a tu familia. ¿Cuántas personas hay en tu familia? ¿Cómo se llaman?',
+    questionText: 'Describe tu equipo de trabajo. ¿Cuántas personas hay en tu equipo? ¿Qué hacen?',
     correctAnswer: '', points: 1, orderIndex: 2,
-    rubric: { minWords: 20, maxWords: 50, criteria: ['vocabulario de familia', 'números', 'oraciones simples'] },
-    tags: ['familia'], timeSuggested: 180
+    rubric: { minWords: 20, maxWords: 50, criteria: ['vocabulario laboral', 'números', 'oraciones simples'] },
+    tags: ['trabajo'], timeSuggested: 180
   },
   // A2 — Short answers (30-60 words)
   {
@@ -162,7 +162,7 @@ export const spanishWritingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Spanish', cefrLevel: 'B1', questionType: 'SHORT_ANSWER', skill: 'WRITING',
-    questionText: '¿Crees que los deberes son útiles para los estudiantes? Da tu opinión con razones y ejemplos.',
+    questionText: '¿Crees que el horario flexible mejora la productividad? Da tu opinión con razones y ejemplos.',
     correctAnswer: '', points: 2, orderIndex: 21,
     rubric: { minWords: 80, maxWords: 150, criteria: ['expresión de opinión', 'razones de apoyo', 'ejemplos', 'estructura de párrafo'] },
     tags: ['opinión', 'educación'], timeSuggested: 360

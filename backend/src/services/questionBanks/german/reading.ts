@@ -849,4 +849,366 @@ export const germanReadingQuestions: MultiSkillQuestionData[] = [
     questionText: 'Komplexe Ideen werden für den ___ vereinfacht.',
     correctAnswer: 'Massenkonsum', points: 2, orderIndex: 82, tags: ['Literatur', 'Wortschatz']
   },
+
+  // ===== PROFESSIONELLE / ARBEITSPLATZ-LESEFRAGEN =====
+
+  // --- A1: Büro-E-Mail über eine Terminänderung ---
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Terminänderung',
+    passage: 'Liebes Team, Das Meeting am Mittwoch ist jetzt um 15:00 Uhr, nicht um 14:00 Uhr. Der Besprechungsraum ist Raum 5B. Bitte bringen Sie Ihren Laptop mit. Vielen Dank, David.',
+    questionText: 'Um wie viel Uhr ist das Meeting jetzt?',
+    options: [
+      { label: '14:00 Uhr', value: '14:00 Uhr' },
+      { label: '15:00 Uhr', value: '15:00 Uhr' },
+      { label: '17:00 Uhr', value: '17:00 Uhr' },
+      { label: '13:00 Uhr', value: '13:00 Uhr' }
+    ],
+    correctAnswer: '15:00 Uhr', points: 1, orderIndex: 83, tags: ['Geschäfts-E-Mail', 'Arbeitsplatz']
+  },
+
+  // --- A1: Speisekarte für ein Geschäftsessen ---
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Mittagsmenü',
+    passage: 'Tagesmenü — Gasthaus zur Linde. Tagessuppe: Tomatensuppe — 4,50 €. Hähnchen mit Salat — 9,00 €. Pasta mit Gemüse — 7,50 €. Kaffee oder Tee inklusive bei jedem Gericht.',
+    questionText: 'Was kostet das Hähnchen mit Salat?',
+    options: [
+      { label: '4,50 €', value: '4,50 €' },
+      { label: '7,50 €', value: '7,50 €' },
+      { label: '9,00 €', value: '9,00 €' },
+      { label: '12,00 €', value: '12,00 €' }
+    ],
+    correctAnswer: '9,00 €', points: 1, orderIndex: 84, tags: ['Geschäftsessen', 'Arbeitsplatz']
+  },
+
+  // --- A1: Hotel-Informationskarte ---
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Hotel-Informationskarte',
+    passage: 'Willkommen im Hotel am Park. Ihr Zimmer ist 412. Frühstück ist von 7:00 bis 10:00 Uhr im Restaurant im Erdgeschoss. WLAN-Passwort: PARK2024. Check-out ist um 11:00 Uhr.',
+    questionText: 'Wie lautet das WLAN-Passwort?',
+    options: [
+      { label: 'HOTEL2024', value: 'HOTEL2024' },
+      { label: 'PARK2024', value: 'PARK2024' },
+      { label: 'ZIMMER412', value: 'ZIMMER412' },
+      { label: 'WILLKOMMEN', value: 'WILLKOMMEN' }
+    ],
+    correctAnswer: 'PARK2024', points: 1, orderIndex: 85, tags: ['Geschäftsreise', 'Hotel']
+  },
+
+  // --- A1: Einfacher Arbeitsplan ---
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Wochenarbeitsplan',
+    passage: 'Arbeitsplan — Woche 12. Montag bis Mittwoch: 9:00 – 17:00 Uhr. Donnerstag: Frei. Freitag: 9:00 – 13:00 Uhr. Samstag und Sonntag: Geschlossen.',
+    questionText: 'Wann ist der freie Tag?',
+    options: [
+      { label: 'Montag', value: 'Montag' },
+      { label: 'Mittwoch', value: 'Mittwoch' },
+      { label: 'Donnerstag', value: 'Donnerstag' },
+      { label: 'Freitag', value: 'Freitag' }
+    ],
+    correctAnswer: 'Donnerstag', points: 1, orderIndex: 86, tags: ['Arbeitsplan', 'Arbeitsplatz']
+  },
+
+  // --- A2: Stellenanzeige für eine/n Rezeptionist/in ---
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Stellenanzeige',
+    passage: 'Wir suchen eine/n Rezeptionist/in für unser Büro in München. Sie müssen Deutsch und Englisch sprechen. Die Arbeitszeiten sind Montag bis Freitag, 8:30 bis 17:30 Uhr. Erfahrung mit Microsoft Office ist erforderlich. Bitte senden Sie Ihren Lebenslauf an hr@globaltech.de bis zum 30. März.',
+    questionText: 'Welche Sprachen muss der/die Rezeptionist/in sprechen?',
+    options: [
+      { label: 'Deutsch und Französisch', value: 'Deutsch und Französisch' },
+      { label: 'Deutsch und Englisch', value: 'Deutsch und Englisch' },
+      { label: 'Englisch und Spanisch', value: 'Englisch und Spanisch' },
+      { label: 'Deutsch und Italienisch', value: 'Deutsch und Italienisch' }
+    ],
+    correctAnswer: 'Deutsch und Englisch', points: 1, orderIndex: 87, tags: ['Stellenanzeige', 'Arbeitsplatz']
+  },
+
+  // --- A2: E-Mail zur Absage einer Besprechungseinladung ---
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Absage einer Besprechung',
+    passage: 'Hallo Marco, vielen Dank für die Einladung zur Vertriebsbesprechung am Dienstag um 10:00 Uhr. Leider kann ich nicht teilnehmen, weil ich zu dieser Zeit einen Kundenbesuch habe. Könnten Sie mir bitte das Protokoll danach schicken? Mit freundlichen Grüßen, Anna Fischer.',
+    questionText: 'Warum kann Anna nicht an der Besprechung teilnehmen?',
+    options: [
+      { label: 'Sie ist im Urlaub', value: 'Sie ist im Urlaub' },
+      { label: 'Sie hat einen Kundenbesuch', value: 'Sie hat einen Kundenbesuch' },
+      { label: 'Sie ist krank', value: 'Sie ist krank' },
+      { label: 'Sie hat ein Meeting mit ihrem Chef', value: 'Sie hat ein Meeting mit ihrem Chef' }
+    ],
+    correctAnswer: 'Sie hat einen Kundenbesuch', points: 1, orderIndex: 88, tags: ['Geschäfts-E-Mail', 'Arbeitsplatz']
+  },
+
+  // --- A2: Betriebsferien-Mitteilung ---
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Büroschließung',
+    passage: 'Bitte beachten Sie, dass das Büro vom 23. Dezember bis zum 2. Januar wegen der Feiertage geschlossen ist. Der letzte Arbeitstag ist der 22. Dezember. Wenn Sie in dieser Zeit Hilfe brauchen, schreiben Sie eine E-Mail an support@brightcorp.de. Frohe Feiertage!',
+    questionText: 'Wann ist der letzte Arbeitstag vor den Feiertagen?',
+    options: [
+      { label: '20. Dezember', value: '20. Dezember' },
+      { label: '22. Dezember', value: '22. Dezember' },
+      { label: '23. Dezember', value: '23. Dezember' },
+      { label: '2. Januar', value: '2. Januar' }
+    ],
+    correctAnswer: '22. Dezember', points: 1, orderIndex: 89, tags: ['Betriebsmitteilung', 'Arbeitsplatz']
+  },
+
+  // --- A2: Anleitung für die Kaffeemaschine ---
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Anleitung für die Kaffeemaschine',
+    passage: 'So benutzen Sie die Kaffeemaschine: 1. Stellen Sie Ihre Tasse unter die Düse. 2. Drücken Sie den blauen Knopf für Espresso oder den grünen Knopf für Cappuccino. 3. Warten Sie 30 Sekunden. 4. Bitte reinigen Sie die Abtropfschale am Ende jedes Tages. Wenn die Maschine ein rotes Licht zeigt, rufen Sie die Haustechnik unter Durchwahl 220 an.',
+    questionText: 'Was sollen Sie tun, wenn die Maschine ein rotes Licht zeigt?',
+    options: [
+      { label: 'Den blauen Knopf drücken', value: 'Den blauen Knopf drücken' },
+      { label: 'Die Abtropfschale reinigen', value: 'Die Abtropfschale reinigen' },
+      { label: 'Die Haustechnik unter Durchwahl 220 anrufen', value: 'Die Haustechnik unter Durchwahl 220 anrufen' },
+      { label: '30 Sekunden warten', value: '30 Sekunden warten' }
+    ],
+    correctAnswer: 'Die Haustechnik unter Durchwahl 220 anrufen', points: 1, orderIndex: 90, tags: ['Büroanleitung', 'Arbeitsplatz']
+  },
+
+  // --- B1: E-Mail über eine Fristverlängerung ---
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Projekt-Update',
+    passage: 'Liebes Team, ich möchte Sie darüber informieren, dass die Frist für den Q3-Bericht auf den 15. Oktober verlängert wurde. Mehrere Teammitglieder haben aufgrund der Systemmigration letzte Woche Schwierigkeiten bei der Datenerhebung gemeldet. Bitte nutzen Sie die zusätzliche Zeit, um die Genauigkeit Ihrer Einreichungen sicherzustellen. Bei Fragen wenden Sie sich an Ihre Abteilungsleitung. Mit freundlichen Grüßen, Sarah Weber, Projektleiterin.',
+    questionText: 'Warum wurde die Frist für den Q3-Bericht verlängert?',
+    options: [
+      { label: 'Die Projektleiterin war im Urlaub', value: 'Die Projektleiterin war im Urlaub' },
+      { label: 'Es gab Schwierigkeiten bei der Datenerhebung wegen der Systemmigration', value: 'Es gab Schwierigkeiten bei der Datenerhebung wegen der Systemmigration' },
+      { label: 'Der Kunde hat Änderungen verlangt', value: 'Der Kunde hat Änderungen verlangt' },
+      { label: 'Das Team wollte mehr Zeit zum Feiern', value: 'Das Team wollte mehr Zeit zum Feiern' }
+    ],
+    correctAnswer: 'Es gab Schwierigkeiten bei der Datenerhebung wegen der Systemmigration', points: 1, orderIndex: 91, tags: ['Geschäfts-E-Mail', 'Arbeitsplatz']
+  },
+
+  // --- B1: Artikel über Homeoffice vs. Büro ---
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Homeoffice oder Büro?',
+    passage: 'Eine aktuelle Umfrage unter 2.000 Angestellten ergab, dass 65 % ein hybrides Arbeitsmodell bevorzugen, das Homeoffice und Bürotage kombiniert. Die Befragten gaben an, zu Hause produktiver zu sein, weil es weniger Unterbrechungen gibt. Allerdings vermissen viele auch den persönlichen Austausch mit Kollegen. Unternehmen experimentieren jetzt mit „Kollaborationstagen", an denen Teams gemeinsam ins Büro kommen, um sich zu treffen und zusammen zu planen. Experten sagen, der Schlüssel sei Flexibilität — den Mitarbeitern die Wahl zu lassen, was am besten zu ihrer Rolle passt.',
+    questionText: 'Was bevorzugen die meisten Angestellten laut der Umfrage?',
+    options: [
+      { label: 'Nur von zu Hause arbeiten', value: 'Nur von zu Hause arbeiten' },
+      { label: 'Ein hybrides Arbeitsmodell', value: 'Ein hybrides Arbeitsmodell' },
+      { label: 'Nur im Büro arbeiten', value: 'Nur im Büro arbeiten' },
+      { label: 'Jedes Jahr den Job wechseln', value: 'Jedes Jahr den Job wechseln' }
+    ],
+    correctAnswer: 'Ein hybrides Arbeitsmodell', points: 1, orderIndex: 92, tags: ['Homeoffice', 'Arbeitstrends']
+  },
+
+  // --- B1: Firmen-Newsletter über eine neue Mitarbeiterleistung ---
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Neues Wellness-Angebot',
+    passage: 'Wir freuen uns, ein neues Wellness-Angebot für alle Vollzeitbeschäftigten ab dem 1. Januar ankündigen zu können. Das Unternehmen übernimmt nun bis zu 500 € pro Jahr für Fitnessstudio-Mitgliedschaften, Yogakurse oder psychologische Beratung. Um dieses Angebot zu nutzen, müssen Mitarbeiter ihre Quittungen innerhalb von 30 Tagen nach Zahlung über das HR-Portal einreichen. Diese Initiative ist Teil unseres Engagements für das Wohlbefinden der Mitarbeiter. Weitere Informationen finden Sie im Bereich „Benefits" im Firmen-Intranet.',
+    questionText: 'Wie können Mitarbeiter das neue Wellness-Angebot nutzen?',
+    options: [
+      { label: 'Indem sie ihren Vorgesetzten um Genehmigung bitten', value: 'Indem sie ihren Vorgesetzten um Genehmigung bitten' },
+      { label: 'Indem sie Quittungen über das HR-Portal einreichen', value: 'Indem sie Quittungen über das HR-Portal einreichen' },
+      { label: 'Indem sie das Firmenfitnessstudio besuchen', value: 'Indem sie das Firmenfitnessstudio besuchen' },
+      { label: 'Indem sie an einem Pflichtworkshop teilnehmen', value: 'Indem sie an einem Pflichtworkshop teilnehmen' }
+    ],
+    correctAnswer: 'Indem sie Quittungen über das HR-Portal einreichen', points: 1, orderIndex: 93, tags: ['Mitarbeiterleistungen', 'Arbeitsplatz']
+  },
+
+  // --- B1: Reiserichtlinie ---
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Geschäftsreiserichtlinie',
+    passage: 'Alle Geschäftsreisen müssen mindestens zwei Wochen vor Reiseantritt von Ihrem Vorgesetzten genehmigt werden. Economy-Class-Flüge sind für Reisen unter fünf Stunden zu buchen. Hotelkosten dürfen 150 € pro Nacht nicht überschreiten. Mitarbeiter sollen das Firmen-Reiseportal für Flug- und Hotelbuchungen nutzen. Mahlzeiten auf Reisen werden bis zu 45 € pro Tag erstattet. Alle Belege müssen innerhalb von 10 Arbeitstagen nach Ihrer Rückkehr eingereicht werden.',
+    questionText: 'Wie hoch dürfen die Hotelkosten pro Nacht maximal sein?',
+    options: [
+      { label: '100 €', value: '100 €' },
+      { label: '120 €', value: '120 €' },
+      { label: '150 €', value: '150 €' },
+      { label: '200 €', value: '200 €' }
+    ],
+    correctAnswer: '150 €', points: 1, orderIndex: 94, tags: ['Reiserichtlinie', 'Arbeitsplatz']
+  },
+
+  // --- B2: Artikel über Führungsstile ---
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Führungsstile in modernen Unternehmen',
+    passage: 'Das traditionelle Führungsmodell der Befehl-und-Kontrolle-Struktur wird zunehmend durch kollaborativere Ansätze ersetzt. Transformationale Führungskräfte, die ihre Teams durch eine überzeugende Vision inspirieren und motivieren, fördern nachweislich ein höheres Mitarbeiterengagement. Servant Leadership, bei dem die Hauptaufgabe der Führungskraft darin besteht, die Entwicklung ihrer Teammitglieder zu unterstützen, gewinnt in Technologieunternehmen an Popularität. Die Forschung zeigt jedoch, dass kein einzelner Stil universell wirksam ist; die besten Führungskräfte passen ihren Ansatz je nach Situation, Reife des Teams und Art der Aufgabe an. Dieses Konzept, bekannt als situative Führung, erfordert emotionale Intelligenz und ein tiefes Verständnis der Teamdynamik.',
+    questionText: 'Was erfordert situative Führung laut dem Artikel?',
+    options: [
+      { label: 'Strenge Regeln für jede Situation', value: 'Strenge Regeln für jede Situation' },
+      { label: 'Emotionale Intelligenz und Verständnis der Teamdynamik', value: 'Emotionale Intelligenz und Verständnis der Teamdynamik' },
+      { label: 'Erfahrung nur im Technologiesektor', value: 'Erfahrung nur im Technologiesektor' },
+      { label: 'Einen einzigen konsistenten Führungsansatz', value: 'Einen einzigen konsistenten Führungsansatz' }
+    ],
+    correctAnswer: 'Emotionale Intelligenz und Verständnis der Teamdynamik', points: 2, orderIndex: 95, tags: ['Führung', 'Management']
+  },
+
+  // --- B2: Ergebnisse einer Mitarbeiterzufriedenheitsumfrage ---
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Ergebnisse der Mitarbeiterzufriedenheitsumfrage',
+    passage: 'Die jährliche Mitarbeiterzufriedenheitsumfrage, an der 87 % der Belegschaft teilnahmen, zeigt mehrere bemerkenswerte Trends. Die Gesamtzufriedenheit ist im Vergleich zum Vorjahr von 72 % auf 78 % gestiegen, hauptsächlich dank Verbesserungen in der Führungskommunikation und bei flexiblen Arbeitsregelungen. Allerdings bleiben Karriereentwicklungsmöglichkeiten mit 58 % die am schlechtesten bewertete Kategorie. Viele Befragte äußerten Frustration über fehlende klare Aufstiegswege. Die Personalabteilung hat ein Mentoring-Programm und vierteljährliche Workshops zur Karriereentwicklung vorgeschlagen. Zudem hoben 40 % der Befragten hervor, dass die Arbeitsbelastung zwischen den Abteilungen weiterhin ungleich verteilt ist.',
+    questionText: 'Was ist der am schlechtesten bewertete Bereich in der Umfrage?',
+    options: [
+      { label: 'Führungskommunikation', value: 'Führungskommunikation' },
+      { label: 'Flexible Arbeitsregelungen', value: 'Flexible Arbeitsregelungen' },
+      { label: 'Karriereentwicklungsmöglichkeiten', value: 'Karriereentwicklungsmöglichkeiten' },
+      { label: 'Arbeitsbelastung', value: 'Arbeitsbelastung' }
+    ],
+    correctAnswer: 'Karriereentwicklungsmöglichkeiten', points: 2, orderIndex: 96, tags: ['Mitarbeiterumfrage', 'Personalwesen']
+  },
+
+  // --- B2: Work-Life-Balance-Trends ---
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Work-Life-Balance-Trends in Europa',
+    passage: 'Eine umfassende Studie der Europäischen Stiftung zur Verbesserung der Lebens- und Arbeitsbedingungen hat signifikante Unterschiede in der Work-Life-Balance zwischen den EU-Mitgliedsstaaten festgestellt. Die nordischen Länder liegen konstant an der Spitze mit kürzeren durchschnittlichen Arbeitszeiten und großzügigen Elternzeitregelungen. Im Gegensatz dazu berichten südeuropäische Länder über längere Arbeitszeiten, profitieren aber von stärkeren familiären Unterstützungsnetzwerken. Die Studie identifizierte auch einen wachsenden Trend zur Vier-Tage-Woche, wobei Pilotprogramme in Belgien, Spanien und Großbritannien vielversprechende Ergebnisse zeigten — die Produktivität blieb stabil oder verbesserte sich, während das Burnout-Risiko um 30 % sank. Kritiker argumentieren jedoch, dass solche Modelle hauptsächlich für wissensbasierte Branchen geeignet seien.',
+    questionText: 'Was zeigten die Pilotprogramme zur Vier-Tage-Woche?',
+    options: [
+      { label: 'Die Produktivität sank erheblich', value: 'Die Produktivität sank erheblich' },
+      { label: 'Die Produktivität blieb stabil oder verbesserte sich und das Burnout-Risiko sank', value: 'Die Produktivität blieb stabil oder verbesserte sich und das Burnout-Risiko sank' },
+      { label: 'Die Mitarbeiter bevorzugten fünf Arbeitstage', value: 'Die Mitarbeiter bevorzugten fünf Arbeitstage' },
+      { label: 'Nur Industrieunternehmen profitierten', value: 'Nur Industrieunternehmen profitierten' }
+    ],
+    correctAnswer: 'Die Produktivität blieb stabil oder verbesserte sich und das Burnout-Risiko sank', points: 2, orderIndex: 97, tags: ['Work-Life-Balance', 'europäische Trends']
+  },
+
+  // --- B2: Zusammenfassung eines Geschäftsvorschlags ---
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Executive Summary: Marktexpansionsvorschlag',
+    passage: 'Dieser Vorschlag skizziert eine Strategie zur Expansion in den DACH-Raum (Deutschland, Österreich und Schweiz) in den nächsten 18 Monaten. Die Marktforschung zeigt eine starke Nachfrage nach unserer SaaS-Plattform bei mittelständischen Unternehmen im produzierenden Gewerbe, mit einem geschätzten adressierbaren Markt von 45 Millionen Euro pro Jahr. Der vorgeschlagene Ansatz umfasst die Eröffnung eines regionalen Vertriebsbüros in München, die Einstellung eines fünfköpfigen lokalen Vertriebsteams und Partnerschaften mit zwei etablierten Beratungsunternehmen. Die erforderliche Gesamtinvestition beträgt 1,2 Millionen Euro, mit einem prognostizierten Break-even-Punkt nach 14 Monaten. Wesentliche Risiken umfassen regulatorische Unterschiede zwischen den drei Märkten und Konkurrenz durch etablierte lokale Anbieter.',
+    questionText: 'Wann wird der Break-even-Punkt für diese Expansion erwartet?',
+    options: [
+      { label: '6 Monate', value: '6 Monate' },
+      { label: '14 Monate', value: '14 Monate' },
+      { label: '18 Monate', value: '18 Monate' },
+      { label: '24 Monate', value: '24 Monate' }
+    ],
+    correctAnswer: '14 Monate', points: 2, orderIndex: 98, tags: ['Geschäftsvorschlag', 'Strategie']
+  },
+
+  // --- C1: Interkulturelle Verhandlungsstrategien ---
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Interkulturelle Verhandlungsstrategien',
+    passage: 'Effektive interkulturelle Verhandlungen erfordern weit mehr als Sprachkenntnisse; sie verlangen ein Verständnis tief verankerter kultureller Rahmenbedingungen, die beeinflussen, wie Vertrauen aufgebaut, Entscheidungen getroffen und Vereinbarungen erzielt werden. In High-Context-Kulturen wie Japan und vielen Ländern des Nahen Ostens geht der Beziehungsaufbau oft jeder Diskussion über Konditionen voraus, und Schweigen während der Verhandlungen kann Nachdenken statt Ablehnung signalisieren. Im Gegensatz dazu neigen Low-Context-Kulturen wie die USA und Deutschland dazu, Direktheit, datengestützte Argumente und schriftliche Verträge zu priorisieren. Forschungen von Erin Meyer am INSEAD haben gezeigt, dass selbst innerhalb Europas erhebliche Unterschiede bestehen — französische Verhandlungsführer beispielsweise engagieren sich oft in intellektuellen Debatten als Teil des Prozesses, während skandinavische Gegenüber die Konsensbildung bevorzugen und konfrontative Taktiken als kontraproduktiv wahrnehmen können.',
+    questionText: 'Was kann Schweigen während Verhandlungen in High-Context-Kulturen laut dem Text bedeuten?',
+    options: [
+      { label: 'Ablehnung des Vorschlags', value: 'Ablehnung des Vorschlags' },
+      { label: 'Den Wunsch, die Verhandlung zu beenden', value: 'Den Wunsch, die Verhandlung zu beenden' },
+      { label: 'Nachdenken statt Ablehnung', value: 'Nachdenken statt Ablehnung' },
+      { label: 'Mangelnde Vorbereitung', value: 'Mangelnde Vorbereitung' }
+    ],
+    correctAnswer: 'Nachdenken statt Ablehnung', points: 2, orderIndex: 99, tags: ['interkulturell', 'Verhandlung']
+  },
+
+  // --- C1: Corporate Social Responsibility ---
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Die Wirkung von Corporate Social Responsibility',
+    passage: 'Corporate Social Responsibility (CSR) hat sich von einer peripheren PR-Maßnahme zu einem strategischen Imperativ für viele multinationale Unternehmen entwickelt. Studien der Harvard Business School haben gezeigt, dass Unternehmen mit robusten CSR-Programmen ihre Wettbewerber langfristig finanziell übertreffen, teilweise weil sie Top-Talente anziehen und halten, die zunehmend nach sinnstiftender Arbeit suchen. Die Zunahme von „Greenwashing" — oberflächliche oder irreführende Behauptungen über Umweltpraktiken — hat jedoch zu wachsender Skepsis bei Verbrauchern und Aufsichtsbehörden geführt. Die EU-Richtlinie zur Nachhaltigkeitsberichterstattung (CSRD), die 2024 in Kraft trat, stellt einen bedeutenden regulatorischen Wandel dar und verpflichtet große Unternehmen zur Offenlegung detaillierter Umwelt-, Sozial- und Governance-Daten (ESG). Kritiker der CSR argumentieren, dass sie von den grundlegenden strukturellen Veränderungen ablenken kann, die zur Bekämpfung von Ungleichheit und Klimawandel notwendig sind.',
+    questionText: 'Was ist das Hauptproblem des „Greenwashings" laut dem Text?',
+    options: [
+      { label: 'Es erhöht die Unternehmensgewinne unfair', value: 'Es erhöht die Unternehmensgewinne unfair' },
+      { label: 'Es hat zu Skepsis über die Authentizität von CSR-Aussagen geführt', value: 'Es hat zu Skepsis über die Authentizität von CSR-Aussagen geführt' },
+      { label: 'Es wird nur von kleinen Unternehmen praktiziert', value: 'Es wird nur von kleinen Unternehmen praktiziert' },
+      { label: 'Es ist durch EU-Vorschriften vorgeschrieben', value: 'Es ist durch EU-Vorschriften vorgeschrieben' }
+    ],
+    correctAnswer: 'Es hat zu Skepsis über die Authentizität von CSR-Aussagen geführt', points: 2, orderIndex: 100, tags: ['CSR', 'Nachhaltigkeit']
+  },
+
+  // --- C1: Digitale Transformation in KMU ---
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Herausforderungen der digitalen Transformation in KMU',
+    passage: 'Während große Unternehmen die digitale Transformation im Allgemeinen mit eigenen Budgets und spezialisierten Teams vorangetrieben haben, stehen kleine und mittlere Unternehmen (KMU) vor besonderen Herausforderungen. Ein OECD-Bericht von 2024 ergab, dass nur 35 % der europäischen KMU fortgeschrittene digitale Werkzeuge wie Cloud Computing, Datenanalyse oder Automatisierung eingeführt hatten. Die wichtigsten genannten Hindernisse waren begrenzte finanzielle Mittel, ein Mangel an digital qualifizierten Mitarbeitern und Widerstand gegen Veränderungen durch langjährige Mitarbeiter, die an etablierte Arbeitsabläufe gewöhnt sind. Darüber hinaus äußerten viele KMU-Inhaber Unsicherheit darüber, welche Technologien einen greifbaren Return on Investment liefern würden. Staatlich geförderte Digitalisierungsprogramme haben gemischte Ergebnisse erzielt; während Subventionen einigen Unternehmen bei der Einführung neuer Systeme geholfen haben, führt fehlende laufende technische Unterstützung oft dazu, dass neue Tools untergenutzt werden.',
+    questionText: 'Laut dem OECD-Bericht: Wie viel Prozent der europäischen KMU hatten fortgeschrittene digitale Werkzeuge eingeführt?',
+    options: [
+      { label: '25 %', value: '25 %' },
+      { label: '35 %', value: '35 %' },
+      { label: '50 %', value: '50 %' },
+      { label: '65 %', value: '65 %' }
+    ],
+    correctAnswer: '35 %', points: 2, orderIndex: 101, tags: ['digitale Transformation', 'KMU']
+  },
+
+  // --- C1: Talentbindung ---
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Talentbindung in wettbewerbsintensiven Märkten',
+    passage: 'In einer Ära, die von Fachkräftemangel und der sogenannten „Großen Kündigung" geprägt ist, sind Unternehmen gezwungen, ihre Strategien zur Talentbindung zu überdenken. Traditionelle Ansätze, die auf wettbewerbsfähigen Gehältern und Jahresboni basieren, erweisen sich als unzureichend, da Mitarbeiter — insbesondere Millennials und die Generation Z — zunehmend Sinn, Autonomie und Karriereentwicklung über rein finanzielle Belohnungen stellen. Führende Unternehmen investieren in personalisierte Lernpfade, interne Mobilitätsprogramme und transparente Beförderungskriterien. Der LinkedIn Workplace Learning Report 2024 ergab, dass Mitarbeiter, die Lern- und Wachstumsmöglichkeiten sehen, 3,5-mal wahrscheinlicher bei ihrem Arbeitgeber bleiben. Die Bindung hängt jedoch nicht allein von individuellen Anreizen ab; Unternehmenskultur, inklusive Führung und die Qualität der Beziehung zwischen Führungskraft und Mitarbeiter bleiben die stärksten Prädiktoren dafür, ob ein Mitarbeiter bleibt oder geht.',
+    questionText: 'Was macht Mitarbeiter laut LinkedIn-Bericht 3,5-mal wahrscheinlicher, zu bleiben?',
+    options: [
+      { label: 'Höhere Gehälter als die Konkurrenz', value: 'Höhere Gehälter als die Konkurrenz' },
+      { label: 'Lern- und Wachstumsmöglichkeiten', value: 'Lern- und Wachstumsmöglichkeiten' },
+      { label: 'Weniger Arbeitsstunden pro Woche', value: 'Weniger Arbeitsstunden pro Woche' },
+      { label: 'Jahresboni', value: 'Jahresboni' }
+    ],
+    correctAnswer: 'Lern- und Wachstumsmöglichkeiten', points: 2, orderIndex: 102, tags: ['Talentbindung', 'HR-Strategie']
+  },
+
+  // --- C2: Ethische KI in HR-Entscheidungen ---
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Ethische KI-Implementierung in HR-Entscheidungen',
+    passage: 'Der Einsatz künstlicher Intelligenz im Personalwesen — von Lebenslauf-Screening-Algorithmen bis hin zu prädiktiven Fluktuationsmodellen — wirft tiefgreifende ethische Fragen auf, mit denen Organisationen gerade erst beginnen, sich auseinanderzusetzen. Während KI verspricht, unbewusste Vorurteile durch Standardisierung der Bewertungskriterien zu reduzieren, zeichnen empirische Befunde ein differenzierteres Bild. Amazons inzwischen eingestelltes Rekrutierungstool, das Lebensläufe mit dem Wort „Frauen" systematisch herabstufte, hat gezeigt, wie auf historisch verzerrten Daten trainierte Algorithmen bestehende Ungleichheiten perpetuieren und sogar verstärken können. Die EU-KI-Verordnung, die 2024 verabschiedet wurde, stuft beschäftigungsbezogene KI-Systeme als „hochriskant" ein und unterwirft sie strengen Anforderungen an Transparenz, menschliche Aufsicht und Bias-Auditing. Doch allein die Compliance ist unzureichend; Organisationen müssen das kultivieren, was Wissenschaftler als „algorithmische Kompetenz" bezeichnen — die Fähigkeit von HR-Fachleuten, KI-Ergebnisse kritisch zu bewerten, anstatt sie als objektive Wahrheiten zu behandeln.',
+    questionText: 'Was ist laut dem Text allein unzureichend bei der Implementierung von KI im Personalwesen?',
+    options: [
+      { label: 'Technische Schulung für Ingenieure', value: 'Technische Schulung für Ingenieure' },
+      { label: 'Regulatorische Compliance', value: 'Regulatorische Compliance' },
+      { label: 'Die Erhöhung des Trainingsdatenvolumens', value: 'Die Erhöhung des Trainingsdatenvolumens' },
+      { label: 'Die Eliminierung jeglicher menschlicher Beteiligung', value: 'Die Eliminierung jeglicher menschlicher Beteiligung' }
+    ],
+    correctAnswer: 'Regulatorische Compliance', points: 2, orderIndex: 103, tags: ['KI-Ethik', 'HR-Technologie']
+  },
+
+  // --- C2: Stakeholder-Kapitalismus vs. Shareholder-Primat ---
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Stakeholder-Kapitalismus vs. Shareholder-Primat',
+    passage: 'Die Debatte zwischen Stakeholder-Kapitalismus und Shareholder-Primat stellt eine der folgenreichsten ideologischen Bruchlinien im zeitgenössischen Wirtschaftsdenken dar. Milton Friedmans Doktrin von 1970 — dass die einzige soziale Verantwortung eines Unternehmens darin besteht, seine Gewinne zu steigern — dominierte den angloamerikanischen Kapitalismus über Jahrzehnte. Das Stakeholder-Modell, verfochten von Persönlichkeiten wie Klaus Schwab vom Weltwirtschaftsforum, vertritt die Auffassung, dass Unternehmen die Interessen von Aktionären, Mitarbeitern, Kunden, Gemeinschaften und der Umwelt ausgleichen müssen, um langfristige Wertschöpfung zu sichern. Die Erklärung des Business Roundtable von 2019, unterzeichnet von 181 CEOs großer US-Unternehmen, bekannte sich formal zu einer stakeholder-orientierten Ausrichtung. Kritiker haben diese Wende jedoch als weitgehend performativ charakterisiert und darauf hingewiesen, dass die Vergütungsstrukturen der Führungskräfte nach wie vor überwiegend an die Aktienkursentwicklung gekoppelt sind.',
+    questionText: 'Warum bezeichnen Kritiker das Stakeholder-Bekenntnis des Business Roundtable von 2019 als „performativ"?',
+    options: [
+      { label: 'Weil die CEOs die Erklärung nicht freiwillig unterzeichneten', value: 'Weil die CEOs die Erklärung nicht freiwillig unterzeichneten' },
+      { label: 'Weil die Vergütung der Führungskräfte weiterhin an die Aktienkursentwicklung gebunden ist', value: 'Weil die Vergütung der Führungskräfte weiterhin an die Aktienkursentwicklung gebunden ist' },
+      { label: 'Weil Stakeholder-Kapitalismus in den USA illegal ist', value: 'Weil Stakeholder-Kapitalismus in den USA illegal ist' },
+      { label: 'Weil die Erklärung im folgenden Jahr zurückgezogen wurde', value: 'Weil die Erklärung im folgenden Jahr zurückgezogen wurde' }
+    ],
+    correctAnswer: 'Weil die Vergütung der Führungskräfte weiterhin an die Aktienkursentwicklung gebunden ist', points: 2, orderIndex: 104, tags: ['Stakeholder-Kapitalismus', 'Unternehmensführung']
+  },
+
+  // --- C2: Organisationale Resilienz nach der Pandemie ---
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Organisationale Resilienz in der Post-Pandemie-Ära',
+    passage: 'Die COVID-19-Pandemie diente als beispielloser Belastungstest für die organisationale Resilienz und legte kritische Schwachstellen in Lieferketten, Personalmanagement und strategischer Planung offen. Organisationen, die in diversifizierte Liefernetzwerke, digitale Infrastruktur und adaptive Führungskonzepte investiert hatten, bewältigten die Krise besser als solche, die auf schlanke, effizienzmaximierte Modelle mit minimaler Redundanz setzten. Der Post-Pandemie-Diskurs um Resilienz läuft jedoch Gefahr, echte Anpassungsfähigkeit mit bloßem Krisenüberleben zu verwechseln. Wahre organisationale Resilienz, wie sie von Wissenschaftlern wie Kathleen Sutcliffe und Karl Weick definiert wird, umfasst nicht nur die Fähigkeit, Störungen zu absorbieren und sich davon zu erholen, sondern auch die Kapazität, aufkommende Bedrohungen zu antizipieren und sich angesichts grundlegend veränderter Bedingungen zu transformieren. Unternehmen, die lediglich ihre vorpandemischen Abläufe wiederherstellten, ohne ihr Geschäftsmodell neu zu denken, könnten für die kumulativen Unsicherheiten aus Klimadisruption, geopolitischer Instabilität und technologischem Wandel schlecht gerüstet sein.',
+    questionText: 'Welches Risiko birgt der Post-Pandemie-Diskurs über Resilienz laut dem Text?',
+    options: [
+      { label: 'Dass Unternehmen zu viel in digitale Infrastruktur investieren', value: 'Dass Unternehmen zu viel in digitale Infrastruktur investieren' },
+      { label: 'Dass echte Anpassungsfähigkeit mit bloßem Krisenüberleben verwechselt wird', value: 'Dass echte Anpassungsfähigkeit mit bloßem Krisenüberleben verwechselt wird' },
+      { label: 'Dass Mitarbeiter die Rückkehr ins Büro verweigern', value: 'Dass Mitarbeiter die Rückkehr ins Büro verweigern' },
+      { label: 'Dass Lieferketten zu stark diversifiziert werden', value: 'Dass Lieferketten zu stark diversifiziert werden' }
+    ],
+    correctAnswer: 'Dass echte Anpassungsfähigkeit mit bloßem Krisenüberleben verwechselt wird', points: 2, orderIndex: 105, tags: ['organisationale Resilienz', 'Strategie']
+  },
+
+  // --- C2: ROI der beruflichen Weiterbildung ---
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Die Ökonomie des ROI beruflicher Weiterbildung',
+    passage: 'Die Quantifizierung des Return on Investment (ROI) von Programmen zur beruflichen Weiterbildung bleibt eine der hartnäckigsten Herausforderungen im Humankapitalmanagement. Traditionelle Ansätze wie das Vier-Stufen-Evaluationsmodell von Kirkpatrick bewerten die Wirkung von Schulungen anhand von Teilnehmerzufriedenheit, Wissenserwerb, Verhaltensänderung und Geschäftsergebnissen — wobei jede weitere Stufe zunehmende Messschwierigkeiten mit sich bringt. Das Problem der kausalen Zuordnung ist besonders akut: Den Einfluss eines Schulungsprogramms von Störvariablen wie Marktbedingungen, Führungsqualität und individueller Motivation zu isolieren, erfordert rigorose experimentelle Designs, für die den meisten Organisationen die Ressourcen oder die Bereitschaft fehlen. Die Erweiterung des Kirkpatrick-Modells durch Jack Phillips um eine fünfte Stufe — den finanziellen ROI — hat in Unternehmen an Bedeutung gewonnen, doch Kritiker argumentieren, dass die Reduktion komplexer Entwicklungsergebnisse auf monetäre Kennzahlen immaterielle Vorteile wie gesteigerte Innovationskapazität und stärkere berufliche Netzwerke zu unterbewerten droht.',
+    questionText: 'Was ist das „Problem der kausalen Zuordnung", das im Text beschrieben wird?',
+    options: [
+      { label: 'Die Schwierigkeit, qualifizierte Trainer zu finden', value: 'Die Schwierigkeit, qualifizierte Trainer zu finden' },
+      { label: 'Die Herausforderung, den Einfluss einer Schulung von Störvariablen zu isolieren', value: 'Die Herausforderung, den Einfluss einer Schulung von Störvariablen zu isolieren' },
+      { label: 'Das Problem, dass Mitarbeiter nicht an Schulungen teilnehmen', value: 'Das Problem, dass Mitarbeiter nicht an Schulungen teilnehmen' },
+      { label: 'Die hohen Kosten der Implementierung des Kirkpatrick-Modells', value: 'Die hohen Kosten der Implementierung des Kirkpatrick-Modells' }
+    ],
+    correctAnswer: 'Die Herausforderung, den Einfluss einer Schulung von Störvariablen zu isolieren', points: 2, orderIndex: 106, tags: ['berufliche Weiterbildung', 'ROI', 'HR-Strategie']
+  },
 ]

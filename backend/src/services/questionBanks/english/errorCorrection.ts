@@ -12,16 +12,16 @@ export const englishErrorCorrectionQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'English', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
-    passage: 'She don\'t like chocolate.',
+    passage: 'She don\'t like deadlines.',
     questionText: 'Find and correct the error in this sentence.',
-    correctAnswer: 'She doesn\'t like chocolate.|She does not like chocolate.',
+    correctAnswer: 'She doesn\'t like deadlines.|She does not like deadlines.',
     points: 1, orderIndex: 1, tags: ['present simple', 'negation']
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
-    passage: 'He goed to the store yesterday.',
+    passage: 'He goed to the office yesterday.',
     questionText: 'Find and correct the error in this sentence.',
-    correctAnswer: 'He went to the store yesterday.',
+    correctAnswer: 'He went to the office yesterday.',
     points: 1, orderIndex: 2, tags: ['past simple', 'irregular verbs']
   },
 
@@ -80,9 +80,9 @@ export const englishErrorCorrectionQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'English', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
-    passage: 'Neither the teacher nor the students was aware of the change.',
+    passage: 'Neither the manager nor the employees was aware of the change.',
     questionText: 'Find and correct the error in this sentence.',
-    correctAnswer: 'Neither the teacher nor the students were aware of the change.',
+    correctAnswer: 'Neither the manager nor the employees were aware of the change.',
     points: 1, orderIndex: 9, tags: ['subject-verb agreement', 'neither/nor']
   },
   {
@@ -107,16 +107,16 @@ export const englishErrorCorrectionQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
-    passage: 'There is many people in the park.',
+    passage: 'There is many employees in the department.',
     questionText: 'Find and correct the error in this sentence.',
-    correctAnswer: 'There are many people in the park.',
+    correctAnswer: 'There are many employees in the department.',
     points: 1, orderIndex: 12, tags: ['there is/are', 'subject-verb agreement']
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
-    passage: 'She can to swim very well.',
+    passage: 'She can to manage a team very well.',
     questionText: 'Find and correct the error in this sentence.',
-    correctAnswer: 'She can swim very well.',
+    correctAnswer: 'She can manage a team very well.',
     points: 1, orderIndex: 13, tags: ['modal verbs', 'infinitive']
   },
   {
@@ -128,9 +128,9 @@ export const englishErrorCorrectionQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
-    passage: 'He always is late for class.',
+    passage: 'He always is late for meetings.',
     questionText: 'Find and correct the error in this sentence.',
-    correctAnswer: 'He is always late for class.',
+    correctAnswer: 'He is always late for meetings.',
     points: 1, orderIndex: 15, tags: ['adverb position', 'frequency']
   },
 
@@ -232,9 +232,9 @@ export const englishErrorCorrectionQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'C1', questionType: 'ERROR_CORRECTION', skill: 'ERROR_CORRECTION',
-    passage: 'The number of students who has enrolled this year has increased significantly.',
+    passage: 'The number of applicants who has applied this year has increased significantly.',
     questionText: 'Find and correct the error in this sentence.',
-    correctAnswer: 'The number of students who have enrolled this year has increased significantly.',
+    correctAnswer: 'The number of applicants who have applied this year has increased significantly.',
     points: 1, orderIndex: 29, tags: ['subject-verb agreement', 'relative clause']
   },
   {

@@ -831,4 +831,366 @@ export const spanishReadingQuestions: MultiSkillQuestionData[] = [
     questionText: 'La estrategia narrativa de Borges en este cuento es de tipo ___.',
     correctAnswer: 'metaficcional', points: 2, orderIndex: 82, tags: ['literatura', 'narratología']
   },
+
+  // ===== PREGUNTAS DE LECTURA PROFESIONAL / LABORAL =====
+
+  // --- A1: Correo electrónico de oficina sobre un cambio de hora de reunión ---
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Cambio de hora de la reunión',
+    passage: 'Estimado equipo, La reunión del miércoles es ahora a las 15:00, no a las 14:00. La sala de reuniones es la sala 5B. Por favor, traigan su portátil. Gracias, David.',
+    questionText: '¿A qué hora es la reunión ahora?',
+    options: [
+      { label: 'A las 14:00', value: 'A las 14:00' },
+      { label: 'A las 15:00', value: 'A las 15:00' },
+      { label: 'A las 17:00', value: 'A las 17:00' },
+      { label: 'A las 13:00', value: 'A las 13:00' }
+    ],
+    correctAnswer: 'A las 15:00', points: 1, orderIndex: 83, tags: ['correo profesional', 'trabajo']
+  },
+
+  // --- A1: Menú de restaurante para un almuerzo de negocios ---
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Menú del almuerzo de negocios',
+    passage: 'Menú del día — Restaurante El Rincón. Sopa del día: Tomate — 4,50 €. Pollo a la plancha con ensalada — 9,00 €. Pasta con verduras — 7,50 €. Café o té incluido con cada plato.',
+    questionText: '¿Cuánto cuesta el pollo a la plancha con ensalada?',
+    options: [
+      { label: '4,50 €', value: '4,50 €' },
+      { label: '7,50 €', value: '7,50 €' },
+      { label: '9,00 €', value: '9,00 €' },
+      { label: '12,00 €', value: '12,00 €' }
+    ],
+    correctAnswer: '9,00 €', points: 1, orderIndex: 84, tags: ['almuerzo de negocios', 'trabajo']
+  },
+
+  // --- A1: Tarjeta de información del hotel ---
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Tarjeta de bienvenida del hotel',
+    passage: 'Bienvenido al Hotel Central. Su habitación es la 412. El desayuno es de 7:00 a 10:00 en el restaurante de la planta baja. Contraseña Wi-Fi: CENTRAL2024. La salida es a las 11:00.',
+    questionText: '¿Cuál es la contraseña del Wi-Fi?',
+    options: [
+      { label: 'HOTEL2024', value: 'HOTEL2024' },
+      { label: 'CENTRAL2024', value: 'CENTRAL2024' },
+      { label: 'HABITACION412', value: 'HABITACION412' },
+      { label: 'BIENVENIDO', value: 'BIENVENIDO' }
+    ],
+    correctAnswer: 'CENTRAL2024', points: 1, orderIndex: 85, tags: ['viaje de negocios', 'hotel']
+  },
+
+  // --- A1: Horario de trabajo semanal ---
+  {
+    language: 'Spanish', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Horario de trabajo semanal',
+    passage: 'Horario de trabajo — Semana 12. De lunes a miércoles: 9:00 – 17:00. Jueves: Día libre. Viernes: 9:00 – 13:00. Sábado y domingo: Cerrado.',
+    questionText: '¿Cuándo es el día libre?',
+    options: [
+      { label: 'Lunes', value: 'Lunes' },
+      { label: 'Miércoles', value: 'Miércoles' },
+      { label: 'Jueves', value: 'Jueves' },
+      { label: 'Viernes', value: 'Viernes' }
+    ],
+    correctAnswer: 'Jueves', points: 1, orderIndex: 86, tags: ['horario laboral', 'trabajo']
+  },
+
+  // --- A2: Anuncio de empleo para recepcionista ---
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Oferta de empleo',
+    passage: 'Buscamos un/a recepcionista para nuestra oficina en Barcelona. Es necesario hablar español e inglés. El horario de trabajo es de lunes a viernes, de 8:30 a 17:30. Se requiere experiencia con Microsoft Office. Envíe su CV a rrhh@globaltech.es antes del 30 de marzo.',
+    questionText: '¿Qué idiomas debe hablar el/la recepcionista?',
+    options: [
+      { label: 'Español y francés', value: 'Español y francés' },
+      { label: 'Español e inglés', value: 'Español e inglés' },
+      { label: 'Inglés y alemán', value: 'Inglés y alemán' },
+      { label: 'Español e italiano', value: 'Español e italiano' }
+    ],
+    correctAnswer: 'Español e inglés', points: 1, orderIndex: 87, tags: ['oferta de empleo', 'trabajo']
+  },
+
+  // --- A2: Correo para rechazar una invitación a una reunión ---
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Rechazo de una reunión',
+    passage: 'Hola Marco, Gracias por la invitación a la reunión comercial del martes a las 10:00. Lamentablemente, no puedo asistir porque tengo una visita a un cliente en ese momento. ¿Podrías enviarme el acta de la reunión después? Saludos cordiales, Ana Fischer.',
+    questionText: '¿Por qué Ana no puede asistir a la reunión?',
+    options: [
+      { label: 'Está de vacaciones', value: 'Está de vacaciones' },
+      { label: 'Tiene una visita a un cliente', value: 'Tiene una visita a un cliente' },
+      { label: 'No se siente bien', value: 'No se siente bien' },
+      { label: 'Tiene otra reunión con su jefe', value: 'Tiene otra reunión con su jefe' }
+    ],
+    correctAnswer: 'Tiene una visita a un cliente', points: 1, orderIndex: 88, tags: ['correo profesional', 'trabajo']
+  },
+
+  // --- A2: Aviso de cierre de la oficina ---
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Cierre de la oficina',
+    passage: 'Les informamos de que la oficina estará cerrada del 23 de diciembre al 2 de enero por las fiestas. El último día laborable es el 22 de diciembre. Si necesitan ayuda durante este período, envíen un correo electrónico a soporte@brightcorp.es. ¡Felices fiestas a todos!',
+    questionText: '¿Cuál es el último día laborable antes de las fiestas?',
+    options: [
+      { label: 'El 20 de diciembre', value: 'El 20 de diciembre' },
+      { label: 'El 22 de diciembre', value: 'El 22 de diciembre' },
+      { label: 'El 23 de diciembre', value: 'El 23 de diciembre' },
+      { label: 'El 2 de enero', value: 'El 2 de enero' }
+    ],
+    correctAnswer: 'El 22 de diciembre', points: 1, orderIndex: 89, tags: ['aviso de empresa', 'trabajo']
+  },
+
+  // --- A2: Instrucciones para la máquina de café ---
+  {
+    language: 'Spanish', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Instrucciones para la máquina de café',
+    passage: 'Cómo usar la máquina de café: 1. Coloque su taza debajo de la boquilla. 2. Pulse el botón azul para espresso o el botón verde para capuchino. 3. Espere 30 segundos. 4. Limpie la bandeja de goteo al final de cada día. Si la máquina muestra una luz roja, contacte con el servicio técnico en la extensión 220.',
+    questionText: '¿Qué hay que hacer si la máquina muestra una luz roja?',
+    options: [
+      { label: 'Pulsar el botón azul', value: 'Pulsar el botón azul' },
+      { label: 'Limpiar la bandeja de goteo', value: 'Limpiar la bandeja de goteo' },
+      { label: 'Contactar con el servicio técnico en la extensión 220', value: 'Contactar con el servicio técnico en la extensión 220' },
+      { label: 'Esperar 30 segundos', value: 'Esperar 30 segundos' }
+    ],
+    correctAnswer: 'Contactar con el servicio técnico en la extensión 220', points: 1, orderIndex: 90, tags: ['instrucciones de oficina', 'trabajo']
+  },
+
+  // --- B1: Correo sobre la prórroga de un plazo de proyecto ---
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Actualización del proyecto',
+    passage: 'Estimados colegas, Les informo de que el plazo para el informe del tercer trimestre se ha prorrogado hasta el 15 de octubre. Varios miembros del equipo han reportado dificultades con la recopilación de datos debido a la migración del sistema de la semana pasada. Por favor, aprovechen este tiempo adicional para garantizar la exactitud de sus entregas. Para cualquier consulta, contacten con su responsable de departamento. Atentamente, Sara García, Directora de Proyecto.',
+    questionText: '¿Por qué se prorrogó el plazo del informe?',
+    options: [
+      { label: 'La directora de proyecto estaba de vacaciones', value: 'La directora de proyecto estaba de vacaciones' },
+      { label: 'Hubo dificultades con la recopilación de datos por la migración del sistema', value: 'Hubo dificultades con la recopilación de datos por la migración del sistema' },
+      { label: 'El cliente solicitó cambios', value: 'El cliente solicitó cambios' },
+      { label: 'El equipo quería más tiempo para celebrar', value: 'El equipo quería más tiempo para celebrar' }
+    ],
+    correctAnswer: 'Hubo dificultades con la recopilación de datos por la migración del sistema', points: 1, orderIndex: 91, tags: ['correo profesional', 'trabajo']
+  },
+
+  // --- B1: Artículo sobre el teletrabajo vs oficina ---
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Teletrabajo o oficina',
+    passage: 'Una encuesta reciente a 2.000 empleados reveló que el 65% prefiere un modelo de trabajo híbrido, que combina días en remoto y días en la oficina. Los trabajadores afirmaron ser más productivos en casa porque hay menos interrupciones. Sin embargo, muchos también dijeron que echan de menos las interacciones cara a cara con los compañeros. Las empresas están experimentando ahora con "días de colaboración" en los que los equipos acuden a la oficina los mismos días para reunirse y planificar juntos. Los expertos aseguran que la clave es la flexibilidad.',
+    questionText: '¿Qué prefiere la mayoría de los empleados según la encuesta?',
+    options: [
+      { label: 'Trabajar solo desde casa', value: 'Trabajar solo desde casa' },
+      { label: 'Un modelo de trabajo híbrido', value: 'Un modelo de trabajo híbrido' },
+      { label: 'Trabajar solo desde la oficina', value: 'Trabajar solo desde la oficina' },
+      { label: 'Cambiar de trabajo cada año', value: 'Cambiar de trabajo cada año' }
+    ],
+    correctAnswer: 'Un modelo de trabajo híbrido', points: 1, orderIndex: 92, tags: ['teletrabajo', 'tendencias laborales']
+  },
+
+  // --- B1: Boletín de empresa sobre un nuevo beneficio ---
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Nuevo beneficio de bienestar',
+    passage: 'Nos complace anunciar un nuevo beneficio de bienestar para todos los empleados a tiempo completo a partir del 1 de enero. La empresa cubrirá hasta 500 € al año para membresías de gimnasio, clases de yoga o asesoramiento psicológico. Para utilizar este beneficio, los empleados deben enviar los recibos a través del portal de RRHH en un plazo de 30 días desde el pago. Esta iniciativa forma parte de nuestro compromiso con el bienestar de los colaboradores. Para más detalles, visiten la sección de Beneficios en la intranet de la empresa.',
+    questionText: '¿Cómo pueden los empleados utilizar el nuevo beneficio?',
+    options: [
+      { label: 'Pidiendo la aprobación de su jefe', value: 'Pidiendo la aprobación de su jefe' },
+      { label: 'Enviando los recibos a través del portal de RRHH', value: 'Enviando los recibos a través del portal de RRHH' },
+      { label: 'Inscribiéndose en el gimnasio de la empresa', value: 'Inscribiéndose en el gimnasio de la empresa' },
+      { label: 'Asistiendo a un taller obligatorio', value: 'Asistiendo a un taller obligatorio' }
+    ],
+    correctAnswer: 'Enviando los recibos a través del portal de RRHH', points: 1, orderIndex: 93, tags: ['beneficios laborales', 'trabajo']
+  },
+
+  // --- B1: Política de viajes de empresa ---
+  {
+    language: 'Spanish', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Política de viajes de empresa',
+    passage: 'Todos los viajes de empresa deben ser aprobados por su responsable directo al menos dos semanas antes del viaje. Los vuelos en clase turista deben reservarse para viajes de menos de cinco horas. Los costes de hotel no deben superar los 150 € por noche. Los empleados deben utilizar el portal de viajes de la empresa para reservar vuelos y hoteles. Las comidas durante el viaje se reembolsan hasta 45 € por día. Todos los recibos deben presentarse en un plazo de 10 días laborables desde su regreso.',
+    questionText: '¿Cuál es el coste máximo de hotel permitido por noche?',
+    options: [
+      { label: '100 €', value: '100 €' },
+      { label: '120 €', value: '120 €' },
+      { label: '150 €', value: '150 €' },
+      { label: '200 €', value: '200 €' }
+    ],
+    correctAnswer: '150 €', points: 1, orderIndex: 94, tags: ['política de viajes', 'trabajo']
+  },
+
+  // --- B2: Artículo sobre estilos de liderazgo ---
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Estilos de liderazgo en las empresas modernas',
+    passage: 'El modelo tradicional de liderazgo basado en el mando y control está siendo sustituido cada vez más por enfoques colaborativos. Los líderes transformacionales, que inspiran y motivan a sus equipos articulando una visión convincente, han demostrado impulsar niveles más altos de compromiso de los empleados. El liderazgo de servicio, donde el papel principal del líder es apoyar el crecimiento y desarrollo de sus colaboradores, ha ganado popularidad en las empresas tecnológicas. Sin embargo, la investigación sugiere que ningún estilo único es universalmente eficaz; los mejores líderes adaptan su enfoque según la situación, la madurez del equipo y la naturaleza de la tarea. Este concepto, conocido como liderazgo situacional, requiere inteligencia emocional y una comprensión profunda de las dinámicas de equipo.',
+    questionText: 'Según el artículo, ¿qué requiere el liderazgo situacional?',
+    options: [
+      { label: 'Un conjunto estricto de reglas para cada situación', value: 'Un conjunto estricto de reglas para cada situación' },
+      { label: 'Inteligencia emocional y comprensión de las dinámicas de equipo', value: 'Inteligencia emocional y comprensión de las dinámicas de equipo' },
+      { label: 'Experiencia solo en el sector tecnológico', value: 'Experiencia solo en el sector tecnológico' },
+      { label: 'Un enfoque de liderazgo único y constante', value: 'Un enfoque de liderazgo único y constante' }
+    ],
+    correctAnswer: 'Inteligencia emocional y comprensión de las dinámicas de equipo', points: 2, orderIndex: 95, tags: ['liderazgo', 'gestión']
+  },
+
+  // --- B2: Resultados de una encuesta de satisfacción laboral ---
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Resultados de la encuesta de satisfacción de los empleados',
+    passage: 'La encuesta anual de satisfacción de los empleados, completada por el 87% de la plantilla, revela varias tendencias destacables. La satisfacción general ha subido del 72% al 78% en comparación con el año pasado, impulsada principalmente por las mejoras en la comunicación directiva y las modalidades de trabajo flexible. Sin embargo, las oportunidades de desarrollo profesional siguen siendo la categoría peor valorada con un 58%, y muchos encuestados expresan frustración por la falta de vías de promoción claras. El departamento de RRHH ha propuesto un programa de mentoría y talleres trimestrales de desarrollo profesional. Además, el 40% de los encuestados señaló que la distribución de la carga de trabajo sigue siendo desigual entre los departamentos.',
+    questionText: '¿Cuál es el área peor valorada en la encuesta?',
+    options: [
+      { label: 'La comunicación directiva', value: 'La comunicación directiva' },
+      { label: 'Las modalidades de trabajo flexible', value: 'Las modalidades de trabajo flexible' },
+      { label: 'Las oportunidades de desarrollo profesional', value: 'Las oportunidades de desarrollo profesional' },
+      { label: 'La distribución de la carga de trabajo', value: 'La distribución de la carga de trabajo' }
+    ],
+    correctAnswer: 'Las oportunidades de desarrollo profesional', points: 2, orderIndex: 96, tags: ['encuesta satisfacción', 'RRHH']
+  },
+
+  // --- B2: Tendencias de conciliación vida-trabajo ---
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Tendencias de conciliación vida-trabajo en Europa',
+    passage: 'Un estudio exhaustivo de la Fundación Europea para la Mejora de las Condiciones de Vida y de Trabajo ha revelado variaciones significativas en la conciliación vida-trabajo entre los Estados miembros de la UE. Los países nórdicos se sitúan sistemáticamente en los primeros puestos, con horarios laborales medios más cortos y generosas políticas de permiso parental. Por el contrario, los países del sur de Europa registran jornadas laborales más largas pero se benefician de redes de apoyo familiar más sólidas. El estudio también identificó una tendencia creciente hacia la semana laboral de cuatro días, con programas piloto en Bélgica, España y el Reino Unido que muestran resultados prometedores — la productividad se mantuvo estable o mejoró, mientras que el agotamiento laboral disminuyó un 30%. Los críticos argumentan, sin embargo, que estos modelos son principalmente adecuados para sectores basados en el conocimiento.',
+    questionText: '¿Qué mostraron los programas piloto de la semana de cuatro días?',
+    options: [
+      { label: 'La productividad bajó significativamente', value: 'La productividad bajó significativamente' },
+      { label: 'La productividad se mantuvo estable o mejoró y el agotamiento disminuyó', value: 'La productividad se mantuvo estable o mejoró y el agotamiento disminuyó' },
+      { label: 'Los empleados preferían trabajar cinco días', value: 'Los empleados preferían trabajar cinco días' },
+      { label: 'Solo las empresas industriales se beneficiaron', value: 'Solo las empresas industriales se beneficiaron' }
+    ],
+    correctAnswer: 'La productividad se mantuvo estable o mejoró y el agotamiento disminuyó', points: 2, orderIndex: 97, tags: ['conciliación vida-trabajo', 'tendencias europeas']
+  },
+
+  // --- B2: Resumen ejecutivo de una propuesta comercial ---
+  {
+    language: 'Spanish', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Resumen ejecutivo: Propuesta de expansión',
+    passage: 'Esta propuesta describe una estrategia para expandirse en la región DACH (Alemania, Austria y Suiza) durante los próximos 18 meses. La investigación de mercado indica una fuerte demanda de nuestra plataforma SaaS entre las pymes del sector manufacturero, con un mercado direccionable estimado de 45 millones de euros anuales. El enfoque propuesto incluye la apertura de una oficina comercial regional en Múnich, la contratación de un equipo de cinco comerciales locales y la asociación con dos consultoras establecidas. La inversión total requerida es de 1,2 millones de euros, con un punto de equilibrio proyectado a los 14 meses. Los principales riesgos incluyen diferencias regulatorias entre los tres mercados y la competencia de proveedores locales establecidos.',
+    questionText: '¿Cuándo se prevé alcanzar el punto de equilibrio de esta expansión?',
+    options: [
+      { label: '6 meses', value: '6 meses' },
+      { label: '14 meses', value: '14 meses' },
+      { label: '18 meses', value: '18 meses' },
+      { label: '24 meses', value: '24 meses' }
+    ],
+    correctAnswer: '14 meses', points: 2, orderIndex: 98, tags: ['propuesta comercial', 'estrategia']
+  },
+
+  // --- C1: Estrategias de negociación intercultural ---
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Estrategias de negociación intercultural',
+    passage: 'Una negociación intercultural eficaz requiere mucho más que competencia lingüística; exige una comprensión de marcos culturales profundamente arraigados que moldean cómo se construye la confianza, se toman las decisiones y se alcanzan los acuerdos. En las culturas de alto contexto, como Japón y muchos países de Oriente Medio, la construcción de relaciones a menudo precede cualquier discusión sobre las condiciones, y el silencio durante las negociaciones puede señalar reflexión más que desacuerdo. Por el contrario, las culturas de bajo contexto, incluidos Estados Unidos y Alemania, tienden a priorizar la franqueza, los argumentos basados en datos y los contratos escritos. Las investigaciones de Erin Meyer en INSEAD han demostrado que incluso dentro de Europa existen diferencias significativas — los negociadores franceses, por ejemplo, a menudo participan en debates intelectuales como parte del proceso, mientras que sus homólogos escandinavos favorecen la búsqueda de consenso y pueden percibir las tácticas confrontativas como contraproducentes.',
+    questionText: 'Según el pasaje, ¿qué puede indicar el silencio durante una negociación en culturas de alto contexto?',
+    options: [
+      { label: 'Desacuerdo con la propuesta', value: 'Desacuerdo con la propuesta' },
+      { label: 'El deseo de terminar la negociación', value: 'El deseo de terminar la negociación' },
+      { label: 'Reflexión más que desacuerdo', value: 'Reflexión más que desacuerdo' },
+      { label: 'Falta de preparación', value: 'Falta de preparación' }
+    ],
+    correctAnswer: 'Reflexión más que desacuerdo', points: 2, orderIndex: 99, tags: ['intercultural', 'negociación']
+  },
+
+  // --- C1: Responsabilidad social corporativa ---
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'El impacto de la responsabilidad social corporativa',
+    passage: 'La responsabilidad social corporativa (RSC) ha evolucionado de un ejercicio periférico de relaciones públicas a un imperativo estratégico para muchas multinacionales. Estudios de la Harvard Business School han demostrado que las empresas con programas de RSC sólidos tienden a superar financieramente a sus competidores a largo plazo, en parte porque atraen y retienen a los mejores talentos que buscan cada vez más un trabajo con propósito. Sin embargo, el auge del "lavado verde" — declaraciones superficiales o engañosas sobre prácticas medioambientales — ha generado un escepticismo creciente entre consumidores y reguladores. La Directiva europea sobre información de sostenibilidad corporativa (CSRD), que entró en vigor en 2024, exige a las grandes empresas divulgar datos detallados sobre criterios ambientales, sociales y de gobernanza (ESG). Los críticos de la RSC argumentan que puede desviar la atención de los cambios estructurales fundamentales necesarios para abordar la desigualdad y el cambio climático.',
+    questionText: '¿Cuál es la principal preocupación sobre el "lavado verde" mencionada en el pasaje?',
+    options: [
+      { label: 'Aumenta injustamente los beneficios empresariales', value: 'Aumenta injustamente los beneficios empresariales' },
+      { label: 'Ha generado escepticismo sobre la autenticidad de los compromisos de RSC', value: 'Ha generado escepticismo sobre la autenticidad de los compromisos de RSC' },
+      { label: 'Solo lo practican las pequeñas empresas', value: 'Solo lo practican las pequeñas empresas' },
+      { label: 'Es exigido por la normativa europea', value: 'Es exigido por la normativa europea' }
+    ],
+    correctAnswer: 'Ha generado escepticismo sobre la autenticidad de los compromisos de RSC', points: 2, orderIndex: 100, tags: ['RSC', 'sostenibilidad']
+  },
+
+  // --- C1: Transformación digital en las pymes ---
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Los retos de la transformación digital en las pymes',
+    passage: 'Mientras que las grandes empresas han adoptado generalmente la transformación digital con presupuestos dedicados y equipos especializados, las pequeñas y medianas empresas (pymes) se enfrentan a un conjunto distinto de desafíos. Un informe de la OCDE de 2024 reveló que solo el 35% de las pymes europeas había implementado herramientas digitales avanzadas como la computación en la nube, el análisis de datos o la automatización. Las principales barreras citadas fueron los recursos financieros limitados, la escasez de empleados con competencias digitales y la resistencia al cambio por parte del personal con larga antigüedad acostumbrado a los flujos de trabajo establecidos. Además, muchos propietarios de pymes expresaron incertidumbre sobre qué tecnologías ofrecerían un retorno tangible de la inversión. Los programas de digitalización respaldados por los gobiernos han tenido resultados mixtos; mientras que las subvenciones han ayudado a algunas empresas a adoptar nuevos sistemas, la falta de soporte técnico continuado hace que las nuevas herramientas a menudo se infrautilicen.',
+    questionText: 'Según el informe de la OCDE, ¿qué porcentaje de pymes europeas había adoptado herramientas digitales avanzadas?',
+    options: [
+      { label: '25%', value: '25%' },
+      { label: '35%', value: '35%' },
+      { label: '50%', value: '50%' },
+      { label: '65%', value: '65%' }
+    ],
+    correctAnswer: '35%', points: 2, orderIndex: 101, tags: ['transformación digital', 'pymes']
+  },
+
+  // --- C1: Retención del talento ---
+  {
+    language: 'Spanish', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La retención del talento en mercados competitivos',
+    passage: 'En una era caracterizada por la escasez de talento y la llamada "Gran Renuncia", las organizaciones se ven obligadas a replantear sus estrategias de retención del talento. Los enfoques tradicionales centrados en salarios competitivos y bonificaciones anuales resultan insuficientes, ya que los empleados — especialmente los millennials y la Generación Z — priorizan cada vez más el propósito, la autonomía y el desarrollo profesional sobre las recompensas puramente económicas. Las empresas líderes están invirtiendo en itinerarios de aprendizaje personalizados, programas de movilidad interna y criterios de promoción transparentes. El informe LinkedIn 2024 sobre Aprendizaje en el Trabajo reveló que los empleados que sienten que tienen oportunidades de aprender y crecer tienen 3,5 veces más probabilidades de quedarse con su empleador. Sin embargo, la retención no depende solo de los incentivos individuales; la cultura organizativa, el liderazgo inclusivo y la calidad de la relación entre manager y empleado siguen siendo los predictores más fuertes.',
+    questionText: 'Según el informe de LinkedIn, ¿qué hace que los empleados tengan 3,5 veces más probabilidades de quedarse?',
+    options: [
+      { label: 'Salarios más altos que la competencia', value: 'Salarios más altos que la competencia' },
+      { label: 'Oportunidades de aprender y crecer', value: 'Oportunidades de aprender y crecer' },
+      { label: 'Menos horas de trabajo semanales', value: 'Menos horas de trabajo semanales' },
+      { label: 'Bonificaciones anuales', value: 'Bonificaciones anuales' }
+    ],
+    correctAnswer: 'Oportunidades de aprender y crecer', points: 2, orderIndex: 102, tags: ['retención de talento', 'estrategia RRHH']
+  },
+
+  // --- C2: IA ética en las decisiones de RRHH ---
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Implementación ética de la IA en las decisiones de RRHH',
+    passage: 'El despliegue de la inteligencia artificial en los recursos humanos — desde los algoritmos de cribado de currículos hasta los modelos predictivos de rotación — plantea profundas cuestiones éticas que las organizaciones apenas están empezando a abordar. Mientras que la IA promete reducir los sesgos inconscientes estandarizando los criterios de evaluación, la evidencia empírica cuenta una historia más matizada. La herramienta de contratación de Amazon, ya descontinuada, que penalizaba sistemáticamente los currículos que contenían la palabra "mujeres", demostró cómo los algoritmos entrenados con datos históricamente sesgados pueden perpetuar e incluso amplificar las desigualdades existentes. El Reglamento europeo de IA, adoptado en 2024, clasifica los sistemas de IA relacionados con el empleo como "de alto riesgo", sometiéndolos a estrictos requisitos de transparencia, supervisión humana y auditoría de sesgos. Sin embargo, el cumplimiento normativo por sí solo es insuficiente; las organizaciones deben cultivar lo que los académicos denominan "alfabetización algorítmica" — la capacidad de los profesionales de RRHH para evaluar críticamente los resultados de la IA en lugar de tratarlos como verdades objetivas.',
+    questionText: 'Según el pasaje, ¿qué es insuficiente por sí solo al implementar IA en RRHH?',
+    options: [
+      { label: 'La formación técnica de los ingenieros', value: 'La formación técnica de los ingenieros' },
+      { label: 'El cumplimiento normativo', value: 'El cumplimiento normativo' },
+      { label: 'El aumento del volumen de datos de entrenamiento', value: 'El aumento del volumen de datos de entrenamiento' },
+      { label: 'La eliminación de toda participación humana', value: 'La eliminación de toda participación humana' }
+    ],
+    correctAnswer: 'El cumplimiento normativo', points: 2, orderIndex: 103, tags: ['ética IA', 'tecnología RRHH']
+  },
+
+  // --- C2: Capitalismo de las partes interesadas vs primacía del accionista ---
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Capitalismo de las partes interesadas vs primacía del accionista',
+    passage: 'El debate entre el capitalismo de las partes interesadas y la primacía del accionista representa una de las líneas de fractura ideológicas más trascendentales del pensamiento empresarial contemporáneo. La doctrina de Milton Friedman de 1970 — según la cual la única responsabilidad social de una empresa es aumentar sus beneficios — dominó el capitalismo angloamericano durante décadas. El modelo de las partes interesadas, defendido por figuras como Klaus Schwab del Foro Económico Mundial, sostiene que las empresas deben equilibrar los intereses de accionistas, empleados, clientes, comunidades y medio ambiente para asegurar la creación de valor a largo plazo. La declaración del Business Roundtable de 2019, firmada por 181 consejeros delegados de grandes empresas estadounidenses, adoptó formalmente un propósito orientado a las partes interesadas. Sin embargo, los críticos han calificado este giro como en gran medida performativo, señalando que las estructuras de remuneración de los directivos siguen estando predominantemente vinculadas a la cotización bursátil.',
+    questionText: '¿Por qué los críticos califican el compromiso del Business Roundtable de 2019 como "performativo"?',
+    options: [
+      { label: 'Porque los consejeros delegados no firmaron la declaración voluntariamente', value: 'Porque los consejeros delegados no firmaron la declaración voluntariamente' },
+      { label: 'Porque la remuneración de los directivos sigue vinculada a la cotización bursátil', value: 'Porque la remuneración de los directivos sigue vinculada a la cotización bursátil' },
+      { label: 'Porque el capitalismo de las partes interesadas es ilegal en Estados Unidos', value: 'Porque el capitalismo de las partes interesadas es ilegal en Estados Unidos' },
+      { label: 'Porque la declaración fue retirada al año siguiente', value: 'Porque la declaración fue retirada al año siguiente' }
+    ],
+    correctAnswer: 'Porque la remuneración de los directivos sigue vinculada a la cotización bursátil', points: 2, orderIndex: 104, tags: ['capitalismo partes interesadas', 'gobernanza corporativa']
+  },
+
+  // --- C2: Resiliencia organizativa pospandemia ---
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Resiliencia organizativa en la era pospandémica',
+    passage: 'La pandemia de COVID-19 sirvió como una prueba de esfuerzo sin precedentes para la resiliencia organizativa, exponiendo vulnerabilidades críticas en las cadenas de suministro, la gestión de personal y la planificación estratégica. Las organizaciones que habían invertido en redes de suministro diversificadas, infraestructura digital y marcos de liderazgo adaptativo superaron la crisis con mayor eficacia que las que dependían de modelos esbeltos, maximizados para la eficiencia con redundancia mínima. Sin embargo, el discurso pospandémico sobre la resiliencia corre el riesgo de confundir la verdadera capacidad adaptativa con la mera supervivencia a la crisis. La verdadera resiliencia organizativa, tal como la definen investigadores como Kathleen Sutcliffe y Karl Weick, abarca no solo la capacidad de absorber y recuperarse de las perturbaciones, sino también la capacidad de anticipar amenazas emergentes y transformarse en respuesta a condiciones fundamentalmente alteradas. Las empresas que simplemente restauraron sus operaciones prepandémicas sin reimaginar su modelo de negocio pueden encontrarse mal preparadas ante las incertidumbres acumuladas de la disrupción climática, la inestabilidad geopolítica y la transformación tecnológica.',
+    questionText: 'Según el pasaje, ¿cuál es el riesgo del discurso pospandémico sobre la resiliencia?',
+    options: [
+      { label: 'Que las empresas inviertan demasiado en infraestructura digital', value: 'Que las empresas inviertan demasiado en infraestructura digital' },
+      { label: 'Que se confunda la verdadera capacidad adaptativa con la mera supervivencia a la crisis', value: 'Que se confunda la verdadera capacidad adaptativa con la mera supervivencia a la crisis' },
+      { label: 'Que los empleados se resistan a volver a la oficina', value: 'Que los empleados se resistan a volver a la oficina' },
+      { label: 'Que las cadenas de suministro se diversifiquen demasiado', value: 'Que las cadenas de suministro se diversifiquen demasiado' }
+    ],
+    correctAnswer: 'Que se confunda la verdadera capacidad adaptativa con la mera supervivencia a la crisis', points: 2, orderIndex: 105, tags: ['resiliencia organizativa', 'estrategia']
+  },
+
+  // --- C2: ROI del desarrollo profesional ---
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La economía del ROI del desarrollo profesional',
+    passage: 'Cuantificar el retorno de la inversión (ROI) de los programas de desarrollo profesional sigue siendo uno de los desafíos más persistentes en la gestión del capital humano. Los enfoques tradicionales, como el modelo de evaluación de cuatro niveles de Kirkpatrick, miden el impacto formativo a través de la satisfacción del participante, la adquisición de conocimientos, el cambio de comportamiento y los resultados empresariales — sin embargo, cada nivel sucesivo presenta dificultades de medición crecientes. El problema de atribución causal es especialmente agudo: aislar el impacto de un programa formativo de variables confusoras como las condiciones del mercado, la calidad de la dirección y la motivación individual requiere diseños experimentales rigurosos que la mayoría de las organizaciones carecen de recursos o voluntad para implementar. La ampliación del modelo de Kirkpatrick por Jack Phillips para incluir un quinto nivel — el ROI financiero — ha ganado tracción, pero los críticos argumentan que reducir resultados formativos complejos a cifras monetarias arriesga infravalorar beneficios intangibles como la mayor capacidad de innovación y el fortalecimiento de las redes profesionales.',
+    questionText: '¿Qué es el "problema de atribución causal" descrito en el pasaje?',
+    options: [
+      { label: 'La dificultad de encontrar formadores cualificados', value: 'La dificultad de encontrar formadores cualificados' },
+      { label: 'El desafío de aislar el impacto de un programa formativo de las variables confusoras', value: 'El desafío de aislar el impacto de un programa formativo de las variables confusoras' },
+      { label: 'El problema de que los empleados no asistan a las formaciones', value: 'El problema de que los empleados no asistan a las formaciones' },
+      { label: 'El alto coste de implementar el modelo de Kirkpatrick', value: 'El alto coste de implementar el modelo de Kirkpatrick' }
+    ],
+    correctAnswer: 'El desafío de aislar el impacto de un programa formativo de las variables confusoras', points: 2, orderIndex: 106, tags: ['desarrollo profesional', 'ROI', 'estrategia RRHH']
+  },
 ]

@@ -856,5 +856,367 @@ export const italianReadingQuestions: MultiSkillQuestionData[] = [
       { label: 'Un accordo basato sulla reciprocità', value: 'reciprocità' }
     ],
     correctAnswer: 'risposta asimmetrica', points: 2, orderIndex: 82, tags: ['filosofia', 'etica']
-  }
+  },
+
+  // ===== DOMANDE DI LETTURA PROFESSIONALE / LAVORATIVA =====
+
+  // --- A1: E-mail d'ufficio su un cambio di orario della riunione ---
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Cambio orario della riunione',
+    passage: 'Cari colleghi, La riunione di mercoledì è ora alle 15:00, non alle 14:00. La sala riunioni è la sala 5B. Per favore, portate il vostro computer portatile. Grazie, Davide.',
+    questionText: 'A che ora è la riunione adesso?',
+    options: [
+      { label: 'Alle 14:00', value: 'Alle 14:00' },
+      { label: 'Alle 15:00', value: 'Alle 15:00' },
+      { label: 'Alle 17:00', value: 'Alle 17:00' },
+      { label: 'Alle 13:00', value: 'Alle 13:00' }
+    ],
+    correctAnswer: 'Alle 15:00', points: 1, orderIndex: 83, tags: ['e-mail aziendale', 'lavoro']
+  },
+
+  // --- A1: Menu del ristorante per un pranzo di lavoro ---
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Menu del pranzo di lavoro',
+    passage: 'Menu del giorno — Trattoria da Marco. Zuppa del giorno: Minestrone — 4,50 €. Pollo alla griglia con insalata — 9,00 €. Pasta alle verdure — 7,50 €. Caffè o tè incluso con ogni piatto.',
+    questionText: 'Quanto costa il pollo alla griglia con insalata?',
+    options: [
+      { label: '4,50 €', value: '4,50 €' },
+      { label: '7,50 €', value: '7,50 €' },
+      { label: '9,00 €', value: '9,00 €' },
+      { label: '12,00 €', value: '12,00 €' }
+    ],
+    correctAnswer: '9,00 €', points: 1, orderIndex: 84, tags: ['pranzo di lavoro', 'lavoro']
+  },
+
+  // --- A1: Scheda informativa del check-in in hotel ---
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Scheda di accoglienza dell\'hotel',
+    passage: 'Benvenuti all\'Hotel Centrale. La vostra camera è la 412. La colazione è dalle 7:00 alle 10:00 al ristorante al piano terra. Password Wi-Fi: CENTRALE2024. Il check-out è alle 11:00.',
+    questionText: 'Qual è la password Wi-Fi?',
+    options: [
+      { label: 'HOTEL2024', value: 'HOTEL2024' },
+      { label: 'CENTRALE2024', value: 'CENTRALE2024' },
+      { label: 'CAMERA412', value: 'CAMERA412' },
+      { label: 'BENVENUTI', value: 'BENVENUTI' }
+    ],
+    correctAnswer: 'CENTRALE2024', points: 1, orderIndex: 85, tags: ['viaggio di lavoro', 'hotel']
+  },
+
+  // --- A1: Orario di lavoro settimanale ---
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Orario di lavoro settimanale',
+    passage: 'Orario di lavoro — Settimana 12. Da lunedì a mercoledì: 9:00 – 17:00. Giovedì: Giorno libero. Venerdì: 9:00 – 13:00. Sabato e domenica: Chiuso.',
+    questionText: 'Quando è il giorno libero?',
+    options: [
+      { label: 'Lunedì', value: 'Lunedì' },
+      { label: 'Mercoledì', value: 'Mercoledì' },
+      { label: 'Giovedì', value: 'Giovedì' },
+      { label: 'Venerdì', value: 'Venerdì' }
+    ],
+    correctAnswer: 'Giovedì', points: 1, orderIndex: 86, tags: ['orario di lavoro', 'lavoro']
+  },
+
+  // --- A2: Annuncio di lavoro per receptionist ---
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Annuncio di lavoro',
+    passage: 'Cerchiamo un/una receptionist per il nostro ufficio a Milano. È necessario parlare italiano e inglese. L\'orario di lavoro è dal lunedì al venerdì, dalle 8:30 alle 17:30. È richiesta esperienza con Microsoft Office. Inviate il vostro CV a hr@globaltech.it entro il 30 marzo.',
+    questionText: 'Quali lingue deve parlare il/la receptionist?',
+    options: [
+      { label: 'Italiano e francese', value: 'Italiano e francese' },
+      { label: 'Italiano e inglese', value: 'Italiano e inglese' },
+      { label: 'Inglese e spagnolo', value: 'Inglese e spagnolo' },
+      { label: 'Italiano e tedesco', value: 'Italiano e tedesco' }
+    ],
+    correctAnswer: 'Italiano e inglese', points: 1, orderIndex: 87, tags: ['annuncio di lavoro', 'lavoro']
+  },
+
+  // --- A2: E-mail per declinare un invito a una riunione ---
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Rifiuto di una riunione',
+    passage: 'Ciao Marco, Grazie per l\'invito alla riunione commerciale di martedì alle 10:00. Purtroppo non posso partecipare perché ho una visita presso un cliente in quel momento. Potresti inviarmi il verbale dopo? Cordiali saluti, Anna Fischer.',
+    questionText: 'Perché Anna non può partecipare alla riunione?',
+    options: [
+      { label: 'È in vacanza', value: 'È in vacanza' },
+      { label: 'Ha una visita presso un cliente', value: 'Ha una visita presso un cliente' },
+      { label: 'Non sta bene', value: 'Non sta bene' },
+      { label: 'Ha un\'altra riunione con il suo capo', value: 'Ha un\'altra riunione con il suo capo' }
+    ],
+    correctAnswer: 'Ha una visita presso un cliente', points: 1, orderIndex: 88, tags: ['e-mail aziendale', 'lavoro']
+  },
+
+  // --- A2: Avviso di chiusura dell'ufficio ---
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Chiusura dell\'ufficio',
+    passage: 'Si prega di notare che l\'ufficio sarà chiuso dal 23 dicembre al 2 gennaio per le festività. L\'ultimo giorno lavorativo è il 22 dicembre. Se avete bisogno di assistenza durante questo periodo, inviate un\'e-mail a support@brightcorp.it. Buone feste a tutti.',
+    questionText: 'Qual è l\'ultimo giorno lavorativo prima delle feste?',
+    options: [
+      { label: 'Il 20 dicembre', value: 'Il 20 dicembre' },
+      { label: 'Il 22 dicembre', value: 'Il 22 dicembre' },
+      { label: 'Il 23 dicembre', value: 'Il 23 dicembre' },
+      { label: 'Il 2 gennaio', value: 'Il 2 gennaio' }
+    ],
+    correctAnswer: 'Il 22 dicembre', points: 1, orderIndex: 89, tags: ['avviso aziendale', 'lavoro']
+  },
+
+  // --- A2: Istruzioni per la macchina del caffè ---
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Istruzioni per la macchina del caffè',
+    passage: 'Come usare la macchina del caffè: 1. Posizionate la tazza sotto il beccuccio. 2. Premete il pulsante blu per l\'espresso o il pulsante verde per il cappuccino. 3. Attendete 30 secondi. 4. Pulite il vassoio raccogligocce alla fine di ogni giorno. Se la macchina mostra una luce rossa, contattate il servizio tecnico al numero interno 220.',
+    questionText: 'Cosa bisogna fare se la macchina mostra una luce rossa?',
+    options: [
+      { label: 'Premere il pulsante blu', value: 'Premere il pulsante blu' },
+      { label: 'Pulire il vassoio raccogligocce', value: 'Pulire il vassoio raccogligocce' },
+      { label: 'Contattare il servizio tecnico al numero interno 220', value: 'Contattare il servizio tecnico al numero interno 220' },
+      { label: 'Attendere 30 secondi', value: 'Attendere 30 secondi' }
+    ],
+    correctAnswer: 'Contattare il servizio tecnico al numero interno 220', points: 1, orderIndex: 90, tags: ['istruzioni ufficio', 'lavoro']
+  },
+
+  // --- B1: E-mail sulla proroga di una scadenza di progetto ---
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Aggiornamento del progetto',
+    passage: 'Cari colleghi, Vi informo che la scadenza per il report del terzo trimestre è stata prorogata al 15 ottobre. Diversi membri del team hanno segnalato difficoltà nella raccolta dati a causa della migrazione del sistema della scorsa settimana. Vi prego di utilizzare questo tempo extra per garantire l\'accuratezza delle vostre consegne. Per qualsiasi domanda, contattate il vostro responsabile di reparto. Cordiali saluti, Sara Bianchi, Project Manager.',
+    questionText: 'Perché la scadenza del report è stata prorogata?',
+    options: [
+      { label: 'La project manager era in vacanza', value: 'La project manager era in vacanza' },
+      { label: 'Ci sono state difficoltà nella raccolta dati a causa della migrazione del sistema', value: 'Ci sono state difficoltà nella raccolta dati a causa della migrazione del sistema' },
+      { label: 'Il cliente ha richiesto delle modifiche', value: 'Il cliente ha richiesto delle modifiche' },
+      { label: 'Il team voleva più tempo per festeggiare', value: 'Il team voleva più tempo per festeggiare' }
+    ],
+    correctAnswer: 'Ci sono state difficoltà nella raccolta dati a causa della migrazione del sistema', points: 1, orderIndex: 91, tags: ['e-mail aziendale', 'lavoro']
+  },
+
+  // --- B1: Articolo sul lavoro da remoto vs ufficio ---
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Smart working o ufficio?',
+    passage: 'Un\'indagine recente su 2.000 dipendenti ha rivelato che il 65% preferisce un modello di lavoro ibrido, che combina giorni da remoto e giorni in ufficio. I lavoratori hanno dichiarato di essere più produttivi a casa perché ci sono meno interruzioni. Tuttavia, molti hanno anche detto di sentire la mancanza delle interazioni faccia a faccia con i colleghi. Le aziende stanno ora sperimentando le "giornate di collaborazione" in cui i team vengono in ufficio gli stessi giorni per incontrarsi e pianificare insieme. Gli esperti affermano che la chiave è la flessibilità.',
+    questionText: 'Cosa preferiscono la maggior parte dei dipendenti secondo l\'indagine?',
+    options: [
+      { label: 'Lavorare solo da casa', value: 'Lavorare solo da casa' },
+      { label: 'Un modello di lavoro ibrido', value: 'Un modello di lavoro ibrido' },
+      { label: 'Lavorare solo dall\'ufficio', value: 'Lavorare solo dall\'ufficio' },
+      { label: 'Cambiare lavoro ogni anno', value: 'Cambiare lavoro ogni anno' }
+    ],
+    correctAnswer: 'Un modello di lavoro ibrido', points: 1, orderIndex: 92, tags: ['smart working', 'tendenze lavorative']
+  },
+
+  // --- B1: Newsletter aziendale su un nuovo benefit ---
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Nuovo benefit per il benessere',
+    passage: 'Siamo lieti di annunciare un nuovo benefit per il benessere per tutti i dipendenti a tempo pieno a partire dal 1° gennaio. L\'azienda coprirà fino a 500 € all\'anno per abbonamenti in palestra, corsi di yoga o consulenze psicologiche. Per usufruire di questo benefit, i dipendenti devono inviare le ricevute tramite il portale HR entro 30 giorni dal pagamento. Questa iniziativa fa parte del nostro impegno per il benessere dei collaboratori. Per ulteriori dettagli, visitate la sezione Benefits sulla intranet aziendale.',
+    questionText: 'Come possono i dipendenti usufruire del nuovo benefit?',
+    options: [
+      { label: 'Chiedendo l\'approvazione al proprio manager', value: 'Chiedendo l\'approvazione al proprio manager' },
+      { label: 'Inviando le ricevute tramite il portale HR', value: 'Inviando le ricevute tramite il portale HR' },
+      { label: 'Iscrivendosi alla palestra aziendale', value: 'Iscrivendosi alla palestra aziendale' },
+      { label: 'Partecipando a un workshop obbligatorio', value: 'Partecipando a un workshop obbligatorio' }
+    ],
+    correctAnswer: 'Inviando le ricevute tramite il portale HR', points: 1, orderIndex: 93, tags: ['benefit aziendali', 'lavoro']
+  },
+
+  // --- B1: Politica per i viaggi di lavoro ---
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Politica per i viaggi di lavoro',
+    passage: 'Tutti i viaggi di lavoro devono essere approvati dal proprio responsabile diretto almeno due settimane prima della partenza. I voli in classe economica devono essere prenotati per i viaggi inferiori a cinque ore. I costi dell\'hotel non devono superare 150 € a notte. I dipendenti devono utilizzare il portale viaggi aziendale per prenotare voli e hotel. I pasti durante il viaggio sono rimborsati fino a 45 € al giorno. Tutte le ricevute devono essere presentate entro 10 giorni lavorativi dal rientro.',
+    questionText: 'Qual è il costo massimo dell\'hotel consentito per notte?',
+    options: [
+      { label: '100 €', value: '100 €' },
+      { label: '120 €', value: '120 €' },
+      { label: '150 €', value: '150 €' },
+      { label: '200 €', value: '200 €' }
+    ],
+    correctAnswer: '150 €', points: 1, orderIndex: 94, tags: ['politica viaggi', 'lavoro']
+  },
+
+  // --- B2: Articolo sugli stili di leadership ---
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Gli stili di leadership nelle aziende moderne',
+    passage: 'Il modello tradizionale di leadership basato su comando e controllo viene sempre più sostituito da approcci collaborativi. I leader trasformazionali, che ispirano e motivano i propri team articolando una visione convincente, hanno dimostrato di favorire un maggiore coinvolgimento dei dipendenti. La servant leadership, in cui il ruolo principale del dirigente è supportare la crescita e lo sviluppo dei propri collaboratori, sta guadagnando popolarità nelle aziende tecnologiche. Tuttavia, la ricerca suggerisce che nessuno stile singolo è universalmente efficace; i migliori leader adattano il proprio approccio in base alla situazione, alla maturità del team e alla natura del compito. Questo concetto, noto come leadership situazionale, richiede intelligenza emotiva e una profonda comprensione delle dinamiche di gruppo.',
+    questionText: 'Secondo l\'articolo, cosa richiede la leadership situazionale?',
+    options: [
+      { label: 'Un insieme rigido di regole per ogni situazione', value: 'Un insieme rigido di regole per ogni situazione' },
+      { label: 'Intelligenza emotiva e comprensione delle dinamiche di gruppo', value: 'Intelligenza emotiva e comprensione delle dinamiche di gruppo' },
+      { label: 'Esperienza solo nel settore tecnologico', value: 'Esperienza solo nel settore tecnologico' },
+      { label: 'Un unico approccio di leadership costante', value: 'Un unico approccio di leadership costante' }
+    ],
+    correctAnswer: 'Intelligenza emotiva e comprensione delle dinamiche di gruppo', points: 2, orderIndex: 95, tags: ['leadership', 'management']
+  },
+
+  // --- B2: Risultati di un'indagine sulla soddisfazione dei dipendenti ---
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Risultati dell\'indagine sulla soddisfazione dei dipendenti',
+    passage: 'L\'indagine annuale sulla soddisfazione dei dipendenti, completata dall\'87% del personale, rivela diverse tendenze significative. La soddisfazione complessiva è salita dal 72% al 78% rispetto all\'anno scorso, trainata principalmente dai miglioramenti nella comunicazione manageriale e nelle modalità di lavoro flessibile. Tuttavia, le opportunità di sviluppo professionale restano la categoria con il punteggio più basso al 58%, con molti intervistati che esprimono frustrazione per la mancanza di percorsi di promozione chiari. Il dipartimento HR ha proposto un programma di mentoring e workshop trimestrali sullo sviluppo di carriera. Inoltre, il 40% degli intervistati ha evidenziato che la distribuzione del carico di lavoro resta disomogenea tra i reparti.',
+    questionText: 'Qual è l\'area con il punteggio più basso nell\'indagine?',
+    options: [
+      { label: 'La comunicazione manageriale', value: 'La comunicazione manageriale' },
+      { label: 'Le modalità di lavoro flessibile', value: 'Le modalità di lavoro flessibile' },
+      { label: 'Le opportunità di sviluppo professionale', value: 'Le opportunità di sviluppo professionale' },
+      { label: 'La distribuzione del carico di lavoro', value: 'La distribuzione del carico di lavoro' }
+    ],
+    correctAnswer: 'Le opportunità di sviluppo professionale', points: 2, orderIndex: 96, tags: ['indagine soddisfazione', 'risorse umane']
+  },
+
+  // --- B2: Tendenze dell'equilibrio vita-lavoro ---
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Tendenze dell\'equilibrio vita-lavoro in Europa',
+    passage: 'Uno studio approfondito della Fondazione europea per il miglioramento delle condizioni di vita e di lavoro ha rilevato variazioni significative nell\'equilibrio vita-lavoro tra gli Stati membri dell\'UE. I paesi nordici si classificano costantemente ai primi posti, con orari di lavoro medi più brevi e generose politiche di congedo parentale. Al contrario, i paesi dell\'Europa meridionale registrano orari di lavoro più lunghi ma beneficiano di reti di supporto familiare più solide. Lo studio ha anche identificato una tendenza crescente verso la settimana lavorativa di quattro giorni, con programmi pilota in Belgio, Spagna e Regno Unito che mostrano risultati promettenti — la produttività è rimasta stabile o è migliorata, mentre il burnout dei dipendenti è diminuito del 30%. I critici sostengono, tuttavia, che tali modelli sono principalmente adatti ai settori basati sulla conoscenza.',
+    questionText: 'Cosa hanno dimostrato i programmi pilota per la settimana di quattro giorni?',
+    options: [
+      { label: 'La produttività è calata notevolmente', value: 'La produttività è calata notevolmente' },
+      { label: 'La produttività è rimasta stabile o migliorata e il burnout è diminuito', value: 'La produttività è rimasta stabile o migliorata e il burnout è diminuito' },
+      { label: 'I dipendenti preferivano lavorare cinque giorni', value: 'I dipendenti preferivano lavorare cinque giorni' },
+      { label: 'Solo le aziende manifatturiere ne hanno beneficiato', value: 'Solo le aziende manifatturiere ne hanno beneficiato' }
+    ],
+    correctAnswer: 'La produttività è rimasta stabile o migliorata e il burnout è diminuito', points: 2, orderIndex: 97, tags: ['equilibrio vita-lavoro', 'tendenze europee']
+  },
+
+  // --- B2: Sintesi esecutiva di una proposta commerciale ---
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Sintesi esecutiva: Proposta di espansione',
+    passage: 'Questa proposta delinea una strategia di espansione nella regione DACH (Germania, Austria e Svizzera) nei prossimi 18 mesi. La ricerca di mercato indica una forte domanda per la nostra piattaforma SaaS tra le PMI del settore manifatturiero, con un mercato indirizzabile stimato di 45 milioni di euro all\'anno. L\'approccio proposto prevede l\'apertura di un ufficio commerciale regionale a Monaco di Baviera, l\'assunzione di un team di cinque commerciali locali e la partnership con due società di consulenza affermate. L\'investimento totale richiesto è di 1,2 milioni di euro, con un punto di pareggio previsto a 14 mesi. I principali rischi includono differenze normative tra i tre mercati e la concorrenza dei fornitori locali affermati.',
+    questionText: 'Quando è previsto il punto di pareggio per questa espansione?',
+    options: [
+      { label: '6 mesi', value: '6 mesi' },
+      { label: '14 mesi', value: '14 mesi' },
+      { label: '18 mesi', value: '18 mesi' },
+      { label: '24 mesi', value: '24 mesi' }
+    ],
+    correctAnswer: '14 mesi', points: 2, orderIndex: 98, tags: ['proposta commerciale', 'strategia']
+  },
+
+  // --- C1: Strategie di negoziazione interculturale ---
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Strategie di negoziazione interculturale',
+    passage: 'Una negoziazione interculturale efficace richiede ben più della competenza linguistica; esige la comprensione di quadri culturali profondamente radicati che plasmano il modo in cui si costruisce la fiducia, si prendono le decisioni e si raggiungono gli accordi. Nelle culture ad alto contesto, come il Giappone e molti paesi del Medio Oriente, la costruzione di relazioni precede spesso qualsiasi discussione sulle condizioni, e il silenzio durante le negoziazioni può indicare riflessione piuttosto che disaccordo. Al contrario, le culture a basso contesto, tra cui gli Stati Uniti e la Germania, tendono a privilegiare la franchezza, gli argomenti basati sui dati e i contratti scritti. Le ricerche di Erin Meyer all\'INSEAD hanno dimostrato che anche all\'interno dell\'Europa esistono differenze significative — i negoziatori francesi, ad esempio, spesso si impegnano in dibattiti intellettuali come parte del processo, mentre le controparti scandinave favoriscono la ricerca del consenso e possono percepire le tattiche conflittuali come controproducenti.',
+    questionText: 'Secondo il passaggio, cosa può indicare il silenzio durante le negoziazioni nelle culture ad alto contesto?',
+    options: [
+      { label: 'Disaccordo con la proposta', value: 'Disaccordo con la proposta' },
+      { label: 'Il desiderio di terminare la negoziazione', value: 'Il desiderio di terminare la negoziazione' },
+      { label: 'Riflessione piuttosto che disaccordo', value: 'Riflessione piuttosto che disaccordo' },
+      { label: 'Mancanza di preparazione', value: 'Mancanza di preparazione' }
+    ],
+    correctAnswer: 'Riflessione piuttosto che disaccordo', points: 2, orderIndex: 99, tags: ['interculturale', 'negoziazione']
+  },
+
+  // --- C1: Responsabilità sociale d'impresa ---
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'impatto della responsabilità sociale d\'impresa',
+    passage: 'La responsabilità sociale d\'impresa (RSI) si è evoluta da un esercizio periferico di relazioni pubbliche a un imperativo strategico per molte multinazionali. Studi della Harvard Business School hanno dimostrato che le aziende con programmi RSI solidi tendono a sovraperformare finanziariamente i concorrenti nel lungo termine, in parte perché attraggono e trattengono i migliori talenti che cercano sempre più un lavoro con un senso di scopo. Tuttavia, l\'aumento del "greenwashing" — affermazioni superficiali o fuorvianti sulle pratiche ambientali — ha generato un crescente scetticismo tra consumatori e autorità di regolamentazione. La direttiva europea sulla rendicontazione di sostenibilità (CSRD), entrata in vigore nel 2024, impone alle grandi aziende di divulgare dati dettagliati su criteri ambientali, sociali e di governance (ESG). I critici della RSI sostengono che possa distogliere l\'attenzione dai cambiamenti strutturali fondamentali necessari per affrontare la disuguaglianza e il cambiamento climatico.',
+    questionText: 'Qual è la principale preoccupazione sollevata riguardo al "greenwashing"?',
+    options: [
+      { label: 'Aumenta ingiustamente i profitti aziendali', value: 'Aumenta ingiustamente i profitti aziendali' },
+      { label: 'Ha generato scetticismo sull\'autenticità degli impegni RSI', value: 'Ha generato scetticismo sull\'autenticità degli impegni RSI' },
+      { label: 'È praticato solo dalle piccole aziende', value: 'È praticato solo dalle piccole aziende' },
+      { label: 'È imposto dalla normativa europea', value: 'È imposto dalla normativa europea' }
+    ],
+    correctAnswer: 'Ha generato scetticismo sull\'autenticità degli impegni RSI', points: 2, orderIndex: 100, tags: ['RSI', 'sostenibilità']
+  },
+
+  // --- C1: Trasformazione digitale nelle PMI ---
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Le sfide della trasformazione digitale nelle PMI',
+    passage: 'Mentre le grandi imprese hanno generalmente abbracciato la trasformazione digitale con budget dedicati e team specializzati, le piccole e medie imprese (PMI) affrontano un insieme distinto di sfide. Un rapporto dell\'OCSE del 2024 ha rilevato che solo il 35% delle PMI europee aveva implementato strumenti digitali avanzati come il cloud computing, l\'analisi dei dati o l\'automazione. I principali ostacoli citati erano le risorse finanziarie limitate, la carenza di dipendenti con competenze digitali e la resistenza al cambiamento da parte del personale con lunga anzianità abituato ai flussi di lavoro consolidati. Inoltre, molti titolari di PMI hanno espresso incertezza su quali tecnologie avrebbero offerto un ritorno sull\'investimento tangibile. I programmi di digitalizzazione sostenuti dallo Stato hanno avuto risultati contrastanti; sebbene i sussidi abbiano aiutato alcune aziende ad adottare nuovi sistemi, la mancanza di supporto tecnico continuativo fa sì che i nuovi strumenti vengano spesso sottoutilizzati.',
+    questionText: 'Secondo il rapporto OCSE, quale percentuale di PMI europee aveva adottato strumenti digitali avanzati?',
+    options: [
+      { label: '25%', value: '25%' },
+      { label: '35%', value: '35%' },
+      { label: '50%', value: '50%' },
+      { label: '65%', value: '65%' }
+    ],
+    correctAnswer: '35%', points: 2, orderIndex: 101, tags: ['trasformazione digitale', 'PMI']
+  },
+
+  // --- C1: Fidelizzazione dei talenti ---
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La fidelizzazione dei talenti nei mercati competitivi',
+    passage: 'In un\'era caratterizzata dalla carenza di competenze e dalle cosiddette "Grandi Dimissioni", le organizzazioni sono costrette a ripensare le proprie strategie di fidelizzazione dei talenti. Gli approcci tradizionali incentrati su stipendi competitivi e bonus annuali si rivelano insufficienti, poiché i dipendenti — in particolare i millennial e la Generazione Z — danno sempre più priorità allo scopo, all\'autonomia e allo sviluppo professionale rispetto alle ricompense puramente finanziarie. Le aziende leader investono in percorsi di apprendimento personalizzati, programmi di mobilità interna e criteri di promozione trasparenti. Il rapporto LinkedIn 2024 sull\'apprendimento sul posto di lavoro ha rilevato che i dipendenti che sentono di avere opportunità di imparare e crescere hanno 3,5 volte più probabilità di restare con il proprio datore di lavoro. Tuttavia, la fidelizzazione non dipende solo dagli incentivi individuali; la cultura organizzativa, la leadership inclusiva e la qualità del rapporto manager-dipendente restano i predittori più forti.',
+    questionText: 'Secondo il rapporto LinkedIn, cosa rende i dipendenti 3,5 volte più propensi a restare?',
+    options: [
+      { label: 'Stipendi più alti della concorrenza', value: 'Stipendi più alti della concorrenza' },
+      { label: 'Opportunità di imparare e crescere', value: 'Opportunità di imparare e crescere' },
+      { label: 'Meno ore di lavoro settimanali', value: 'Meno ore di lavoro settimanali' },
+      { label: 'Bonus annuali', value: 'Bonus annuali' }
+    ],
+    correctAnswer: 'Opportunità di imparare e crescere', points: 2, orderIndex: 102, tags: ['fidelizzazione talenti', 'strategia HR']
+  },
+
+  // --- C2: IA etica nelle decisioni HR ---
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Implementazione etica dell\'IA nelle decisioni HR',
+    passage: 'L\'impiego dell\'intelligenza artificiale nelle risorse umane — dagli algoritmi di screening dei curriculum ai modelli predittivi di turnover — solleva profonde questioni etiche che le organizzazioni stanno appena iniziando ad affrontare. Mentre l\'IA promette di ridurre i pregiudizi inconsci standardizzando i criteri di valutazione, le evidenze empiriche raccontano una storia più sfumata. Lo strumento di reclutamento di Amazon, ora dismesso, che penalizzava sistematicamente i CV contenenti la parola "donne", ha dimostrato come algoritmi addestrati su dati storicamente distorti possano perpetuare e persino amplificare le disuguaglianze esistenti. Il Regolamento europeo sull\'IA, adottato nel 2024, classifica i sistemi di IA relativi all\'occupazione come "ad alto rischio", sottoponendoli a requisiti stringenti di trasparenza, supervisione umana e audit dei bias. Tuttavia, la conformità normativa da sola è insufficiente; le organizzazioni devono coltivare quella che gli studiosi definiscono "alfabetizzazione algoritmica" — la capacità dei professionisti HR di valutare criticamente i risultati dell\'IA piuttosto che trattarli come verità oggettive.',
+    questionText: 'Secondo il passaggio, cosa è insufficiente da solo nell\'implementazione dell\'IA nelle HR?',
+    options: [
+      { label: 'La formazione tecnica degli ingegneri', value: 'La formazione tecnica degli ingegneri' },
+      { label: 'La conformità normativa', value: 'La conformità normativa' },
+      { label: 'L\'aumento del volume dei dati di addestramento', value: 'L\'aumento del volume dei dati di addestramento' },
+      { label: 'L\'eliminazione di ogni coinvolgimento umano', value: 'L\'eliminazione di ogni coinvolgimento umano' }
+    ],
+    correctAnswer: 'La conformità normativa', points: 2, orderIndex: 103, tags: ['etica IA', 'tecnologia HR']
+  },
+
+  // --- C2: Capitalismo degli stakeholder vs primato degli azionisti ---
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Capitalismo degli stakeholder vs primato degli azionisti',
+    passage: 'Il dibattito tra capitalismo degli stakeholder e primato degli azionisti rappresenta una delle linee di frattura ideologiche più consequenti nel pensiero economico contemporaneo. La dottrina di Milton Friedman del 1970 — secondo cui l\'unica responsabilità sociale di un\'impresa è aumentare i propri profitti — ha dominato il capitalismo angloamericano per decenni. Il modello degli stakeholder, sostenuto da figure come Klaus Schwab del World Economic Forum, afferma che le imprese devono bilanciare gli interessi di azionisti, dipendenti, clienti, comunità e ambiente per garantire la creazione di valore a lungo termine. La dichiarazione del Business Roundtable del 2019, firmata da 181 CEO di grandi aziende statunitensi, ha formalmente adottato una finalità orientata agli stakeholder. Tuttavia, i critici hanno definito questa svolta come largamente performativa, notando che le strutture retributive dei dirigenti restano prevalentemente legate all\'andamento del prezzo delle azioni.',
+    questionText: 'Perché i critici definiscono l\'impegno del Business Roundtable del 2019 come "performativo"?',
+    options: [
+      { label: 'Perché i CEO non hanno firmato la dichiarazione volontariamente', value: 'Perché i CEO non hanno firmato la dichiarazione volontariamente' },
+      { label: 'Perché la retribuzione dei dirigenti resta legata all\'andamento del prezzo delle azioni', value: 'Perché la retribuzione dei dirigenti resta legata all\'andamento del prezzo delle azioni' },
+      { label: 'Perché il capitalismo degli stakeholder è illegale negli Stati Uniti', value: 'Perché il capitalismo degli stakeholder è illegale negli Stati Uniti' },
+      { label: 'Perché la dichiarazione è stata ritirata l\'anno successivo', value: 'Perché la dichiarazione è stata ritirata l\'anno successivo' }
+    ],
+    correctAnswer: 'Perché la retribuzione dei dirigenti resta legata all\'andamento del prezzo delle azioni', points: 2, orderIndex: 104, tags: ['capitalismo stakeholder', 'governance aziendale']
+  },
+
+  // --- C2: Resilienza organizzativa post-pandemia ---
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La resilienza organizzativa nell\'era post-pandemica',
+    passage: 'La pandemia di COVID-19 ha rappresentato uno stress test senza precedenti per la resilienza organizzativa, mettendo a nudo vulnerabilità critiche nelle catene di approvvigionamento, nella gestione del personale e nella pianificazione strategica. Le organizzazioni che avevano investito in reti di fornitura diversificate, infrastrutture digitali e modelli di leadership adattiva hanno affrontato la crisi in modo più efficace rispetto a quelle basate su modelli snelli, ottimizzati per l\'efficienza con ridondanza minima. Tuttavia, il discorso post-pandemico sulla resilienza rischia di confondere la vera capacità adattiva con la mera sopravvivenza alla crisi. La vera resilienza organizzativa, come definita da studiosi come Kathleen Sutcliffe e Karl Weick, comprende non solo la capacità di assorbire e riprendersi dalle perturbazioni, ma anche la capacità di anticipare le minacce emergenti e trasformarsi in risposta a condizioni fondamentalmente mutate. Le aziende che hanno semplicemente ripristinato le operazioni pre-pandemiche senza ripensare il proprio modello di business potrebbero trovarsi impreparate di fronte alle incertezze cumulative di disruzione climatica, instabilità geopolitica e trasformazione tecnologica.',
+    questionText: 'Secondo il passaggio, qual è il rischio del discorso post-pandemico sulla resilienza?',
+    options: [
+      { label: 'Che le aziende investano troppo nelle infrastrutture digitali', value: 'Che le aziende investano troppo nelle infrastrutture digitali' },
+      { label: 'Che la vera capacità adattiva venga confusa con la mera sopravvivenza alla crisi', value: 'Che la vera capacità adattiva venga confusa con la mera sopravvivenza alla crisi' },
+      { label: 'Che i dipendenti resistano al rientro in ufficio', value: 'Che i dipendenti resistano al rientro in ufficio' },
+      { label: 'Che le catene di approvvigionamento diventino troppo diversificate', value: 'Che le catene di approvvigionamento diventino troppo diversificate' }
+    ],
+    correctAnswer: 'Che la vera capacità adattiva venga confusa con la mera sopravvivenza alla crisi', points: 2, orderIndex: 105, tags: ['resilienza organizzativa', 'strategia']
+  },
+
+  // --- C2: ROI della formazione professionale ---
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'L\'economia del ROI della formazione professionale',
+    passage: 'Quantificare il ritorno sull\'investimento (ROI) dei programmi di sviluppo professionale resta una delle sfide più persistenti nella gestione del capitale umano. Gli approcci tradizionali, come il modello di valutazione a quattro livelli di Kirkpatrick, misurano l\'impatto formativo attraverso la soddisfazione dei partecipanti, l\'acquisizione di conoscenze, il cambiamento comportamentale e i risultati aziendali — tuttavia, ogni livello successivo presenta difficoltà di misurazione crescenti. Il problema dell\'attribuzione causale è particolarmente acuto: isolare l\'impatto di un programma formativo da variabili confondenti come le condizioni di mercato, la qualità del management e la motivazione individuale richiede disegni sperimentali rigorosi che la maggior parte delle organizzazioni non ha le risorse o la volontà di implementare. L\'estensione del modello di Kirkpatrick proposta da Jack Phillips per includere un quinto livello — il ROI finanziario — ha guadagnato terreno, ma i critici sostengono che ridurre risultati formativi complessi a cifre monetarie rischia di sottovalutare benefici intangibili come la capacità di innovazione accresciuta e il rafforzamento delle reti professionali.',
+    questionText: 'Cos\'è il "problema dell\'attribuzione causale" descritto nel passaggio?',
+    options: [
+      { label: 'La difficoltà di trovare formatori qualificati', value: 'La difficoltà di trovare formatori qualificati' },
+      { label: 'La sfida di isolare l\'impatto di una formazione dalle variabili confondenti', value: 'La sfida di isolare l\'impatto di una formazione dalle variabili confondenti' },
+      { label: 'Il problema dei dipendenti che non partecipano alle formazioni', value: 'Il problema dei dipendenti che non partecipano alle formazioni' },
+      { label: 'Il costo elevato dell\'implementazione del modello di Kirkpatrick', value: 'Il costo elevato dell\'implementazione del modello di Kirkpatrick' }
+    ],
+    correctAnswer: 'La sfida di isolare l\'impatto di una formazione dalle variabili confondenti', points: 2, orderIndex: 106, tags: ['formazione professionale', 'ROI', 'strategia HR']
+  },
 ]

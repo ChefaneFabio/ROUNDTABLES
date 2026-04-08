@@ -15,9 +15,9 @@ export const englishVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'The weather was so bad that we had to ___ the picnic.',
+    questionText: 'The weather was so bad that we had to ___ the outdoor meeting.',
     options: [{ label: 'cancel', value: 'cancel' }, { label: 'stop', value: 'stop' }, { label: 'close', value: 'close' }, { label: 'break', value: 'break' }],
-    correctAnswer: 'cancel', points: 1, orderIndex: 42, tags: ['weather', 'daily life']
+    correctAnswer: 'cancel', points: 1, orderIndex: 42, tags: ['weather', 'workplace']
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
@@ -154,15 +154,15 @@ export const englishVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'She is my sister. She is part of my ___.',
-    options: [{ label: 'school', value: 'school' }, { label: 'family', value: 'family' }, { label: 'office', value: 'office' }, { label: 'team', value: 'team' }],
-    correctAnswer: 'family', points: 1, orderIndex: 21, tags: ['family', 'basic nouns']
+    questionText: 'She is my colleague. She is part of my ___.',
+    options: [{ label: 'class', value: 'class' }, { label: 'neighbourhood', value: 'neighbourhood' }, { label: 'department', value: 'department' }, { label: 'team', value: 'team' }],
+    correctAnswer: 'team', points: 1, orderIndex: 21, tags: ['workplace', 'basic nouns']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
     questionText: 'I use a ___ to write.',
     options: [{ label: 'cup', value: 'cup' }, { label: 'pen', value: 'pen' }, { label: 'bag', value: 'bag' }, { label: 'shoe', value: 'shoe' }],
-    correctAnswer: 'pen', points: 1, orderIndex: 22, tags: ['school supplies', 'basic nouns']
+    correctAnswer: 'pen', points: 1, orderIndex: 22, tags: ['office supplies', 'basic nouns']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
@@ -339,5 +339,121 @@ export const englishVocabularyQuestions: MultiSkillQuestionData[] = [
     questionText: 'The critic described the film as a ___ masterpiece — beautiful on the surface but hollow underneath.',
     options: [{ label: 'specious', value: 'specious' }, { label: 'spurious', value: 'spurious' }, { label: 'superfluous', value: 'superfluous' }, { label: 'superlative', value: 'superlative' }],
     correctAnswer: 'specious', points: 2, orderIndex: 48, tags: ['art criticism', 'literary vocabulary']
+  },
+
+  // ============================================================
+  // FILL_BLANK — Vocabulary (20 questions: 3-4 per CEFR level)
+  // ============================================================
+
+  // A1 — Basic opposites & definitions
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The opposite of "hot" is ___.',
+    correctAnswer: 'cold', points: 1, orderIndex: 49, tags: ['opposites', 'adjectives']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The opposite of "big" is ___.',
+    correctAnswer: 'small', points: 1, orderIndex: 50, tags: ['opposites', 'adjectives']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'A person who helps you when you are ill is a ___.',
+    correctAnswer: 'doctor', points: 1, orderIndex: 51, tags: ['definitions', 'jobs']
+  },
+
+  // A2 — Collocations & word families
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'You ___ a bus to go to work. (take/catch)',
+    correctAnswer: 'take', points: 1, orderIndex: 52, tags: ['collocations', 'transport']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The noun form of "happy" is ___.',
+    correctAnswer: 'happiness', points: 1, orderIndex: 53, tags: ['word families', 'nouns']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The opposite of "expensive" is ___.',
+    correctAnswer: 'cheap', points: 1, orderIndex: 54, tags: ['opposites', 'adjectives']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'You use an ___ to keep the rain off. (object)',
+    correctAnswer: 'umbrella', points: 1, orderIndex: 55, tags: ['definitions', 'objects']
+  },
+
+  // B1 — Synonyms & collocations
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'A synonym of "start" is ___.',
+    correctAnswer: 'begin', points: 1, orderIndex: 56, tags: ['synonyms', 'verbs']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'You ___ a decision. (make/do — collocation)',
+    correctAnswer: 'make', points: 1, orderIndex: 57, tags: ['collocations', 'make vs do']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The adjective form of "danger" is ___.',
+    correctAnswer: 'dangerous', points: 1, orderIndex: 58, tags: ['word families', 'adjectives']
+  },
+
+  // B2 — Advanced collocations & abstract vocabulary
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The company decided to ___ new staff to meet demand. (employ — formal synonym)',
+    correctAnswer: 'recruit', points: 2, orderIndex: 59, tags: ['synonyms', 'business']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'There is a strong ___ between smoking and lung disease. (link — formal noun)',
+    correctAnswer: 'correlation', points: 2, orderIndex: 60, tags: ['academic', 'abstract nouns']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The noun form of "resilient" is ___.',
+    correctAnswer: 'resilience', points: 2, orderIndex: 61, tags: ['word families', 'abstract nouns']
+  },
+
+  // C1 — Nuanced vocabulary
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'To ___ a problem means to make it less severe. (ease — formal verb)',
+    correctAnswer: 'alleviate', points: 2, orderIndex: 62, tags: ['definitions', 'advanced verbs']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'A person who is ___ pays very careful attention to detail. (careful — advanced adjective)',
+    correctAnswer: 'meticulous', points: 2, orderIndex: 63, tags: ['synonyms', 'advanced adjectives']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The government tried to ___ the true cost of the project. (hide — formal verb)',
+    correctAnswer: 'conceal', points: 2, orderIndex: 64, tags: ['synonyms', 'formal verbs']
+  },
+
+  // C2 — Literary & rare vocabulary
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'His ___ wit made his speeches both cutting and memorable. (sharp/mocking — literary adjective)',
+    correctAnswer: 'sardonic', points: 2, orderIndex: 65, tags: ['definitions', 'literary adjectives']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The negotiation ended in a complete ___. (disaster — formal noun)',
+    correctAnswer: 'debacle', points: 2, orderIndex: 66, tags: ['synonyms', 'advanced nouns']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The philosopher\'s argument was deliberately ___ — superficially convincing but fundamentally flawed.',
+    correctAnswer: 'specious', points: 2, orderIndex: 67, tags: ['definitions', 'literary vocabulary']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'A ___ analysis cuts straight to the heart of the matter. (sharp/incisive — literary adjective)',
+    correctAnswer: 'trenchant', points: 2, orderIndex: 68, tags: ['definitions', 'literary adjectives']
   },
 ]

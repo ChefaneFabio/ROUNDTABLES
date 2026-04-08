@@ -25,7 +25,7 @@ export const spanishSpeakingQuestions: MultiSkillQuestionData[] = [
   {
     language: 'Spanish', cefrLevel: 'A2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
     questionText: 'Lee el siguiente texto en voz alta con claridad:',
-    speakingPrompt: 'El sábado pasado fui al parque con mis amigos. El tiempo estaba soleado y cálido. Hicimos un picnic y jugamos al fútbol. Fue un día estupendo.',
+    speakingPrompt: 'El sábado pasado fui a una conferencia con mis compañeros de trabajo. El hotel era moderno y cómodo. Asistimos a tres talleres y conocimos a nuevos clientes. Fue un día muy productivo.',
     correctAnswer: '', points: 1, orderIndex: 3,
     rubric: { criteria: ['pronunciación clara', 'ritmo adecuado', 'entonación', 'pronunciación del pasado'], maxDuration: 45 },
     tags: ['lectura en voz alta', 'pasado'], timeSuggested: 45
@@ -175,7 +175,7 @@ export const spanishSpeakingQuestions: MultiSkillQuestionData[] = [
   {
     language: 'Spanish', cefrLevel: 'B1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
     questionText: 'Habla sobre el siguiente tema durante 45-60 segundos. Da tu opinión.',
-    speakingPrompt: '¿Crees que los niños deberían tener un teléfono móvil? ¿A qué edad? ¿Por qué sí o por qué no?',
+    speakingPrompt: '¿Crees que los empleados deberían poder teletrabajar? ¿Cuántos días por semana? ¿Por qué sí o por qué no?',
     correctAnswer: '', points: 1, orderIndex: 20,
     rubric: { criteria: ['opinión coherente', 'razones de apoyo', 'conectores', 'fluidez'], maxDuration: 60 },
     tags: ['opinión', 'tecnología'], timeSuggested: 60

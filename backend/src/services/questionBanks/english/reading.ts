@@ -9,19 +9,19 @@ export const englishReadingQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'My Family',
-    passage: 'My name is Anna. I am 10 years old. I have a brother. His name is Tom. He is 8. We have a dog. The dog is brown. We live in a small house.',
+    passageTitle: 'New at the Office',
+    passage: 'My name is Anna. I am 28 years old. I have a colleague. His name is Tom. He is 35. We share an office. The office is small. We work in a big company.',
     questionText: 'How old is Anna?',
-    options: [{ label: '8', value: '8' }, { label: '10', value: '10' }, { label: '12', value: '12' }, { label: '6', value: '6' }],
-    correctAnswer: '10', points: 1, orderIndex: 1, tags: ['family', 'numbers']
+    options: [{ label: '25', value: '25' }, { label: '28', value: '28' }, { label: '30', value: '30' }, { label: '35', value: '35' }],
+    correctAnswer: '28', points: 1, orderIndex: 1, tags: ['workplace', 'numbers']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'My Family',
-    passage: 'My name is Anna. I am 10 years old. I have a brother. His name is Tom. He is 8. We have a dog. The dog is brown. We live in a small house.',
-    questionText: 'What color is the dog?',
-    options: [{ label: 'White', value: 'white' }, { label: 'Black', value: 'black' }, { label: 'Brown', value: 'brown' }, { label: 'Grey', value: 'grey' }],
-    correctAnswer: 'brown', points: 1, orderIndex: 2, tags: ['family', 'colors']
+    passageTitle: 'New at the Office',
+    passage: 'My name is Anna. I am 28 years old. I have a colleague. His name is Tom. He is 35. We share an office. The office is small. We work in a big company.',
+    questionText: 'How old is Tom?',
+    options: [{ label: '28', value: '28' }, { label: '30', value: '30' }, { label: '35', value: '35' }, { label: '40', value: '40' }],
+    correctAnswer: '35', points: 1, orderIndex: 2, tags: ['workplace', 'numbers']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'READING',
@@ -39,23 +39,23 @@ export const englishReadingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'My Day',
-    passage: 'I wake up at 7 o\'clock. I eat breakfast. Then I go to school. School starts at 8:30. I come home at 3 o\'clock. I play with my friends.',
-    questionText: 'What time does school start?',
-    options: [{ label: '7:00', value: '7:00' }, { label: '8:30', value: '8:30' }, { label: '3:00', value: '3:00' }, { label: '9:00', value: '9:00' }],
+    passageTitle: 'My Work Day',
+    passage: 'I wake up at 7 o\'clock. I eat breakfast. Then I go to the office. Work starts at 8:30. I finish at 5 o\'clock. I take the bus home.',
+    questionText: 'What time does work start?',
+    options: [{ label: '7:00', value: '7:00' }, { label: '8:30', value: '8:30' }, { label: '5:00', value: '5:00' }, { label: '9:00', value: '9:00' }],
     correctAnswer: '8:30', points: 1, orderIndex: 5, tags: ['daily routine', 'time']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'My Day',
-    passage: 'I wake up at 7 o\'clock. I eat breakfast. Then I go to school. School starts at 8:30. I come home at 3 o\'clock. I play with my friends.',
-    questionText: 'What does the person do after school?',
-    options: [{ label: 'Eats dinner', value: 'eats dinner' }, { label: 'Plays with friends', value: 'plays with friends' }, { label: 'Goes shopping', value: 'goes shopping' }, { label: 'Watches TV', value: 'watches TV' }],
-    correctAnswer: 'plays with friends', points: 1, orderIndex: 6, tags: ['daily routine']
+    passageTitle: 'My Work Day',
+    passage: 'I wake up at 7 o\'clock. I eat breakfast. Then I go to the office. Work starts at 8:30. I finish at 5 o\'clock. I take the bus home.',
+    questionText: 'How does the person go home?',
+    options: [{ label: 'By car', value: 'by car' }, { label: 'By bus', value: 'by bus' }, { label: 'On foot', value: 'on foot' }, { label: 'By train', value: 'by train' }],
+    correctAnswer: 'by bus', points: 1, orderIndex: 6, tags: ['daily routine', 'transport']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'I wake up at 7 o\'clock. I eat breakfast. Then I go to school.',
+    passage: 'I wake up at 7 o\'clock. I eat breakfast. Then I go to the office.',
     questionText: 'I wake up at 7 ___.  (Write the missing word)',
     correctAnswer: "o'clock", points: 1, orderIndex: 7, tags: ['time']
   },
@@ -449,57 +449,57 @@ export const englishReadingQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'A Sign at the Park',
-    passage: 'PARK RULES: No dogs. No bicycles. Open from 8 AM to 6 PM. Children must be with an adult.',
-    questionText: 'Can you bring your dog to the park?',
-    options: [{ label: 'Yes', value: 'yes' }, { label: 'No', value: 'no' }, { label: 'Only small dogs', value: 'only small dogs' }, { label: 'Only on weekends', value: 'only on weekends' }],
+    passageTitle: 'Office Notice',
+    passage: 'OFFICE RULES: No food at desks. No personal calls during meetings. Open from 8 AM to 6 PM. All visitors must sign in at reception.',
+    questionText: 'Can you eat at your desk?',
+    options: [{ label: 'Yes', value: 'yes' }, { label: 'No', value: 'no' }, { label: 'Only snacks', value: 'only snacks' }, { label: 'Only on Fridays', value: 'only on Fridays' }],
     correctAnswer: 'no', points: 1, orderIndex: 43, tags: ['signs', 'rules']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'A Sign at the Park',
-    passage: 'PARK RULES: No dogs. No bicycles. Open from 8 AM to 6 PM. Children must be with an adult.',
-    questionText: 'What time does the park close?',
+    passageTitle: 'Office Notice',
+    passage: 'OFFICE RULES: No food at desks. No personal calls during meetings. Open from 8 AM to 6 PM. All visitors must sign in at reception.',
+    questionText: 'What time does the office close?',
     options: [{ label: '5 PM', value: '5 PM' }, { label: '6 PM', value: '6 PM' }, { label: '7 PM', value: '7 PM' }, { label: '8 PM', value: '8 PM' }],
     correctAnswer: '6 PM', points: 1, orderIndex: 44, tags: ['signs', 'time']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'My Pet',
-    passage: 'I have a cat. Her name is Mimi. She is white and very small. She sleeps on my bed. She likes milk and fish. I love my cat very much.',
-    questionText: 'What does Mimi like to eat?',
-    options: [{ label: 'Bread and water', value: 'bread and water' }, { label: 'Milk and fish', value: 'milk and fish' }, { label: 'Rice and chicken', value: 'rice and chicken' }, { label: 'Fruit and vegetables', value: 'fruit and vegetables' }],
-    correctAnswer: 'milk and fish', points: 1, orderIndex: 45, tags: ['pets', 'food']
+    passageTitle: 'My Desk',
+    passage: 'I have a desk at work. It is near the window. The desk is big and white. I have a computer and a phone on my desk. I also have a cup of coffee. I like my desk very much.',
+    questionText: 'What is on the desk?',
+    options: [{ label: 'Books and papers', value: 'books and papers' }, { label: 'A computer and a phone', value: 'a computer and a phone' }, { label: 'A lamp and a plant', value: 'a lamp and a plant' }, { label: 'Folders and pens', value: 'folders and pens' }],
+    correctAnswer: 'a computer and a phone', points: 1, orderIndex: 45, tags: ['office', 'objects']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'My Pet',
-    passage: 'I have a cat. Her name is Mimi. She is white and very small. She sleeps on my bed. She likes milk and fish. I love my cat very much.',
-    questionText: 'Where does Mimi sleep?',
-    options: [{ label: 'On the floor', value: 'on the floor' }, { label: 'On the sofa', value: 'on the sofa' }, { label: 'On the bed', value: 'on the bed' }, { label: 'In the garden', value: 'in the garden' }],
-    correctAnswer: 'on the bed', points: 1, orderIndex: 46, tags: ['pets', 'house']
+    passageTitle: 'My Desk',
+    passage: 'I have a desk at work. It is near the window. The desk is big and white. I have a computer and a phone on my desk. I also have a cup of coffee. I like my desk very much.',
+    questionText: 'Where is the desk?',
+    options: [{ label: 'Near the door', value: 'near the door' }, { label: 'In the corridor', value: 'in the corridor' }, { label: 'Near the window', value: 'near the window' }, { label: 'In the meeting room', value: 'in the meeting room' }],
+    correctAnswer: 'near the window', points: 1, orderIndex: 46, tags: ['office', 'location']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'A Short Note',
-    passage: 'Dear Lisa, I am at the supermarket. There is no bread at home. I will buy bread, eggs, and cheese. I will be home at 5. Love, Mum.',
-    questionText: 'Where is Mum?',
-    options: [{ label: 'At home', value: 'at home' }, { label: 'At work', value: 'at work' }, { label: 'At the supermarket', value: 'at the supermarket' }, { label: 'At school', value: 'at school' }],
-    correctAnswer: 'at the supermarket', points: 1, orderIndex: 47, tags: ['notes', 'shopping']
+    passageTitle: 'An Office Note',
+    passage: 'Dear colleagues, I am at the client meeting. There is no toner in the printer. I will buy toner and paper. I will be back at 3. Best, Marco.',
+    questionText: 'Where is Marco?',
+    options: [{ label: 'At home', value: 'at home' }, { label: 'At a client meeting', value: 'at a client meeting' }, { label: 'At the supermarket', value: 'at the supermarket' }, { label: 'At the bank', value: 'at the bank' }],
+    correctAnswer: 'at a client meeting', points: 1, orderIndex: 47, tags: ['notes', 'workplace']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'A Short Note',
-    passage: 'Dear Lisa, I am at the supermarket. There is no bread at home. I will buy bread, eggs, and cheese. I will be home at 5. Love, Mum.',
-    questionText: 'What will Mum buy?',
-    options: [{ label: 'Milk, rice, and fruit', value: 'milk, rice, and fruit' }, { label: 'Bread, eggs, and cheese', value: 'bread, eggs, and cheese' }, { label: 'Water and juice', value: 'water and juice' }, { label: 'Meat and vegetables', value: 'meat and vegetables' }],
-    correctAnswer: 'bread, eggs, and cheese', points: 1, orderIndex: 48, tags: ['notes', 'shopping']
+    passageTitle: 'An Office Note',
+    passage: 'Dear colleagues, I am at the client meeting. There is no toner in the printer. I will buy toner and paper. I will be back at 3. Best, Marco.',
+    questionText: 'What will Marco buy?',
+    options: [{ label: 'Coffee and cups', value: 'coffee and cups' }, { label: 'Toner and paper', value: 'toner and paper' }, { label: 'Pens and notebooks', value: 'pens and notebooks' }, { label: 'Folders and clips', value: 'folders and clips' }],
+    correctAnswer: 'toner and paper', points: 1, orderIndex: 48, tags: ['notes', 'office supplies']
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'Dear Lisa, I am at the supermarket. There is no bread at home. I will buy bread, eggs, and cheese. I will be home at 5.',
-    questionText: 'Mum will be home at ___.',
-    correctAnswer: '5', points: 1, orderIndex: 49, tags: ['notes', 'time']
+    passage: 'Dear colleagues, I am at the client meeting. There is no toner in the printer. I will buy toner and paper. I will be back at 3.',
+    questionText: 'Marco will be back at ___.',
+    correctAnswer: '3', points: 1, orderIndex: 49, tags: ['notes', 'time']
   },
 
   // ============================================================
@@ -539,25 +539,25 @@ export const englishReadingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Weekend Plans',
-    passage: 'Hi James, Are you free this Saturday? My parents are having a barbecue in the garden. There will be burgers, salads, and cake. My cousin is coming too — you met him at my birthday party. It starts at 2 PM. Let me know! Best, Daniel',
+    passageTitle: 'Team Lunch',
+    passage: 'Hi James, Are you free this Friday? Our department is having a team lunch at the Italian restaurant on Park Street. There will be pasta, salads, and dessert. The new project manager is coming too — you met her at the conference last month. It starts at 1 PM. Let me know! Best, Daniel',
     questionText: 'What kind of event is it?',
-    options: [{ label: 'A birthday party', value: 'birthday party' }, { label: 'A barbecue', value: 'a barbecue' }, { label: 'A wedding', value: 'wedding' }, { label: 'A dinner party', value: 'dinner party' }],
-    correctAnswer: 'a barbecue', points: 1, orderIndex: 54, tags: ['social', 'invitations']
+    options: [{ label: 'A conference', value: 'conference' }, { label: 'A team lunch', value: 'a team lunch' }, { label: 'A training session', value: 'training' }, { label: 'A workshop', value: 'workshop' }],
+    correctAnswer: 'a team lunch', points: 1, orderIndex: 54, tags: ['workplace', 'invitations']
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Weekend Plans',
-    passage: 'Hi James, Are you free this Saturday? My parents are having a barbecue in the garden. There will be burgers, salads, and cake. My cousin is coming too — you met him at my birthday party. It starts at 2 PM. Let me know! Best, Daniel',
-    questionText: 'When does the barbecue start?',
+    passageTitle: 'Team Lunch',
+    passage: 'Hi James, Are you free this Friday? Our department is having a team lunch at the Italian restaurant on Park Street. There will be pasta, salads, and dessert. The new project manager is coming too — you met her at the conference last month. It starts at 1 PM. Let me know! Best, Daniel',
+    questionText: 'When does the team lunch start?',
     options: [{ label: '12 PM', value: '12 PM' }, { label: '1 PM', value: '1 PM' }, { label: '2 PM', value: '2 PM' }, { label: '3 PM', value: '3 PM' }],
-    correctAnswer: '2 PM', points: 1, orderIndex: 55, tags: ['social', 'time']
+    correctAnswer: '1 PM', points: 1, orderIndex: 55, tags: ['workplace', 'time']
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'Hi James, My parents are having a barbecue in the garden. There will be burgers, salads, and cake.',
-    questionText: 'The barbecue is in the ___.',
-    correctAnswer: 'garden', points: 1, orderIndex: 56, tags: ['social', 'places']
+    passage: 'Hi James, Our department is having a team lunch at the Italian restaurant on Park Street. There will be pasta, salads, and dessert.',
+    questionText: 'The team lunch is at the ___ restaurant.',
+    correctAnswer: 'Italian', points: 1, orderIndex: 56, tags: ['workplace', 'places']
   },
 
   // ============================================================
@@ -884,5 +884,367 @@ export const englishReadingQuestions: MultiSkillQuestionData[] = [
       { label: 'Meaning is irrelevant to communication', value: 'irrelevant' }
     ],
     correctAnswer: 'function of use', points: 2, orderIndex: 82, tags: ['philosophy', 'linguistics']
+  },
+
+  // ===== PROFESSIONAL / WORKPLACE READING QUESTIONS =====
+
+  // --- A1: Office email about a meeting time change ---
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Meeting Time Change',
+    passage: 'Dear Team, The meeting on Wednesday is now at 3:00 PM, not 2:00 PM. The meeting room is Room 5B. Please bring your laptop. Thank you, David.',
+    questionText: 'What time is the meeting now?',
+    options: [
+      { label: '2:00 PM', value: '2:00 PM' },
+      { label: '3:00 PM', value: '3:00 PM' },
+      { label: '5:00 PM', value: '5:00 PM' },
+      { label: '1:00 PM', value: '1:00 PM' }
+    ],
+    correctAnswer: '3:00 PM', points: 1, orderIndex: 83, tags: ['business email', 'workplace']
+  },
+
+  // --- A1: Restaurant menu for a business lunch ---
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Business Lunch Menu',
+    passage: 'Today\'s Lunch Menu — Café Roma. Soup of the day: Tomato — €4.50. Grilled chicken with salad — €9.00. Pasta with vegetables — €7.50. Coffee or tea included with every meal.',
+    questionText: 'How much is the grilled chicken with salad?',
+    options: [
+      { label: '€4.50', value: '€4.50' },
+      { label: '€7.50', value: '€7.50' },
+      { label: '€9.00', value: '€9.00' },
+      { label: '€12.00', value: '€12.00' }
+    ],
+    correctAnswer: '€9.00', points: 1, orderIndex: 84, tags: ['business lunch', 'workplace']
+  },
+
+  // --- A1: Hotel check-in information card ---
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Hotel Check-In Card',
+    passage: 'Welcome to Grand Hotel. Your room is 412. Breakfast is from 7:00 to 10:00 AM in the restaurant on the first floor. Wi-Fi password: GRAND2024. Check-out is at 11:00 AM.',
+    questionText: 'What is the Wi-Fi password?',
+    options: [
+      { label: 'HOTEL2024', value: 'HOTEL2024' },
+      { label: 'GRAND2024', value: 'GRAND2024' },
+      { label: 'ROOM412', value: 'ROOM412' },
+      { label: 'WELCOME', value: 'WELCOME' }
+    ],
+    correctAnswer: 'GRAND2024', points: 1, orderIndex: 85, tags: ['business travel', 'hotel']
+  },
+
+  // --- A1: Simple work schedule ---
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Weekly Work Schedule',
+    passage: 'Work Schedule — Week 12. Monday to Wednesday: 9:00 AM – 5:00 PM. Thursday: Day off. Friday: 9:00 AM – 1:00 PM. Saturday and Sunday: Closed.',
+    questionText: 'When is the day off?',
+    options: [
+      { label: 'Monday', value: 'Monday' },
+      { label: 'Wednesday', value: 'Wednesday' },
+      { label: 'Thursday', value: 'Thursday' },
+      { label: 'Friday', value: 'Friday' }
+    ],
+    correctAnswer: 'Thursday', points: 1, orderIndex: 86, tags: ['work schedule', 'workplace']
+  },
+
+  // --- A2: Job advertisement for a receptionist ---
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Job Advertisement',
+    passage: 'We are looking for a receptionist for our office in Milan. You must speak English and Italian. Working hours are Monday to Friday, 8:30 AM to 5:30 PM. Experience with Microsoft Office is required. Please send your CV to hr@globaltech.com before March 30th.',
+    questionText: 'What languages must the receptionist speak?',
+    options: [
+      { label: 'English and French', value: 'English and French' },
+      { label: 'English and Italian', value: 'English and Italian' },
+      { label: 'Italian and German', value: 'Italian and German' },
+      { label: 'English and Spanish', value: 'English and Spanish' }
+    ],
+    correctAnswer: 'English and Italian', points: 1, orderIndex: 87, tags: ['job advertisement', 'workplace']
+  },
+
+  // --- A2: Email declining a meeting invitation ---
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Meeting Decline Email',
+    passage: 'Hi Marco, Thank you for the invitation to the sales meeting on Tuesday at 10:00 AM. Unfortunately, I cannot attend because I have a client visit at that time. Could you please send me the meeting notes afterwards? Best regards, Anna Fischer.',
+    questionText: 'Why can Anna not attend the meeting?',
+    options: [
+      { label: 'She is on holiday', value: 'She is on holiday' },
+      { label: 'She has a client visit', value: 'She has a client visit' },
+      { label: 'She is feeling unwell', value: 'She is feeling unwell' },
+      { label: 'She has another meeting with her manager', value: 'She has another meeting with her manager' }
+    ],
+    correctAnswer: 'She has a client visit', points: 1, orderIndex: 88, tags: ['business email', 'workplace']
+  },
+
+  // --- A2: Company holiday notice ---
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Office Closure Notice',
+    passage: 'Please note that the office will be closed from December 23rd to January 2nd for the holiday period. The last working day is December 22nd. If you need help during this time, please email support@brightcorp.com. We wish everyone a happy holiday season.',
+    questionText: 'What is the last working day before the holidays?',
+    options: [
+      { label: 'December 20th', value: 'December 20th' },
+      { label: 'December 22nd', value: 'December 22nd' },
+      { label: 'December 23rd', value: 'December 23rd' },
+      { label: 'January 2nd', value: 'January 2nd' }
+    ],
+    correctAnswer: 'December 22nd', points: 1, orderIndex: 89, tags: ['company notice', 'workplace']
+  },
+
+  // --- A2: Instructions for using the office coffee machine ---
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Coffee Machine Instructions',
+    passage: 'How to use the coffee machine: 1. Place your cup under the nozzle. 2. Press the blue button for espresso or the green button for cappuccino. 3. Wait 30 seconds. 4. Please clean the drip tray at the end of each day. If the machine shows a red light, contact Facilities at ext. 220.',
+    questionText: 'What should you do if you see a red light on the machine?',
+    options: [
+      { label: 'Press the blue button', value: 'Press the blue button' },
+      { label: 'Clean the drip tray', value: 'Clean the drip tray' },
+      { label: 'Contact Facilities at ext. 220', value: 'Contact Facilities at ext. 220' },
+      { label: 'Wait 30 seconds', value: 'Wait 30 seconds' }
+    ],
+    correctAnswer: 'Contact Facilities at ext. 220', points: 1, orderIndex: 90, tags: ['office instructions', 'workplace']
+  },
+
+  // --- B1: Email about a project deadline extension ---
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Project Update Email',
+    passage: 'Dear Team, I am writing to inform you that the deadline for the Q3 report has been extended to October 15th. Several team members have reported challenges with data collection due to the system migration last week. Please use this extra time to ensure accuracy in your submissions. If you have any questions, contact your department lead. Best regards, Sarah Chen, Project Manager.',
+    questionText: 'Why was the deadline for the Q3 report extended?',
+    options: [
+      { label: 'The manager was on holiday', value: 'The manager was on holiday' },
+      { label: 'There were problems with data collection due to the system migration', value: 'There were problems with data collection due to the system migration' },
+      { label: 'The client requested changes to the report format', value: 'The client requested changes to the report format' },
+      { label: 'The team wanted more time for a celebration', value: 'The team wanted more time for a celebration' }
+    ],
+    correctAnswer: 'There were problems with data collection due to the system migration', points: 1, orderIndex: 91, tags: ['business email', 'workplace']
+  },
+
+  // --- B1: Article about remote work vs office work ---
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Remote Work vs Office Work',
+    passage: 'A recent survey of 2,000 employees found that 65% prefer a hybrid work model, combining remote and office days. Workers said they are more productive at home because there are fewer interruptions. However, many also said they miss face-to-face interactions with colleagues. Companies are now experimenting with "collaboration days" where teams come to the office on the same days to meet and plan together. Experts say the key is flexibility — letting employees choose what works best for their role.',
+    questionText: 'What do most employees prefer according to the survey?',
+    options: [
+      { label: 'Working fully from home', value: 'Working fully from home' },
+      { label: 'A hybrid work model', value: 'A hybrid work model' },
+      { label: 'Working only from the office', value: 'Working only from the office' },
+      { label: 'Changing jobs every year', value: 'Changing jobs every year' }
+    ],
+    correctAnswer: 'A hybrid work model', points: 1, orderIndex: 92, tags: ['remote work', 'workplace trends']
+  },
+
+  // --- B1: Company newsletter about a new employee benefit ---
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'New Employee Benefit Announcement',
+    passage: 'We are excited to announce a new wellness benefit for all full-time employees starting January 1st. The company will now cover up to €500 per year for gym memberships, yoga classes, or mental health counselling. To use this benefit, employees must submit receipts through the HR portal within 30 days of payment. This initiative is part of our commitment to supporting employee well-being. For more details, please visit the Benefits section on the company intranet.',
+    questionText: 'How can employees use the new wellness benefit?',
+    options: [
+      { label: 'By asking their manager for approval', value: 'By asking their manager for approval' },
+      { label: 'By submitting receipts through the HR portal', value: 'By submitting receipts through the HR portal' },
+      { label: 'By visiting the company gym', value: 'By visiting the company gym' },
+      { label: 'By attending a mandatory workshop', value: 'By attending a mandatory workshop' }
+    ],
+    correctAnswer: 'By submitting receipts through the HR portal', points: 1, orderIndex: 93, tags: ['company benefits', 'workplace']
+  },
+
+  // --- B1: Travel policy document ---
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Business Travel Policy',
+    passage: 'All business travel must be approved by your line manager at least two weeks before the trip. Economy class flights should be booked for trips under five hours. Hotel costs must not exceed €150 per night. Employees should use the company travel portal to book flights and hotels. Meals during travel are reimbursed up to €45 per day. All receipts must be submitted within 10 working days of your return.',
+    questionText: 'What is the maximum hotel cost allowed per night?',
+    options: [
+      { label: '€100', value: '€100' },
+      { label: '€120', value: '€120' },
+      { label: '€150', value: '€150' },
+      { label: '€200', value: '€200' }
+    ],
+    correctAnswer: '€150', points: 1, orderIndex: 94, tags: ['travel policy', 'workplace']
+  },
+
+  // --- B2: Article about leadership styles ---
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Leadership Styles in Modern Companies',
+    passage: 'The traditional command-and-control leadership model is increasingly being replaced by more collaborative approaches. Transformational leaders, who inspire and motivate their teams by articulating a compelling vision, have been shown to drive higher levels of employee engagement. Servant leadership, where the leader\'s primary role is to support their team members\' growth and development, has gained popularity in technology companies. However, research suggests that no single style is universally effective; the best leaders adapt their approach depending on the situation, the maturity of the team, and the nature of the task. This concept, known as situational leadership, requires emotional intelligence and a deep understanding of team dynamics.',
+    questionText: 'According to the article, what does situational leadership require?',
+    options: [
+      { label: 'A strict set of rules for every situation', value: 'A strict set of rules for every situation' },
+      { label: 'Emotional intelligence and understanding of team dynamics', value: 'Emotional intelligence and understanding of team dynamics' },
+      { label: 'Experience only in the technology sector', value: 'Experience only in the technology sector' },
+      { label: 'A single consistent leadership approach', value: 'A single consistent leadership approach' }
+    ],
+    correctAnswer: 'Emotional intelligence and understanding of team dynamics', points: 2, orderIndex: 95, tags: ['leadership', 'management']
+  },
+
+  // --- B2: Report on employee satisfaction survey ---
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Employee Satisfaction Survey Results',
+    passage: 'The annual employee satisfaction survey, completed by 87% of staff, reveals several notable trends. Overall satisfaction has risen from 72% to 78% compared to last year, driven largely by improvements in management communication and flexible working arrangements. However, career development opportunities remain the lowest-rated category at 58%, with many respondents expressing frustration at the lack of clear promotion pathways. The HR department has proposed a mentorship programme and quarterly career development workshops to address these concerns. Additionally, 40% of respondents highlighted that workload distribution remains uneven across departments.',
+    questionText: 'What is the lowest-rated area in the survey?',
+    options: [
+      { label: 'Management communication', value: 'Management communication' },
+      { label: 'Flexible working arrangements', value: 'Flexible working arrangements' },
+      { label: 'Career development opportunities', value: 'Career development opportunities' },
+      { label: 'Workload distribution', value: 'Workload distribution' }
+    ],
+    correctAnswer: 'Career development opportunities', points: 2, orderIndex: 96, tags: ['employee survey', 'HR']
+  },
+
+  // --- B2: Work-life balance trends ---
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Work-Life Balance Trends Across Europe',
+    passage: 'A comprehensive study by the European Foundation for the Improvement of Living and Working Conditions found significant variations in work-life balance across EU member states. Nordic countries consistently rank highest, with shorter average working hours and generous parental leave policies. In contrast, Southern European nations report longer working hours but also benefit from stronger family support networks. The study also identified a growing trend toward four-day work weeks, with pilot programmes in Belgium, Spain, and the UK showing promising results — productivity remained stable or improved, while employee burnout decreased by 30%. Critics argue, however, that such models are primarily suited to knowledge-based industries and may not be feasible in sectors like healthcare or manufacturing.',
+    questionText: 'What did pilot programmes for four-day work weeks show?',
+    options: [
+      { label: 'Productivity dropped significantly', value: 'Productivity dropped significantly' },
+      { label: 'Productivity remained stable or improved and burnout decreased', value: 'Productivity remained stable or improved and burnout decreased' },
+      { label: 'Employees preferred to work five days', value: 'Employees preferred to work five days' },
+      { label: 'Only manufacturing companies benefited', value: 'Only manufacturing companies benefited' }
+    ],
+    correctAnswer: 'Productivity remained stable or improved and burnout decreased', points: 2, orderIndex: 97, tags: ['work-life balance', 'European trends']
+  },
+
+  // --- B2: Business proposal executive summary ---
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Executive Summary: Market Expansion Proposal',
+    passage: 'This proposal outlines a strategy for expanding into the DACH region (Germany, Austria, and Switzerland) over the next 18 months. Market research indicates a strong demand for our SaaS platform among mid-sized enterprises in the manufacturing sector, with an estimated addressable market of €45 million annually. The proposed approach involves establishing a regional sales office in Munich, hiring a team of five local sales representatives, and partnering with two established consulting firms for channel distribution. The total investment required is €1.2 million, with a projected break-even point at 14 months. Key risks include regulatory differences across the three markets and competition from established local providers.',
+    questionText: 'When is the projected break-even point for this expansion?',
+    options: [
+      { label: '6 months', value: '6 months' },
+      { label: '14 months', value: '14 months' },
+      { label: '18 months', value: '18 months' },
+      { label: '24 months', value: '24 months' }
+    ],
+    correctAnswer: '14 months', points: 2, orderIndex: 98, tags: ['business proposal', 'strategy']
+  },
+
+  // --- C1: Cross-cultural negotiation strategies ---
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Cross-Cultural Negotiation Strategies',
+    passage: 'Effective cross-cultural negotiation requires far more than linguistic proficiency; it demands an understanding of deeply embedded cultural frameworks that shape how trust is built, decisions are made, and agreements are reached. In high-context cultures, such as Japan and many Middle Eastern countries, relationship-building often precedes any discussion of terms, and silence during negotiations may signal contemplation rather than disagreement. Conversely, low-context cultures, including the United States and Germany, tend to prioritise directness, data-driven arguments, and written contracts. Research by Erin Meyer at INSEAD has demonstrated that even within Europe, significant differences exist — French negotiators, for instance, often engage in intellectual debate as part of the process, while Scandinavian counterparts favour consensus-building and may perceive confrontational tactics as counterproductive. Understanding these nuances can mean the difference between a successful partnership and a failed deal.',
+    questionText: 'According to the passage, what might silence during negotiations indicate in high-context cultures?',
+    options: [
+      { label: 'Disagreement with the proposal', value: 'Disagreement with the proposal' },
+      { label: 'A desire to end the negotiation', value: 'A desire to end the negotiation' },
+      { label: 'Contemplation rather than disagreement', value: 'Contemplation rather than disagreement' },
+      { label: 'A lack of preparation', value: 'A lack of preparation' }
+    ],
+    correctAnswer: 'Contemplation rather than disagreement', points: 2, orderIndex: 99, tags: ['cross-cultural', 'negotiation']
+  },
+
+  // --- C1: Corporate social responsibility ---
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The Impact of Corporate Social Responsibility',
+    passage: 'Corporate social responsibility (CSR) has evolved from a peripheral public relations exercise to a strategic imperative for many multinational corporations. Studies by Harvard Business School have shown that companies with robust CSR programmes tend to outperform their peers financially over the long term, partly because they attract and retain top talent who increasingly seek purpose-driven work. However, the rise of "greenwashing" — superficial or misleading claims about environmental practices — has led to growing scepticism among consumers and regulators alike. The European Union\'s Corporate Sustainability Reporting Directive (CSRD), which came into effect in 2024, represents a significant regulatory shift, requiring large companies to disclose detailed environmental, social, and governance (ESG) data. Critics of CSR argue that it can distract from the fundamental structural changes needed to address inequality and climate change, while proponents maintain that corporate engagement, however imperfect, is essential to scaling solutions.',
+    questionText: 'What is the main concern raised about "greenwashing" in the passage?',
+    options: [
+      { label: 'It increases corporate profits unfairly', value: 'It increases corporate profits unfairly' },
+      { label: 'It has led to scepticism about the authenticity of CSR claims', value: 'It has led to scepticism about the authenticity of CSR claims' },
+      { label: 'It is only practised by small companies', value: 'It is only practised by small companies' },
+      { label: 'It is required by EU regulations', value: 'It is required by EU regulations' }
+    ],
+    correctAnswer: 'It has led to scepticism about the authenticity of CSR claims', points: 2, orderIndex: 100, tags: ['CSR', 'sustainability']
+  },
+
+  // --- C1: Digital transformation in SMEs ---
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Digital Transformation Challenges in SMEs',
+    passage: 'While large enterprises have generally embraced digital transformation with dedicated budgets and specialised teams, small and medium-sized enterprises (SMEs) face a distinct set of challenges. A 2024 report by the OECD found that only 35% of European SMEs had implemented advanced digital tools such as cloud computing, data analytics, or automation. The primary barriers cited were limited financial resources, a shortage of digitally skilled employees, and resistance to change from long-tenured staff accustomed to established workflows. Furthermore, many SME owners expressed uncertainty about which technologies would deliver tangible returns on investment. Government-backed digitalisation programmes have had mixed results; while subsidies have helped some businesses adopt new systems, a lack of ongoing technical support often means that new tools are underutilised. Experts argue that successful digital transformation in SMEs requires not just technology adoption but a fundamental shift in organisational culture and leadership mindset.',
+    questionText: 'According to the OECD report, what percentage of European SMEs had adopted advanced digital tools?',
+    options: [
+      { label: '25%', value: '25%' },
+      { label: '35%', value: '35%' },
+      { label: '50%', value: '50%' },
+      { label: '65%', value: '65%' }
+    ],
+    correctAnswer: '35%', points: 2, orderIndex: 101, tags: ['digital transformation', 'SMEs']
+  },
+
+  // --- C1: Talent retention ---
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Talent Retention in Competitive Markets',
+    passage: 'In an era characterised by skill shortages and the so-called "Great Resignation," organisations are being forced to rethink their talent retention strategies. Traditional approaches centred on competitive salaries and annual bonuses are proving insufficient, as employees — particularly millennials and Generation Z — increasingly prioritise purpose, autonomy, and career development over purely financial rewards. Leading companies are responding by investing in personalised learning pathways, internal mobility programmes, and transparent promotion criteria. LinkedIn\'s 2024 Workplace Learning Report found that employees who feel they have opportunities to learn and grow are 3.5 times more likely to stay with their employer. However, retention is not solely about individual incentives; organisational culture, inclusive leadership, and the quality of the manager-employee relationship remain the strongest predictors of whether an employee will stay or leave. Companies that fail to address these systemic factors risk a costly cycle of recruitment and attrition.',
+    questionText: 'According to LinkedIn\'s report, what makes employees 3.5 times more likely to stay?',
+    options: [
+      { label: 'Higher salaries than competitors', value: 'Higher salaries than competitors' },
+      { label: 'Having opportunities to learn and grow', value: 'Having opportunities to learn and grow' },
+      { label: 'Working fewer hours per week', value: 'Working fewer hours per week' },
+      { label: 'Receiving annual bonuses', value: 'Receiving annual bonuses' }
+    ],
+    correctAnswer: 'Having opportunities to learn and grow', points: 2, orderIndex: 102, tags: ['talent retention', 'HR strategy']
+  },
+
+  // --- C2: Ethical AI in HR decisions ---
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Ethical AI Implementation in HR Decisions',
+    passage: 'The deployment of artificial intelligence in human resources — from résumé screening algorithms to predictive attrition models — raises profound ethical questions that organisations are only beginning to grapple with. While AI promises to reduce unconscious bias by standardising evaluation criteria, empirical evidence tells a more nuanced story. Amazon\'s now-discontinued recruitment tool, which systematically downgraded CVs containing the word "women\'s," demonstrated how algorithms trained on historically biased data can perpetuate and even amplify existing inequalities. The EU AI Act, adopted in 2024, classifies employment-related AI systems as "high-risk," subjecting them to stringent requirements for transparency, human oversight, and bias auditing. Yet compliance alone is insufficient; organisations must cultivate what scholars term "algorithmic literacy" — the capacity of HR professionals to critically evaluate AI outputs rather than treating them as objective truths. The tension between efficiency gains and ethical responsibility demands not merely technical safeguards but a fundamental reimagining of how human judgement and machine intelligence should interact in decisions that profoundly affect people\'s livelihoods.',
+    questionText: 'What does the passage suggest is insufficient on its own when implementing AI in HR?',
+    options: [
+      { label: 'Technical training for engineers', value: 'Technical training for engineers' },
+      { label: 'Regulatory compliance', value: 'Regulatory compliance' },
+      { label: 'Increasing the volume of training data', value: 'Increasing the volume of training data' },
+      { label: 'Eliminating all human involvement', value: 'Eliminating all human involvement' }
+    ],
+    correctAnswer: 'Regulatory compliance', points: 2, orderIndex: 103, tags: ['AI ethics', 'HR technology']
+  },
+
+  // --- C2: Stakeholder capitalism vs shareholder primacy ---
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Stakeholder Capitalism vs Shareholder Primacy',
+    passage: 'The debate between stakeholder capitalism and shareholder primacy represents one of the most consequential ideological fault lines in contemporary business thought. Milton Friedman\'s 1970 doctrine — that a corporation\'s sole social responsibility is to increase its profits — dominated Anglo-American capitalism for decades, providing an intellectually coherent framework for prioritising shareholder returns above all other considerations. The stakeholder model, championed by figures such as Klaus Schwab of the World Economic Forum, contends that corporations must balance the interests of shareholders, employees, customers, communities, and the environment to ensure long-term value creation. The 2019 Business Roundtable statement, signed by 181 CEOs of major US corporations, formally endorsed a stakeholder-oriented purpose, yet critics have characterised this pivot as largely performative, noting that executive compensation structures remain overwhelmingly tied to share price performance. Empirical research on whether stakeholder-oriented companies outperform shareholder-focused ones yields mixed results, complicated by methodological challenges in defining and measuring stakeholder value. What is clear, however, is that the binary framing of the debate obscures the complex interdependencies between financial performance and broader societal outcomes.',
+    questionText: 'Why do critics characterise the Business Roundtable\'s 2019 stakeholder commitment as "performative"?',
+    options: [
+      { label: 'Because the CEOs did not sign the statement voluntarily', value: 'Because the CEOs did not sign the statement voluntarily' },
+      { label: 'Because executive compensation remains tied to share price performance', value: 'Because executive compensation remains tied to share price performance' },
+      { label: 'Because stakeholder capitalism is illegal in the United States', value: 'Because stakeholder capitalism is illegal in the United States' },
+      { label: 'Because the statement was retracted the following year', value: 'Because the statement was retracted the following year' }
+    ],
+    correctAnswer: 'Because executive compensation remains tied to share price performance', points: 2, orderIndex: 104, tags: ['stakeholder capitalism', 'corporate governance']
+  },
+
+  // --- C2: Organizational resilience post-pandemic ---
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Organizational Resilience in the Post-Pandemic Era',
+    passage: 'The COVID-19 pandemic served as an unprecedented stress test for organisational resilience, exposing critical vulnerabilities in supply chains, workforce management, and strategic planning. Organisations that had invested in diversified supply networks, digital infrastructure, and adaptive leadership frameworks weathered the crisis more effectively than those reliant on lean, efficiency-maximised models with minimal redundancy. However, the post-pandemic discourse around resilience risks conflating genuine adaptive capacity with mere crisis survival. True organisational resilience, as defined by scholars such as Kathleen Sutcliffe and Karl Weick, encompasses not only the ability to absorb and recover from disruption but also the capacity to anticipate emerging threats and transform in response to fundamentally altered conditions. This distinction is critical: companies that simply restored pre-pandemic operations without reimagining their business models may find themselves ill-equipped for the compounding uncertainties of climate disruption, geopolitical instability, and technological transformation. Building resilience demands sustained investment in scenario planning, psychological safety within teams, and governance structures that empower decentralised decision-making — investments that often compete directly with short-term profitability targets.',
+    questionText: 'According to the passage, what is the risk in the post-pandemic discourse around resilience?',
+    options: [
+      { label: 'That companies invest too much in digital infrastructure', value: 'That companies invest too much in digital infrastructure' },
+      { label: 'That genuine adaptive capacity is conflated with mere crisis survival', value: 'That genuine adaptive capacity is conflated with mere crisis survival' },
+      { label: 'That employees resist returning to the office', value: 'That employees resist returning to the office' },
+      { label: 'That supply chains become too diversified', value: 'That supply chains become too diversified' }
+    ],
+    correctAnswer: 'That genuine adaptive capacity is conflated with mere crisis survival', points: 2, orderIndex: 105, tags: ['organizational resilience', 'strategy']
+  },
+
+  // --- C2: Professional development ROI ---
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The Economics of Professional Development ROI',
+    passage: 'Quantifying the return on investment (ROI) of professional development programmes remains one of the most persistent challenges in human capital management. Traditional approaches, such as Kirkpatrick\'s four-level evaluation model, assess training impact through learner satisfaction, knowledge acquisition, behavioural change, and business results — yet each successive level presents escalating measurement difficulties. The causal attribution problem is particularly acute: isolating the impact of a training programme from confounding variables such as market conditions, management quality, and individual motivation requires rigorous experimental designs that most organisations lack the resources or inclination to implement. Jack Phillips\' extension of the Kirkpatrick model to include a fifth level — financial ROI — has gained traction in corporate settings, but critics argue that reducing complex developmental outcomes to monetary figures risks undervaluing intangible benefits such as enhanced innovation capacity, improved organisational culture, and stronger professional networks. Furthermore, the temporal dimension complicates analysis: the most impactful development interventions, such as executive coaching and cross-functional rotations, may not yield measurable results for years, creating a misalignment with quarterly reporting cycles that favour short-term, easily quantifiable training outputs.',
+    questionText: 'What is the "causal attribution problem" described in the passage?',
+    options: [
+      { label: 'The difficulty of finding qualified trainers for professional development', value: 'The difficulty of finding qualified trainers for professional development' },
+      { label: 'The challenge of isolating a training programme\'s impact from confounding variables', value: 'The challenge of isolating a training programme\'s impact from confounding variables' },
+      { label: 'The problem of employees not attending training sessions', value: 'The problem of employees not attending training sessions' },
+      { label: 'The high cost of implementing Kirkpatrick\'s model', value: 'The high cost of implementing Kirkpatrick\'s model' }
+    ],
+    correctAnswer: 'The challenge of isolating a training programme\'s impact from confounding variables', points: 2, orderIndex: 106, tags: ['professional development', 'ROI', 'HR strategy']
   },
 ]

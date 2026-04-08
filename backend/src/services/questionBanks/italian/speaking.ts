@@ -25,7 +25,7 @@ export const italianSpeakingQuestions: MultiSkillQuestionData[] = [
   {
     language: 'Italian', cefrLevel: 'A2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
     questionText: 'Leggi il seguente testo ad alta voce in modo chiaro:',
-    speakingPrompt: 'Sabato scorso sono andato al parco con i miei amici. Il tempo era soleggiato e caldo. Abbiamo fatto un picnic e giocato a pallone. È stata una bella giornata.',
+    speakingPrompt: 'Sabato scorso sono andato a una conferenza con i miei colleghi. L\'hotel era moderno e confortevole. Abbiamo partecipato a tre workshop e conosciuto nuovi clienti. È stata una giornata produttiva.',
     correctAnswer: '', points: 1, orderIndex: 3,
     rubric: { criteria: ['pronuncia chiara', 'ritmo appropriato', 'intonazione', 'pronuncia del passato prossimo'], maxDuration: 45 },
     tags: ['lettura ad alta voce', 'passato prossimo'], timeSuggested: 45
