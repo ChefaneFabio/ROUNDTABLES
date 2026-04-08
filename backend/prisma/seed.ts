@@ -164,48 +164,33 @@ async function main() {
       ]
 
       if (allQuestions.length > 0) {
-        // Check per-skill coverage to detect missing skills
-        const existingSkills = await prisma.assessmentQuestion.groupBy({
-          by: ['skill'],
-          where: { language: lang.name, skill: { not: null } },
-          _count: true,
+        // Force reseed: delete all existing and recreate to ensure full coverage
+        console.log(`  Reseeding ${lang.name} (force refresh)...`)
+        await prisma.assessmentQuestion.deleteMany({
+          where: { language: lang.name, skill: { not: null } }
         })
-        const existingSkillMap = new Map(existingSkills.map(s => [s.skill, s._count]))
-        const expectedSkills = ['READING', 'LISTENING', 'WRITING', 'SPEAKING', 'GRAMMAR', 'VOCABULARY', 'ERROR_CORRECTION', 'SENTENCE_TRANSFORMATION']
-        const missingSkills = expectedSkills.filter(s => !existingSkillMap.has(s))
-
-        if (missingSkills.length === 0 && existingSkills.length >= 8) {
-          const total = existingSkills.reduce((sum, s) => sum + s._count, 0)
-          console.log(`→ ${lang.name} questions OK (${total} across ${existingSkills.length} skills)`)
-        } else {
-          // Delete and reseed to ensure all skills are covered
-          console.log(`  Reseeding ${lang.name} (missing skills: ${missingSkills.join(', ') || 'count mismatch'})...`)
-          await prisma.assessmentQuestion.deleteMany({
-            where: { language: lang.name, skill: { not: null } }
-          })
-          await prisma.assessmentQuestion.createMany({
-            data: allQuestions.map((q: any) => ({
-              language: q.language,
-              cefrLevel: q.cefrLevel,
-              questionType: q.questionType,
-              questionText: q.questionText,
-              options: q.options || undefined,
-              correctAnswer: q.correctAnswer || '',
-              passage: q.passage,
-              passageTitle: q.passageTitle,
-              points: q.points,
-              orderIndex: q.orderIndex,
-              skill: q.skill,
-              ttsScript: q.ttsScript,
-              ttsLanguageCode: q.ttsLanguageCode,
-              speakingPrompt: q.speakingPrompt,
-              rubric: q.rubric || undefined,
-              tags: q.tags || [],
-              timeSuggested: q.timeSuggested,
-            })),
-          })
-          console.log(`✓ Seeded ${allQuestions.length} ${lang.name} questions (R:${readingQs.length} L:${listeningQs.length} W:${writingQs.length} S:${speakingQs.length} G:${grammarQs.length} V:${vocabularyQs.length} EC:${errorCorrectionQs.length} ST:${sentenceTransformationQs.length})`)
-        }
+        await prisma.assessmentQuestion.createMany({
+          data: allQuestions.map((q: any) => ({
+            language: q.language,
+            cefrLevel: q.cefrLevel,
+            questionType: q.questionType,
+            questionText: q.questionText,
+            options: q.options || undefined,
+            correctAnswer: q.correctAnswer || '',
+            passage: q.passage,
+            passageTitle: q.passageTitle,
+            points: q.points,
+            orderIndex: q.orderIndex,
+            skill: q.skill,
+            ttsScript: q.ttsScript,
+            ttsLanguageCode: q.ttsLanguageCode,
+            speakingPrompt: q.speakingPrompt,
+            rubric: q.rubric || undefined,
+            tags: q.tags || [],
+            timeSuggested: q.timeSuggested,
+          })),
+        })
+        console.log(`✓ Seeded ${allQuestions.length} ${lang.name} questions (R:${readingQs.length} L:${listeningQs.length} W:${writingQs.length} S:${speakingQs.length} G:${grammarQs.length} V:${vocabularyQs.length} EC:${errorCorrectionQs.length} ST:${sentenceTransformationQs.length})`)
       }
     } catch (err) {
       console.log(`→ Skipping ${lang.name}: question bank files not found`)
