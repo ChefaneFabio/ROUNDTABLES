@@ -25,21 +25,26 @@ const LEVEL_NAMES: Record<string, string> = {
 }
 
 const SUBLEVEL_NAMES: Record<string, string> = {
-  'A1.1': 'Beginner (Foundation)', 'A1.2': 'Beginner (Consolidation)',
-  'A2.1': 'Elementary (Foundation)', 'A2.2': 'Elementary (Consolidation)',
-  'B1.1': 'Intermediate (Foundation)', 'B1.2': 'Intermediate (Consolidation)',
-  'B2.1': 'Upper Intermediate (Foundation)', 'B2.2': 'Upper Intermediate (Consolidation)',
-  'C1.1': 'Advanced (Foundation)', 'C1.2': 'Advanced (Consolidation)',
-  'C2.1': 'Proficiency (Foundation)', 'C2.2': 'Proficiency (Consolidation)',
+  'A1.1': 'Beginner — Exposure', 'A1.2': 'Beginner — Building', 'A1.3': 'Beginner — Consolidating',
+  'A2.1': 'Elementary — Exposure', 'A2.2': 'Elementary — Building', 'A2.3': 'Elementary — Consolidating',
+  'B1.1': 'Intermediate — Exposure', 'B1.2': 'Intermediate — Building', 'B1.3': 'Intermediate — Consolidating',
+  'B2.1': 'Upper Intermediate — Exposure', 'B2.2': 'Upper Intermediate — Building', 'B2.3': 'Upper Intermediate — Consolidating',
+  'C1.1': 'Advanced — Exposure', 'C1.2': 'Advanced — Building', 'C1.3': 'Advanced — Consolidating',
+  'C2.1': 'Proficiency — Exposure', 'C2.2': 'Proficiency — Building', 'C2.3': 'Proficiency — Consolidating',
 }
 
 // Calculate sublevel from CEFR level + percentage score within that level
-// < 75% accuracy at a level = .1 (still building), >= 75% = .2 (consolidating)
+// Uses 3 tiers based on accuracy:
+//   .1 Exposure:       60-72% (just entered this level, still fragile)
+//   .2 Building:       73-84% (developing control at this level)
+//   .3 Consolidating:  85%+   (strong at this level, approaching next)
+// Below 60% at a level means the student hasn't truly reached it — scored at prior level
 function calculateSublevel(cefrLevel: string, percentageScore: number | null): string {
   if (!cefrLevel) return 'A1.1'
-  const threshold = 75
-  const sub = (percentageScore != null && percentageScore >= threshold) ? '.2' : '.1'
-  return `${cefrLevel}${sub}`
+  const pct = percentageScore ?? 0
+  if (pct >= 85) return `${cefrLevel}.3`
+  if (pct >= 73) return `${cefrLevel}.2`
+  return `${cefrLevel}.1`
 }
 
 // Legacy 4-section configuration
@@ -1289,8 +1294,8 @@ export class SectionAssessmentService {
           await prisma.notification.create({
             data: {
               type: 'GENERAL',
-              subject: `Test Complete: ${studentName} — ${language} ${overallLevel}`,
-              content: `${studentName} has completed their ${language} placement test.\n\nOverall: ${overallLevel} (${avgPercentage}%)\nSkills: ${skillSummary}\n\nView the full results and review answers in the assessment management page.`,
+              subject: `Test Complete: ${studentName} — ${language} ${calculateSublevel(overallLevel, avgPercentage)}`,
+              content: `${studentName} has completed their ${language} placement test.\n\nOverall: ${calculateSublevel(overallLevel, avgPercentage)} — ${SUBLEVEL_NAMES[calculateSublevel(overallLevel, avgPercentage)] || overallLevel} (${avgPercentage}%)\nSkills: ${skillSummary}\n\nView the full results and review answers in the assessment management page.`,
               status: 'SENT',
               sentAt: new Date(),
               userId: admin.id,
@@ -1320,16 +1325,17 @@ export class SectionAssessmentService {
       if (emailService.isConfigured()) {
         try {
           const pdfBuffer = await certificateService.generateMultiSkillResultPdf(assessmentId)
+          const overallSublevel = calculateSublevel(overallLevel, avgPercentage)
           await emailService.sendMultiSkillResults({
             to: assessment.student.user.email,
             studentName: assessment.student.user.name,
             language: assessment.language,
-            overallLevel,
-            overallLevelName: LEVEL_NAMES[overallLevel] || overallLevel,
+            overallLevel: overallSublevel,
+            overallLevelName: SUBLEVEL_NAMES[overallSublevel] || LEVEL_NAMES[overallLevel] || overallLevel,
             overallScore: avgPercentage,
             skills: assessment.sections.map(s => ({
               skill: s.skill,
-              cefrLevel: s.cefrLevel || '',
+              cefrLevel: calculateSublevel(s.cefrLevel || 'A1', s.percentageScore),
               score: s.percentageScore,
               teacherReviewed: s.teacherScore != null
             })),
