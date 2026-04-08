@@ -1,7 +1,7 @@
 import { MultiSkillQuestionData } from '../types'
 
-// French Grammar MCQ Questions — 40 questions
-// Distributed across A1-C2 levels
+// French Grammar MCQ Questions — 100 questions
+// Distributed across A1-C2 levels (A1:18, A2:18, B1:18, B2:18, C1:14, C2:14)
 
 export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
   // ============================================================
@@ -10,49 +10,49 @@ export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Je ___ étudiant.',
-    options: [{ label: 'A', value: 'suis' }, { label: 'B', value: 'es' }, { label: 'C', value: 'est' }, { label: 'D', value: 'être' }],
+    options: [{ label: 'suis', value: 'suis' }, { label: 'es', value: 'es' }, { label: 'est', value: 'est' }, { label: 'être', value: 'être' }],
     correctAnswer: 'suis', points: 1, orderIndex: 1, tags: ['être', 'présent']
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Nous ___ un chat et un chien.',
-    options: [{ label: 'A', value: 'a' }, { label: 'B', value: 'avons' }, { label: 'C', value: 'avez' }, { label: 'D', value: 'ont' }],
+    options: [{ label: 'a', value: 'a' }, { label: 'avons', value: 'avons' }, { label: 'avez', value: 'avez' }, { label: 'ont', value: 'ont' }],
     correctAnswer: 'avons', points: 1, orderIndex: 2, tags: ['avoir', 'présent']
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Elle habite ___ Paris.',
-    options: [{ label: 'A', value: 'en' }, { label: 'B', value: 'à' }, { label: 'C', value: 'au' }, { label: 'D', value: 'dans' }],
+    options: [{ label: 'en', value: 'en' }, { label: 'à', value: 'à' }, { label: 'au', value: 'au' }, { label: 'dans', value: 'dans' }],
     correctAnswer: 'à', points: 1, orderIndex: 3, tags: ['prépositions', 'villes']
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'J\'achète ___ pain à la boulangerie.',
-    options: [{ label: 'A', value: 'le' }, { label: 'B', value: 'du' }, { label: 'C', value: 'un' }, { label: 'D', value: 'de' }],
+    options: [{ label: 'le', value: 'le' }, { label: 'du', value: 'du' }, { label: 'un', value: 'un' }, { label: 'de', value: 'de' }],
     correctAnswer: 'du', points: 1, orderIndex: 4, tags: ['articles partitifs']
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Ils ___ au restaurant le samedi.',
-    options: [{ label: 'A', value: 'va' }, { label: 'B', value: 'allons' }, { label: 'C', value: 'vont' }, { label: 'D', value: 'allez' }],
+    options: [{ label: 'va', value: 'va' }, { label: 'allons', value: 'allons' }, { label: 'vont', value: 'vont' }, { label: 'allez', value: 'allez' }],
     correctAnswer: 'vont', points: 1, orderIndex: 5, tags: ['aller', 'présent']
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: '___ est ton numéro de téléphone ?',
-    options: [{ label: 'A', value: 'Qui' }, { label: 'B', value: 'Quel' }, { label: 'C', value: 'Que' }, { label: 'D', value: 'Comment' }],
+    options: [{ label: 'Qui', value: 'Qui' }, { label: 'Quel', value: 'Quel' }, { label: 'Que', value: 'Que' }, { label: 'Comment', value: 'Comment' }],
     correctAnswer: 'Quel', points: 1, orderIndex: 6, tags: ['interrogatifs']
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Ce sont ___ amies de Sophie.',
-    options: [{ label: 'A', value: 'le' }, { label: 'B', value: 'la' }, { label: 'C', value: 'les' }, { label: 'D', value: 'des' }],
+    options: [{ label: 'le', value: 'le' }, { label: 'la', value: 'la' }, { label: 'les', value: 'les' }, { label: 'des', value: 'des' }],
     correctAnswer: 'les', points: 1, orderIndex: 7, tags: ['articles définis']
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Tu ___ français et anglais.',
-    options: [{ label: 'A', value: 'parle' }, { label: 'B', value: 'parles' }, { label: 'C', value: 'parlons' }, { label: 'D', value: 'parler' }],
+    options: [{ label: 'parle', value: 'parle' }, { label: 'parles', value: 'parles' }, { label: 'parlons', value: 'parlons' }, { label: 'parler', value: 'parler' }],
     correctAnswer: 'parles', points: 1, orderIndex: 8, tags: ['verbes en -er', 'présent']
   },
 
@@ -62,49 +62,49 @@ export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
   {
     language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Hier, nous ___ au cinéma.',
-    options: [{ label: 'A', value: 'avons allé' }, { label: 'B', value: 'sommes allés' }, { label: 'C', value: 'avons allés' }, { label: 'D', value: 'sont allés' }],
+    options: [{ label: 'avons allé', value: 'avons allé' }, { label: 'sommes allés', value: 'sommes allés' }, { label: 'avons allés', value: 'avons allés' }, { label: 'sont allés', value: 'sont allés' }],
     correctAnswer: 'sommes allés', points: 1, orderIndex: 9, tags: ['passé composé', 'être']
   },
   {
     language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Quand j\'étais petit, je ___ à la campagne.',
-    options: [{ label: 'A', value: 'ai habité' }, { label: 'B', value: 'habite' }, { label: 'C', value: 'habitais' }, { label: 'D', value: 'habiterai' }],
+    options: [{ label: 'ai habité', value: 'ai habité' }, { label: 'habite', value: 'habite' }, { label: 'habitais', value: 'habitais' }, { label: 'habiterai', value: 'habiterai' }],
     correctAnswer: 'habitais', points: 1, orderIndex: 10, tags: ['imparfait', 'description']
   },
   {
     language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Je ___ ai parlé hier. (à mes parents)',
-    options: [{ label: 'A', value: 'les' }, { label: 'B', value: 'leur' }, { label: 'C', value: 'eux' }, { label: 'D', value: 'leurs' }],
+    options: [{ label: 'les', value: 'les' }, { label: 'leur', value: 'leur' }, { label: 'eux', value: 'eux' }, { label: 'leurs', value: 'leurs' }],
     correctAnswer: 'leur', points: 1, orderIndex: 11, tags: ['pronoms COI']
   },
   {
     language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Elle a mangé ___ la tarte. (toute la tarte)',
-    options: [{ label: 'A', value: 'le' }, { label: 'B', value: 'la' }, { label: 'C', value: 'toute' }, { label: 'D', value: 'tout' }],
+    options: [{ label: 'le', value: 'le' }, { label: 'la', value: 'la' }, { label: 'toute', value: 'toute' }, { label: 'tout', value: 'tout' }],
     correctAnswer: 'toute', points: 1, orderIndex: 12, tags: ['pronoms COD', 'tout/toute']
   },
   {
     language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Il pleuvait quand je ___ de la maison.',
-    options: [{ label: 'A', value: 'suis sorti' }, { label: 'B', value: 'sortais' }, { label: 'C', value: 'sors' }, { label: 'D', value: 'sortirai' }],
+    options: [{ label: 'suis sorti', value: 'suis sorti' }, { label: 'sortais', value: 'sortais' }, { label: 'sors', value: 'sors' }, { label: 'sortirai', value: 'sortirai' }],
     correctAnswer: 'suis sorti', points: 1, orderIndex: 13, tags: ['passé composé', 'imparfait']
   },
   {
     language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Tu as vu ce film ? — Oui, je ___ ai vu la semaine dernière.',
-    options: [{ label: 'A', value: 'le' }, { label: 'B', value: 'la' }, { label: 'C', value: 'l\'' }, { label: 'D', value: 'lui' }],
+    options: [{ label: 'le', value: 'le' }, { label: 'la', value: 'la' }, { label: 'l\'', value: 'l\'' }, { label: 'lui', value: 'lui' }],
     correctAnswer: 'l\'', points: 1, orderIndex: 14, tags: ['pronoms COD', 'élision']
   },
   {
     language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Nous allons ___ vacances en Italie cet été.',
-    options: [{ label: 'A', value: 'à' }, { label: 'B', value: 'de' }, { label: 'C', value: 'en' }, { label: 'D', value: 'aux' }],
+    options: [{ label: 'à', value: 'à' }, { label: 'de', value: 'de' }, { label: 'en', value: 'en' }, { label: 'aux', value: 'aux' }],
     correctAnswer: 'en', points: 1, orderIndex: 15, tags: ['prépositions', 'vacances']
   },
   {
     language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Elle s\'est ___ ce matin à 7 heures.',
-    options: [{ label: 'A', value: 'réveillé' }, { label: 'B', value: 'réveillée' }, { label: 'C', value: 'réveillés' }, { label: 'D', value: 'réveiller' }],
+    options: [{ label: 'réveillé', value: 'réveillé' }, { label: 'réveillée', value: 'réveillée' }, { label: 'réveillés', value: 'réveillés' }, { label: 'réveiller', value: 'réveiller' }],
     correctAnswer: 'réveillée', points: 1, orderIndex: 16, tags: ['verbes pronominaux', 'accord']
   },
 
@@ -114,49 +114,49 @@ export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
   {
     language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Il faut que tu ___ tes devoirs avant de sortir.',
-    options: [{ label: 'A', value: 'fais' }, { label: 'B', value: 'fasses' }, { label: 'C', value: 'faire' }, { label: 'D', value: 'ferais' }],
+    options: [{ label: 'fais', value: 'fais' }, { label: 'fasses', value: 'fasses' }, { label: 'faire', value: 'faire' }, { label: 'ferais', value: 'ferais' }],
     correctAnswer: 'fasses', points: 1, orderIndex: 17, tags: ['subjonctif', 'il faut que']
   },
   {
     language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Si j\'avais de l\'argent, j\' ___ une maison.',
-    options: [{ label: 'A', value: 'achète' }, { label: 'B', value: 'achèterais' }, { label: 'C', value: 'achèterai' }, { label: 'D', value: 'ai acheté' }],
+    options: [{ label: 'achète', value: 'achète' }, { label: 'achèterais', value: 'achèterais' }, { label: 'achèterai', value: 'achèterai' }, { label: 'ai acheté', value: 'ai acheté' }],
     correctAnswer: 'achèterais', points: 1, orderIndex: 18, tags: ['conditionnel', 'hypothèse']
   },
   {
     language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'La fille ___ je t\'ai parlé est ma voisine.',
-    options: [{ label: 'A', value: 'que' }, { label: 'B', value: 'qui' }, { label: 'C', value: 'dont' }, { label: 'D', value: 'où' }],
+    options: [{ label: 'que', value: 'que' }, { label: 'qui', value: 'qui' }, { label: 'dont', value: 'dont' }, { label: 'où', value: 'où' }],
     correctAnswer: 'dont', points: 1, orderIndex: 19, tags: ['pronoms relatifs', 'dont']
   },
   {
     language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Je doute qu\'il ___ la vérité.',
-    options: [{ label: 'A', value: 'dit' }, { label: 'B', value: 'dise' }, { label: 'C', value: 'dira' }, { label: 'D', value: 'dirait' }],
+    options: [{ label: 'dit', value: 'dit' }, { label: 'dise', value: 'dise' }, { label: 'dira', value: 'dira' }, { label: 'dirait', value: 'dirait' }],
     correctAnswer: 'dise', points: 1, orderIndex: 20, tags: ['subjonctif', 'douter']
   },
   {
     language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'C\'est la ville ___ je suis né.',
-    options: [{ label: 'A', value: 'que' }, { label: 'B', value: 'qui' }, { label: 'C', value: 'dont' }, { label: 'D', value: 'où' }],
+    options: [{ label: 'que', value: 'que' }, { label: 'qui', value: 'qui' }, { label: 'dont', value: 'dont' }, { label: 'où', value: 'où' }],
     correctAnswer: 'où', points: 1, orderIndex: 21, tags: ['pronoms relatifs', 'où']
   },
   {
     language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Si tu m\'avais prévenu, je ___ venu.',
-    options: [{ label: 'A', value: 'serais' }, { label: 'B', value: 'serai' }, { label: 'C', value: 'suis' }, { label: 'D', value: 'étais' }],
+    options: [{ label: 'serais', value: 'serais' }, { label: 'serai', value: 'serai' }, { label: 'suis', value: 'suis' }, { label: 'étais', value: 'étais' }],
     correctAnswer: 'serais', points: 1, orderIndex: 22, tags: ['conditionnel passé', 'hypothèse']
   },
   {
     language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Bien qu\'il ___ fatigué, il a continué à travailler.',
-    options: [{ label: 'A', value: 'est' }, { label: 'B', value: 'soit' }, { label: 'C', value: 'était' }, { label: 'D', value: 'serait' }],
+    options: [{ label: 'est', value: 'est' }, { label: 'soit', value: 'soit' }, { label: 'était', value: 'était' }, { label: 'serait', value: 'serait' }],
     correctAnswer: 'soit', points: 1, orderIndex: 23, tags: ['subjonctif', 'bien que']
   },
   {
     language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Il m\'a demandé ___ je voulais manger.',
-    options: [{ label: 'A', value: 'qu\'est-ce que' }, { label: 'B', value: 'ce que' }, { label: 'C', value: 'que' }, { label: 'D', value: 'quoi' }],
+    options: [{ label: 'qu\'est-ce que', value: 'qu\'est-ce que' }, { label: 'ce que', value: 'ce que' }, { label: 'que', value: 'que' }, { label: 'quoi', value: 'quoi' }],
     correctAnswer: 'ce que', points: 1, orderIndex: 24, tags: ['interrogation indirecte']
   },
 
@@ -166,49 +166,49 @@ export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
   {
     language: 'French', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Quand je suis arrivé, elle ___ déjà partie.',
-    options: [{ label: 'A', value: 'a' }, { label: 'B', value: 'est' }, { label: 'C', value: 'était' }, { label: 'D', value: 'avait' }],
+    options: [{ label: 'a', value: 'a' }, { label: 'est', value: 'est' }, { label: 'était', value: 'était' }, { label: 'avait', value: 'avait' }],
     correctAnswer: 'était', points: 1, orderIndex: 25, tags: ['plus-que-parfait']
   },
   {
     language: 'French', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Cette maison ___ en 1850.',
-    options: [{ label: 'A', value: 'a construit' }, { label: 'B', value: 'a été construite' }, { label: 'C', value: 'est construite' }, { label: 'D', value: 'construisait' }],
+    options: [{ label: 'a construit', value: 'a construit' }, { label: 'a été construite', value: 'a été construite' }, { label: 'est construite', value: 'est construite' }, { label: 'construisait', value: 'construisait' }],
     correctAnswer: 'a été construite', points: 1, orderIndex: 26, tags: ['voix passive', 'passé composé']
   },
   {
     language: 'French', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Il m\'a dit qu\'il ___ le lendemain.',
-    options: [{ label: 'A', value: 'viendra' }, { label: 'B', value: 'viendrait' }, { label: 'C', value: 'vient' }, { label: 'D', value: 'venait' }],
+    options: [{ label: 'viendra', value: 'viendra' }, { label: 'viendrait', value: 'viendrait' }, { label: 'vient', value: 'vient' }, { label: 'venait', value: 'venait' }],
     correctAnswer: 'viendrait', points: 1, orderIndex: 27, tags: ['discours indirect', 'concordance']
   },
   {
     language: 'French', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Je cherche quelqu\'un qui ___ parler trois langues.',
-    options: [{ label: 'A', value: 'peut' }, { label: 'B', value: 'puisse' }, { label: 'C', value: 'pourra' }, { label: 'D', value: 'pourrait' }],
+    options: [{ label: 'peut', value: 'peut' }, { label: 'puisse', value: 'puisse' }, { label: 'pourra', value: 'pourra' }, { label: 'pourrait', value: 'pourrait' }],
     correctAnswer: 'puisse', points: 1, orderIndex: 28, tags: ['subjonctif', 'antécédent indéterminé']
   },
   {
     language: 'French', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: '___ tu aies raison, je ne suis pas d\'accord.',
-    options: [{ label: 'A', value: 'Bien que' }, { label: 'B', value: 'Parce que' }, { label: 'C', value: 'Puisque' }, { label: 'D', value: 'Pendant que' }],
+    options: [{ label: 'Bien que', value: 'Bien que' }, { label: 'Parce que', value: 'Parce que' }, { label: 'Puisque', value: 'Puisque' }, { label: 'Pendant que', value: 'Pendant que' }],
     correctAnswer: 'Bien que', points: 1, orderIndex: 29, tags: ['subjonctif', 'concession']
   },
   {
     language: 'French', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Si j\'avais su, je ne ___ pas venu.',
-    options: [{ label: 'A', value: 'serai' }, { label: 'B', value: 'serais' }, { label: 'C', value: 'suis' }, { label: 'D', value: 'aurais' }],
+    options: [{ label: 'serai', value: 'serai' }, { label: 'serais', value: 'serais' }, { label: 'suis', value: 'suis' }, { label: 'aurais', value: 'aurais' }],
     correctAnswer: 'serais', points: 1, orderIndex: 30, tags: ['conditionnel passé', 'irréel du passé']
   },
   {
     language: 'French', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Les lettres ___ par le facteur chaque matin.',
-    options: [{ label: 'A', value: 'distribuent' }, { label: 'B', value: 'sont distribuées' }, { label: 'C', value: 'ont distribué' }, { label: 'D', value: 'distribués' }],
+    options: [{ label: 'distribuent', value: 'distribuent' }, { label: 'sont distribuées', value: 'sont distribuées' }, { label: 'ont distribué', value: 'ont distribué' }, { label: 'distribués', value: 'distribués' }],
     correctAnswer: 'sont distribuées', points: 1, orderIndex: 31, tags: ['voix passive', 'présent']
   },
   {
     language: 'French', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Elle a affirmé qu\'elle ___ déjà ___ ce livre.',
-    options: [{ label: 'A', value: 'a / lu' }, { label: 'B', value: 'avait / lu' }, { label: 'C', value: 'aura / lu' }, { label: 'D', value: 'aurait / lu' }],
+    options: [{ label: 'a / lu', value: 'a / lu' }, { label: 'avait / lu', value: 'avait / lu' }, { label: 'aura / lu', value: 'aura / lu' }, { label: 'aurait / lu', value: 'aurait / lu' }],
     correctAnswer: 'avait / lu', points: 1, orderIndex: 32, tags: ['discours indirect', 'plus-que-parfait']
   },
 
@@ -218,25 +218,25 @@ export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
   {
     language: 'French', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Il ___ la porte et entra sans frapper.',
-    options: [{ label: 'A', value: 'ouvra' }, { label: 'B', value: 'ouvrit' }, { label: 'C', value: 'a ouvert' }, { label: 'D', value: 'ouvrait' }],
+    options: [{ label: 'ouvra', value: 'ouvra' }, { label: 'ouvrit', value: 'ouvrit' }, { label: 'a ouvert', value: 'a ouvert' }, { label: 'ouvrait', value: 'ouvrait' }],
     correctAnswer: 'ouvrit', points: 1, orderIndex: 33, tags: ['passé simple']
   },
   {
     language: 'French', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Quoi qu\'il ___, je ne changerai pas d\'avis.',
-    options: [{ label: 'A', value: 'dit' }, { label: 'B', value: 'dise' }, { label: 'C', value: 'dira' }, { label: 'D', value: 'a dit' }],
+    options: [{ label: 'dit', value: 'dit' }, { label: 'dise', value: 'dise' }, { label: 'dira', value: 'dira' }, { label: 'a dit', value: 'a dit' }],
     correctAnswer: 'dise', points: 1, orderIndex: 34, tags: ['subjonctif', 'quoi que']
   },
   {
     language: 'French', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Il aurait fallu que vous ___ plus tôt.',
-    options: [{ label: 'A', value: 'partiez' }, { label: 'B', value: 'partez' }, { label: 'C', value: 'partirez' }, { label: 'D', value: 'partiriez' }],
+    options: [{ label: 'partiez', value: 'partiez' }, { label: 'partez', value: 'partez' }, { label: 'partirez', value: 'partirez' }, { label: 'partiriez', value: 'partiriez' }],
     correctAnswer: 'partiez', points: 1, orderIndex: 35, tags: ['subjonctif', 'il aurait fallu']
   },
   {
     language: 'French', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Elle ___ pendant des heures avant de trouver la solution.',
-    options: [{ label: 'A', value: 'cherchait' }, { label: 'B', value: 'chercha' }, { label: 'C', value: 'a cherché' }, { label: 'D', value: 'cherche' }],
+    options: [{ label: 'cherchait', value: 'cherchait' }, { label: 'chercha', value: 'chercha' }, { label: 'a cherché', value: 'a cherché' }, { label: 'cherche', value: 'cherche' }],
     correctAnswer: 'chercha', points: 1, orderIndex: 36, tags: ['passé simple', 'narration']
   },
 
@@ -246,25 +246,25 @@ export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
   {
     language: 'French', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Eût-il ___ la vérité, il n\'aurait rien changé.',
-    options: [{ label: 'A', value: 'su' }, { label: 'B', value: 'sait' }, { label: 'C', value: 'sachant' }, { label: 'D', value: 'savoir' }],
+    options: [{ label: 'su', value: 'su' }, { label: 'sait', value: 'sait' }, { label: 'sachant', value: 'sachant' }, { label: 'savoir', value: 'savoir' }],
     correctAnswer: 'su', points: 1, orderIndex: 37, tags: ['subjonctif plus-que-parfait', 'inversion']
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Il parla d\'une voix si basse que nul ne l\' ___.',
-    options: [{ label: 'A', value: 'entendit' }, { label: 'B', value: 'entendît' }, { label: 'C', value: 'entendait' }, { label: 'D', value: 'a entendu' }],
+    options: [{ label: 'entendit', value: 'entendit' }, { label: 'entendît', value: 'entendît' }, { label: 'entendait', value: 'entendait' }, { label: 'a entendu', value: 'a entendu' }],
     correctAnswer: 'entendît', points: 1, orderIndex: 38, tags: ['subjonctif imparfait', 'concordance des temps']
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Dussé-je y passer la nuit, je ___ ce travail.',
-    options: [{ label: 'A', value: 'finirai' }, { label: 'B', value: 'finirais' }, { label: 'C', value: 'finis' }, { label: 'D', value: 'finisse' }],
+    options: [{ label: 'finirai', value: 'finirai' }, { label: 'finirais', value: 'finirais' }, { label: 'finis', value: 'finis' }, { label: 'finisse', value: 'finisse' }],
     correctAnswer: 'finirai', points: 1, orderIndex: 39, tags: ['subjonctif imparfait inversé', 'concession']
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'Il eût été souhaitable qu\'elle ___ avant la fin de la séance.',
-    options: [{ label: 'A', value: 'intervienne' }, { label: 'B', value: 'intervînt' }, { label: 'C', value: 'intervenait' }, { label: 'D', value: 'interviendrait' }],
+    options: [{ label: 'intervienne', value: 'intervienne' }, { label: 'intervînt', value: 'intervînt' }, { label: 'intervenait', value: 'intervenait' }, { label: 'interviendrait', value: 'interviendrait' }],
     correctAnswer: 'intervînt', points: 1, orderIndex: 40, tags: ['subjonctif imparfait', 'concordance des temps']
   },
 ]
