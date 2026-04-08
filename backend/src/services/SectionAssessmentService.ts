@@ -783,6 +783,10 @@ export class SectionAssessmentService {
           break // Student failed this level — stop, this is their ceiling
         }
       }
+    } else {
+      // Writing/Speaking: use the adaptive targetLevel as initial CEFR estimate
+      // (will be refined when AI scores arrive or teacher reviews)
+      determinedLevel = section.targetLevel || 'A1'
     }
 
     const percentageScore = maxScore > 0 ? Math.round((rawScore / maxScore) * 100) : null

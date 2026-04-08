@@ -190,11 +190,21 @@ export function MultiSkillResultPage() {
   const levelStyle = LEVEL_COLORS[overallLevel] || LEVEL_COLORS.B1
   const overallGse = cefrToGse(overallLevel)
 
-  // Get the 4 main skill sections
+  // Get the 4 main skill sections, preferring assessment-level CEFR when available
   const mainSkills = ['READING', 'LISTENING', 'WRITING', 'SPEAKING']
-  const skillSections = mainSkills.map(skill =>
-    sections.find((s: any) => s.skill === skill)
-  ).filter(Boolean)
+  const assessmentSkillLevels: Record<string, string | null> = {
+    READING: assessment.readingLevel,
+    LISTENING: assessment.listeningLevel,
+    WRITING: assessment.writingLevel,
+    SPEAKING: assessment.speakingLevel,
+  }
+  const skillSections = mainSkills.map(skill => {
+    const section = sections.find((s: any) => s.skill === skill)
+    if (!section) return null
+    // Use the assessment-level skill CEFR if section-level is missing
+    const effectiveLevel = section.cefrLevel || assessmentSkillLevels[skill] || null
+    return { ...section, cefrLevel: effectiveLevel }
+  }).filter(Boolean)
 
   // For the bar chart
   const barColors = ['bg-blue-500', 'bg-green-500', 'bg-amber-500', 'bg-purple-500']
