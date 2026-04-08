@@ -6,6 +6,15 @@ import { aiScoringService } from './AiScoringService'
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
+// Fisher-Yates shuffle
+function shuffleArray<T>(arr: T[]): T[] {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr
+}
+
 const LEVEL_WEIGHTS: Record<string, number> = {
   A1: 1, A2: 1, B1: 2, B2: 2, C1: 3, C2: 3
 }
@@ -37,9 +46,9 @@ const SECTION_CONFIG_V2: Record<string, { timeLimitMin: number; questionsLimit: 
 
 // Versant-style 4-section configuration — Reading absorbs grammar/vocab/error-correction questions
 const SECTION_CONFIG_V3: Record<string, { timeLimitMin: number; questionsLimit: number; orderIndex: number }> = {
-  READING:   { timeLimitMin: 25, questionsLimit: 20, orderIndex: 0 },
-  LISTENING: { timeLimitMin: 15, questionsLimit: 8,  orderIndex: 1 },
-  WRITING:   { timeLimitMin: 15, questionsLimit: 3,  orderIndex: 2 },
+  READING:   { timeLimitMin: 30, questionsLimit: 25, orderIndex: 0 },
+  LISTENING: { timeLimitMin: 20, questionsLimit: 12, orderIndex: 1 },
+  WRITING:   { timeLimitMin: 20, questionsLimit: 4,  orderIndex: 2 },
   SPEAKING:  { timeLimitMin: 15, questionsLimit: 3,  orderIndex: 3 },
 }
 
@@ -518,40 +527,34 @@ export class SectionAssessmentService {
     const skillQuestionTypes = this.getQuestionTypesForSkill(section.skill)
     const allowedSkills = this.getSkillsForSection(section.skill)
 
-    // Get a question from the target level that hasn't been answered
-    let question = await prisma.assessmentQuestion.findFirst({
-      where: {
-        language: section.assessment.language,
-        cefrLevel: targetLevel,
-        isActive: true,
-        id: { notIn: answeredIds },
-        OR: [
-          { skill: { in: allowedSkills } },
-          ...(skillQuestionTypes.length > 0
-            ? [{ questionType: { in: skillQuestionTypes }, skill: null }]
-            : [])
-        ]
-      },
-      orderBy: { orderIndex: 'asc' }
+    // Get available questions from the target level, then pick one randomly
+    const baseWhere = {
+      language: section.assessment.language,
+      isActive: true,
+      id: { notIn: answeredIds },
+      OR: [
+        { skill: { in: allowedSkills } },
+        ...(skillQuestionTypes.length > 0
+          ? [{ questionType: { in: skillQuestionTypes }, skill: null }]
+          : [])
+      ]
+    }
+
+    let candidates = await prisma.assessmentQuestion.findMany({
+      where: { ...baseWhere, cefrLevel: targetLevel },
     })
 
     // Fallback: try any level for this skill
-    if (!question) {
-      question = await prisma.assessmentQuestion.findFirst({
-        where: {
-          language: section.assessment.language,
-          isActive: true,
-          id: { notIn: answeredIds },
-          OR: [
-            { skill: { in: allowedSkills } },
-            ...(skillQuestionTypes.length > 0
-              ? [{ questionType: { in: skillQuestionTypes }, skill: null }]
-              : [])
-          ]
-        },
-        orderBy: { orderIndex: 'asc' }
+    if (candidates.length === 0) {
+      candidates = await prisma.assessmentQuestion.findMany({
+        where: baseWhere,
       })
     }
+
+    // Pick a random question from candidates
+    const question = candidates.length > 0
+      ? candidates[Math.floor(Math.random() * candidates.length)]
+      : null
 
     if (!question) {
       // No questions available for this skill — auto-complete the section
@@ -562,8 +565,11 @@ export class SectionAssessmentService {
       return { isComplete: true, totalAnswered: answers.length, noQuestions: true }
     }
 
-    // Return question without the correct answer
+    // Return question without the correct answer, shuffle MC options
     const { correctAnswer, ...safeQuestion } = question
+    if (safeQuestion.options && Array.isArray(safeQuestion.options) && (safeQuestion.options as any[]).length > 1) {
+      safeQuestion.options = shuffleArray([...(safeQuestion.options as any[])])
+    }
     return {
       isComplete: false,
       question: safeQuestion,
