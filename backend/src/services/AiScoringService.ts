@@ -1,4 +1,5 @@
 import Anthropic from '@anthropic-ai/sdk'
+import { Prisma } from '@prisma/client'
 import { prisma } from '../config/database'
 
 interface WritingEvaluation {
@@ -186,7 +187,12 @@ Respond ONLY with valid JSON:
 
     const transcript = response.transcript
     if (!transcript) {
-      throw new Error('No transcript available. Ensure client-side transcription is enabled.')
+      // No transcript available — return a pending evaluation rather than failing
+      return {
+        pronunciation: 0, fluency: 0, grammar: 0, vocabulary: 0,
+        overall: 0, cefrLevel: response.section.targetLevel,
+        feedback: 'No transcript was captured. A teacher should review the audio recording manually.'
+      } as SpeakingEvaluation
     }
 
     const evaluation = await this.evaluateSpeaking({
@@ -233,7 +239,7 @@ Respond ONLY with valid JSON:
 
       // Calculate section AI score as average of writing evaluations
       const evaluatedResponses = await prisma.writingResponse.findMany({
-        where: { sectionId, aiEvaluation: { not: undefined } }
+        where: { sectionId, NOT: { aiEvaluation: { equals: Prisma.DbNull } } }
       })
 
       if (evaluatedResponses.length > 0) {
@@ -279,7 +285,7 @@ Respond ONLY with valid JSON:
       }
 
       const evaluatedResponses = await prisma.speakingResponse.findMany({
-        where: { sectionId, aiEvaluation: { not: undefined } }
+        where: { sectionId, NOT: { aiEvaluation: { equals: Prisma.DbNull } } }
       })
 
       if (evaluatedResponses.length > 0) {
