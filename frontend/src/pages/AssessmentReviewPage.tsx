@@ -280,7 +280,7 @@ export function AssessmentReviewPage() {
                         {!isCorrectOption && !(isStudentChoice && !answer.isCorrect) && (
                           <div className="w-4 h-4 flex-shrink-0" />
                         )}
-                        <span>{opt.label}</span>
+                        <span>{opt.label?.length <= 2 ? opt.value : opt.label}</span>
                         {isStudentChoice && !answer.isCorrect && (
                           <span className="ml-auto text-xs text-red-500 font-medium">Student's answer</span>
                         )}

@@ -553,7 +553,7 @@ export function MultiSkillResultPage() {
                                             >
                                               {isCorrectAnswer && <CheckCircle className="w-3 h-3 inline mr-1 text-green-500" />}
                                               {isStudentAnswer && !isCorrectAnswer && <XCircle className="w-3 h-3 inline mr-1 text-red-400" />}
-                                              {opt.label}
+                                              {opt.label?.length <= 2 ? opt.value : opt.label}
                                             </div>
                                           )
                                         })}

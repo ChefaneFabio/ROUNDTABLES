@@ -74,7 +74,7 @@ export function ReadingQuestion({ question, onSubmit, disabled, language }: Read
                   {OPTION_LETTERS[idx] || idx + 1}
                 </span>
                 <span className={`text-base ${isSelected ? 'text-blue-900 font-medium' : 'text-gray-800'}`}>
-                  {option.label}
+                  {option.label.length <= 2 ? option.value : option.label}
                 </span>
               </button>
             )

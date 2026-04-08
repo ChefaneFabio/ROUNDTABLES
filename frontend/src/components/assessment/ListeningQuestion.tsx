@@ -79,7 +79,7 @@ export function ListeningQuestion({ question, onSubmit, disabled }: ListeningQue
                 ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
               `}
             >
-              {option.label}
+              {option.label.length <= 2 ? option.value : option.label}
             </button>
           ))}
         </div>
