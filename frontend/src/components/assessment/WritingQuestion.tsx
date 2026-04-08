@@ -21,7 +21,7 @@ export function WritingQuestion({ question, onSubmit, disabled, language }: Writ
     return text.trim().split(/\s+/).filter(w => w.length > 0).length
   }, [text])
 
-  const maxWords = question.rubric?.maxWords || 300
+  const maxWords = question.rubric?.maxWords || 150
   const isOverMax = wordCount > maxWords
 
   const handleSubmit = () => {
