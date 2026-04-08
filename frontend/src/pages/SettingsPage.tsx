@@ -1,10 +1,16 @@
 import React, { useState } from 'react'
-import { Settings, Bell, Lock, Eye, EyeOff, Save, Shield, Trash2, CheckCircle, AlertCircle } from 'lucide-react'
+import {
+  Settings, Bell, Lock, Eye, EyeOff, Save, Shield, Trash2, CheckCircle, AlertCircle,
+  GraduationCap, ClipboardCheck, Users
+} from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { authApi } from '../services/api'
 
 export const SettingsPage: React.FC = () => {
-  useAuth() // Ensure user is authenticated
+  const { isAdmin, user } = useAuth()
+  const isTeacher = user?.role === 'TEACHER'
+  const isStaff = isAdmin || isTeacher
+
   const [activeTab, setActiveTab] = useState('general')
   const [isSaving, setIsSaving] = useState(false)
   const [showCurrentPassword, setShowCurrentPassword] = useState(false)
@@ -12,14 +18,41 @@ export const SettingsPage: React.FC = () => {
 
   const defaultSettings = {
     language: 'en',
-    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || 'Europe/Rome',
     darkMode: false,
+    // Notifications
     emailNotifications: true,
     pushNotifications: true,
     lessonReminders: true,
     progressUpdates: true,
     marketingEmails: false,
-    profileVisibility: 'public',
+    // Admin/Teacher notifications
+    notifyTestCompletion: true,
+    notifyAiScoring: true,
+    notifySectionCompletion: true,
+    notifyRetryRequests: true,
+    notifyNewEnrollments: true,
+    // Assessment defaults (admin)
+    defaultTimeLimitReading: 25,
+    defaultTimeLimitListening: 15,
+    defaultTimeLimitWriting: 15,
+    defaultTimeLimitSpeaking: 15,
+    defaultQuestionsReading: 20,
+    defaultQuestionsListening: 8,
+    defaultQuestionsWriting: 3,
+    defaultQuestionsSpeaking: 3,
+    passingThreshold: 60,
+    autoAssignOnEnroll: false,
+    defaultAssessmentLanguage: 'English',
+    aiAutoScore: true,
+    showCorrectAnswersToStudents: false,
+    allowRetryRequests: true,
+    maxRetries: 2,
+    // Teacher preferences
+    showStudentTranscripts: true,
+    showAiEvaluation: true,
+    // Privacy
+    profileVisibility: 'school',
     showProgress: true,
     showCertificates: true
   }
@@ -48,7 +81,6 @@ export const SettingsPage: React.FC = () => {
   const handleSave = async () => {
     setIsSaving(true)
     try {
-      // Settings are stored locally for now (language, timezone, dark mode are client preferences)
       localStorage.setItem('userSettings', JSON.stringify(settings))
       showMessage('success', 'Settings saved')
     } catch {
@@ -82,6 +114,8 @@ export const SettingsPage: React.FC = () => {
   const tabs = [
     { id: 'general', name: 'General', icon: Settings },
     { id: 'notifications', name: 'Notifications', icon: Bell },
+    ...(isStaff ? [{ id: 'assessments', name: 'Assessments', icon: ClipboardCheck }] : []),
+    ...(isAdmin ? [{ id: 'school', name: 'School', icon: GraduationCap }] : []),
     { id: 'security', name: 'Security', icon: Lock },
     { id: 'privacy', name: 'Privacy', icon: Shield }
   ]
@@ -99,12 +133,22 @@ export const SettingsPage: React.FC = () => {
     </button>
   )
 
+  const SaveButton = () => (
+    <button
+      onClick={handleSave}
+      disabled={isSaving}
+      className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50"
+    >
+      {isSaving ? 'Saving...' : <><Save className="w-4 h-4" /> Save Changes</>}
+    </button>
+  )
+
   return (
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Header */}
       <div>
         <h1 className="text-xl font-semibold text-gray-900">Settings</h1>
-        <p className="text-sm text-gray-500 mt-1">Manage your account preferences</p>
+        <p className="text-sm text-gray-500 mt-1">Manage your account and preferences</p>
       </div>
 
       {/* Message */}
@@ -119,14 +163,14 @@ export const SettingsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Underline tabs */}
+      {/* Tabs */}
       <div className="border-b border-gray-200">
-        <nav className="flex gap-6">
+        <nav className="flex gap-6 overflow-x-auto">
           {tabs.map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
-              className={`flex items-center gap-2 pb-3 text-sm font-medium border-b-2 transition-colors ${
+              className={`flex items-center gap-2 pb-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
                 activeTab === tab.id
                   ? 'border-gray-900 text-gray-900'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -141,77 +185,54 @@ export const SettingsPage: React.FC = () => {
 
       {/* Content */}
       <div>
+        {/* ─── General ─── */}
         {activeTab === 'general' && (
           <div className="space-y-6">
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Preferences</h2>
-
               <div className="space-y-5">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Language
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Interface Language</label>
                   <select
                     value={settings.language}
                     onChange={(e) => setSettings({ ...settings, language: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-white text-sm text-gray-900 focus:ring-1 focus:ring-gray-400 focus:border-gray-400 outline-none"
                   >
                     <option value="en">English</option>
-                    <option value="es">Spanish</option>
-                    <option value="fr">French</option>
-                    <option value="de">German</option>
-                    <option value="it">Italian</option>
+                    <option value="it">Italiano</option>
+                    <option value="es">Espa&ntilde;ol</option>
+                    <option value="fr">Fran&ccedil;ais</option>
+                    <option value="de">Deutsch</option>
                   </select>
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Timezone
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Timezone</label>
                   <select
                     value={settings.timezone}
                     onChange={(e) => setSettings({ ...settings, timezone: e.target.value })}
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-white text-sm text-gray-900 focus:ring-1 focus:ring-gray-400 focus:border-gray-400 outline-none"
                   >
+                    <option value="Europe/Rome">Rome (CET)</option>
+                    <option value="Europe/London">London (GMT)</option>
+                    <option value="Europe/Paris">Paris (CET)</option>
+                    <option value="Europe/Berlin">Berlin (CET)</option>
+                    <option value="Europe/Madrid">Madrid (CET)</option>
+                    <option value="America/New_York">New York (EST)</option>
+                    <option value="America/Los_Angeles">Los Angeles (PST)</option>
                     <option value="UTC">UTC</option>
-                    <option value="America/New_York">Eastern Time</option>
-                    <option value="America/Los_Angeles">Pacific Time</option>
-                    <option value="Europe/London">London</option>
-                    <option value="Europe/Paris">Paris</option>
                   </select>
                 </div>
               </div>
             </div>
-
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Appearance</h2>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-900">Dark Mode</p>
-                  <p className="text-sm text-gray-500 mt-0.5">Use dark theme throughout the app</p>
-                </div>
-                <Toggle
-                  enabled={settings.darkMode as boolean}
-                  onChange={() => setSettings({ ...settings, darkMode: !settings.darkMode })}
-                />
-              </div>
-            </div>
-
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50"
-            >
-              {isSaving ? 'Saving...' : <><Save className="w-4 h-4" /> Save Changes</>}
-            </button>
+            <SaveButton />
           </div>
         )}
 
+        {/* ─── Notifications ─── */}
         {activeTab === 'notifications' && (
           <div className="space-y-6">
             <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Notification Channels</h2>
-
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Channels</h2>
               <div className="space-y-0 divide-y divide-gray-100">
                 {[
                   { key: 'emailNotifications', label: 'Email Notifications', desc: 'Receive notifications via email' },
@@ -232,13 +253,11 @@ export const SettingsPage: React.FC = () => {
             </div>
 
             <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Notification Types</h2>
-
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">General</h2>
               <div className="space-y-0 divide-y divide-gray-100">
                 {[
                   { key: 'lessonReminders', label: 'Lesson Reminders', desc: 'Get reminded before scheduled lessons' },
                   { key: 'progressUpdates', label: 'Progress Updates', desc: 'Weekly progress summary' },
-                  { key: 'marketingEmails', label: 'Marketing Emails', desc: 'News and promotional offers' }
                 ].map(item => (
                   <div key={item.key} className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
                     <div>
@@ -254,26 +273,247 @@ export const SettingsPage: React.FC = () => {
               </div>
             </div>
 
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50"
-            >
-              {isSaving ? 'Saving...' : <><Save className="w-4 h-4" /> Save Changes</>}
-            </button>
+            {/* Admin/Teacher notification preferences */}
+            {isStaff && (
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">
+                  {isAdmin ? 'Admin' : 'Teacher'} Notifications
+                </h2>
+                <div className="space-y-0 divide-y divide-gray-100">
+                  {[
+                    { key: 'notifyTestCompletion', label: 'Test Completions', desc: 'When a student completes their full assessment' },
+                    { key: 'notifyAiScoring', label: 'AI Scoring Results', desc: 'When AI finishes evaluating Writing/Speaking responses' },
+                    { key: 'notifySectionCompletion', label: 'Section Completions', desc: 'When a student completes each individual section' },
+                    { key: 'notifyRetryRequests', label: 'Retry Requests', desc: 'When a student requests to retake a section' },
+                    ...(isAdmin ? [{ key: 'notifyNewEnrollments', label: 'New Enrollments', desc: 'When a new student is added to the platform' }] : []),
+                  ].map(item => (
+                    <div key={item.key} className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">{item.label}</p>
+                        <p className="text-sm text-gray-500 mt-0.5">{item.desc}</p>
+                      </div>
+                      <Toggle
+                        enabled={settings[item.key as keyof typeof settings] as boolean}
+                        onChange={() => setSettings({ ...settings, [item.key]: !settings[item.key as keyof typeof settings] })}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <SaveButton />
           </div>
         )}
 
+        {/* ─── Assessments (Admin/Teacher) ─── */}
+        {activeTab === 'assessments' && isStaff && (
+          <div className="space-y-6">
+            {isAdmin && (
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Default Time Limits</h2>
+                <p className="text-xs text-gray-400 mb-4">Default time limits for new assessments (in minutes)</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    { key: 'defaultTimeLimitReading', label: 'Reading' },
+                    { key: 'defaultTimeLimitListening', label: 'Listening' },
+                    { key: 'defaultTimeLimitWriting', label: 'Writing' },
+                    { key: 'defaultTimeLimitSpeaking', label: 'Speaking' },
+                  ].map(item => (
+                    <div key={item.key}>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">{item.label}</label>
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="number" min="5" max="60"
+                          value={settings[item.key as keyof typeof settings] as number}
+                          onChange={(e) => setSettings({ ...settings, [item.key]: parseInt(e.target.value) || 15 })}
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:ring-1 focus:ring-gray-400 outline-none"
+                        />
+                        <span className="text-xs text-gray-400">min</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {isAdmin && (
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Default Questions per Section</h2>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {[
+                    { key: 'defaultQuestionsReading', label: 'Reading' },
+                    { key: 'defaultQuestionsListening', label: 'Listening' },
+                    { key: 'defaultQuestionsWriting', label: 'Writing' },
+                    { key: 'defaultQuestionsSpeaking', label: 'Speaking' },
+                  ].map(item => (
+                    <div key={item.key}>
+                      <label className="block text-xs font-medium text-gray-600 mb-1">{item.label}</label>
+                      <input
+                        type="number" min="1" max="50"
+                        value={settings[item.key as keyof typeof settings] as number}
+                        onChange={(e) => setSettings({ ...settings, [item.key]: parseInt(e.target.value) || 5 })}
+                        className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:ring-1 focus:ring-gray-400 outline-none"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Scoring & Grading</h2>
+              <div className="space-y-5">
+                {isAdmin && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Passing Threshold (%)</label>
+                    <p className="text-xs text-gray-400 mb-2">Minimum percentage to pass a CEFR level</p>
+                    <input
+                      type="number" min="40" max="90"
+                      value={settings.passingThreshold}
+                      onChange={(e) => setSettings({ ...settings, passingThreshold: parseInt(e.target.value) || 60 })}
+                      className="w-32 px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:ring-1 focus:ring-gray-400 outline-none"
+                    />
+                  </div>
+                )}
+                <div className="space-y-0 divide-y divide-gray-100">
+                  {[
+                    { key: 'aiAutoScore', label: 'Auto AI Scoring', desc: 'Automatically score Writing/Speaking with AI when section completes', admin: true },
+                    { key: 'showCorrectAnswersToStudents', label: 'Show Correct Answers to Students', desc: 'Students can see the correct answers after completing the test', admin: true },
+                    { key: 'allowRetryRequests', label: 'Allow Retry Requests', desc: 'Students can request to retake completed sections', admin: true },
+                    { key: 'showStudentTranscripts', label: 'Show Speaking Transcripts', desc: 'Display speech-to-text transcripts in review panel', admin: false },
+                    { key: 'showAiEvaluation', label: 'Show AI Evaluation Details', desc: 'Show full AI scoring breakdown when reviewing responses', admin: false },
+                  ]
+                  .filter(item => isAdmin || !item.admin)
+                  .map(item => (
+                    <div key={item.key} className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">{item.label}</p>
+                        <p className="text-sm text-gray-500 mt-0.5">{item.desc}</p>
+                      </div>
+                      <Toggle
+                        enabled={settings[item.key as keyof typeof settings] as boolean}
+                        onChange={() => setSettings({ ...settings, [item.key]: !settings[item.key as keyof typeof settings] })}
+                      />
+                    </div>
+                  ))}
+                </div>
+                {isAdmin && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Max Retries per Section</label>
+                    <input
+                      type="number" min="1" max="5"
+                      value={settings.maxRetries}
+                      onChange={(e) => setSettings({ ...settings, maxRetries: parseInt(e.target.value) || 2 })}
+                      className="w-32 px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:ring-1 focus:ring-gray-400 outline-none"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {isAdmin && (
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Enrollment Defaults</h2>
+                <div className="space-y-5">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1.5">Default Assessment Language</label>
+                    <select
+                      value={settings.defaultAssessmentLanguage}
+                      onChange={(e) => setSettings({ ...settings, defaultAssessmentLanguage: e.target.value })}
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg bg-white text-sm text-gray-900 focus:ring-1 focus:ring-gray-400 outline-none"
+                    >
+                      <option value="English">English</option>
+                      <option value="Italian">Italian</option>
+                      <option value="French">French</option>
+                      <option value="Spanish">Spanish</option>
+                      <option value="German">German</option>
+                    </select>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">Auto-assign Placement Test</p>
+                      <p className="text-sm text-gray-500 mt-0.5">Automatically assign a placement test when a new student enrolls</p>
+                    </div>
+                    <Toggle
+                      enabled={settings.autoAssignOnEnroll}
+                      onChange={() => setSettings({ ...settings, autoAssignOnEnroll: !settings.autoAssignOnEnroll })}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <SaveButton />
+          </div>
+        )}
+
+        {/* ─── School (Admin only) ─── */}
+        {activeTab === 'school' && isAdmin && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">School Information</h2>
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-lg">
+                  <GraduationCap className="w-8 h-8 text-gray-400" />
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">Maka Language Consulting</p>
+                    <p className="text-xs text-gray-500">Language training, coaching, and skills development</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Supported Languages</h2>
+              <p className="text-xs text-gray-400 mb-3">Languages available for assessments and courses</p>
+              <div className="flex flex-wrap gap-2">
+                {[
+                  { flag: '\u{1F1EC}\u{1F1E7}', name: 'English' },
+                  { flag: '\u{1F1EE}\u{1F1F9}', name: 'Italian' },
+                  { flag: '\u{1F1EB}\u{1F1F7}', name: 'French' },
+                  { flag: '\u{1F1EA}\u{1F1F8}', name: 'Spanish' },
+                  { flag: '\u{1F1E9}\u{1F1EA}', name: 'German' },
+                ].map(lang => (
+                  <div key={lang.name} className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg">
+                    <span className="text-lg">{lang.flag}</span>
+                    <span className="text-sm text-gray-700">{lang.name}</span>
+                    <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Staff Access</h2>
+              <p className="text-xs text-gray-400 mb-3">Quick overview of team members with access</p>
+              <div className="space-y-2">
+                {[
+                  { role: 'Administrators', desc: 'Full access to all settings, students, and assessments', icon: Shield },
+                  { role: 'Teachers', desc: 'Can review assessments, score responses, and manage lessons', icon: Users },
+                  { role: 'Students', desc: 'Can take assessments, view courses, and track progress', icon: GraduationCap },
+                ].map(item => (
+                  <div key={item.role} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50">
+                    <item.icon className="w-5 h-5 text-gray-400" />
+                    <div>
+                      <p className="text-sm font-medium text-gray-900">{item.role}</p>
+                      <p className="text-xs text-gray-500">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ─── Security ─── */}
         {activeTab === 'security' && (
           <div className="space-y-6">
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Change Password</h2>
-
               <div className="space-y-4 max-w-md">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Current Password
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Current Password</label>
                   <div className="relative">
                     <input
                       type={showCurrentPassword ? 'text' : 'password'}
@@ -290,11 +530,8 @@ export const SettingsPage: React.FC = () => {
                     </button>
                   </div>
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    New Password
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">New Password</label>
                   <div className="relative">
                     <input
                       type={showNewPassword ? 'text' : 'password'}
@@ -311,11 +548,8 @@ export const SettingsPage: React.FC = () => {
                     </button>
                   </div>
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                    Confirm New Password
-                  </label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1.5">Confirm New Password</label>
                   <input
                     type="password"
                     value={passwordForm.confirmPassword}
@@ -323,7 +557,6 @@ export const SettingsPage: React.FC = () => {
                     className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm text-gray-900 focus:ring-1 focus:ring-gray-400 focus:border-gray-400 outline-none"
                   />
                 </div>
-
                 <button
                   onClick={handlePasswordChange}
                   disabled={isSaving || !passwordForm.currentPassword || !passwordForm.newPassword}
@@ -333,26 +566,16 @@ export const SettingsPage: React.FC = () => {
                 </button>
               </div>
             </div>
-
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Two-Factor Authentication</h2>
-              <p className="text-sm text-gray-500 mb-4">Add an extra layer of security to your account</p>
-              <button className="px-4 py-2 border border-gray-200 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors">
-                Enable 2FA
-              </button>
-            </div>
           </div>
         )}
 
+        {/* ─── Privacy ─── */}
         {activeTab === 'privacy' && (
           <div className="space-y-6">
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Profile Visibility</h2>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">
-                  Who can see your profile
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Who can see your profile</label>
                 <select
                   value={settings.profileVisibility}
                   onChange={(e) => setSettings({ ...settings, profileVisibility: e.target.value })}
@@ -367,7 +590,6 @@ export const SettingsPage: React.FC = () => {
 
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">Data Sharing</h2>
-
               <div className="space-y-0 divide-y divide-gray-100">
                 {[
                   { key: 'showProgress', label: 'Show Learning Progress', desc: 'Allow others to see your progress' },
@@ -387,13 +609,7 @@ export const SettingsPage: React.FC = () => {
               </div>
             </div>
 
-            <button
-              onClick={handleSave}
-              disabled={isSaving}
-              className="flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50"
-            >
-              {isSaving ? 'Saving...' : <><Save className="w-4 h-4" /> Save Changes</>}
-            </button>
+            <SaveButton />
 
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <h2 className="text-sm font-semibold text-red-500 uppercase tracking-wide mb-2">Danger Zone</h2>
