@@ -478,5 +478,10 @@ export const assessmentApi = {
   // Delete a question (soft-delete)
   async deleteQuestion(id: string): Promise<void> {
     await api.delete(`/assessments/multi-skill/admin/question-bank/${id}`)
+  },
+
+  // Delete an assessment (admin only)
+  async deleteAssessment(id: string): Promise<void> {
+    await api.delete(`/assessments/${id}`)
   }
 }

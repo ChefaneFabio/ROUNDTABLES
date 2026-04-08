@@ -13,6 +13,7 @@ import {
   AlertCircle,
   Download,
   FileText,
+  Trash2,
 } from 'lucide-react'
 import { assessmentApi } from '../../services/assessmentApi'
 import api, { studentsApi } from '../../services/api'
@@ -64,6 +65,26 @@ export default function AssessmentManagementPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [exporting, setExporting] = useState(false)
   const [showTestPdfMenu, setShowTestPdfMenu] = useState(false)
+
+  const deleteMutation = useMutation(
+    (id: string) => assessmentApi.deleteAssessment(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('adminAssessments')
+        setSuccessMsg('Assessment deleted')
+        setTimeout(() => setSuccessMsg(''), 3000)
+      },
+      onError: (err: any) => {
+        setError(err.response?.data?.error || 'Failed to delete assessment')
+      }
+    }
+  )
+
+  const handleDelete = (id: string, studentName: string) => {
+    if (window.confirm(`Delete assessment for ${studentName}? This will permanently remove all answers, responses, and scores.`)) {
+      deleteMutation.mutate(id)
+    }
+  }
 
   const { data: assessments, isLoading } = useQuery(
     ['adminAssessments', filterLanguage, filterStatus],
@@ -353,17 +374,26 @@ export default function AssessmentManagementPage() {
                         : '--'}
                     </td>
                     <td className="py-3 px-4 text-right">
-                      {a.status === 'COMPLETED' ? (
+                      <div className="flex items-center justify-end gap-2">
+                        {a.status === 'COMPLETED' ? (
+                          <button
+                            onClick={() => navigate(`/assessment/multi-skill/${a.id}/results`)}
+                            className="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 text-sm font-medium"
+                          >
+                            <Eye className="w-4 h-4" />
+                            Results
+                          </button>
+                        ) : (
+                          <span className="text-xs text-gray-400">Pending</span>
+                        )}
                         <button
-                          onClick={() => navigate(`/assessment/multi-skill/${a.id}/results`)}
-                          className="inline-flex items-center gap-1 text-primary-600 hover:text-primary-700 text-sm font-medium"
+                          onClick={() => handleDelete(a.id, a.student?.user?.name || 'this student')}
+                          className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          title="Delete assessment"
                         >
-                          <Eye className="w-4 h-4" />
-                          Results
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
-                      ) : (
-                        <span className="text-xs text-gray-400">Pending</span>
-                      )}
+                      </div>
                     </td>
                   </tr>
                 ))}
