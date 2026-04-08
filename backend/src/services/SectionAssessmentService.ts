@@ -854,7 +854,7 @@ export class SectionAssessmentService {
     return updated
   }
 
-  // Submit teacher score override for writing/speaking sections
+  // Submit teacher/admin score override for any section
   async submitTeacherScore(input: {
     sectionId: string
     teacherUserId: string
@@ -864,9 +864,6 @@ export class SectionAssessmentService {
 
     const section = await prisma.assessmentSection.findUnique({ where: { id: sectionId } })
     if (!section) throw new Error('Section not found')
-    if (section.skill !== 'WRITING' && section.skill !== 'SPEAKING') {
-      throw new Error('Teacher scoring only applies to writing and speaking sections')
-    }
 
     const updated = await prisma.assessmentSection.update({
       where: { id: sectionId },
@@ -874,7 +871,7 @@ export class SectionAssessmentService {
         teacherScore: score as any,
         teacherReviewedBy: teacherUserId,
         teacherReviewedAt: new Date(),
-        finalScore: score as any, // Teacher score takes precedence
+        finalScore: score as any, // Teacher/admin score takes precedence
         cefrLevel: score.cefrLevel || section.cefrLevel
       }
     })

@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { assessmentApi } from '../services/assessmentApi'
 import { useToast } from '../components/common/Toast'
+import { useAuth } from '../contexts/AuthContext'
 import {
   BookOpen, Headphones, PenTool, Mic, Download, ArrowLeft,
-  CheckCircle, BookType, Shuffle, Eraser, FileText, TrendingUp, Lightbulb
+  CheckCircle, BookType, Shuffle, Eraser, FileText, TrendingUp, Lightbulb,
+  Edit3, Save, X
 } from 'lucide-react'
 
 // ─── GSE & CEFR Mapping (from Maka/Versant reference) ───
@@ -153,9 +155,13 @@ export function MultiSkillResultPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const toast = useToast()
+  const { isAdmin } = useAuth()
   const [results, setResults] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [editingSection, setEditingSection] = useState<string | null>(null)
+  const [editForm, setEditForm] = useState({ cefrLevel: 'A1', overall: 0, feedback: '' })
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -183,6 +189,35 @@ export function MultiSkillResultPage() {
         </div>
       </div>
     )
+  }
+
+  const reloadResults = () => {
+    assessmentApi.getMultiSkillResults(id!)
+      .then(data => setResults(data))
+      .catch(() => {})
+  }
+
+  const handleStartEdit = (section: any) => {
+    setEditingSection(section.id)
+    setEditForm({
+      cefrLevel: section.cefrLevel || 'A1',
+      overall: section.percentageScore || 0,
+      feedback: section.teacherScore?.feedback || ''
+    })
+  }
+
+  const handleSaveScore = async (sectionId: string) => {
+    try {
+      setSaving(true)
+      await assessmentApi.submitTeacherScore(id!, sectionId, editForm)
+      toast.success('Score updated successfully')
+      setEditingSection(null)
+      reloadResults()
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || 'Failed to save score')
+    } finally {
+      setSaving(false)
+    }
   }
 
   const { assessment, sections } = results
@@ -355,7 +390,18 @@ export function MultiSkillResultPage() {
                           <Icon className="w-6 h-6 text-white" />
                         </div>
                         <div>
-                          <h4 className={`text-lg font-bold ${meta.color}`}>{meta.label}</h4>
+                          <div className="flex items-center gap-2">
+                            <h4 className={`text-lg font-bold ${meta.color}`}>{meta.label}</h4>
+                            {isAdmin && editingSection !== section.id && (
+                              <button
+                                onClick={() => handleStartEdit(section)}
+                                className="p-1 rounded hover:bg-white/60 transition-colors"
+                                title="Edit score"
+                              >
+                                <Edit3 className="w-3.5 h-3.5 text-gray-400 hover:text-gray-600" />
+                              </button>
+                            )}
+                          </div>
                           <div className="flex items-center gap-2 mt-0.5">
                             <span className={`px-2 py-0.5 rounded-md ${meta.badgeBg} text-xs font-bold ${meta.color}`}>
                               GSE: {gse}/90
@@ -376,22 +422,84 @@ export function MultiSkillResultPage() {
 
                       {/* Right: Description + Tips */}
                       <div className="flex-1 space-y-3">
-                        <p className="text-sm text-gray-700 leading-relaxed">{description}</p>
-                        {tips.length > 0 && (
-                          <div>
-                            <div className="flex items-center gap-1.5 mb-1.5">
-                              <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
-                              <span className="text-xs font-semibold text-amber-700">Tips to improve:</span>
+                        {editingSection === section.id ? (
+                          <div className="bg-white rounded-lg border border-gray-200 p-4 space-y-3">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-semibold text-gray-700">Admin Score Override</span>
+                              <button onClick={() => setEditingSection(null)} className="p-1 hover:bg-gray-100 rounded">
+                                <X className="w-4 h-4 text-gray-400" />
+                              </button>
                             </div>
-                            <ul className="space-y-1">
-                              {tips.map((tip, i) => (
-                                <li key={i} className="text-xs text-gray-600 flex items-start gap-1.5">
-                                  <TrendingUp className="w-3 h-3 text-gray-400 mt-0.5 shrink-0" />
-                                  {tip}
-                                </li>
-                              ))}
-                            </ul>
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="text-xs text-gray-500 font-medium">CEFR Level</label>
+                                <select
+                                  value={editForm.cefrLevel}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, cefrLevel: e.target.value }))}
+                                  className="w-full p-2 border border-gray-200 rounded-lg text-sm mt-1"
+                                >
+                                  {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map(l => (
+                                    <option key={l} value={l}>{l} — {LEVEL_NAMES[l]}</option>
+                                  ))}
+                                </select>
+                              </div>
+                              <div>
+                                <label className="text-xs text-gray-500 font-medium">Overall Score (0-100)</label>
+                                <input
+                                  type="number" min="0" max="100"
+                                  value={editForm.overall}
+                                  onChange={(e) => setEditForm(prev => ({ ...prev, overall: parseInt(e.target.value) || 0 }))}
+                                  className="w-full p-2 border border-gray-200 rounded-lg text-sm mt-1"
+                                />
+                              </div>
+                            </div>
+                            <div>
+                              <label className="text-xs text-gray-500 font-medium">Feedback (optional)</label>
+                              <textarea
+                                value={editForm.feedback}
+                                onChange={(e) => setEditForm(prev => ({ ...prev, feedback: e.target.value }))}
+                                rows={2}
+                                placeholder="Add notes about this score adjustment..."
+                                className="w-full p-2 border border-gray-200 rounded-lg text-sm mt-1 resize-none"
+                              />
+                            </div>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => handleSaveScore(section.id)}
+                                disabled={saving}
+                                className="flex items-center gap-1.5 px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 disabled:opacity-50 transition-colors"
+                              >
+                                <Save className="w-3.5 h-3.5" />
+                                {saving ? 'Saving...' : 'Save'}
+                              </button>
+                              <button
+                                onClick={() => setEditingSection(null)}
+                                className="px-4 py-2 text-gray-600 border border-gray-200 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors"
+                              >
+                                Cancel
+                              </button>
+                            </div>
                           </div>
+                        ) : (
+                          <>
+                            <p className="text-sm text-gray-700 leading-relaxed">{description}</p>
+                            {tips.length > 0 && (
+                              <div>
+                                <div className="flex items-center gap-1.5 mb-1.5">
+                                  <Lightbulb className="w-3.5 h-3.5 text-amber-500" />
+                                  <span className="text-xs font-semibold text-amber-700">Tips to improve:</span>
+                                </div>
+                                <ul className="space-y-1">
+                                  {tips.map((tip, i) => (
+                                    <li key={i} className="text-xs text-gray-600 flex items-start gap-1.5">
+                                      <TrendingUp className="w-3 h-3 text-gray-400 mt-0.5 shrink-0" />
+                                      {tip}
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>
