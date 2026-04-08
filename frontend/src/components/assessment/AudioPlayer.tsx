@@ -21,7 +21,24 @@ export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComp
     setIsPlaying(false)
   }, [src, ttsScript])
 
-  const handlePlay = () => {
+  const handleStop = () => {
+    if (!useFallback && audioRef.current) {
+      audioRef.current.pause()
+      audioRef.current.currentTime = 0
+    } else if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel()
+    }
+    setIsPlaying(false)
+    setPlayCount(c => c + 1)
+    onPlayComplete?.()
+  }
+
+  const handlePlayStop = () => {
+    if (isPlaying) {
+      handleStop()
+      return
+    }
+
     if (!canPlay) return
 
     if (!useFallback && audioRef.current) {
@@ -73,18 +90,17 @@ export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComp
 
       <div className="flex items-center gap-4">
         <button
-          onClick={handlePlay}
-          disabled={!canPlay || isPlaying}
+          onClick={handlePlayStop}
+          disabled={!canPlay && !isPlaying}
           className={`flex items-center justify-center w-12 h-12 rounded-full transition-all
-            ${isPlaying ? 'bg-blue-600 text-white animate-pulse' :
+            ${isPlaying ? 'bg-red-500 text-white hover:bg-red-600' :
               canPlay ? 'bg-blue-500 text-white hover:bg-blue-600' :
               'bg-gray-300 text-gray-500 cursor-not-allowed'}
           `}
         >
           {isPlaying ? (
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <rect x="6" y="4" width="4" height="16" />
-              <rect x="14" y="4" width="4" height="16" />
+              <rect x="6" y="6" width="12" height="12" rx="1" />
             </svg>
           ) : (
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -95,7 +111,7 @@ export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComp
 
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-700">
-            {isPlaying ? 'Playing audio...' : canPlay ? 'Click to play audio' : 'No more plays available'}
+            {isPlaying ? 'Playing... click to stop' : canPlay ? 'Click to play audio' : 'No more plays available'}
           </p>
           <p className="text-xs text-gray-500">
             Plays: {playCount}/{maxPlays}
