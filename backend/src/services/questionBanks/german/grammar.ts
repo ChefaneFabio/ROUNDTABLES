@@ -251,8 +251,8 @@ export const germanGrammarQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'Die in den letzten Jahren ___ angestiegene Inflation bereitet Sorgen.',
-    options: [{ label: 'stetig', value: 'stetig' }, { label: 'dramatisch', value: 'dramatisch' }, { label: 'kontinuierlich', value: 'kontinuierlich' }, { label: 'merklich', value: 'merklich' }],
+    questionText: 'Die in den letzten Jahren ohne Unterbrechung ___ angestiegene Inflation bereitet Sorgen.',
+    options: [{ label: 'plötzlich', value: 'plötzlich' }, { label: 'gelegentlich', value: 'gelegentlich' }, { label: 'kontinuierlich', value: 'kontinuierlich' }, { label: 'selten', value: 'selten' }],
     correctAnswer: 'kontinuierlich', points: 1, orderIndex: 38, tags: ['erweitertes Attribut', 'Nominalstil']
   },
   {

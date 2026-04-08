@@ -646,7 +646,7 @@ export const englishGrammarQuestions: MultiSkillQuestionData[] = [
   {
     language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: 'He ___ well have known about the fraud, but he chose to look the other way.',
-    options: [{ label: 'might', value: 'might' }, { label: 'may', value: 'may' }, { label: 'should', value: 'should' }, { label: 'could', value: 'could' }],
+    options: [{ label: 'shall', value: 'shall' }, { label: 'may', value: 'may' }, { label: 'should', value: 'should' }, { label: 'would', value: 'would' }],
     correctAnswer: 'may', points: 2, orderIndex: 99, tags: ['modals', 'speculation']
   },
   {

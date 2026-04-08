@@ -234,8 +234,8 @@ export const germanVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'German', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'Die ___ für das Hotelzimmer war sehr angemessen — nur 70 Euro pro Nacht.',
-    options: [{ label: 'Gebühr', value: 'Gebühr' }, { label: 'Strafe', value: 'Strafe' }, { label: 'Miete', value: 'Miete' }, { label: 'Schuld', value: 'Schuld' }],
+    questionText: 'Die ___ für die Übernachtung im Hotel war sehr angemessen — nur 70 Euro pro Nacht.',
+    options: [{ label: 'Gebühr', value: 'Gebühr' }, { label: 'Strafe', value: 'Strafe' }, { label: 'Schuld', value: 'Schuld' }, { label: 'Prämie', value: 'Prämie' }],
     correctAnswer: 'Gebühr', points: 1, orderIndex: 34, tags: ['Reisen', 'Nomen']
   },
   {
@@ -302,7 +302,7 @@ export const germanVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'German', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'Die Maßnahme erwies sich im Nachhinein als ___.',
+    questionText: 'Die Maßnahme erwies sich im Nachhinein als völlig ___ — sie war gar nicht nötig gewesen.',
     options: [{ label: 'überflüssig', value: 'überflüssig' }, { label: 'überlegen', value: 'überlegen' }, { label: 'übertrieben', value: 'übertrieben' }, { label: 'üblich', value: 'üblich' }],
     correctAnswer: 'überflüssig', points: 2, orderIndex: 45, tags: ['abstrakte Begriffe', 'Adjektive']
   },
@@ -352,7 +352,7 @@ export const germanVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'German', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'Das Problem ist ___ — es gibt keine einfache Lösung.',
+    questionText: 'Das Problem ist ___ — es hat viele verborgene Ebenen und es gibt keine einfache Lösung.',
     options: [{ label: 'vielschichtig', value: 'vielschichtig' }, { label: 'vielseitig', value: 'vielseitig' }, { label: 'vielleicht', value: 'vielleicht' }, { label: 'vielfältig', value: 'vielfältig' }],
     correctAnswer: 'vielschichtig', points: 2, orderIndex: 53, tags: ['abstrakte Begriffe', 'Adjektive']
   },

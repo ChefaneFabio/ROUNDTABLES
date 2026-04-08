@@ -303,8 +303,8 @@ export const frenchGrammarQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: 'Je ne mange ___ de viande.',
-    options: [{ label: 'pas', value: 'pas' }, { label: 'plus', value: 'plus' }, { label: 'rien', value: 'rien' }, { label: 'jamais', value: 'jamais' }],
+    questionText: 'Je ne mange ___ de viande. Je préfère le poisson.',
+    options: [{ label: 'pas', value: 'pas' }, { label: 'aussi', value: 'aussi' }, { label: 'très', value: 'très' }, { label: 'encore', value: 'encore' }],
     correctAnswer: 'pas', points: 1, orderIndex: 46, tags: ['négation', 'ne...pas']
   },
   {

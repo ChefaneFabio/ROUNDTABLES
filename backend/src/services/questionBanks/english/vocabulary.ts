@@ -182,7 +182,7 @@ export const englishVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'She put on her ___ because it was raining outside.',
+    questionText: 'She put on her ___ because it was raining outside and she didn\'t want to get wet.',
     options: [{ label: 'scarf', value: 'scarf' }, { label: 'raincoat', value: 'raincoat' }, { label: 'hat', value: 'hat' }, { label: 'gloves', value: 'gloves' }],
     correctAnswer: 'raincoat', points: 1, orderIndex: 25, tags: ['clothes', 'weather']
   },
@@ -330,8 +330,8 @@ export const englishVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'The philosopher argued that true knowledge is ___ and can never be fully attained.',
-    options: [{ label: 'ephemeral', value: 'ephemeral' }, { label: 'empirical', value: 'empirical' }, { label: 'ethereal', value: 'ethereal' }, { label: 'elusive', value: 'elusive' }],
+    questionText: 'The philosopher argued that true knowledge is ___ — always just beyond our grasp, no matter how hard we pursue it.',
+    options: [{ label: 'ephemeral', value: 'ephemeral' }, { label: 'empirical', value: 'empirical' }, { label: 'elaborate', value: 'elaborate' }, { label: 'elusive', value: 'elusive' }],
     correctAnswer: 'elusive', points: 2, orderIndex: 47, tags: ['philosophy', 'nuanced vocabulary']
   },
   {

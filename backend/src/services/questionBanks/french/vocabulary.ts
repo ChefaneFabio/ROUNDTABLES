@@ -21,8 +21,8 @@ export const frenchVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'Pouvez-vous me ___ le chemin pour aller à la gare ?',
-    options: [{ label: 'dire', value: 'dire' }, { label: 'indiquer', value: 'indiquer' }, { label: 'parler', value: 'parler' }, { label: 'montrer', value: 'montrer' }],
+    questionText: 'Pouvez-vous m\' ___ le chemin pour aller à la gare, s\'il vous plaît ?',
+    options: [{ label: 'dire', value: 'dire' }, { label: 'indiquer', value: 'indiquer' }, { label: 'parler', value: 'parler' }, { label: 'raconter', value: 'raconter' }],
     correctAnswer: 'indiquer', points: 1, orderIndex: 3, tags: ['directions', 'demander']
   },
 
@@ -212,7 +212,7 @@ export const frenchVocabularyQuestions: MultiSkillQuestionData[] = [
   {
     language: 'French', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
     questionText: 'Il faut ___ un formulaire pour s\'inscrire à l\'université.',
-    options: [{ label: 'remplir', value: 'remplir' }, { label: 'remplier', value: 'remplier' }, { label: 'compléter', value: 'compléter' }, { label: 'finir', value: 'finir' }],
+    options: [{ label: 'remplir', value: 'remplir' }, { label: 'remplier', value: 'remplier' }, { label: 'construire', value: 'construire' }, { label: 'finir', value: 'finir' }],
     correctAnswer: 'remplir', points: 1, orderIndex: 30, tags: ['administratif', 'collocations']
   },
   {
@@ -251,7 +251,7 @@ export const frenchVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'Il a fait preuve d\'une grande ___ en acceptant les critiques sans se plaindre.',
+    questionText: 'Il a fait preuve d\'une grande ___ en acceptant les critiques sans se plaindre et en rebondissant rapidement.',
     options: [{ label: 'résilience', value: 'résilience' }, { label: 'résidence', value: 'résidence' }, { label: 'résistance', value: 'résistance' }, { label: 'résonance', value: 'résonance' }],
     correctAnswer: 'résilience', points: 2, orderIndex: 36, tags: ['personnalité', 'noms abstraits']
   },
@@ -313,7 +313,7 @@ export const frenchVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'La ___ de ses propos a choqué l\'assemblée tout entière.',
+    questionText: 'La ___ de ses propos, empreints d\'hostilité et d\'agressivité, a choqué l\'assemblée tout entière.',
     options: [{ label: 'virulence', value: 'virulence' }, { label: 'vigilance', value: 'vigilance' }, { label: 'véhémence', value: 'véhémence' }, { label: 'vraisemblance', value: 'vraisemblance' }],
     correctAnswer: 'virulence', points: 2, orderIndex: 45, tags: ['rhétorique', 'noms soutenus']
   },
@@ -331,8 +331,8 @@ export const frenchVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'L\'artiste a su ___ les codes esthétiques traditionnels pour créer une oeuvre avant-gardiste.',
-    options: [{ label: 'transgresser', value: 'transgresser' }, { label: 'transcender', value: 'transcender' }, { label: 'transmettre', value: 'transmettre' }, { label: 'transplanter', value: 'transplanter' }],
+    questionText: 'L\'artiste a su délibérément ___ les codes esthétiques traditionnels, les violant avec audace pour créer une oeuvre avant-gardiste.',
+    options: [{ label: 'transgresser', value: 'transgresser' }, { label: 'transcrire', value: 'transcrire' }, { label: 'transmettre', value: 'transmettre' }, { label: 'transplanter', value: 'transplanter' }],
     correctAnswer: 'transgresser', points: 2, orderIndex: 48, tags: ['art', 'verbes littéraires']
   },
 

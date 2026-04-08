@@ -78,7 +78,7 @@ export const spanishVocabularyQuestions: MultiSkillQuestionData[] = [
   {
     language: 'Spanish', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
     questionText: 'La crisis económica tuvo un ___ profundo en la sociedad.',
-    options: [{ label: 'impacto', value: 'impacto' }, { label: 'golpe', value: 'golpe' }, { label: 'choque', value: 'choque' }, { label: 'encuentro', value: 'encuentro' }],
+    options: [{ label: 'impacto', value: 'impacto' }, { label: 'paisaje', value: 'paisaje' }, { label: 'horario', value: 'horario' }, { label: 'encuentro', value: 'encuentro' }],
     correctAnswer: 'impacto', points: 1, orderIndex: 11, tags: ['economics', 'nouns']
   },
 

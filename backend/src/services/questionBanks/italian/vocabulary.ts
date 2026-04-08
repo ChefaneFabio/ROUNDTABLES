@@ -31,8 +31,8 @@ export const italianVocabularyQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'Italian', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'L\'azienda ha deciso di ___ 100 nuovi dipendenti quest\'anno.',
-    options: [{ label: 'licenziare', value: 'licenziare' }, { label: 'assumere', value: 'assumere' }, { label: 'pensionare', value: 'pensionare' }, { label: 'dimettersi', value: 'dimettersi' }],
+    questionText: 'L\'azienda è in crescita e ha deciso di ___ 100 nuovi dipendenti quest\'anno.',
+    options: [{ label: 'assumere', value: 'assumere' }, { label: 'trasferire', value: 'trasferire' }, { label: 'pensionare', value: 'pensionare' }, { label: 'dimettersi', value: 'dimettersi' }],
     correctAnswer: 'assumere', points: 1, orderIndex: 4, tags: ['lavoro', 'verbi']
   },
   {
@@ -171,8 +171,8 @@ export const italianVocabularyQuestions: MultiSkillQuestionData[] = [
   // A2 — Vita quotidiana (24–31)
   {
     language: 'Italian', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'Ogni mattina mi ___ i denti dopo colazione.',
-    options: [{ label: 'lavo', value: 'lavo' }, { label: 'pulisco', value: 'pulisco' }, { label: 'cambio', value: 'cambio' }, { label: 'prendo', value: 'prendo' }],
+    questionText: 'Ogni mattina mi ___ i denti con lo spazzolino dopo colazione.',
+    options: [{ label: 'lavo', value: 'lavo' }, { label: 'asciugo', value: 'asciugo' }, { label: 'cambio', value: 'cambio' }, { label: 'prendo', value: 'prendo' }],
     correctAnswer: 'lavo', points: 1, orderIndex: 24, tags: ['routine quotidiana', 'igiene']
   },
   {
@@ -201,8 +201,8 @@ export const italianVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Italian', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'La ___ del treno per Milano costa venti euro.',
-    options: [{ label: 'corsa', value: 'corsa' }, { label: 'fermata', value: 'fermata' }, { label: 'partenza', value: 'partenza' }, { label: 'tratta', value: 'tratta' }],
+    questionText: 'Una ___ in treno da Roma a Milano costa circa venti euro con il regionale.',
+    options: [{ label: 'corsa', value: 'corsa' }, { label: 'fermata', value: 'fermata' }, { label: 'partenza', value: 'partenza' }, { label: 'stazione', value: 'stazione' }],
     correctAnswer: 'corsa', points: 1, orderIndex: 29, tags: ['trasporti']
   },
   {
@@ -257,8 +257,8 @@ export const italianVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Italian', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'Per questo lavoro è necessaria una buona ___ dell\'inglese.',
-    options: [{ label: 'conoscenza', value: 'conoscenza' }, { label: 'coscienza', value: 'coscienza' }, { label: 'competenza', value: 'competenza' }, { label: 'confidenza', value: 'confidenza' }],
+    questionText: 'Per questo lavoro è necessaria una buona ___ della lingua inglese, sia scritta che parlata.',
+    options: [{ label: 'conoscenza', value: 'conoscenza' }, { label: 'coscienza', value: 'coscienza' }, { label: 'coincidenza', value: 'coincidenza' }, { label: 'confidenza', value: 'confidenza' }],
     correctAnswer: 'conoscenza', points: 1, orderIndex: 38, tags: ['lavoro', 'lingue']
   },
   {
@@ -271,13 +271,13 @@ export const italianVocabularyQuestions: MultiSkillQuestionData[] = [
   // B2 — Concetti astratti (40–47)
   {
     language: 'Italian', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'La ___ tra ricchi e poveri continua ad aumentare in molti Paesi.',
-    options: [{ label: 'disuguaglianza', value: 'disuguaglianza' }, { label: 'differenza', value: 'differenza' }, { label: 'distanza', value: 'distanza' }, { label: 'divisione', value: 'divisione' }],
+    questionText: 'La ___ economica e sociale tra ricchi e poveri continua ad aumentare in molti Paesi.',
+    options: [{ label: 'disuguaglianza', value: 'disuguaglianza' }, { label: 'dimenticanza', value: 'dimenticanza' }, { label: 'diplomazia', value: 'diplomazia' }, { label: 'divisione', value: 'divisione' }],
     correctAnswer: 'disuguaglianza', points: 2, orderIndex: 40, tags: ['società', 'concetti astratti']
   },
   {
     language: 'Italian', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'Il suo comportamento ___ ha deluso tutti i colleghi.',
+    questionText: 'Il suo comportamento ___ e contrario alle regole ha deluso tutti i colleghi.',
     options: [{ label: 'scorretto', value: 'scorretto' }, { label: 'scorso', value: 'scorso' }, { label: 'scortese', value: 'scortese' }, { label: 'scontento', value: 'scontento' }],
     correctAnswer: 'scorretto', points: 2, orderIndex: 41, tags: ['etica', 'aggettivi']
   },
@@ -307,8 +307,8 @@ export const italianVocabularyQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Italian', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'Dopo anni di sfruttamento, i lavoratori hanno chiesto condizioni più ___.',
-    options: [{ label: 'eque', value: 'eque' }, { label: 'uguali', value: 'uguali' }, { label: 'simili', value: 'simili' }, { label: 'pari', value: 'pari' }],
+    questionText: 'Dopo anni di sfruttamento, i lavoratori hanno chiesto condizioni più ___ e giuste.',
+    options: [{ label: 'eque', value: 'eque' }, { label: 'estreme', value: 'estreme' }, { label: 'esterne', value: 'esterne' }, { label: 'esigue', value: 'esigue' }],
     correctAnswer: 'eque', points: 2, orderIndex: 46, tags: ['lavoro', 'diritti']
   },
   {
