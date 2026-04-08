@@ -911,21 +911,63 @@ export class SectionAssessmentService {
 
     if (!assessment) throw new Error('Assessment not found')
 
-    const sectionResults = assessment.sections.map(s => ({
-      id: s.id,
-      skill: s.skill,
-      status: s.status,
-      cefrLevel: s.cefrLevel,
-      cefrName: LEVEL_NAMES[s.cefrLevel || 'A1'] || '',
-      percentageScore: s.percentageScore,
-      rawScore: s.rawScore,
-      maxScore: s.maxScore,
-      aiScore: s.aiScore,
-      teacherScore: s.teacherScore,
-      finalScore: s.finalScore,
-      questionsAnswered: ((s.answers as unknown as AnswerRecord[]) || []).length,
-      questionsTotal: s.questionsLimit
-    }))
+    // Collect all question IDs from all sections to batch-fetch
+    const allQuestionIds: string[] = []
+    for (const s of assessment.sections) {
+      const answers = (s.answers as unknown as AnswerRecord[]) || []
+      for (const a of answers) {
+        if (a.questionId) allQuestionIds.push(a.questionId)
+      }
+    }
+
+    // Batch-fetch question details
+    const questions = allQuestionIds.length > 0
+      ? await prisma.assessmentQuestion.findMany({
+          where: { id: { in: allQuestionIds } },
+          select: {
+            id: true, questionText: true, questionType: true, options: true,
+            correctAnswer: true, passage: true, passageTitle: true, cefrLevel: true
+          }
+        })
+      : []
+    const questionMap = new Map(questions.map(q => [q.id, q]))
+
+    const sectionResults = assessment.sections.map(s => {
+      const answers = (s.answers as unknown as AnswerRecord[]) || []
+      const detailedAnswers = answers.map(a => {
+        const q = questionMap.get(a.questionId)
+        return {
+          questionId: a.questionId,
+          questionText: q?.questionText || '',
+          questionType: q?.questionType || '',
+          options: q?.options || null,
+          passage: q?.passage || null,
+          passageTitle: q?.passageTitle || null,
+          studentAnswer: a.answer,
+          correctAnswer: q?.correctAnswer || '',
+          isCorrect: a.isCorrect,
+          cefrLevel: a.cefrLevel,
+          points: a.points
+        }
+      })
+
+      return {
+        id: s.id,
+        skill: s.skill,
+        status: s.status,
+        cefrLevel: s.cefrLevel,
+        cefrName: LEVEL_NAMES[s.cefrLevel || 'A1'] || '',
+        percentageScore: s.percentageScore,
+        rawScore: s.rawScore,
+        maxScore: s.maxScore,
+        aiScore: s.aiScore,
+        teacherScore: s.teacherScore,
+        finalScore: s.finalScore,
+        questionsAnswered: answers.length,
+        questionsTotal: s.questionsLimit,
+        answers: detailedAnswers
+      }
+    })
 
     return {
       assessment: {

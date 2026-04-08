@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext'
 import {
   BookOpen, Headphones, PenTool, Mic, Download, ArrowLeft,
   CheckCircle, BookType, Shuffle, Eraser, FileText, TrendingUp, Lightbulb,
-  Edit3, Save, X
+  Edit3, Save, X, XCircle
 } from 'lucide-react'
 
 // ─── GSE & CEFR Mapping (from Maka/Versant reference) ───
@@ -162,6 +162,7 @@ export function MultiSkillResultPage() {
   const [editingSection, setEditingSection] = useState<string | null>(null)
   const [editForm, setEditForm] = useState({ cefrLevel: 'A1', overall: 0, feedback: '' })
   const [saving, setSaving] = useState(false)
+  const [expandedSection, setExpandedSection] = useState<string | null>(null)
 
   useEffect(() => {
     if (!id) return
@@ -503,6 +504,123 @@ export function MultiSkillResultPage() {
                         )}
                       </div>
                     </div>
+
+                    {/* Admin: View All Answers */}
+                    {isAdmin && section.answers && section.answers.length > 0 && (
+                      <div className="mt-4 pt-4 border-t border-gray-200/60">
+                        <button
+                          onClick={() => setExpandedSection(expandedSection === section.id ? null : section.id)}
+                          className="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-700 transition-colors"
+                        >
+                          <FileText className="w-4 h-4" />
+                          {expandedSection === section.id ? 'Hide Answers' : `View All Answers (${section.answers.length})`}
+                        </button>
+
+                        {expandedSection === section.id && (
+                          <div className="mt-3 space-y-2">
+                            {section.answers.map((ans: any, idx: number) => (
+                              <div key={idx} className={`bg-white rounded-lg border p-3 ${ans.isCorrect ? 'border-green-200' : 'border-red-200'}`}>
+                                <div className="flex items-start gap-2">
+                                  <div className="flex-shrink-0 mt-0.5">
+                                    {ans.isCorrect
+                                      ? <CheckCircle className="w-4 h-4 text-green-500" />
+                                      : <XCircle className="w-4 h-4 text-red-500" />
+                                    }
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-2 mb-1">
+                                      <span className="text-xs font-bold text-gray-400">Q{idx + 1}</span>
+                                      <span className="text-[10px] px-1.5 py-0.5 rounded bg-gray-100 text-gray-500 font-medium">{ans.cefrLevel}</span>
+                                      <span className="text-[10px] text-gray-400">{ans.questionType?.replace(/_/g, ' ')}</span>
+                                    </div>
+                                    <p className="text-sm text-gray-800 mb-1">{ans.questionText}</p>
+                                    {ans.passage && (
+                                      <p className="text-xs text-gray-500 italic mb-1 line-clamp-2">{ans.passage}</p>
+                                    )}
+                                    {ans.options && Array.isArray(ans.options) ? (
+                                      <div className="space-y-1 mt-1">
+                                        {ans.options.map((opt: any) => {
+                                          const isStudentAnswer = opt.value === ans.studentAnswer
+                                          const isCorrectAnswer = opt.value === ans.correctAnswer
+                                          return (
+                                            <div
+                                              key={opt.value}
+                                              className={`text-xs px-2 py-1 rounded ${
+                                                isCorrectAnswer ? 'bg-green-50 text-green-800 font-medium' :
+                                                isStudentAnswer ? 'bg-red-50 text-red-700' :
+                                                'text-gray-500'
+                                              }`}
+                                            >
+                                              {isCorrectAnswer && <CheckCircle className="w-3 h-3 inline mr-1 text-green-500" />}
+                                              {isStudentAnswer && !isCorrectAnswer && <XCircle className="w-3 h-3 inline mr-1 text-red-400" />}
+                                              {opt.label}
+                                            </div>
+                                          )
+                                        })}
+                                      </div>
+                                    ) : (
+                                      <div className="mt-1 space-y-0.5">
+                                        <p className="text-xs">
+                                          <span className="text-gray-400">Student: </span>
+                                          <span className={ans.isCorrect ? 'text-green-700 font-medium' : 'text-red-600'}>{ans.studentAnswer}</span>
+                                        </p>
+                                        {!ans.isCorrect && ans.correctAnswer && (
+                                          <p className="text-xs">
+                                            <span className="text-gray-400">Correct: </span>
+                                            <span className="text-green-700 font-medium">{ans.correctAnswer}</span>
+                                          </p>
+                                        )}
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {/* Admin: View Writing Responses */}
+                    {isAdmin && section.skill === 'WRITING' && results.writingResponses?.length > 0 && (
+                      <div className="mt-4 pt-4 border-t border-gray-200/60">
+                        <p className="text-sm font-medium text-gray-500 mb-2">Writing Responses</p>
+                        {results.writingResponses.map((wr: any) => (
+                          <div key={wr.id} className="bg-white rounded-lg border border-gray-200 p-3 mb-2">
+                            <p className="text-sm text-gray-800 whitespace-pre-wrap">{wr.responseText}</p>
+                            <p className="text-xs text-gray-400 mt-1">{wr.wordCount} words</p>
+                            {wr.aiEvaluation && (
+                              <div className="mt-2 text-xs space-y-0.5">
+                                <p className="font-medium text-blue-600">AI Evaluation: {wr.aiEvaluation.cefrLevel} — {wr.aiEvaluation.overall}/100</p>
+                                <p className="text-gray-500">Grammar: {wr.aiEvaluation.grammar} | Vocabulary: {wr.aiEvaluation.vocabulary} | Coherence: {wr.aiEvaluation.coherence} | Spelling: {wr.aiEvaluation.spelling}</p>
+                                {wr.aiEvaluation.feedback && <p className="text-gray-600 italic">{wr.aiEvaluation.feedback}</p>}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Admin: View Speaking Responses */}
+                    {isAdmin && section.skill === 'SPEAKING' && results.speakingResponses?.length > 0 && (
+                      <div className="mt-4 pt-4 border-t border-gray-200/60">
+                        <p className="text-sm font-medium text-gray-500 mb-2">Speaking Responses</p>
+                        {results.speakingResponses.map((sr: any) => (
+                          <div key={sr.id} className="bg-white rounded-lg border border-gray-200 p-3 mb-2">
+                            {sr.audioUrl && <audio controls src={sr.audioUrl} className="w-full h-10 mb-2" />}
+                            {sr.transcript && <p className="text-sm text-gray-700 italic mb-1">"{sr.transcript}"</p>}
+                            <p className="text-xs text-gray-400">{sr.duration ? `${sr.duration}s` : 'No duration'}</p>
+                            {sr.aiEvaluation && (
+                              <div className="mt-2 text-xs space-y-0.5">
+                                <p className="font-medium text-blue-600">AI Evaluation: {sr.aiEvaluation.cefrLevel} — {sr.aiEvaluation.overall}/100</p>
+                                <p className="text-gray-500">Pronunciation: {sr.aiEvaluation.pronunciation} | Fluency: {sr.aiEvaluation.fluency} | Grammar: {sr.aiEvaluation.grammar} | Vocabulary: {sr.aiEvaluation.vocabulary}</p>
+                                {sr.aiEvaluation.feedback && <p className="text-gray-600 italic">{sr.aiEvaluation.feedback}</p>}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )
               })}
