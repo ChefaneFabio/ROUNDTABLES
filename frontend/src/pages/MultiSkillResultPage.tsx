@@ -245,6 +245,36 @@ export function MultiSkillResultPage() {
   // For the bar chart
   const barColors = ['bg-blue-500', 'bg-green-500', 'bg-amber-500', 'bg-purple-500']
 
+  // Students see a simple completion message — no scores or levels
+  if (!isAdmin) {
+    return (
+      <div className="max-w-2xl mx-auto py-16 text-center space-y-6">
+        <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-green-100 to-emerald-100 border-4 border-white shadow-lg">
+          <CheckCircle className="w-10 h-10 text-green-600" />
+        </div>
+        <h1 className="text-3xl font-bold text-gray-900">Test Complete</h1>
+        <div className="bg-white border border-gray-200 rounded-2xl p-8 shadow-sm space-y-4">
+          <div className="flex items-center justify-center gap-2 text-lg">
+            <span>{LANGUAGE_FLAGS[assessment.language] || ''}</span>
+            <span className="font-semibold text-gray-800">{assessment.language} Placement Test</span>
+          </div>
+          <p className="text-gray-600">
+            Thank you for completing your assessment. Your results have been submitted and will be reviewed by your teacher.
+          </p>
+          <p className="text-gray-500 text-sm">
+            Your teacher or Maka staff will share your results and recommended learning path with you.
+          </p>
+        </div>
+        <button
+          onClick={() => navigate('/assessment')}
+          className="flex items-center gap-2 px-6 py-2.5 text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all shadow-sm font-medium mx-auto"
+        >
+          <ArrowLeft className="w-4 h-4" /> Back to Assessments
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div className="max-w-5xl mx-auto space-y-8 pb-12">
       {/* ─── Header Ribbon ─── */}

@@ -439,9 +439,7 @@ export function SectionTakePage() {
           <p className="text-gray-600 mb-8">
             {answeredCount === 0
               ? 'This section has been completed.'
-              : section?.skill === 'WRITING' || section?.skill === 'SPEAKING'
-                ? 'Your responses will be evaluated by AI and may be reviewed by a teacher.'
-                : `Your ${answeredCount} answer${answeredCount !== 1 ? 's have' : ' has'} been scored.`}
+              : 'Your responses have been submitted successfully.'}
           </p>
           <button
             onClick={handleContinue}

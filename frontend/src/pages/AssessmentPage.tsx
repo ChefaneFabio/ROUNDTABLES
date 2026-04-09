@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import {
   ClipboardCheck,
@@ -38,6 +39,7 @@ const RESULTS_LIMIT = 10
 export function AssessmentPage() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { isAdmin } = useAuth()
   const [error, setError] = useState('')
   const [showAllResults, setShowAllResults] = useState(false)
 
@@ -223,7 +225,7 @@ export function AssessmentPage() {
                       {result ? (
                         <div className="flex items-center gap-1 text-xs text-green-600">
                           <CheckCircle className="w-3.5 h-3.5" />
-                          <span className="font-medium">Level: {result.cefrLevel}</span>
+                          <span className="font-medium">{isAdmin ? `Level: ${result.cefrLevel}` : 'Completed'}</span>
                         </div>
                       ) : (
                         <div className="flex items-center gap-1 text-xs text-gray-400">
@@ -234,13 +236,15 @@ export function AssessmentPage() {
                     </div>
                   </div>
 
-                  {/* Skill levels — always shown */}
-                  <div className="grid grid-cols-2 gap-1.5 mb-4">
-                    <SkillLevel icon={BookOpen} label="Reading" level={result?.readingLevel} />
-                    <SkillLevel icon={Headphones} label="Listening" level={result?.listeningLevel} />
-                    <SkillLevel icon={PenTool} label="Writing" level={result?.writingLevel} />
-                    <SkillLevel icon={Mic} label="Speaking" level={result?.speakingLevel} />
-                  </div>
+                  {/* Skill levels — admin only */}
+                  {isAdmin && (
+                    <div className="grid grid-cols-2 gap-1.5 mb-4">
+                      <SkillLevel icon={BookOpen} label="Reading" level={result?.readingLevel} />
+                      <SkillLevel icon={Headphones} label="Listening" level={result?.listeningLevel} />
+                      <SkillLevel icon={PenTool} label="Writing" level={result?.writingLevel} />
+                      <SkillLevel icon={Mic} label="Speaking" level={result?.speakingLevel} />
+                    </div>
+                  )}
 
                   <button
                     onClick={() => {
@@ -263,8 +267,8 @@ export function AssessmentPage() {
         </div>
       </div>
 
-      {/* Previous Results */}
-      {completedAssessments.length > 0 && (
+      {/* Previous Results — admin/teacher only */}
+      {isAdmin && completedAssessments.length > 0 && (
         <div>
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Previous Results</h2>
           <div className="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
