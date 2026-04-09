@@ -77,6 +77,48 @@ const teacherScoreSchema = Joi.object({
   feedback: Joi.string().optional().allow('')
 })
 
+// ─── Assessment Settings (MUST be before /:id routes) ───
+
+const DEFAULT_ASSESSMENT_SETTINGS = {
+  allowPause: true, allowRetry: false, maxRetries: 1, showTimer: true,
+  autoSubmitOnExpiry: true, blockTabSwitch: true, blockCopyPaste: true,
+  requireFullscreen: false, warnOnLeave: true,
+}
+
+router.get('/settings', authenticate, async (req: Request, res: Response) => {
+  try {
+    const schoolId = req.user?.schoolId
+    if (!schoolId) {
+      return res.json(apiResponse.success(DEFAULT_ASSESSMENT_SETTINGS))
+    }
+    const school = await prisma.school.findFirst({
+      where: { id: schoolId, deletedAt: null },
+      select: { assessmentSettings: true }
+    })
+    const settings = { ...DEFAULT_ASSESSMENT_SETTINGS, ...(school?.assessmentSettings as Record<string, any> || {}) }
+    res.json(apiResponse.success(settings))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+router.put('/settings', authenticate, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const schoolId = req.user?.schoolId
+    if (!schoolId) {
+      return res.status(400).json(apiResponse.error('No school found', 'NO_SCHOOL'))
+    }
+    const updated = await prisma.school.update({
+      where: { id: schoolId },
+      data: { assessmentSettings: req.body },
+      select: { assessmentSettings: true }
+    })
+    res.json(apiResponse.success(updated.assessmentSettings, 'Assessment settings updated'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // ==================== Student Routes ====================
 
 // Create a multi-skill assessment
@@ -872,48 +914,6 @@ router.get('/:id/results/pdf', authenticate, async (req: Request, res: Response)
     res.setHeader('Content-Type', 'application/pdf')
     res.setHeader('Content-Disposition', `attachment; filename="${assessment.language}-placement-results${detailed ? '-detailed' : ''}.pdf"`)
     res.send(pdfBuffer)
-  } catch (error) {
-    return handleError(res, error)
-  }
-})
-
-// ─── Assessment Settings (uses req.user.schoolId, no school ID needed in URL) ───
-
-const DEFAULT_ASSESSMENT_SETTINGS = {
-  allowPause: true, allowRetry: false, maxRetries: 1, showTimer: true,
-  autoSubmitOnExpiry: true, blockTabSwitch: true, blockCopyPaste: true,
-  requireFullscreen: false, warnOnLeave: true,
-}
-
-router.get('/settings', authenticate, async (req: Request, res: Response) => {
-  try {
-    const schoolId = req.user?.schoolId
-    if (!schoolId) {
-      return res.json(apiResponse.success(DEFAULT_ASSESSMENT_SETTINGS))
-    }
-    const school = await prisma.school.findFirst({
-      where: { id: schoolId, deletedAt: null },
-      select: { assessmentSettings: true }
-    })
-    const settings = { ...DEFAULT_ASSESSMENT_SETTINGS, ...(school?.assessmentSettings as Record<string, any> || {}) }
-    res.json(apiResponse.success(settings))
-  } catch (error) {
-    return handleError(res, error)
-  }
-})
-
-router.put('/settings', authenticate, requireAdmin, async (req: Request, res: Response) => {
-  try {
-    const schoolId = req.user?.schoolId
-    if (!schoolId) {
-      return res.status(400).json(apiResponse.error('No school found', 'NO_SCHOOL'))
-    }
-    const updated = await prisma.school.update({
-      where: { id: schoolId },
-      data: { assessmentSettings: req.body },
-      select: { assessmentSettings: true }
-    })
-    res.json(apiResponse.success(updated.assessmentSettings, 'Assessment settings updated'))
   } catch (error) {
     return handleError(res, error)
   }
