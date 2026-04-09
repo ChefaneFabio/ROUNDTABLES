@@ -201,11 +201,11 @@ export function MultiSkillAssessmentPage() {
       <div className="max-w-3xl mx-auto">
         <div className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/40 rounded-xl shadow-lg p-10 space-y-8">
           <div className="text-center space-y-2">
-            <div className="flex justify-center mb-3">
-              <img src="/favicon.webp" alt="Maka" className="h-12 w-12 rounded-full shadow-md" />
+            <div className="flex justify-center items-center gap-3 mb-3">
+              <img src="/favicon.webp" alt="Maka" className="h-10 w-10 rounded-full shadow-md" />
+              <span className="text-5xl">{LANGUAGE_FLAGS[assessmentInfo?.language || ''] || ''}</span>
             </div>
             <h1 className="text-3xl font-bold text-gray-900">
-              <span className="mr-2">{LANGUAGE_FLAGS[assessmentInfo?.language || ''] || ''}</span>
               {assessmentInfo?.language || ''} {assessmentInfo?.type === 'PROGRESS' ? `Level ${assessmentInfo.targetLevel} Test` : 'Placement Test'}
             </h1>
             <p className="text-lg text-gray-500">Test di Posizionamento</p>
@@ -249,7 +249,12 @@ export function MultiSkillAssessmentPage() {
           <div className="bg-white/60 backdrop-blur rounded-xl p-6">
             <h2 className="font-semibold text-gray-900 mb-4">Test Structure / Struttura del Test</h2>
             <div className="grid grid-cols-2 gap-3">
-              {['READING', 'LISTENING', 'WRITING', 'SPEAKING'].map(skill => {
+              {([
+                { skill: 'READING', questions: 65, time: 22 },
+                { skill: 'LISTENING', questions: 15, time: 13 },
+                { skill: 'WRITING', questions: 10, time: 13 },
+                { skill: 'SPEAKING', questions: 10, time: 12 },
+              ]).map(({ skill, questions, time }) => {
                 const info = SKILL_INFO[skill]
                 const iconData = SKILL_ICONS[skill]
                 const SkillIcon = iconData?.Icon
@@ -263,7 +268,10 @@ export function MultiSkillAssessmentPage() {
                       ) : (
                         <span className="text-xl">{info.icon}</span>
                       )}
-                      <span className="font-medium text-gray-900">{info.title}</span>
+                      <div>
+                        <span className="font-medium text-gray-900 block">{info.title}</span>
+                        <span className="text-xs text-gray-500">{questions} questions &middot; {time} min</span>
+                      </div>
                     </div>
                   </div>
                 )
@@ -271,7 +279,7 @@ export function MultiSkillAssessmentPage() {
             </div>
             <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
               <Clock className="w-4 h-4" />
-              <span>Estimated time: ~70 minutes / Tempo stimato: ~70 minuti</span>
+              <span>Estimated time: ~60 minutes / Tempo stimato: ~60 minuti</span>
             </div>
           </div>
 
