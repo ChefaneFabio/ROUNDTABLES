@@ -575,6 +575,8 @@ export class SectionAssessmentService {
       })
     }
 
+    console.log(`[Question Selection] ${section.skill} ${section.assessment.language} ${targetLevel}: ${candidates.length} candidates, ${answeredIds.length} already answered`)
+
     // Pick a random question from candidates
     const question = candidates.length > 0
       ? candidates[Math.floor(Math.random() * candidates.length)]

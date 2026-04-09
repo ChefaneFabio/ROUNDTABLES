@@ -164,10 +164,10 @@ async function main() {
       ]
 
       if (allQuestions.length > 0) {
-        // Force reseed: delete all existing and recreate to ensure full coverage
+        // Force reseed: delete ALL existing questions for this language and recreate
         console.log(`  Reseeding ${lang.name} (force refresh)...`)
         await prisma.assessmentQuestion.deleteMany({
-          where: { language: lang.name, skill: { not: null } }
+          where: { language: lang.name }
         })
         await prisma.assessmentQuestion.createMany({
           data: allQuestions.map((q: any) => ({
