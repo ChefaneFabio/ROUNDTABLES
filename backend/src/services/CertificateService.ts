@@ -485,7 +485,7 @@ export class CertificateService {
     const logoPath = path.join(__dirname, '../../public/logo.png')
     const hasLogo = fs.existsSync(logoPath)
 
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const doc = new PDFDocument({ size: 'A4', margin: 50, bufferPages: true })
       const chunks: Buffer[] = []
 
