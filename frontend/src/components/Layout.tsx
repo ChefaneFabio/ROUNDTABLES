@@ -3,13 +3,14 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useQuery } from 'react-query'
 import { useAuth } from '../contexts/AuthContext'
 import { notificationsApi } from '../services/api'
+import { assessmentApi } from '../services/assessmentApi'
 import { UserRole } from '../types'
 import {
   Menu, X, Home, BookOpen, Users, GraduationCap, Calendar, Bell,
   Settings, LogOut, ChevronDown, ChevronRight, User, CreditCard,
   FileText, MessageSquare, ClipboardCheck, Award, BarChart3,
   Key, Video, PenTool, Mic, Building2, Ticket, Clock, Route,
-  Timer, DollarSign, Zap, Layers, Wallet, Package
+  Timer, DollarSign, Zap, Layers, Wallet, Package, ClipboardList
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -18,6 +19,7 @@ interface NavItem {
   href: string
   icon: React.ElementType
   roles?: UserRole[]
+  badgeKey?: string
 }
 
 interface NavGroup {
@@ -93,6 +95,7 @@ const navGroups: NavGroup[] = [
       { name: 'SCORM', href: '/admin/scorm', icon: Package, roles: [UserRole.ADMIN, UserRole.TEACHER] },
       { name: 'Assessments', href: '/admin/assessments', icon: ClipboardCheck, roles: [UserRole.ADMIN, UserRole.TEACHER] },
       { name: 'Question Bank', href: '/admin/assessment-questions', icon: ClipboardCheck, roles: [UserRole.ADMIN, UserRole.TEACHER] },
+      { name: 'Review Queue', href: '/admin/review-queue', icon: ClipboardList, roles: [UserRole.ADMIN, UserRole.TEACHER], badgeKey: 'pendingReviews' },
     ]
   },
 
@@ -187,11 +190,12 @@ const navGroups: NavGroup[] = [
   },
 ]
 
-function NavSection({ group, isActive, isTestInProgress, onNavigate }: {
+function NavSection({ group, isActive, isTestInProgress, onNavigate, badges }: {
   group: NavGroup
   isActive: (href: string) => boolean
   isTestInProgress: boolean
   onNavigate?: () => void
+  badges?: Record<string, number>
 }) {
   const [open, setOpen] = useState(group.defaultOpen ?? false)
   const hasActiveItem = group.items.some(item => isActive(item.href))
@@ -241,6 +245,11 @@ function NavSection({ group, isActive, isTestInProgress, onNavigate }: {
               >
                 <item.icon className="h-4 w-4 flex-shrink-0" />
                 {item.name}
+                {item.badgeKey && badges && badges[item.badgeKey] > 0 && (
+                  <span className="ml-auto flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[10px] font-bold text-white bg-amber-500 rounded-full leading-none">
+                    {badges[item.badgeKey] > 99 ? '99+' : badges[item.badgeKey]}
+                  </span>
+                )}
               </Link>
             )
           })}
@@ -264,6 +273,21 @@ export function Layout({ children }: { children: React.ReactNode }) {
     () => notificationsApi.getUnreadCount(),
     { enabled: !isTestInProgress, refetchInterval: 60000, staleTime: 30000 }
   )
+
+  // Pending review count for admin/teacher badge
+  const { data: pendingReviews = [] } = useQuery(
+    'pending-review-count',
+    () => assessmentApi.getPendingReview(),
+    {
+      enabled: !isTestInProgress && (isAdmin || isTeacher),
+      refetchInterval: 60000,
+      staleTime: 30000
+    }
+  )
+
+  const navBadges: Record<string, number> = {
+    pendingReviews: Array.isArray(pendingReviews) ? pendingReviews.length : 0
+  }
 
   const isActive = (href: string) =>
     location.pathname === href || (href === '/dashboard' && location.pathname === '/')
@@ -314,6 +338,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
             isActive={isActive}
             isTestInProgress={isTestInProgress}
             onNavigate={() => setSidebarOpen(false)}
+            badges={navBadges}
           />
         ))}
       </nav>

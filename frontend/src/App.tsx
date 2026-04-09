@@ -37,6 +37,7 @@ import AdminExerciseStatsPage from './pages/admin/ExerciseStatsPage'
 import AdminScormPackagesPage from './pages/admin/ScormPackagesPage'
 import AdminAssessmentQuestionsPage from './pages/admin/AssessmentQuestionsPage'
 import AdminAssessmentManagementPage from './pages/admin/AssessmentManagementPage'
+import AdminReviewQueuePage from './pages/admin/ReviewQueuePage'
 import AdminCalendarPage from './pages/admin/CalendarPage'
 // Assessment review pages
 import { AssessmentReviewPage } from './pages/AssessmentReviewPage'
@@ -663,6 +664,18 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
             <Layout>
               <AdminAssessmentManagementPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Review Queue (Writing/Speaking grading) */}
+      <Route
+        path="/admin/review-queue"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
+            <Layout>
+              <AdminReviewQueuePage />
             </Layout>
           </ProtectedRoute>
         }

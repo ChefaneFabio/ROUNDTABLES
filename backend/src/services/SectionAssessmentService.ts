@@ -1030,7 +1030,8 @@ export class SectionAssessmentService {
         grammarLevel: assessment.grammarLevel,
         vocabularyLevel: assessment.vocabularyLevel,
         errorCorrectionLevel: assessment.errorCorrectionLevel,
-        sentenceTransformationLevel: assessment.sentenceTransformationLevel
+        sentenceTransformationLevel: assessment.sentenceTransformationLevel,
+        metadata: assessment.metadata
       },
       student: {
         id: assessment.student.id,

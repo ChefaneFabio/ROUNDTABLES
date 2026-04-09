@@ -19,6 +19,18 @@ const CEFR_TO_VERSANT: Record<string, string> = {
   A1: '22-27', A2: '30-36', B1: '43-50', B2: '51-67', C1: '76-84', C2: '85-90',
 }
 
+const CEFR_TO_IELTS: Record<string, string> = {
+  A1: '–', A2: '3.0-3.5', B1: '4.0-5.0', B2: '5.5-6.5', C1: '7.0-8.0', C2: '8.5-9.0',
+}
+
+const CEFR_TO_TOEFL: Record<string, string> = {
+  A1: '–', A2: '30-31', B1: '42-71', B2: '72-94', C1: '95-113', C2: '114-120',
+}
+
+const CEFR_TO_COMMON: Record<string, string> = {
+  A1: 'Beginner', A2: 'Elementary', B1: 'Intermediate', B2: 'Upper Intermediate', C1: 'Advanced', C2: 'Proficiency',
+}
+
 const LEVEL_NAMES: Record<string, string> = {
   A1: 'Beginner', A2: 'Elementary', B1: 'Intermediate',
   B2: 'Upper Intermediate', C1: 'Advanced', C2: 'Proficiency'
@@ -303,6 +315,48 @@ export function MultiSkillResultPage() {
               )}
             </div>
 
+            {/* ─── Pre-Test Data (Admin only) ─── */}
+            {isAdmin && assessment.metadata?.preTestData && (() => {
+              const pt = assessment.metadata.preTestData
+              return (
+                <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 mb-8 text-sm text-gray-600">
+                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Pre-Test Information</p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-1.5">
+                    {pt.jobRole && <p><span className="text-gray-400">Job role:</span> {pt.jobRole}</p>}
+                    {pt.company && <p><span className="text-gray-400">Company:</span> {pt.company}</p>}
+                    {pt.phone && <p><span className="text-gray-400">Phone:</span> {pt.phone}</p>}
+                    {pt.skillsNeeded && (
+                      <p className="col-span-2 md:col-span-3">
+                        <span className="text-gray-400">Skills needed:</span>{' '}
+                        Speaking {pt.skillsNeeded.speaking ? '✓' : '✗'}{' · '}
+                        Reading {pt.skillsNeeded.reading ? '✓' : '✗'}{' · '}
+                        Writing {pt.skillsNeeded.writing ? '✓' : '✗'}
+                      </p>
+                    )}
+                    {pt.needForWork != null && <p><span className="text-gray-400">Need for work:</span> {pt.needForWork ? 'Yes' : 'No'}</p>}
+                    {pt.selfConfidence && <p><span className="text-gray-400">Self-confidence:</span> {pt.selfConfidence}</p>}
+                  </div>
+                  {pt.availability && (
+                    <div className="mt-2">
+                      <span className="text-gray-400 text-xs">Availability:</span>
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {Object.entries(pt.availability).map(([day, slots]: [string, any]) =>
+                          slots && (Array.isArray(slots) ? slots : [slots]).map((slot: string, i: number) => (
+                            <span key={`${day}-${i}`} className="px-1.5 py-0.5 bg-gray-200 text-gray-600 rounded text-[10px]">
+                              {day} {slot}
+                            </span>
+                          ))
+                        )}
+                      </div>
+                    </div>
+                  )}
+                  {pt.comments && (
+                    <p className="mt-2 text-xs text-gray-500 italic">{pt.comments}</p>
+                  )}
+                </div>
+              )
+            })()}
+
             {/* ─── Overall Score Card (Versant-style) ─── */}
             <div className="flex flex-col md:flex-row gap-8 mb-10">
               {/* Left: GSE score + CEFR badge */}
@@ -319,6 +373,9 @@ export function MultiSkillResultPage() {
                 {assessment.score != null && (
                   <p className="text-xs text-gray-400 mt-1">Versant equivalent: {CEFR_TO_VERSANT[overallLevel] || '--'}/80</p>
                 )}
+                <p className="text-xs text-gray-400 mt-0.5">IELTS equivalent: {CEFR_TO_IELTS[overallLevel] || '–'}</p>
+                <p className="text-xs text-gray-400 mt-0.5">TOEFL iBT: {CEFR_TO_TOEFL[overallLevel] || '–'}</p>
+                <p className="text-xs text-gray-400 mt-0.5">Common scale: {CEFR_TO_COMMON[overallLevel] || '–'}</p>
               </div>
 
               {/* Right: Candidate description */}
@@ -401,6 +458,77 @@ export function MultiSkillResultPage() {
                 </div>
               </div>
             </div>
+
+            {/* ─── Strengths & Weaknesses (Admin only) ─── */}
+            {isAdmin && skillSections.length >= 4 && (() => {
+              const sorted = [...skillSections].sort((a: any, b: any) => {
+                const aScore = a.percentageScore ?? cefrToGse(a.cefrLevel)
+                const bScore = b.percentageScore ?? cefrToGse(b.cefrLevel)
+                return bScore - aScore
+              })
+              const strengths = sorted.slice(0, 2)
+              const weaknesses = sorted.slice(2)
+
+              const getInsight = (section: any, isStrength: boolean) => {
+                const level = section.cefrLevel || 'A1'
+                const desc = SKILL_DESCRIPTIONS[section.skill]?.[level] || ''
+                if (isStrength) {
+                  // Shorten the description into an insight
+                  const first = desc.split('.')[0] || desc
+                  return first.replace(/^Can /, 'Strong ability to ').replace(/^Has /, 'Demonstrates ')
+                } else {
+                  return `Needs more practice with ${(SKILL_META[section.skill]?.label || section.skill).toLowerCase()}-related tasks`
+                }
+              }
+
+              return (
+                <div className="mb-10">
+                  <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Strengths & Areas for Development</h3>
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {/* Strengths */}
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+                      <p className="text-sm font-bold text-emerald-700 mb-3">Strengths</p>
+                      <div className="space-y-2.5">
+                        {strengths.map((s: any) => {
+                          const meta = SKILL_META[s.skill]
+                          const sublevel = s.cefrSublevel || s.cefrLevel || 'A1'
+                          return (
+                            <div key={s.skill} className="flex items-start gap-2">
+                              <span className="text-emerald-500 mt-0.5 shrink-0">✓</span>
+                              <div>
+                                <span className="text-sm font-semibold text-emerald-800">{meta?.label || s.skill}</span>
+                                <span className="text-xs text-emerald-600 ml-1.5">({sublevel})</span>
+                                <p className="text-xs text-emerald-700 mt-0.5 leading-relaxed">{getInsight(s, true)}</p>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                    {/* Areas for Development */}
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl p-5">
+                      <p className="text-sm font-bold text-amber-700 mb-3">Areas for Development</p>
+                      <div className="space-y-2.5">
+                        {weaknesses.map((s: any) => {
+                          const meta = SKILL_META[s.skill]
+                          const sublevel = s.cefrSublevel || s.cefrLevel || 'A1'
+                          return (
+                            <div key={s.skill} className="flex items-start gap-2">
+                              <span className="text-amber-500 mt-0.5 shrink-0">△</span>
+                              <div>
+                                <span className="text-sm font-semibold text-amber-800">{meta?.label || s.skill}</span>
+                                <span className="text-xs text-amber-600 ml-1.5">({sublevel})</span>
+                                <p className="text-xs text-amber-700 mt-0.5 leading-relaxed">{getInsight(s, false)}</p>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )
+            })()}
 
             {/* ─── Per-Skill Detail Cards (Versant-style) ─── */}
             <div className="space-y-4">
