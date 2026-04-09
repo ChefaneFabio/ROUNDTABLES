@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { assessmentApi, AssessmentSection } from '../services/assessmentApi'
 import { useAuth } from '../contexts/AuthContext'
+import { useTestSecurity } from '../hooks/useTestSecurity'
 import { SectionTimer } from '../components/assessment/SectionTimer'
 import { ReadingQuestion } from '../components/assessment/ReadingQuestion'
 import { ListeningQuestion } from '../components/assessment/ListeningQuestion'
@@ -127,6 +128,18 @@ export function SectionTakePage() {
   const [sectionMeta, setSectionMeta] = useState<{ skill: string; timeLimitMin: number; questionsLimit: number } | null>(null)
   const [assessmentLanguage, setAssessmentLanguage] = useState<string>('')
   const [testSettings, setTestSettings] = useState({ allowPause: true, showTimer: true, autoSubmitOnExpiry: true })
+
+  // Anti-cheating: detect tab switches, block copy/paste, warn on navigation
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { violationCount: _violations } = useTestSecurity({
+    assessmentId: assessmentId || '',
+    expiresAt: section?.expiresAt || null,
+    onExpired: () => {
+      if (testSettings.autoSubmitOnExpiry) {
+        handleCompleteSection()
+      }
+    }
+  })
 
   useEffect(() => {
     // Fetch section metadata without starting the timer
@@ -290,8 +303,10 @@ export function SectionTakePage() {
   }, [assessmentId, sectionId])
 
   const handleTimerExpired = useCallback(() => {
-    handleCompleteSection()
-  }, [handleCompleteSection])
+    if (testSettings.autoSubmitOnExpiry) {
+      handleCompleteSection()
+    }
+  }, [handleCompleteSection, testSettings.autoSubmitOnExpiry])
 
   const handlePauseAndSave = async () => {
     try {
