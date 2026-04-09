@@ -437,7 +437,7 @@ export function MultiSkillAssessmentPage() {
                     </div>
                   )}
 
-                  {section.status === 'IN_PROGRESS' && (
+                  {(section.status === 'IN_PROGRESS' || (section.status === 'PENDING' && canStart && (section as any).answers?.length > 0)) && (
                     <div className="space-y-2 text-right">
                       <button
                         onClick={() => handleStartSection(section)}
@@ -455,7 +455,7 @@ export function MultiSkillAssessmentPage() {
                     </div>
                   )}
 
-                  {section.status === 'PENDING' && canStart && (
+                  {section.status === 'PENDING' && canStart && !((section as any).answers?.length > 0) && (
                     <button
                       onClick={() => handleStartSection(section)}
                       className="px-5 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 shadow-sm hover:shadow-md transition-all"
