@@ -133,7 +133,7 @@ export function SectionTakePage() {
   })
 
   // Anti-cheating: configurable via admin settings
-  useTestSecurity({
+  const { violationCount, showWarning, dismissWarning } = useTestSecurity({
     assessmentId: assessmentId || '',
     expiresAt: section?.expiresAt || null,
     onExpired: () => {
@@ -145,6 +145,10 @@ export function SectionTakePage() {
     blockCopyPaste: testSettings.blockCopyPaste,
     requireFullscreen: testSettings.requireFullscreen,
     warnOnLeave: testSettings.warnOnLeave,
+    maxViolations: 5,
+    onMaxViolations: () => {
+      handleCompleteSection()
+    },
   })
 
   useEffect(() => {
@@ -484,6 +488,30 @@ export function SectionTakePage() {
 
   return (
     <div className="max-w-3xl mx-auto">
+      {/* Tab switch warning overlay */}
+      {showWarning && (
+        <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl p-8 max-w-md text-center space-y-4 shadow-2xl">
+            <div className="w-16 h-16 mx-auto rounded-full bg-red-100 flex items-center justify-center">
+              <AlertCircle className="w-8 h-8 text-red-600" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900">Tab Switch Detected</h2>
+            <p className="text-gray-600">
+              You left the test window. Switching tabs during the test is not allowed and has been recorded.
+            </p>
+            <p className="text-sm text-red-600 font-medium">
+              Violations: {violationCount}/5 — the test will be automatically submitted after 5 violations.
+            </p>
+            <button
+              onClick={dismissWarning}
+              className="px-8 py-3 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors"
+            >
+              Return to Test
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-3">

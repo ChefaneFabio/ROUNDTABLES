@@ -5,11 +5,12 @@ interface UseTestSecurityOptions {
   assessmentId: string
   expiresAt?: string | null
   onExpired: () => void
-  // Admin-configurable security settings
-  blockTabSwitch?: boolean    // Detect and report tab switches
-  blockCopyPaste?: boolean    // Block copy/cut/right-click
-  requireFullscreen?: boolean // Force fullscreen mode during test
-  warnOnLeave?: boolean       // Show "leave page?" browser warning
+  blockTabSwitch?: boolean
+  blockCopyPaste?: boolean
+  requireFullscreen?: boolean
+  warnOnLeave?: boolean
+  maxViolations?: number       // Auto-submit after this many violations (0 = unlimited)
+  onMaxViolations?: () => void // Called when max violations reached
 }
 
 export function useTestSecurity({
@@ -20,24 +21,35 @@ export function useTestSecurity({
   blockCopyPaste = true,
   requireFullscreen = false,
   warnOnLeave = true,
+  maxViolations = 0,
+  onMaxViolations,
 }: UseTestSecurityOptions) {
   const [violationCount, setViolationCount] = useState(0)
   const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null)
+  const [showWarning, setShowWarning] = useState(false)
   const onExpiredRef = useRef(onExpired)
   const expiredFiredRef = useRef(false)
+  const maxViolationsTriggered = useRef(false)
 
   onExpiredRef.current = onExpired
 
   const isTimed = !!expiresAt
 
   const reportViolation = useCallback((type: string, details?: string) => {
-    setViolationCount(c => c + 1)
+    setViolationCount(c => {
+      const next = c + 1
+      if (maxViolations > 0 && next >= maxViolations && !maxViolationsTriggered.current) {
+        maxViolationsTriggered.current = true
+        onMaxViolations?.()
+      }
+      return next
+    })
     assessmentApi.reportViolation(assessmentId, {
       type,
       timestamp: new Date().toISOString(),
       details
-    }).catch(() => {}) // fire-and-forget
-  }, [assessmentId])
+    }).catch(() => {})
+  }, [assessmentId, maxViolations, onMaxViolations])
 
   // Countdown timer
   useEffect(() => {
@@ -62,12 +74,15 @@ export function useTestSecurity({
     return () => clearInterval(interval)
   }, [isTimed, expiresAt])
 
-  // Tab switch detection
+  // Tab switch detection — show warning overlay when returning
   useEffect(() => {
     if (!isTimed || !blockTabSwitch) return
     const handler = () => {
       if (document.hidden) {
         reportViolation('TAB_SWITCH', 'Student switched away from test tab')
+      } else {
+        // Student returned — show warning
+        setShowWarning(true)
       }
     }
     document.addEventListener('visibilitychange', handler)
@@ -77,7 +92,10 @@ export function useTestSecurity({
   // Focus loss
   useEffect(() => {
     if (!isTimed || !blockTabSwitch) return
-    const handler = () => reportViolation('FOCUS_LOSS', 'Window lost focus')
+    const handler = () => {
+      reportViolation('FOCUS_LOSS', 'Window lost focus')
+      setShowWarning(true)
+    }
     window.addEventListener('blur', handler)
     return () => window.removeEventListener('blur', handler)
   }, [isTimed, blockTabSwitch, reportViolation])
@@ -127,13 +145,11 @@ export function useTestSecurity({
   useEffect(() => {
     if (!isTimed || !requireFullscreen) return
 
-    // Request fullscreen on mount
     document.documentElement.requestFullscreen?.().catch(() => {})
 
     const handler = () => {
       if (!document.fullscreenElement) {
         reportViolation('FULLSCREEN_EXIT', 'Student exited fullscreen mode')
-        // Re-request fullscreen
         setTimeout(() => {
           document.documentElement.requestFullscreen?.().catch(() => {})
         }, 500)
@@ -142,12 +158,15 @@ export function useTestSecurity({
     document.addEventListener('fullscreenchange', handler)
     return () => {
       document.removeEventListener('fullscreenchange', handler)
-      // Exit fullscreen on unmount
       if (document.fullscreenElement) {
         document.exitFullscreen?.().catch(() => {})
       }
     }
   }, [isTimed, requireFullscreen, reportViolation])
+
+  const dismissWarning = useCallback(() => {
+    setShowWarning(false)
+  }, [])
 
   const requestFullscreen = useCallback(() => {
     document.documentElement.requestFullscreen?.().catch(() => {})
@@ -157,6 +176,8 @@ export function useTestSecurity({
     violationCount,
     remainingSeconds,
     requestFullscreen,
-    isTimed
+    isTimed,
+    showWarning,
+    dismissWarning
   }
 }
