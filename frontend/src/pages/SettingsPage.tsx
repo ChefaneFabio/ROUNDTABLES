@@ -5,6 +5,7 @@ import {
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { authApi } from '../services/api'
+import { assessmentApi } from '../services/assessmentApi'
 
 export const SettingsPage: React.FC = () => {
   const { isAdmin, user } = useAuth()
@@ -48,6 +49,10 @@ export const SettingsPage: React.FC = () => {
     showCorrectAnswersToStudents: false,
     allowRetryRequests: true,
     maxRetries: 2,
+    // Test control
+    allowPause: true,
+    showTimer: true,
+    autoSubmitOnExpiry: true,
     // Teacher preferences
     showStudentTranscripts: true,
     showAiEvaluation: true,
@@ -82,6 +87,16 @@ export const SettingsPage: React.FC = () => {
     setIsSaving(true)
     try {
       localStorage.setItem('userSettings', JSON.stringify(settings))
+      // If admin, also save assessment settings to backend
+      if (isAdmin) {
+        await assessmentApi.updateAssessmentSettings('maka-language-centre', {
+          allowPause: settings.allowPause,
+          allowRetry: settings.allowRetryRequests,
+          maxRetries: settings.maxRetries,
+          showTimer: settings.showTimer,
+          autoSubmitOnExpiry: settings.autoSubmitOnExpiry,
+        }).catch(() => {}) // Don't fail if backend save fails
+      }
       showMessage('success', 'Settings saved')
     } catch {
       showMessage('error', 'Failed to save settings')
@@ -379,6 +394,9 @@ export const SettingsPage: React.FC = () => {
                 <div className="space-y-0 divide-y divide-gray-100">
                   {[
                     { key: 'aiAutoScore', label: 'Auto AI Scoring', desc: 'Automatically score Writing/Speaking with AI when section completes', admin: true },
+                    { key: 'allowPause', label: 'Allow Pause & Resume', desc: 'Students can pause the test and come back later to finish', admin: true },
+                    { key: 'showTimer', label: 'Show Countdown Timer', desc: 'Display the remaining time to students during the test', admin: true },
+                    { key: 'autoSubmitOnExpiry', label: 'Auto-submit on Time Expiry', desc: 'Automatically submit and close the section when time runs out', admin: true },
                     { key: 'showCorrectAnswersToStudents', label: 'Show Correct Answers to Students', desc: 'Students can see the correct answers after completing the test', admin: true },
                     { key: 'allowRetryRequests', label: 'Allow Retry Requests', desc: 'Students can request to retake completed sections', admin: true },
                     { key: 'showStudentTranscripts', label: 'Show Speaking Transcripts', desc: 'Display speech-to-text transcripts in review panel', admin: false },

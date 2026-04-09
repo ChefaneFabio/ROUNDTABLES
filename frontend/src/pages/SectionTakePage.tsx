@@ -126,6 +126,7 @@ export function SectionTakePage() {
   const [showSectionIntro, setShowSectionIntro] = useState(true)
   const [sectionMeta, setSectionMeta] = useState<{ skill: string; timeLimitMin: number; questionsLimit: number } | null>(null)
   const [assessmentLanguage, setAssessmentLanguage] = useState<string>('')
+  const [testSettings, setTestSettings] = useState({ allowPause: true, showTimer: true, autoSubmitOnExpiry: true })
 
   useEffect(() => {
     // Fetch section metadata without starting the timer
@@ -135,11 +136,13 @@ export function SectionTakePage() {
   const loadSectionMeta = async () => {
     try {
       setLoading(true)
-      const [sections, assessment] = await Promise.all([
+      const [sections, assessment, settings] = await Promise.all([
         assessmentApi.getSections(assessmentId!),
         assessmentApi.getById(assessmentId!).catch(() => null),
+        assessmentApi.getAssessmentSettings('maka-language-centre').catch(() => null),
       ])
       if (assessment) setAssessmentLanguage(assessment.language || '')
+      if (settings) setTestSettings(s => ({ ...s, ...settings }))
       const current = sections.find((s: AssessmentSection) => s.id === sectionId)
       if (current) {
         setSectionMeta({ skill: current.skill, timeLimitMin: current.timeLimitMin, questionsLimit: current.questionsLimit })
@@ -476,19 +479,21 @@ export function SectionTakePage() {
         </div>
 
         <div className="flex items-center gap-3">
-          {section?.expiresAt && (
+          {testSettings.showTimer && section?.expiresAt && (
             <SectionTimer
               expiresAt={section.expiresAt}
               onExpired={handleTimerExpired}
             />
           )}
-          <button
-            onClick={handlePauseAndSave}
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-xl hover:bg-amber-100 transition-all"
-          >
-            <Pause className="w-3.5 h-3.5" />
-            Pause & Save
-          </button>
+          {testSettings.allowPause && (
+            <button
+              onClick={handlePauseAndSave}
+              className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-amber-700 bg-amber-50 border border-amber-200 rounded-xl hover:bg-amber-100 transition-all"
+            >
+              <Pause className="w-3.5 h-3.5" />
+              Pause & Save
+            </button>
+          )}
           {progress && progress.answered >= progress.total - 1 && (
             <button
               onClick={handleCompleteSection}

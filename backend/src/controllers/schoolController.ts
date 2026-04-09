@@ -337,4 +337,48 @@ router.put('/:id/notification-settings', authenticate, requireSchoolAccess, vali
   }
 })
 
+// ─── Assessment Settings ───
+
+const DEFAULT_ASSESSMENT_SETTINGS = {
+  allowPause: true,        // Students can pause and resume later
+  allowRetry: false,       // Students can request a retry
+  maxRetries: 1,           // Max retries per section
+  showTimer: true,         // Show countdown timer during test
+  autoSubmitOnExpiry: true, // Auto-submit when time runs out
+}
+
+// Get assessment settings
+router.get('/:id/assessment-settings', authenticate, requireSchoolAccess, async (req: Request, res: Response) => {
+  try {
+    const school = await prisma.school.findFirst({
+      where: { id: req.params.id, deletedAt: null },
+      select: { assessmentSettings: true }
+    })
+    if (!school) {
+      return res.status(404).json(apiResponse.error('School not found', 'NOT_FOUND'))
+    }
+    const settings = { ...DEFAULT_ASSESSMENT_SETTINGS, ...(school.assessmentSettings as Record<string, any> || {}) }
+    res.json(apiResponse.success(settings))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Update assessment settings (admin only)
+router.put('/:id/assessment-settings', authenticate, requireSchoolAccess, async (req: Request, res: Response) => {
+  try {
+    if (req.user?.role !== 'ADMIN') {
+      return res.status(403).json(apiResponse.error('Only admins can update assessment settings', 'FORBIDDEN'))
+    }
+    const updated = await prisma.school.update({
+      where: { id: req.params.id },
+      data: { assessmentSettings: req.body },
+      select: { assessmentSettings: true }
+    })
+    res.json(apiResponse.success(updated.assessmentSettings, 'Assessment settings updated'))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
 export default router

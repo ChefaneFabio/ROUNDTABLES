@@ -483,5 +483,23 @@ export const assessmentApi = {
   // Delete an assessment (admin only)
   async deleteAssessment(id: string): Promise<void> {
     await api.delete(`/assessments/${id}`)
+  },
+
+  // Get assessment settings for the school
+  async getAssessmentSettings(schoolId: string): Promise<{
+    allowPause: boolean
+    allowRetry: boolean
+    maxRetries: number
+    showTimer: boolean
+    autoSubmitOnExpiry: boolean
+  }> {
+    const res = await api.get(`/schools/${schoolId}/assessment-settings`)
+    return res.data.data
+  },
+
+  // Update assessment settings (admin only)
+  async updateAssessmentSettings(schoolId: string, settings: Record<string, any>): Promise<any> {
+    const res = await api.put(`/schools/${schoolId}/assessment-settings`, settings)
+    return res.data.data
   }
 }

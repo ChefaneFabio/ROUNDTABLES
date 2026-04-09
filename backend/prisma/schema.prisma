@@ -102,6 +102,9 @@ model School {
   // Notification settings
   lessonReminderMinutes Json? // Array of minutes before lesson, e.g. [1440, 60]. Default: [60]
 
+  // Assessment settings (configurable by admin)
+  assessmentSettings Json? // { allowPause, allowRetry, maxRetries, showTimer, autoSubmitOnExpiry }
+
   // Owner user account
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
