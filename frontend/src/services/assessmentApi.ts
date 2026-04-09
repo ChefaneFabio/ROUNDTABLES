@@ -501,6 +501,12 @@ export const assessmentApi = {
     return res.data.data
   },
 
+  // Save pre-test form data to assessment metadata
+  async updatePreTestData(assessmentId: string, data: Record<string, any>): Promise<any> {
+    const res = await api.put(`/assessments/multi-skill/${assessmentId}/pre-test-data`, data)
+    return res.data.data
+  },
+
   // Update assessment settings (admin only)
   async updateAssessmentSettings(settings: Record<string, any>): Promise<any> {
     const res = await api.put('/assessments/multi-skill/settings', settings)

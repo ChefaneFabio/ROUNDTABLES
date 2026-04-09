@@ -1163,6 +1163,7 @@ model Assessment {
   timeLimitMin Int? // minutes allowed (null = unlimited for self-started)
   expiresAt    DateTime? // set when student starts: startedAt + timeLimitMin
   violations   Json? // [{type, timestamp, details}] — tab switches, copy attempts, etc.
+  metadata     Json? // Pre-test form data, availability, self-evaluation, etc.
 
   // Multi-skill assessment fields
   isMultiSkill                Boolean @default(false)

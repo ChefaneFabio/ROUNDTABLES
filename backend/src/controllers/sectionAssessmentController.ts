@@ -119,6 +119,24 @@ router.put('/settings', authenticate, requireAdmin, async (req: Request, res: Re
   }
 })
 
+// Save pre-test form data (student info, needs, availability)
+router.put('/:id/pre-test-data', authenticate, async (req: Request, res: Response) => {
+  try {
+    const assessment = await prisma.assessment.findUnique({ where: { id: req.params.id } })
+    if (!assessment) {
+      return res.status(404).json(apiResponse.error('Assessment not found', 'NOT_FOUND'))
+    }
+    const existing = (assessment.metadata as Record<string, any>) || {}
+    await prisma.assessment.update({
+      where: { id: req.params.id },
+      data: { metadata: { ...existing, preTestData: req.body } }
+    })
+    return res.json(apiResponse.success(null, 'Pre-test data saved'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // ==================== Student Routes ====================
 
 // Create a multi-skill assessment

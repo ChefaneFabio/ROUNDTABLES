@@ -57,8 +57,17 @@ export function MultiSkillAssessmentPage() {
   const [isPaused, setIsPaused] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
   const [showIntro, setShowIntro] = useState(false)
+  const [showPreTestForm, setShowPreTestForm] = useState(false)
   const [retryMessage, setRetryMessage] = useState<string | null>(null)
   const [assessmentInfo, setAssessmentInfo] = useState<{ language: string; type: string; targetLevel?: string } | null>(null)
+  const [preTestData, setPreTestData] = useState({
+    jobRole: '', phoneNumber: '', company: '',
+    needForWork: true,
+    needSpeaking: true, needReading: true, needWriting: true,
+    availability: {} as Record<string, string[]>,
+    selfConfidence: 'medium' as 'low' | 'medium' | 'high',
+    comments: ''
+  })
 
   useEffect(() => {
     if (!id) return
@@ -250,10 +259,10 @@ export function MultiSkillAssessmentPage() {
             <h2 className="font-semibold text-gray-900 mb-4">Test Structure / Struttura del Test</h2>
             <div className="grid grid-cols-2 gap-3">
               {([
-                { skill: 'READING', questions: 65, time: 22 },
-                { skill: 'LISTENING', questions: 15, time: 13 },
-                { skill: 'WRITING', questions: 10, time: 13 },
-                { skill: 'SPEAKING', questions: 10, time: 12 },
+                { skill: 'READING', questions: 60, time: 18 },
+                { skill: 'LISTENING', questions: 12, time: 10 },
+                { skill: 'WRITING', questions: 6, time: 7 },
+                { skill: 'SPEAKING', questions: 6, time: 5 },
               ]).map(({ skill, questions, time }) => {
                 const info = SKILL_INFO[skill]
                 const iconData = SKILL_ICONS[skill]
@@ -279,18 +288,163 @@ export function MultiSkillAssessmentPage() {
             </div>
             <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
               <Clock className="w-4 h-4" />
-              <span>Estimated time: ~60 minutes / Tempo stimato: ~60 minuti</span>
+              <span>Estimated time: ~40 minutes / Tempo stimato: ~40 minuti</span>
             </div>
           </div>
 
           <div className="text-center pt-2">
             <button
-              onClick={() => setShowIntro(false)}
+              onClick={() => { setShowIntro(false); setShowPreTestForm(true) }}
               className="px-10 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all"
             >
               Begin Test / Inizia il Test
             </button>
           </div>
+        </div>
+      </div>
+    )
+  }
+
+  // ─── Pre-test information form ───
+  if (showPreTestForm) {
+    const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    const SLOTS = ['AM', 'Lunch', 'PM', 'Evening']
+    const toggleAvail = (day: string, slot: string) => {
+      setPreTestData(prev => {
+        const current = prev.availability[day] || []
+        const updated = current.includes(slot)
+          ? current.filter(s => s !== slot)
+          : [...current, slot]
+        return { ...prev, availability: { ...prev.availability, [day]: updated } }
+      })
+    }
+
+    return (
+      <div className="max-w-2xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 space-y-6">
+          <div className="text-center">
+            <span className="text-4xl">{LANGUAGE_FLAGS[assessmentInfo?.language || ''] || ''}</span>
+            <h1 className="text-2xl font-bold text-gray-900 mt-2">Before We Start</h1>
+            <p className="text-gray-500 text-sm">Please fill in a few details to help us personalise your experience.</p>
+          </div>
+
+          {/* Professional info */}
+          <div className="space-y-4">
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Professional Information</h2>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Job Role</label>
+                <input type="text" value={preTestData.jobRole} onChange={e => setPreTestData(p => ({ ...p, jobRole: e.target.value }))}
+                  placeholder="e.g. Marketing Manager" className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-400 outline-none" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                <input type="text" value={preTestData.company} onChange={e => setPreTestData(p => ({ ...p, company: e.target.value }))}
+                  placeholder="e.g. Acme Corp" className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-400 outline-none" />
+              </div>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+              <input type="tel" value={preTestData.phoneNumber} onChange={e => setPreTestData(p => ({ ...p, phoneNumber: e.target.value }))}
+                placeholder="+39 ..." className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-400 outline-none" />
+            </div>
+          </div>
+
+          {/* Language needs */}
+          <div className="space-y-3">
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Language Needs</h2>
+            <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
+              <input type="checkbox" checked={preTestData.needForWork} onChange={e => setPreTestData(p => ({ ...p, needForWork: e.target.checked }))}
+                className="w-4 h-4 rounded border-gray-300 text-blue-600" />
+              <span className="text-sm text-gray-800">I need {assessmentInfo?.language || 'this language'} for work</span>
+            </label>
+            <p className="text-xs text-gray-500">Which skills do you need most?</p>
+            <div className="flex gap-3">
+              {[
+                { key: 'needSpeaking', label: 'Speaking' },
+                { key: 'needReading', label: 'Reading' },
+                { key: 'needWriting', label: 'Writing' },
+              ].map(({ key, label }) => (
+                <label key={key} className={`flex-1 text-center py-2 px-3 border-2 rounded-lg cursor-pointer transition-all text-sm font-medium ${
+                  (preTestData as any)[key] ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                }`}>
+                  <input type="checkbox" className="sr-only" checked={(preTestData as any)[key]}
+                    onChange={e => setPreTestData(p => ({ ...p, [key]: e.target.checked }))} />
+                  {label}
+                </label>
+              ))}
+            </div>
+          </div>
+
+          {/* Availability */}
+          <div className="space-y-3">
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Availability for Lessons</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-xs">
+                <thead>
+                  <tr>
+                    <th className="p-1"></th>
+                    {DAYS.map(d => <th key={d} className="p-1 text-center text-gray-500 font-medium">{d}</th>)}
+                  </tr>
+                </thead>
+                <tbody>
+                  {SLOTS.map(slot => (
+                    <tr key={slot}>
+                      <td className="p-1 text-gray-500 font-medium">{slot}</td>
+                      {DAYS.map(day => {
+                        const active = (preTestData.availability[day] || []).includes(slot)
+                        return (
+                          <td key={day} className="p-1 text-center">
+                            <button type="button" onClick={() => toggleAvail(day, slot)}
+                              className={`w-8 h-8 rounded-lg transition-all ${active ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-400 hover:bg-gray-200'}`}>
+                              {active ? '✓' : ''}
+                            </button>
+                          </td>
+                        )
+                      })}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Self-evaluation */}
+          <div className="space-y-3">
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Self-Evaluation</h2>
+            <p className="text-xs text-gray-500">How confident do you feel in {assessmentInfo?.language || 'this language'}?</p>
+            <div className="flex gap-3">
+              {(['low', 'medium', 'high'] as const).map(level => (
+                <button key={level} type="button" onClick={() => setPreTestData(p => ({ ...p, selfConfidence: level }))}
+                  className={`flex-1 py-2.5 px-4 border-2 rounded-lg text-sm font-medium transition-all capitalize ${
+                    preTestData.selfConfidence === level
+                      ? 'border-blue-500 bg-blue-50 text-blue-700'
+                      : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                  }`}>
+                  {level}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Comments */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Comments (optional)</label>
+            <textarea value={preTestData.comments} onChange={e => setPreTestData(p => ({ ...p, comments: e.target.value }))}
+              rows={2} placeholder="Anything else we should know..."
+              className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-400 outline-none resize-none" />
+          </div>
+
+          <button
+            onClick={() => {
+              // Save pre-test data to assessment metadata
+              assessmentApi.updatePreTestData(id!, preTestData).catch(() => {})
+              setShowPreTestForm(false)
+            }}
+            className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 shadow-md transition-all"
+          >
+            Start Test / Inizia il Test
+          </button>
         </div>
       </div>
     )
