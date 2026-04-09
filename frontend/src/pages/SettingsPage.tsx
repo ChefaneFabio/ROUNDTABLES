@@ -53,6 +53,11 @@ export const SettingsPage: React.FC = () => {
     allowPause: true,
     showTimer: true,
     autoSubmitOnExpiry: true,
+    // Screen blocking / anti-cheating
+    blockTabSwitch: true,
+    blockCopyPaste: true,
+    requireFullscreen: false,
+    warnOnLeave: true,
     // Teacher preferences
     showStudentTranscripts: true,
     showAiEvaluation: true,
@@ -95,6 +100,10 @@ export const SettingsPage: React.FC = () => {
           maxRetries: settings.maxRetries,
           showTimer: settings.showTimer,
           autoSubmitOnExpiry: settings.autoSubmitOnExpiry,
+          blockTabSwitch: settings.blockTabSwitch,
+          blockCopyPaste: settings.blockCopyPaste,
+          requireFullscreen: settings.requireFullscreen,
+          warnOnLeave: settings.warnOnLeave,
         }).catch(() => {}) // Don't fail if backend save fails
       }
       showMessage('success', 'Settings saved')
@@ -397,6 +406,10 @@ export const SettingsPage: React.FC = () => {
                     { key: 'allowPause', label: 'Allow Pause & Resume', desc: 'Students can pause the test and come back later to finish', admin: true },
                     { key: 'showTimer', label: 'Show Countdown Timer', desc: 'Display the remaining time to students during the test', admin: true },
                     { key: 'autoSubmitOnExpiry', label: 'Auto-submit on Time Expiry', desc: 'Automatically submit and close the section when time runs out', admin: true },
+                    { key: 'blockTabSwitch', label: 'Block Tab Switching', desc: 'Detect and log when students switch tabs or lose focus during the test', admin: true },
+                    { key: 'blockCopyPaste', label: 'Block Copy/Paste & Right-Click', desc: 'Prevent students from copying content or right-clicking during the test', admin: true },
+                    { key: 'requireFullscreen', label: 'Require Fullscreen Mode', desc: 'Force the test to run in fullscreen — exit is logged as a violation and re-requested', admin: true },
+                    { key: 'warnOnLeave', label: 'Warn on Page Leave', desc: 'Show a browser warning if the student tries to navigate away during the test', admin: true },
                     { key: 'showCorrectAnswersToStudents', label: 'Show Correct Answers to Students', desc: 'Students can see the correct answers after completing the test', admin: true },
                     { key: 'allowRetryRequests', label: 'Allow Retry Requests', desc: 'Students can request to retake completed sections', admin: true },
                     { key: 'showStudentTranscripts', label: 'Show Speaking Transcripts', desc: 'Display speech-to-text transcripts in review panel', admin: false },

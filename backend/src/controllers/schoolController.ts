@@ -340,11 +340,15 @@ router.put('/:id/notification-settings', authenticate, requireSchoolAccess, vali
 // ─── Assessment Settings ───
 
 const DEFAULT_ASSESSMENT_SETTINGS = {
-  allowPause: true,        // Students can pause and resume later
-  allowRetry: false,       // Students can request a retry
-  maxRetries: 1,           // Max retries per section
-  showTimer: true,         // Show countdown timer during test
-  autoSubmitOnExpiry: true, // Auto-submit when time runs out
+  allowPause: true,          // Students can pause and resume later
+  allowRetry: false,         // Students can request a retry
+  maxRetries: 1,             // Max retries per section
+  showTimer: true,           // Show countdown timer during test
+  autoSubmitOnExpiry: true,  // Auto-submit when time runs out
+  blockTabSwitch: true,      // Detect and report tab switches / focus loss
+  blockCopyPaste: true,      // Block copy, cut, and right-click during test
+  requireFullscreen: false,  // Force fullscreen mode during test
+  warnOnLeave: true,         // Show browser warning when navigating away
 }
 
 // Get assessment settings

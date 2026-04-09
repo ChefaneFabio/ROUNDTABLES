@@ -5,9 +5,22 @@ interface UseTestSecurityOptions {
   assessmentId: string
   expiresAt?: string | null
   onExpired: () => void
+  // Admin-configurable security settings
+  blockTabSwitch?: boolean    // Detect and report tab switches
+  blockCopyPaste?: boolean    // Block copy/cut/right-click
+  requireFullscreen?: boolean // Force fullscreen mode during test
+  warnOnLeave?: boolean       // Show "leave page?" browser warning
 }
 
-export function useTestSecurity({ assessmentId, expiresAt, onExpired }: UseTestSecurityOptions) {
+export function useTestSecurity({
+  assessmentId,
+  expiresAt,
+  onExpired,
+  blockTabSwitch = true,
+  blockCopyPaste = true,
+  requireFullscreen = false,
+  warnOnLeave = true,
+}: UseTestSecurityOptions) {
   const [violationCount, setViolationCount] = useState(0)
   const [remainingSeconds, setRemainingSeconds] = useState<number | null>(null)
   const onExpiredRef = useRef(onExpired)
@@ -51,7 +64,7 @@ export function useTestSecurity({ assessmentId, expiresAt, onExpired }: UseTestS
 
   // Tab switch detection
   useEffect(() => {
-    if (!isTimed) return
+    if (!isTimed || !blockTabSwitch) return
     const handler = () => {
       if (document.hidden) {
         reportViolation('TAB_SWITCH', 'Student switched away from test tab')
@@ -59,30 +72,30 @@ export function useTestSecurity({ assessmentId, expiresAt, onExpired }: UseTestS
     }
     document.addEventListener('visibilitychange', handler)
     return () => document.removeEventListener('visibilitychange', handler)
-  }, [isTimed, reportViolation])
+  }, [isTimed, blockTabSwitch, reportViolation])
 
   // Focus loss
   useEffect(() => {
-    if (!isTimed) return
+    if (!isTimed || !blockTabSwitch) return
     const handler = () => reportViolation('FOCUS_LOSS', 'Window lost focus')
     window.addEventListener('blur', handler)
     return () => window.removeEventListener('blur', handler)
-  }, [isTimed, reportViolation])
+  }, [isTimed, blockTabSwitch, reportViolation])
 
-  // beforeunload
+  // beforeunload warning
   useEffect(() => {
-    if (!isTimed) return
+    if (!isTimed || !warnOnLeave) return
     const handler = (e: BeforeUnloadEvent) => {
       e.preventDefault()
       e.returnValue = 'Test in progress. Are you sure you want to leave?'
     }
     window.addEventListener('beforeunload', handler)
     return () => window.removeEventListener('beforeunload', handler)
-  }, [isTimed])
+  }, [isTimed, warnOnLeave])
 
   // Copy/cut prevention
   useEffect(() => {
-    if (!isTimed) return
+    if (!isTimed || !blockCopyPaste) return
     const handleCopy = (e: Event) => {
       e.preventDefault()
       reportViolation('COPY_ATTEMPT', 'Student attempted to copy content')
@@ -97,30 +110,44 @@ export function useTestSecurity({ assessmentId, expiresAt, onExpired }: UseTestS
       document.removeEventListener('copy', handleCopy)
       document.removeEventListener('cut', handleCut)
     }
-  }, [isTimed, reportViolation])
+  }, [isTimed, blockCopyPaste, reportViolation])
 
   // Right-click prevention
   useEffect(() => {
-    if (!isTimed) return
+    if (!isTimed || !blockCopyPaste) return
     const handler = (e: Event) => {
       e.preventDefault()
       reportViolation('RIGHT_CLICK', 'Student attempted right-click')
     }
     document.addEventListener('contextmenu', handler)
     return () => document.removeEventListener('contextmenu', handler)
-  }, [isTimed, reportViolation])
+  }, [isTimed, blockCopyPaste, reportViolation])
 
-  // Fullscreen exit detection
+  // Fullscreen enforcement
   useEffect(() => {
-    if (!isTimed) return
+    if (!isTimed || !requireFullscreen) return
+
+    // Request fullscreen on mount
+    document.documentElement.requestFullscreen?.().catch(() => {})
+
     const handler = () => {
       if (!document.fullscreenElement) {
         reportViolation('FULLSCREEN_EXIT', 'Student exited fullscreen mode')
+        // Re-request fullscreen
+        setTimeout(() => {
+          document.documentElement.requestFullscreen?.().catch(() => {})
+        }, 500)
       }
     }
     document.addEventListener('fullscreenchange', handler)
-    return () => document.removeEventListener('fullscreenchange', handler)
-  }, [isTimed, reportViolation])
+    return () => {
+      document.removeEventListener('fullscreenchange', handler)
+      // Exit fullscreen on unmount
+      if (document.fullscreenElement) {
+        document.exitFullscreen?.().catch(() => {})
+      }
+    }
+  }, [isTimed, requireFullscreen, reportViolation])
 
   const requestFullscreen = useCallback(() => {
     document.documentElement.requestFullscreen?.().catch(() => {})

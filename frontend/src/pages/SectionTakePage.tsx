@@ -127,18 +127,24 @@ export function SectionTakePage() {
   const [showSectionIntro, setShowSectionIntro] = useState(true)
   const [sectionMeta, setSectionMeta] = useState<{ skill: string; timeLimitMin: number; questionsLimit: number } | null>(null)
   const [assessmentLanguage, setAssessmentLanguage] = useState<string>('')
-  const [testSettings, setTestSettings] = useState({ allowPause: true, showTimer: true, autoSubmitOnExpiry: true })
+  const [testSettings, setTestSettings] = useState({
+    allowPause: true, showTimer: true, autoSubmitOnExpiry: true,
+    blockTabSwitch: true, blockCopyPaste: true, requireFullscreen: false, warnOnLeave: true
+  })
 
-  // Anti-cheating: detect tab switches, block copy/paste, warn on navigation
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { violationCount: _violations } = useTestSecurity({
+  // Anti-cheating: configurable via admin settings
+  useTestSecurity({
     assessmentId: assessmentId || '',
     expiresAt: section?.expiresAt || null,
     onExpired: () => {
       if (testSettings.autoSubmitOnExpiry) {
         handleCompleteSection()
       }
-    }
+    },
+    blockTabSwitch: testSettings.blockTabSwitch,
+    blockCopyPaste: testSettings.blockCopyPaste,
+    requireFullscreen: testSettings.requireFullscreen,
+    warnOnLeave: testSettings.warnOnLeave,
   })
 
   useEffect(() => {
