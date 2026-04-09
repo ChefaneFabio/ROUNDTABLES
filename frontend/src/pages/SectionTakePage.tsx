@@ -145,7 +145,7 @@ export function SectionTakePage() {
     blockCopyPaste: testSettings.blockCopyPaste,
     requireFullscreen: testSettings.requireFullscreen,
     warnOnLeave: testSettings.warnOnLeave,
-    maxViolations: 5,
+    maxViolations: 2,
     onMaxViolations: () => {
       handleCompleteSection()
     },
@@ -500,7 +500,7 @@ export function SectionTakePage() {
               You left the test window. Switching tabs during the test is not allowed and has been recorded.
             </p>
             <p className="text-sm text-red-600 font-medium">
-              Violations: {violationCount}/5 — the test will be automatically submitted after 5 violations.
+              Violations: {violationCount}/2 — the test will be automatically submitted after 2 violations.
             </p>
             <button
               onClick={dismissWarning}
