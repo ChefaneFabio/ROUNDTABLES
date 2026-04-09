@@ -485,21 +485,25 @@ export const assessmentApi = {
     await api.delete(`/assessments/${id}`)
   },
 
-  // Get assessment settings for the school
-  async getAssessmentSettings(schoolId: string): Promise<{
+  // Get assessment settings (uses logged-in user's school)
+  async getAssessmentSettings(): Promise<{
     allowPause: boolean
     allowRetry: boolean
     maxRetries: number
     showTimer: boolean
     autoSubmitOnExpiry: boolean
+    blockTabSwitch: boolean
+    blockCopyPaste: boolean
+    requireFullscreen: boolean
+    warnOnLeave: boolean
   }> {
-    const res = await api.get(`/schools/${schoolId}/assessment-settings`)
+    const res = await api.get('/assessments/multi-skill/settings')
     return res.data.data
   },
 
   // Update assessment settings (admin only)
-  async updateAssessmentSettings(schoolId: string, settings: Record<string, any>): Promise<any> {
-    const res = await api.put(`/schools/${schoolId}/assessment-settings`, settings)
+  async updateAssessmentSettings(settings: Record<string, any>): Promise<any> {
+    const res = await api.put('/assessments/multi-skill/settings', settings)
     return res.data.data
   }
 }

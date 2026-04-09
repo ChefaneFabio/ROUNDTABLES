@@ -94,7 +94,7 @@ export const SettingsPage: React.FC = () => {
       localStorage.setItem('userSettings', JSON.stringify(settings))
       // If admin, also save assessment settings to backend
       if (isAdmin) {
-        await assessmentApi.updateAssessmentSettings('maka-language-centre', {
+        await assessmentApi.updateAssessmentSettings({
           allowPause: settings.allowPause,
           allowRetry: settings.allowRetryRequests,
           maxRetries: settings.maxRetries,

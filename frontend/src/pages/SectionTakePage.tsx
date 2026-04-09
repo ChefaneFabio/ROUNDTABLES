@@ -158,15 +158,20 @@ export function SectionTakePage() {
       const [sections, assessment, settings] = await Promise.all([
         assessmentApi.getSections(assessmentId!),
         assessmentApi.getById(assessmentId!).catch(() => null),
-        assessmentApi.getAssessmentSettings('maka-language-centre').catch(() => null),
+        assessmentApi.getAssessmentSettings().catch(() => null),
       ])
       if (assessment) setAssessmentLanguage(assessment.language || '')
       if (settings) setTestSettings(s => ({ ...s, ...settings }))
       const current = sections.find((s: AssessmentSection) => s.id === sectionId)
       if (current) {
         setSectionMeta({ skill: current.skill, timeLimitMin: current.timeLimitMin, questionsLimit: current.questionsLimit })
-        // If already in progress, skip intro
-        if (current.status === 'IN_PROGRESS') {
+        if (current.status === 'COMPLETED') {
+          // Section already done — show completion screen
+          setShowSectionIntro(false)
+          setSection(current)
+          setIsComplete(true)
+        } else if (current.status === 'IN_PROGRESS') {
+          // Resume in progress
           setShowSectionIntro(false)
           setSection(current)
           await fetchNextQuestion()
