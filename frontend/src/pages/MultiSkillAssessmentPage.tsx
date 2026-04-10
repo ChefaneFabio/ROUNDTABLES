@@ -256,10 +256,10 @@ export function MultiSkillAssessmentPage() {
             <h2 className="font-semibold text-gray-900 mb-4">{t('Test Structure', 'Struttura del Test')}</h2>
             <div className="grid grid-cols-2 gap-3">
               {([
-                { skill: 'READING', questions: 60, time: 18 },
-                { skill: 'LISTENING', questions: 12, time: 10 },
-                { skill: 'WRITING', questions: 6, time: 7 },
-                { skill: 'SPEAKING', questions: 6, time: 5 },
+                { skill: 'READING', questions: 60, time: 25 },
+                { skill: 'LISTENING', questions: 15, time: 15 },
+                { skill: 'WRITING', questions: 10, time: 13 },
+                { skill: 'SPEAKING', questions: 10, time: 12 },
               ]).map(({ skill, questions, time }) => {
                 const info = SKILL_INFO[skill]
                 const iconData = SKILL_ICONS[skill]
@@ -285,7 +285,7 @@ export function MultiSkillAssessmentPage() {
             </div>
             <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
               <Clock className="w-4 h-4" />
-              <span>{t('Estimated time: ~40 minutes', 'Tempo stimato: ~40 minuti')}</span>
+              <span>{t('Estimated time: ~60 minutes', 'Tempo stimato: ~60 minuti')}</span>
             </div>
           </div>
 
@@ -333,18 +333,18 @@ export function MultiSkillAssessmentPage() {
             <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">{t('Professional Information', 'Informazioni Professionali')}</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{t('Job Role', 'Ruolo')}</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('Job Role', 'Ruolo')} <span className="text-red-500">*</span></label>
                 <input type="text" value={preTestData.jobRole} onChange={e => setPreTestData(p => ({ ...p, jobRole: e.target.value }))}
                   placeholder="e.g. Marketing Manager" className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-400 outline-none" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">{t('Company', 'Azienda')}</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('Company', 'Azienda')} <span className="text-red-500">*</span></label>
                 <input type="text" value={preTestData.company} onChange={e => setPreTestData(p => ({ ...p, company: e.target.value }))}
                   placeholder="e.g. Acme Corp" className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-400 outline-none" />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">{t('Phone Number', 'Numero di Telefono')}</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('Phone Number', 'Numero di Telefono')} <span className="text-red-500">*</span></label>
               <input type="tel" value={preTestData.phoneNumber} onChange={e => setPreTestData(p => ({ ...p, phoneNumber: e.target.value }))}
                 placeholder="+39 ..." className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-400 outline-none" />
             </div>
@@ -437,11 +437,15 @@ export function MultiSkillAssessmentPage() {
 
           <button
             onClick={() => {
+              if (!preTestData.jobRole.trim() || !preTestData.company.trim() || !preTestData.phoneNumber.trim()) {
+                return
+              }
               // Save pre-test data to assessment metadata
               assessmentApi.updatePreTestData(id!, preTestData).catch(() => {})
               setShowPreTestForm(false)
             }}
-            className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 shadow-md transition-all"
+            disabled={!preTestData.jobRole.trim() || !preTestData.company.trim() || !preTestData.phoneNumber.trim()}
+            className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 shadow-md transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {t('Start Test', 'Inizia il Test')}
           </button>

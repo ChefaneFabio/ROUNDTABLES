@@ -12,6 +12,10 @@ import { WritingQuestion } from '../components/assessment/WritingQuestion'
 import { SpeakingQuestion } from '../components/assessment/SpeakingQuestion'
 import { ErrorCorrectionQuestion } from '../components/assessment/ErrorCorrectionQuestion'
 import { SentenceTransformationQuestion } from '../components/assessment/SentenceTransformationQuestion'
+import { TrueFalseQuestion } from '../components/assessment/TrueFalseQuestion'
+import { MatchingQuestion } from '../components/assessment/MatchingQuestion'
+import { ReorderQuestion } from '../components/assessment/ReorderQuestion'
+import { WordFormationQuestion } from '../components/assessment/WordFormationQuestion'
 import {
   BookOpen,
   Headphones,
@@ -639,8 +643,24 @@ export function SectionTakePage() {
           return <SpeakingQuestion question={currentQuestion} onSubmit={handleSpeakingSubmit} disabled={submitting} language={assessmentLanguage} />
         }
         // Listening section
-        if (skill === 'LISTENING' || qType === 'LISTENING' || qType === 'DICTATION') {
+        if (skill === 'LISTENING' || qType === 'LISTENING' || qType === 'DICTATION' || qType === 'LISTENING_FILL_BLANK') {
           return <ListeningQuestion question={{ ...currentQuestion, language: assessmentLanguage || 'English' }} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
+        }
+        // True/False
+        if (qType === 'TRUE_FALSE') {
+          return <TrueFalseQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
+        }
+        // Matching
+        if (qType === 'MATCHING') {
+          return <MatchingQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
+        }
+        // Reorder
+        if (qType === 'REORDER') {
+          return <ReorderQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
+        }
+        // Word formation
+        if (qType === 'WORD_FORMATION') {
+          return <WordFormationQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
         }
         // Error correction (can appear in Reading section)
         if (qType === 'ERROR_CORRECTION') {
