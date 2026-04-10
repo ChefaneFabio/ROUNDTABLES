@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { assessmentApi, AssessmentSection } from '../services/assessmentApi'
 import { useAuth } from '../contexts/AuthContext'
+import { useLanguage } from '../contexts/LanguageContext'
+import { LanguageToggle } from '../components/LanguageToggle'
 import { useTestSecurity } from '../hooks/useTestSecurity'
 import { SectionTimer } from '../components/assessment/SectionTimer'
 import { ReadingQuestion } from '../components/assessment/ReadingQuestion'
@@ -114,6 +116,7 @@ export function SectionTakePage() {
   const { id: assessmentId, sectionId } = useParams<{ id: string; sectionId: string }>()
   const navigate = useNavigate()
   const { isAdmin } = useAuth()
+  const { t } = useLanguage()
 
   const [section, setSection] = useState<AssessmentSection | null>(null)
   const [currentQuestion, setCurrentQuestion] = useState<any>(null)
@@ -147,7 +150,7 @@ export function SectionTakePage() {
     warnOnLeave: testSettings.warnOnLeave,
     maxViolations: 2,
     onMaxViolations: () => {
-      handleCompleteSection()
+      handleCompleteSection('INTERRUPTED')
     },
   })
 
@@ -307,9 +310,9 @@ export function SectionTakePage() {
     }
   }
 
-  const handleCompleteSection = useCallback(async () => {
+  const handleCompleteSection = useCallback(async (reason?: string) => {
     try {
-      await assessmentApi.completeSection(assessmentId!, sectionId!)
+      await assessmentApi.completeSection(assessmentId!, sectionId!, reason)
       setIsComplete(true)
     } catch (err: any) {
       // May already be completed
@@ -319,7 +322,7 @@ export function SectionTakePage() {
 
   const handleTimerExpired = useCallback(() => {
     if (testSettings.autoSubmitOnExpiry) {
-      handleCompleteSection()
+      handleCompleteSection('EXPIRED')
     }
   }, [handleCompleteSection, testSettings.autoSubmitOnExpiry])
 
@@ -369,6 +372,9 @@ export function SectionTakePage() {
     return (
       <div className="max-w-3xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 space-y-6">
+          <div className="flex justify-end">
+            <LanguageToggle />
+          </div>
           <div className="text-center">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-gray-100 mb-4">
               <SkillIcon className="w-6 h-6 text-gray-700" />
@@ -396,7 +402,7 @@ export function SectionTakePage() {
           </div>
 
           <div className="bg-gray-50 border border-gray-200 rounded-xl p-5">
-            <h2 className="font-semibold text-gray-800 mb-3">Instructions / Istruzioni</h2>
+            <h2 className="font-semibold text-gray-800 mb-3">{t('Instructions', 'Istruzioni')}</h2>
             <div className="space-y-3">
               {instructions.en.map((line, i) => {
                 const InstrIcon = INSTRUCTION_ICONS[i] || Info
@@ -405,10 +411,7 @@ export function SectionTakePage() {
                     <div className="flex-shrink-0 mt-0.5">
                       <InstrIcon className="w-4 h-4 text-gray-500" />
                     </div>
-                    <div>
-                      <p className="text-gray-800">{line}</p>
-                      <p className="text-gray-500">{instructions.it[i]}</p>
-                    </div>
+                    <p className="text-gray-800">{t(line, instructions.it[i])}</p>
                   </div>
                 )
               })}
@@ -417,14 +420,12 @@ export function SectionTakePage() {
 
           <div className="bg-gray-100 border border-gray-200 rounded-xl p-4 flex gap-3 items-start">
             <AlertCircle className="w-5 h-5 text-gray-500 flex-shrink-0 mt-0.5" />
-            <div>
-              <p className="text-sm text-gray-700 font-medium">
-                The timer will start when you click "{section?.status === 'IN_PROGRESS' ? 'Continue' : 'Start Section'}".
-              </p>
-              <p className="text-sm text-gray-500">
-                Il timer partira quando clicchi "{section?.status === 'IN_PROGRESS' ? 'Continua' : 'Inizia Sezione'}".
-              </p>
-            </div>
+            <p className="text-sm text-gray-700 font-medium">
+              {t(
+                `The timer will start when you click "${section?.status === 'IN_PROGRESS' ? 'Continue' : 'Start Section'}".`,
+                `Il timer partira quando clicchi "${section?.status === 'IN_PROGRESS' ? 'Continua' : 'Inizia Sezione'}".`
+              )}
+            </p>
           </div>
 
           <div className="flex justify-center gap-3 pt-2">
@@ -433,15 +434,15 @@ export function SectionTakePage() {
               className="inline-flex items-center gap-2 px-6 py-3 text-gray-700 bg-white border border-gray-300 rounded-xl font-medium hover:bg-gray-50 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Back / Indietro
+              {t('Back', 'Indietro')}
             </button>
             <button
               onClick={handleStartSection}
               className="inline-flex items-center gap-2 px-8 py-3 bg-gray-900 text-white rounded-xl font-semibold text-lg hover:bg-gray-800 transition-all"
             >
               {section?.status === 'IN_PROGRESS'
-                ? 'Continue / Continua'
-                : 'Start Section / Inizia Sezione'}
+                ? t('Continue', 'Continua')
+                : t('Start Section', 'Inizia Sezione')}
               <ArrowRight className="w-5 h-5" />
             </button>
           </div>
@@ -467,18 +468,18 @@ export function SectionTakePage() {
           </div>
 
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            {SKILL_LABELS[section?.skill || '']} Section Complete
+            {SKILL_LABELS[section?.skill || '']} {t('Section Complete', 'Sezione Completata')}
           </h2>
           <p className="text-gray-600 mb-8">
             {answeredCount === 0
-              ? 'This section has been completed.'
-              : 'Your responses have been submitted successfully.'}
+              ? t('This section has been completed.', 'Questa sezione è stata completata.')
+              : t('Your responses have been submitted successfully.', 'Le tue risposte sono state inviate con successo.')}
           </p>
           <button
             onClick={handleContinue}
             className="inline-flex items-center gap-2 px-10 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 transition-all shadow-lg shadow-blue-500/25"
           >
-            Continue to Next Section
+            {t('Continue to Next Section', 'Continua alla Prossima Sezione')}
             <ArrowRight className="w-5 h-5" />
           </button>
         </div>
@@ -495,18 +496,24 @@ export function SectionTakePage() {
             <div className="w-16 h-16 mx-auto rounded-full bg-red-100 flex items-center justify-center">
               <AlertCircle className="w-8 h-8 text-red-600" />
             </div>
-            <h2 className="text-xl font-bold text-gray-900">Tab Switch Detected</h2>
+            <h2 className="text-xl font-bold text-gray-900">{t('Tab Switch Detected', 'Cambio Scheda Rilevato')}</h2>
             <p className="text-gray-600">
-              You left the test window. Switching tabs during the test is not allowed and has been recorded.
+              {t(
+                'You left the test window. Switching tabs during the test is not allowed and has been recorded.',
+                'Hai lasciato la finestra del test. Il cambio di scheda durante il test non è consentito ed è stato registrato.'
+              )}
             </p>
             <p className="text-sm text-red-600 font-medium">
-              Violations: {violationCount}/2 — the test will be automatically submitted after 2 violations.
+              {t(
+                `Violations: ${violationCount}/2 — the test will be automatically submitted after 2 violations.`,
+                `Violazioni: ${violationCount}/2 — il test verrà inviato automaticamente dopo 2 violazioni.`
+              )}
             </p>
             <button
               onClick={dismissWarning}
               className="px-8 py-3 bg-gray-900 text-white rounded-xl font-semibold hover:bg-gray-800 transition-colors"
             >
-              Return to Test
+              {t('Return to Test', 'Torna al Test')}
             </button>
           </div>
         </div>
@@ -550,7 +557,7 @@ export function SectionTakePage() {
           )}
           {progress && progress.answered >= progress.total - 1 && (
             <button
-              onClick={handleCompleteSection}
+              onClick={() => handleCompleteSection()}
               className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-xl hover:bg-green-700 transition-all"
             >
               <Flag className="w-3.5 h-3.5" />

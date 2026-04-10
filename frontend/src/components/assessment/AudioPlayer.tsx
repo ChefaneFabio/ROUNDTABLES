@@ -55,9 +55,13 @@ export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComp
 
       const utterance = new SpeechSynthesisUtterance(ttsScript)
       utterance.lang = `${langCode}-${langCode === 'en' ? 'US' : langCode.toUpperCase()}`
-      // Pick a random voice from available ones for variety
+      // Pick a consistent voice per question (hash the script text so same question = same voice)
       if (langVoices.length > 0) {
-        utterance.voice = langVoices[Math.floor(Math.random() * langVoices.length)]
+        let hash = 0
+        for (let i = 0; i < ttsScript.length; i++) {
+          hash = ((hash << 5) - hash + ttsScript.charCodeAt(i)) | 0
+        }
+        utterance.voice = langVoices[Math.abs(hash) % langVoices.length]
       }
       utterance.rate = 0.9
       utterance.onstart = () => setIsPlaying(true)

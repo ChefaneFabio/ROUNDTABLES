@@ -1,5 +1,11 @@
 import { AssessmentSection } from '../../services/assessmentApi'
 
+const getStatusColor = (section: AssessmentSection): string => {
+  if (section.status === 'COMPLETED' && section.completionReason === 'INTERRUPTED') return 'bg-amber-500 text-white'
+  if (section.status === 'COMPLETED' && section.completionReason === 'EXPIRED') return 'bg-orange-500 text-white'
+  return STATUS_COLORS[section.status] || STATUS_COLORS['PENDING']
+}
+
 const SKILL_LABELS: Record<string, string> = {
   GRAMMAR: 'Grammar',
   VOCABULARY: 'Vocabulary',
@@ -33,9 +39,10 @@ interface SectionNavProps {
   sections: AssessmentSection[]
   currentSectionId?: string
   onSectionClick?: (section: AssessmentSection) => void
+  showLevels?: boolean // Only show CEFR levels for admins
 }
 
-export function SectionNav({ sections, currentSectionId, onSectionClick }: SectionNavProps) {
+export function SectionNav({ sections, currentSectionId, onSectionClick, showLevels = false }: SectionNavProps) {
   return (
     <div className="flex items-center gap-1 mb-6 overflow-x-auto pb-2">
       {sections.map((section, index) => (
@@ -45,13 +52,13 @@ export function SectionNav({ sections, currentSectionId, onSectionClick }: Secti
             disabled={section.status === 'PENDING' && index > 0}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-all
               ${section.id === currentSectionId ? 'ring-2 ring-blue-400 ring-offset-2' : ''}
-              ${STATUS_COLORS[section.status]}
+              ${getStatusColor(section)}
               ${section.status === 'PENDING' && index > 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:opacity-90'}
             `}
           >
             <span>{SKILL_ICONS[section.skill]}</span>
             <span>{SKILL_LABELS[section.skill]}</span>
-            {section.status === 'COMPLETED' && section.cefrLevel && (
+            {showLevels && section.status === 'COMPLETED' && section.cefrLevel && (
               <span className="ml-1 text-xs font-bold bg-white/20 px-1.5 py-0.5 rounded">
                 {section.cefrLevel}
               </span>

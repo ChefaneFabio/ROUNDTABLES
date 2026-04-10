@@ -1233,7 +1233,8 @@ model AssessmentSection {
   timeLimitMin   Int // Time limit for this section
   expiresAt      DateTime? // Set when section starts
   startedAt      DateTime?
-  completedAt    DateTime?
+  completedAt      DateTime?
+  completionReason String?         // null=normal, INTERRUPTED=violations, EXPIRED=time ran out
   targetLevel    String          @default("B1") // Adaptive level within section
   questionsLimit Int             @default(10)
   answers        Json? // [{questionId, answer, isCorrect, cefrLevel, points}]

@@ -238,7 +238,8 @@ router.post('/:id/sections/:sectionId/complete', authenticate, async (req: Reque
 
     const result = await sectionAssessmentService.completeSection(
       req.params.id,
-      req.params.sectionId
+      req.params.sectionId,
+      req.body?.reason
     )
     return res.json(apiResponse.success(result, 'Section completed'))
   } catch (error) {

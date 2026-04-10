@@ -49,6 +49,7 @@ export interface AssessmentSection {
   maxScore?: number
   percentageScore?: number
   cefrLevel?: string
+  completionReason?: string // null=normal, INTERRUPTED=violations, EXPIRED=time ran out
   aiScore?: any
   teacherScore?: any
   finalScore?: any
@@ -320,8 +321,8 @@ export const assessmentApi = {
   },
 
   // Complete a section
-  async completeSection(assessmentId: string, sectionId: string): Promise<AssessmentSection> {
-    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/complete`)
+  async completeSection(assessmentId: string, sectionId: string, reason?: string): Promise<AssessmentSection> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/complete`, { reason })
     return response.data.data
   },
 

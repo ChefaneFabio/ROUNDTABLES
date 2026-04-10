@@ -508,7 +508,7 @@ export class SectionAssessmentService {
 
     // Check if section timer expired
     if (section.expiresAt && new Date() > section.expiresAt) {
-      await this.completeSection(assessmentId, sectionId)
+      await this.completeSection(assessmentId, sectionId, 'EXPIRED')
       return { isComplete: true, expired: true, totalAnswered: ((section.answers as unknown as AnswerRecord[]) || []).length }
     }
 
@@ -629,7 +629,7 @@ export class SectionAssessmentService {
 
     // Check timer
     if (section.expiresAt && new Date() > section.expiresAt) {
-      await this.completeSection(assessmentId, sectionId)
+      await this.completeSection(assessmentId, sectionId, 'EXPIRED')
       return { isCorrect: false, correctAnswer: '', points: 0, shouldAutoComplete: true, expired: true }
     }
 
@@ -774,7 +774,7 @@ export class SectionAssessmentService {
   }
 
   // Complete a section and calculate score
-  async completeSection(assessmentId: string, sectionId: string) {
+  async completeSection(assessmentId: string, sectionId: string, reason?: string) {
     const section = await prisma.assessmentSection.findUnique({
       where: { id: sectionId },
       include: { assessment: true }
@@ -837,6 +837,7 @@ export class SectionAssessmentService {
       data: {
         status: 'COMPLETED',
         completedAt: new Date(),
+        completionReason: reason || null,
         rawScore,
         maxScore,
         percentageScore,

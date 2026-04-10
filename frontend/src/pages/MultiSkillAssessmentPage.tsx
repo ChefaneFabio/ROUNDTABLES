@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Pause, Play, RotateCcw, BookOpen, Headphones, PenTool, Mic, CheckCircle, Lock, Wifi, Volume2, Clock, Circle } from 'lucide-react'
+import { Pause, Play, RotateCcw, BookOpen, Headphones, PenTool, Mic, CheckCircle, Lock, Wifi, Volume2, Clock, Circle, AlertTriangle } from 'lucide-react'
 import { assessmentApi, AssessmentSection } from '../services/assessmentApi'
 import { SectionNav } from '../components/assessment/SectionNav'
+import { useAuth } from '../contexts/AuthContext'
+import { useLanguage } from '../contexts/LanguageContext'
+import { LanguageToggle } from '../components/LanguageToggle'
 
 const LANGUAGE_FLAGS: Record<string, string> = {
   English: '\u{1F1EC}\u{1F1E7}',
@@ -51,6 +54,8 @@ const SKILL_ICONS: Record<string, { Icon: React.ComponentType<any>; bg: string; 
 export function MultiSkillAssessmentPage() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
+  const { isAdmin } = useAuth()
+  const { t } = useLanguage()
   const [sections, setSections] = useState<AssessmentSection[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -209,54 +214,46 @@ export function MultiSkillAssessmentPage() {
     return (
       <div className="max-w-3xl mx-auto">
         <div className="bg-gradient-to-br from-white via-blue-50/30 to-indigo-50/40 rounded-xl shadow-lg p-10 space-y-8">
+          <div className="flex justify-end">
+            <LanguageToggle />
+          </div>
           <div className="text-center space-y-2">
             <div className="flex justify-center items-center gap-3 mb-3">
               <img src="/favicon.webp" alt="Maka" className="h-10 w-10 rounded-full shadow-md" />
               <span className="text-5xl">{LANGUAGE_FLAGS[assessmentInfo?.language || ''] || ''}</span>
             </div>
             <h1 className="text-3xl font-bold text-gray-900">
-              {assessmentInfo?.language || ''} {assessmentInfo?.type === 'PROGRESS' ? `Level ${assessmentInfo.targetLevel} Test` : 'Placement Test'}
+              {assessmentInfo?.language || ''} {assessmentInfo?.type === 'PROGRESS'
+                ? t(`Level ${assessmentInfo.targetLevel} Test`, `Test Livello ${assessmentInfo.targetLevel}`)
+                : t('Placement Test', 'Test di Posizionamento')}
             </h1>
-            <p className="text-lg text-gray-500">Test di Posizionamento</p>
             <div className="mx-auto mt-3 w-16 h-1 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500" />
           </div>
 
           <div className="bg-white/80 backdrop-blur border border-blue-200 rounded-xl p-6 space-y-4">
-            <h2 className="font-semibold text-blue-900 text-base">Before you begin / Prima di iniziare</h2>
+            <h2 className="font-semibold text-blue-900 text-base">{t('Before you begin', 'Prima di iniziare')}</h2>
             <ul className="space-y-3 text-sm text-blue-800">
               <li className="flex items-start gap-3">
                 <Wifi className="w-4 h-4 mt-0.5 text-blue-500 shrink-0" />
-                <div>
-                  <strong>Make sure you have a stable internet connection.</strong><br />
-                  <span className="text-blue-600">Assicurati di avere una connessione internet stabile.</span>
-                </div>
+                <span>{t('Make sure you have a stable internet connection.', 'Assicurati di avere una connessione internet stabile.')}</span>
               </li>
               <li className="flex items-start gap-3">
                 <Volume2 className="w-4 h-4 mt-0.5 text-blue-500 shrink-0" />
-                <div>
-                  <strong>Find a quiet place with no distractions.</strong><br />
-                  <span className="text-blue-600">Trova un luogo tranquillo senza distrazioni.</span>
-                </div>
+                <span>{t('Find a quiet place with no distractions.', 'Trova un luogo tranquillo senza distrazioni.')}</span>
               </li>
               <li className="flex items-start gap-3">
                 <Mic className="w-4 h-4 mt-0.5 text-blue-500 shrink-0" />
-                <div>
-                  <strong>You will need a microphone for the Speaking section.</strong><br />
-                  <span className="text-blue-600">Avrai bisogno di un microfono per la sezione Speaking.</span>
-                </div>
+                <span>{t('You will need a microphone for the Speaking section.', 'Avrai bisogno di un microfono per la sezione Speaking.')}</span>
               </li>
               <li className="flex items-start gap-3">
                 <Pause className="w-4 h-4 mt-0.5 text-blue-500 shrink-0" />
-                <div>
-                  <strong>You can pause and resume the test at any time.</strong><br />
-                  <span className="text-blue-600">Puoi mettere in pausa e riprendere il test in qualsiasi momento.</span>
-                </div>
+                <span>{t('You can pause and resume the test at any time.', 'Puoi mettere in pausa e riprendere il test in qualsiasi momento.')}</span>
               </li>
             </ul>
           </div>
 
           <div className="bg-white/60 backdrop-blur rounded-xl p-6">
-            <h2 className="font-semibold text-gray-900 mb-4">Test Structure / Struttura del Test</h2>
+            <h2 className="font-semibold text-gray-900 mb-4">{t('Test Structure', 'Struttura del Test')}</h2>
             <div className="grid grid-cols-2 gap-3">
               {([
                 { skill: 'READING', questions: 60, time: 18 },
@@ -279,7 +276,7 @@ export function MultiSkillAssessmentPage() {
                       )}
                       <div>
                         <span className="font-medium text-gray-900 block">{info.title}</span>
-                        <span className="text-xs text-gray-500">{questions} questions &middot; {time} min</span>
+                        <span className="text-xs text-gray-500">{questions} {t('questions', 'domande')} &middot; {time} min</span>
                       </div>
                     </div>
                   </div>
@@ -288,7 +285,7 @@ export function MultiSkillAssessmentPage() {
             </div>
             <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
               <Clock className="w-4 h-4" />
-              <span>Estimated time: ~40 minutes / Tempo stimato: ~40 minuti</span>
+              <span>{t('Estimated time: ~40 minutes', 'Tempo stimato: ~40 minuti')}</span>
             </div>
           </div>
 
@@ -297,7 +294,7 @@ export function MultiSkillAssessmentPage() {
               onClick={() => { setShowIntro(false); setShowPreTestForm(true) }}
               className="px-10 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all"
             >
-              Begin Test / Inizia il Test
+              {t('Begin Test', 'Inizia il Test')}
             </button>
           </div>
         </div>
@@ -322,29 +319,32 @@ export function MultiSkillAssessmentPage() {
     return (
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-8 space-y-6">
+          <div className="flex justify-end">
+            <LanguageToggle />
+          </div>
           <div className="text-center">
             <span className="text-4xl">{LANGUAGE_FLAGS[assessmentInfo?.language || ''] || ''}</span>
-            <h1 className="text-2xl font-bold text-gray-900 mt-2">Before We Start</h1>
-            <p className="text-gray-500 text-sm">Please fill in a few details to help us personalise your experience.</p>
+            <h1 className="text-2xl font-bold text-gray-900 mt-2">{t('Before We Start', 'Prima di iniziare')}</h1>
+            <p className="text-gray-500 text-sm">{t('Please fill in a few details to help us personalise your experience.', 'Compila alcuni dettagli per personalizzare la tua esperienza.')}</p>
           </div>
 
           {/* Professional info */}
           <div className="space-y-4">
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Professional Information</h2>
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">{t('Professional Information', 'Informazioni Professionali')}</h2>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Job Role</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('Job Role', 'Ruolo')}</label>
                 <input type="text" value={preTestData.jobRole} onChange={e => setPreTestData(p => ({ ...p, jobRole: e.target.value }))}
                   placeholder="e.g. Marketing Manager" className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-400 outline-none" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Company</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">{t('Company', 'Azienda')}</label>
                 <input type="text" value={preTestData.company} onChange={e => setPreTestData(p => ({ ...p, company: e.target.value }))}
                   placeholder="e.g. Acme Corp" className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-400 outline-none" />
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">{t('Phone Number', 'Numero di Telefono')}</label>
               <input type="tel" value={preTestData.phoneNumber} onChange={e => setPreTestData(p => ({ ...p, phoneNumber: e.target.value }))}
                 placeholder="+39 ..." className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-400 outline-none" />
             </div>
@@ -352,13 +352,13 @@ export function MultiSkillAssessmentPage() {
 
           {/* Language needs */}
           <div className="space-y-3">
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Language Needs</h2>
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">{t('Language Needs', 'Esigenze Linguistiche')}</h2>
             <label className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50">
               <input type="checkbox" checked={preTestData.needForWork} onChange={e => setPreTestData(p => ({ ...p, needForWork: e.target.checked }))}
                 className="w-4 h-4 rounded border-gray-300 text-blue-600" />
-              <span className="text-sm text-gray-800">I need {assessmentInfo?.language || 'this language'} for work</span>
+              <span className="text-sm text-gray-800">{t(`I need ${assessmentInfo?.language || 'this language'} for work`, `Ho bisogno di ${assessmentInfo?.language || 'questa lingua'} per lavoro`)}</span>
             </label>
-            <p className="text-xs text-gray-500">Which skills do you need most?</p>
+            <p className="text-xs text-gray-500">{t('Which skills do you need most?', 'Quali competenze ti servono di più?')}</p>
             <div className="flex gap-3">
               {[
                 { key: 'needSpeaking', label: 'Speaking' },
@@ -378,7 +378,7 @@ export function MultiSkillAssessmentPage() {
 
           {/* Availability */}
           <div className="space-y-3">
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Availability for Lessons</h2>
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">{t('Availability for Lessons', 'Disponibilità per le Lezioni')}</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
@@ -411,8 +411,8 @@ export function MultiSkillAssessmentPage() {
 
           {/* Self-evaluation */}
           <div className="space-y-3">
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">Self-Evaluation</h2>
-            <p className="text-xs text-gray-500">How confident do you feel in {assessmentInfo?.language || 'this language'}?</p>
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">{t('Self-Evaluation', 'Autovalutazione')}</h2>
+            <p className="text-xs text-gray-500">{t(`How confident do you feel in ${assessmentInfo?.language || 'this language'}?`, `Quanto ti senti sicuro/a in ${assessmentInfo?.language || 'questa lingua'}?`)}</p>
             <div className="flex gap-3">
               {(['low', 'medium', 'high'] as const).map(level => (
                 <button key={level} type="button" onClick={() => setPreTestData(p => ({ ...p, selfConfidence: level }))}
@@ -429,7 +429,7 @@ export function MultiSkillAssessmentPage() {
 
           {/* Comments */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Comments (optional)</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t('Comments (optional)', 'Commenti (opzionale)')}</label>
             <textarea value={preTestData.comments} onChange={e => setPreTestData(p => ({ ...p, comments: e.target.value }))}
               rows={2} placeholder="Anything else we should know..."
               className="w-full p-2.5 border border-gray-200 rounded-lg text-sm focus:ring-1 focus:ring-blue-400 outline-none resize-none" />
@@ -443,7 +443,13 @@ export function MultiSkillAssessmentPage() {
             }}
             className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 shadow-md transition-all"
           >
-            Start Test / Inizia il Test
+            {t('Start Test', 'Inizia il Test')}
+          </button>
+          <button
+            onClick={() => setShowPreTestForm(false)}
+            className="w-full py-2 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            {t('Skip, go directly to the test', 'Salta, vai direttamente al test')}
           </button>
         </div>
       </div>
@@ -452,17 +458,25 @@ export function MultiSkillAssessmentPage() {
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
+      <div className="flex justify-end mb-2">
+        <LanguageToggle />
+      </div>
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-2">
           <span className="text-3xl">{LANGUAGE_FLAGS[assessmentInfo?.language || ''] || ''}</span>
           <h1 className="text-2xl font-bold text-gray-900">
-            {assessmentInfo?.language || ''} {assessmentInfo?.type === 'PROGRESS' ? `Level ${assessmentInfo.targetLevel} Test` : 'Placement Test'}
+            {assessmentInfo?.language || ''} {assessmentInfo?.type === 'PROGRESS'
+              ? t(`Level ${assessmentInfo.targetLevel} Test`, `Test Livello ${assessmentInfo.targetLevel}`)
+              : t('Placement Test', 'Test di Posizionamento')}
           </h1>
         </div>
         <p className="text-gray-600">
           {assessmentInfo?.type === 'PROGRESS'
-            ? `All questions at ${assessmentInfo.targetLevel} level. Complete all sections to verify your competency.`
-            : 'Complete all sections to determine your CEFR level across all language skills.'}
+            ? t(
+                `All questions at ${assessmentInfo.targetLevel} level. Complete all sections to verify your competency.`,
+                `Tutte le domande al livello ${assessmentInfo.targetLevel}. Completa tutte le sezioni per verificare la tua competenza.`
+              )
+            : t('Complete all sections to determine your CEFR level across all language skills.', 'Completa tutte le sezioni per determinare il tuo livello CEFR in tutte le competenze linguistiche.')}
         </p>
 
         {/* Step progress indicator */}
@@ -504,7 +518,7 @@ export function MultiSkillAssessmentPage() {
               disabled={actionLoading || allCompleted}
               className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl shadow-sm hover:bg-gray-50 hover:shadow-md transition-all disabled:opacity-50"
             >
-              <Pause className="w-4 h-4" /> Pause Test
+              <Pause className="w-4 h-4" /> {t('Pause Test', 'Pausa Test')}
             </button>
           ) : (
             <button
@@ -512,7 +526,7 @@ export function MultiSkillAssessmentPage() {
               disabled={actionLoading}
               className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-sm hover:shadow-md transition-all disabled:opacity-50"
             >
-              <Play className="w-4 h-4" /> Resume Test
+              <Play className="w-4 h-4" /> {t('Resume Test', 'Riprendi Test')}
             </button>
           )}
           <button
@@ -520,7 +534,7 @@ export function MultiSkillAssessmentPage() {
             disabled={actionLoading}
             className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-xl shadow-sm hover:bg-red-50 hover:border-red-300 hover:shadow-md transition-all disabled:opacity-50"
           >
-            <RotateCcw className="w-4 h-4" /> Restart Test
+            <RotateCcw className="w-4 h-4" /> {t('Restart Test', 'Ricomincia Test')}
           </button>
         </div>
       </div>
@@ -535,6 +549,7 @@ export function MultiSkillAssessmentPage() {
       <SectionNav
         sections={sections}
         onSectionClick={handleStartSection}
+        showLevels={isAdmin}
       />
 
       {/* Section cards */}
@@ -568,8 +583,8 @@ export function MultiSkillAssessmentPage() {
                     <h3 className="text-lg font-semibold text-gray-900">{info.title}</h3>
                     <p className="text-sm text-gray-600 mt-1">{info.description}</p>
                     <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{section.timeLimitMin} minutes</span>
-                      <span>{section.questionsLimit} questions</span>
+                      <span className="flex items-center gap-1"><Clock className="w-3 h-3" />{section.timeLimitMin} {t('minutes', 'minuti')}</span>
+                      <span>{section.questionsLimit} {t('questions', 'domande')}</span>
                     </div>
                   </div>
                 </div>
@@ -577,16 +592,28 @@ export function MultiSkillAssessmentPage() {
                 <div className="text-right shrink-0 ml-4">
                   {section.status === 'COMPLETED' && (
                     <div className="space-y-2">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-500 text-white text-sm font-bold rounded-full shadow-sm">
-                        <CheckCircle className="w-4 h-4" />
-                        Done
-                      </span>
+                      {section.completionReason === 'INTERRUPTED' ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-500 text-white text-sm font-bold rounded-full shadow-sm">
+                          <AlertTriangle className="w-4 h-4" />
+                          {t('Interrupted', 'Interrotto')}
+                        </span>
+                      ) : section.completionReason === 'EXPIRED' ? (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-500 text-white text-sm font-bold rounded-full shadow-sm">
+                          <Clock className="w-4 h-4" />
+                          {t('Time Expired', 'Tempo Scaduto')}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-500 text-white text-sm font-bold rounded-full shadow-sm">
+                          <CheckCircle className="w-4 h-4" />
+                          {t('Done', 'Completato')}
+                        </span>
+                      )}
                       <button
                         onClick={() => handleRequestRetry(section.id)}
                         disabled={actionLoading}
                         className="block text-xs text-amber-700 hover:text-amber-900 underline disabled:opacity-50"
                       >
-                        Request Retry
+                        {t('Request Retry', 'Richiedi Ripetizione')}
                       </button>
                     </div>
                   )}
@@ -597,14 +624,14 @@ export function MultiSkillAssessmentPage() {
                         onClick={() => handleStartSection(section)}
                         className="px-5 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 shadow-sm hover:shadow-md transition-all"
                       >
-                        Continue
+                        {t('Continue', 'Continua')}
                       </button>
                       <button
                         onClick={() => handleResetSection(section.id)}
                         disabled={actionLoading}
                         className="block text-xs text-gray-500 hover:text-gray-700 underline disabled:opacity-50 ml-auto"
                       >
-                        Reset Section
+                        {t('Reset Section', 'Resetta Sezione')}
                       </button>
                     </div>
                   )}
@@ -614,13 +641,13 @@ export function MultiSkillAssessmentPage() {
                       onClick={() => handleStartSection(section)}
                       className="px-5 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 shadow-sm hover:shadow-md transition-all"
                     >
-                      Start
+                      {t('Start', 'Inizia')}
                     </button>
                   )}
 
                   {section.status === 'PENDING' && !canStart && (
                     <span className="inline-flex items-center gap-1.5 text-sm text-gray-400">
-                      <Lock className="w-4 h-4" /> Locked
+                      <Lock className="w-4 h-4" /> {t('Locked', 'Bloccato')}
                     </span>
                   )}
                 </div>
@@ -637,7 +664,7 @@ export function MultiSkillAssessmentPage() {
             onClick={() => navigate(`/assessment/multi-skill/${id}/results`)}
             className="px-8 py-3 bg-green-600 text-white rounded-lg font-semibold text-lg hover:bg-green-700 transition-colors"
           >
-            View Results
+            {t('View Results', 'Vedi Risultati')}
           </button>
         </div>
       )}

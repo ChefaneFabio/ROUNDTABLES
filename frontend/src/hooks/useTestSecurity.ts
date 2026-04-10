@@ -89,16 +89,19 @@ export function useTestSecurity({
     return () => document.removeEventListener('visibilitychange', handler)
   }, [isTimed, blockTabSwitch, reportViolation])
 
-  // Focus loss
+  // Focus loss — only show warning, don't count as separate violation
+  // (visibilitychange already fires on tab switch, so counting blur too would double-count)
   useEffect(() => {
     if (!isTimed || !blockTabSwitch) return
     const handler = () => {
-      reportViolation('FOCUS_LOSS', 'Window lost focus')
-      setShowWarning(true)
+      // Only warn if the tab didn't also become hidden (avoids double-counting with visibilitychange)
+      if (!document.hidden) {
+        setShowWarning(true)
+      }
     }
     window.addEventListener('blur', handler)
     return () => window.removeEventListener('blur', handler)
-  }, [isTimed, blockTabSwitch, reportViolation])
+  }, [isTimed, blockTabSwitch])
 
   // beforeunload warning
   useEffect(() => {
