@@ -409,14 +409,25 @@ export class AssessmentService {
           include: {
             user: { select: { name: true, email: true } }
           }
-        }
+        },
+        sections: { orderBy: { orderIndex: 'asc' } }
       }
     })
 
     if (!assessment) throw new Error('Assessment not found')
     if (assessment.status !== 'COMPLETED') throw new Error('Assessment not yet completed')
 
-    const answers = (assessment.answers as unknown as AnswerRecord[]) || []
+    // For multi-skill assessments, answers are on sections, not the assessment itself
+    let answers = (assessment.answers as unknown as AnswerRecord[]) || []
+    if (answers.length === 0 && assessment.sections?.length > 0) {
+      for (const section of assessment.sections) {
+        const sectionAnswers = (section.answers as unknown as AnswerRecord[]) || []
+        answers = answers.concat(sectionAnswers.map(a => ({
+          ...a,
+          skill: section.skill
+        })))
+      }
+    }
     const questionIds = answers.map(a => a.questionId)
 
     // Fetch all question details in one query
@@ -434,6 +445,7 @@ export class AssessmentService {
         questionText: q?.questionText || 'Question not found',
         questionType: q?.questionType || 'UNKNOWN',
         cefrLevel: a.cefrLevel,
+        skill: (a as any).skill || null,
         options: q?.options || null,
         passage: q?.passage || null,
         passageTitle: q?.passageTitle || null,
@@ -454,6 +466,24 @@ export class AssessmentService {
       if (a.isCorrect) levelBreakdown[a.cefrLevel].correct++
     }
 
+    // Build section overview for multi-skill assessments
+    const sectionOverview = assessment.sections?.length > 0
+      ? assessment.sections.map(s => ({
+          id: s.id,
+          skill: s.skill,
+          status: s.status,
+          cefrLevel: s.cefrLevel,
+          percentageScore: s.percentageScore,
+          rawScore: s.rawScore,
+          maxScore: s.maxScore,
+          questionsAnswered: ((s.answers as unknown as AnswerRecord[]) || []).length,
+          questionsTotal: s.questionsLimit,
+          timeLimitMin: s.timeLimitMin,
+          completionReason: s.completionReason,
+          completedAt: s.completedAt
+        }))
+      : null
+
     return {
       assessment: {
         id: assessment.id,
@@ -473,7 +503,8 @@ export class AssessmentService {
         email: assessment.student.user.email
       },
       levelBreakdown,
-      answers: detailedAnswers
+      answers: detailedAnswers,
+      sections: sectionOverview
     }
   }
 

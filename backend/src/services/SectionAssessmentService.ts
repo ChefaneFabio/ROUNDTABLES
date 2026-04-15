@@ -68,12 +68,12 @@ const SECTION_CONFIG_V2: Record<string, { timeLimitMin: number; questionsLimit: 
 }
 
 // Versant-style 4-section configuration — Reading absorbs grammar/vocab/error-correction questions
-// Total: ~90 questions in 60 minutes
+// Total: ~70 questions in 45 minutes (reduced by ~25% after user feedback: test felt too long)
 const SECTION_CONFIG_V3: Record<string, { timeLimitMin: number; questionsLimit: number; orderIndex: number }> = {
-  READING:   { timeLimitMin: 25, questionsLimit: 60, orderIndex: 0 },
-  LISTENING: { timeLimitMin: 15, questionsLimit: 15, orderIndex: 1 },
-  WRITING:   { timeLimitMin: 13, questionsLimit: 10, orderIndex: 2 },
-  SPEAKING:  { timeLimitMin: 12, questionsLimit: 10, orderIndex: 3 },
+  READING:   { timeLimitMin: 20, questionsLimit: 45, orderIndex: 0 },
+  LISTENING: { timeLimitMin: 12, questionsLimit: 11, orderIndex: 1 },
+  WRITING:   { timeLimitMin: 10, questionsLimit: 8,  orderIndex: 2 },
+  SPEAKING:  { timeLimitMin: 10, questionsLimit: 8,  orderIndex: 3 },
 }
 
 // Default to V3 (Versant-style) for new assessments
@@ -902,6 +902,36 @@ export class SectionAssessmentService {
     }
 
     // Check if all sections are completed -> complete assessment
+    await this.checkAndCompleteAssessment(assessmentId)
+
+    return updated
+  }
+
+  // Skip a section — mark as SKIPPED, unanswered questions treated as null
+  async skipSection(assessmentId: string, sectionId: string) {
+    const section = await prisma.assessmentSection.findUnique({
+      where: { id: sectionId },
+      include: { assessment: true }
+    })
+
+    if (!section) throw new Error('Section not found')
+    if (section.assessmentId !== assessmentId) throw new Error('Section does not belong to this assessment')
+    if (section.status === 'COMPLETED' || section.status === 'SKIPPED') return section
+
+    const updated = await prisma.assessmentSection.update({
+      where: { id: sectionId },
+      data: {
+        status: 'SKIPPED',
+        completedAt: new Date(),
+        completionReason: 'SKIPPED',
+        rawScore: 0,
+        maxScore: 0,
+        percentageScore: 0,
+        cefrLevel: 'A1'
+      }
+    })
+
+    // Check if all sections are done -> complete assessment
     await this.checkAndCompleteAssessment(assessmentId)
 
     return updated

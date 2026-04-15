@@ -247,6 +247,28 @@ router.post('/:id/sections/:sectionId/complete', authenticate, async (req: Reque
   }
 })
 
+// Skip a section (unanswered questions treated as null)
+router.post('/:id/sections/:sectionId/skip', authenticate, async (req: Request, res: Response) => {
+  try {
+    if (req.user?.role === 'STUDENT') {
+      const assessment = await prisma.assessment.findFirst({
+        where: { id: req.params.id, studentId: req.user.studentId }
+      })
+      if (!assessment) {
+        return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
+      }
+    }
+
+    const result = await sectionAssessmentService.skipSection(
+      req.params.id,
+      req.params.sectionId
+    )
+    return res.json(apiResponse.success(result, 'Section skipped'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // Submit writing response
 router.post('/:id/sections/:sectionId/writing', authenticate, validateRequest(submitWritingSchema), async (req: Request, res: Response) => {
   try {
@@ -318,6 +340,22 @@ router.get('/:id/results', authenticate, async (req: Request, res: Response) => 
     }
 
     const results = await sectionAssessmentService.getMultiSkillResults(req.params.id)
+
+    // Students only see CEFR level — no scores, answers, or detailed breakdown
+    const isStudent = role === 'STUDENT' || (!role && assessment.studentId === req.user?.studentId)
+    if (isStudent) {
+      const studentView = {
+        assessmentId: results.assessmentId,
+        language: results.language,
+        cefrLevel: results.cefrLevel,
+        cefrSublevel: results.cefrSublevel,
+        cefrName: results.cefrName,
+        completedAt: results.completedAt,
+        // Strip: answers, scores, per-section details, skill breakdowns
+      }
+      return res.json(apiResponse.success(studentView))
+    }
+
     return res.json(apiResponse.success(results))
   } catch (error) {
     return handleError(res, error)

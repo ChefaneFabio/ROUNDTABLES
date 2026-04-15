@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Pause, Play, RotateCcw, BookOpen, Headphones, PenTool, Mic, CheckCircle, Lock, Wifi, Volume2, Clock, Circle, AlertTriangle } from 'lucide-react'
+import { BookOpen, Headphones, PenTool, Mic, CheckCircle, Lock, Wifi, Volume2, Clock, Circle, AlertTriangle } from 'lucide-react'
 import { assessmentApi, AssessmentSection } from '../services/assessmentApi'
 import { SectionNav } from '../components/assessment/SectionNav'
 import { useAuth } from '../contexts/AuthContext'
@@ -59,18 +59,18 @@ export function MultiSkillAssessmentPage() {
   const [sections, setSections] = useState<AssessmentSection[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isPaused, setIsPaused] = useState(false)
   const [actionLoading, setActionLoading] = useState(false)
   const [showIntro, setShowIntro] = useState(false)
   const [showPreTestForm, setShowPreTestForm] = useState(false)
   const [retryMessage, setRetryMessage] = useState<string | null>(null)
   const [assessmentInfo, setAssessmentInfo] = useState<{ language: string; type: string; targetLevel?: string } | null>(null)
+  const [hasPreTestData, setHasPreTestData] = useState(false)
   const [preTestData, setPreTestData] = useState({
     jobRole: '', phoneNumber: '', company: '',
     needForWork: true,
     needSpeaking: true, needReading: true, needWriting: true,
     availability: {} as Record<string, string[]>,
-    selfConfidence: 'medium' as 'low' | 'medium' | 'high',
+    selfConfidence: 'intermediate' as 'beginner' | 'intermediate' | 'advanced',
     comments: ''
   })
 
@@ -82,15 +82,22 @@ export function MultiSkillAssessmentPage() {
   const loadSections = async () => {
     try {
       setLoading(true)
-      const [data, assessment] = await Promise.all([
+      const [data, assessment, myAssessments] = await Promise.all([
         assessmentApi.getSections(id!),
         assessmentApi.getById(id!).catch(() => null),
+        assessmentApi.getMyAssessments().catch(() => [] as any[]),
       ])
       setSections(data)
       // Store assessment info
       if (assessment) {
         setAssessmentInfo({ language: assessment.language, type: assessment.type, targetLevel: assessment.targetLevel })
-        setIsPaused(assessment.status === 'PAUSED')
+        // Check if pre-test form was already filled (on this or any previous assessment)
+        const meta = assessment.metadata as Record<string, any> | null
+        const anyHasPreTest = meta?.preTestData ||
+          myAssessments.some((a: any) => (a.metadata as any)?.preTestData)
+        if (anyHasPreTest) {
+          setHasPreTestData(true)
+        }
       }
       // Show intro if no sections have been started yet
       const anyStarted = data.some((s: AssessmentSection) => s.status !== 'PENDING')
@@ -102,49 +109,14 @@ export function MultiSkillAssessmentPage() {
     }
   }
 
-  const handlePause = async () => {
+  const handleSkipSection = async (sectionId: string) => {
+    if (!confirm(t(
+      'Skip this section? Unanswered questions will count as blank.',
+      'Saltare questa sezione? Le domande senza risposta saranno lasciate vuote.'
+    ))) return
     try {
       setActionLoading(true)
-      await assessmentApi.pauseAssessment(id!)
-      setIsPaused(true)
-    } catch (err: any) {
-      setError(err.response?.data?.error || err.message)
-    } finally {
-      setActionLoading(false)
-    }
-  }
-
-  const handleResume = async () => {
-    try {
-      setActionLoading(true)
-      await assessmentApi.resumeAssessment(id!)
-      setIsPaused(false)
-      await loadSections()
-    } catch (err: any) {
-      setError(err.response?.data?.error || err.message)
-    } finally {
-      setActionLoading(false)
-    }
-  }
-
-  const handleRestart = async () => {
-    if (!confirm('This will abandon your current progress and start a fresh test. Continue?')) return
-    try {
-      setActionLoading(true)
-      const newAssessment = await assessmentApi.restartAssessment(id!)
-      navigate(`/assessment/multi-skill/${newAssessment.id}`, { replace: true })
-    } catch (err: any) {
-      setError(err.response?.data?.error || err.message)
-    } finally {
-      setActionLoading(false)
-    }
-  }
-
-  const handleResetSection = async (sectionId: string) => {
-    if (!confirm('This will clear your progress on this section. Continue?')) return
-    try {
-      setActionLoading(true)
-      await assessmentApi.resetSection(id!, sectionId)
+      await assessmentApi.skipSection(id!, sectionId)
       await loadSections()
     } catch (err: any) {
       setError(err.response?.data?.error || err.message)
@@ -168,11 +140,7 @@ export function MultiSkillAssessmentPage() {
 
   const handleStartSection = async (section: AssessmentSection) => {
     try {
-      if (isPaused) {
-        await handleResume()
-      }
-
-      if (section.status === 'COMPLETED') {
+      if (section.status === 'COMPLETED' || section.status === 'SKIPPED') {
         return
       }
 
@@ -246,8 +214,8 @@ export function MultiSkillAssessmentPage() {
                 <span>{t('You will need a microphone for the Speaking section.', 'Avrai bisogno di un microfono per la sezione Speaking.')}</span>
               </li>
               <li className="flex items-start gap-3">
-                <Pause className="w-4 h-4 mt-0.5 text-blue-500 shrink-0" />
-                <span>{t('You can pause and resume the test at any time.', 'Puoi mettere in pausa e riprendere il test in qualsiasi momento.')}</span>
+                <CheckCircle className="w-4 h-4 mt-0.5 text-blue-500 shrink-0" />
+                <span>{t('You can skip a section if you prefer.', 'Puoi saltare una sezione se preferisci.')}</span>
               </li>
             </ul>
           </div>
@@ -285,13 +253,13 @@ export function MultiSkillAssessmentPage() {
             </div>
             <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
               <Clock className="w-4 h-4" />
-              <span>{t('Estimated time: ~60 minutes', 'Tempo stimato: ~60 minuti')}</span>
+              <span>{t('Estimated time: ~45 minutes', 'Tempo stimato: ~45 minuti')}</span>
             </div>
           </div>
 
           <div className="text-center pt-2">
             <button
-              onClick={() => { setShowIntro(false); setShowPreTestForm(true) }}
+              onClick={() => { setShowIntro(false); if (!hasPreTestData) setShowPreTestForm(true) }}
               className="px-10 py-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:from-blue-700 hover:to-indigo-700 shadow-md hover:shadow-lg transition-all"
             >
               {t('Begin Test', 'Inizia il Test')}
@@ -412,18 +380,25 @@ export function MultiSkillAssessmentPage() {
           {/* Self-evaluation */}
           <div className="space-y-3">
             <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">{t('Self-Evaluation', 'Autovalutazione')}</h2>
-            <p className="text-xs text-gray-500">{t(`How confident do you feel in ${assessmentInfo?.language || 'this language'}?`, `Quanto ti senti sicuro/a in ${assessmentInfo?.language || 'questa lingua'}?`)}</p>
+            <p className="text-xs text-gray-500">{t(`How would you rate your level in ${assessmentInfo?.language || 'this language'}?`, `Come valuteresti il tuo livello in ${assessmentInfo?.language || 'questa lingua'}?`)}</p>
             <div className="flex gap-3">
-              {(['low', 'medium', 'high'] as const).map(level => (
+              {(['beginner', 'intermediate', 'advanced'] as const).map(level => {
+                const labels: Record<string, { en: string; it: string }> = {
+                  beginner: { en: 'Beginner', it: 'Principiante' },
+                  intermediate: { en: 'Intermediate', it: 'Intermedio' },
+                  advanced: { en: 'Advanced', it: 'Avanzato' },
+                }
+                return (
                 <button key={level} type="button" onClick={() => setPreTestData(p => ({ ...p, selfConfidence: level }))}
-                  className={`flex-1 py-2.5 px-4 border-2 rounded-lg text-sm font-medium transition-all capitalize ${
+                  className={`flex-1 py-2.5 px-4 border-2 rounded-lg text-sm font-medium transition-all ${
                     preTestData.selfConfidence === level
                       ? 'border-blue-500 bg-blue-50 text-blue-700'
                       : 'border-gray-200 text-gray-500 hover:border-gray-300'
                   }`}>
-                  {level}
+                  {t(labels[level].en, labels[level].it)}
                 </button>
-              ))}
+                )
+              })}
             </div>
           </div>
 
@@ -515,32 +490,6 @@ export function MultiSkillAssessmentPage() {
             })}
           </div>
         )}
-        <div className="flex justify-center gap-3 mt-4">
-          {!isPaused ? (
-            <button
-              onClick={handlePause}
-              disabled={actionLoading || allCompleted}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl shadow-sm hover:bg-gray-50 hover:shadow-md transition-all disabled:opacity-50"
-            >
-              <Pause className="w-4 h-4" /> {t('Pause Test', 'Pausa Test')}
-            </button>
-          ) : (
-            <button
-              onClick={handleResume}
-              disabled={actionLoading}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl shadow-sm hover:shadow-md transition-all disabled:opacity-50"
-            >
-              <Play className="w-4 h-4" /> {t('Resume Test', 'Riprendi Test')}
-            </button>
-          )}
-          <button
-            onClick={handleRestart}
-            disabled={actionLoading}
-            className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-red-600 bg-white border border-red-200 rounded-xl shadow-sm hover:bg-red-50 hover:border-red-300 hover:shadow-md transition-all disabled:opacity-50"
-          >
-            <RotateCcw className="w-4 h-4" /> {t('Restart Test', 'Ricomincia Test')}
-          </button>
-        </div>
       </div>
 
       {retryMessage && (
@@ -622,6 +571,12 @@ export function MultiSkillAssessmentPage() {
                     </div>
                   )}
 
+                  {section.status === 'SKIPPED' && (
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-400 text-white text-sm font-bold rounded-full shadow-sm">
+                      {t('Skipped', 'Saltato')}
+                    </span>
+                  )}
+
                   {(section.status === 'IN_PROGRESS' || (section.status === 'PENDING' && canStart && (section as any).answers?.length > 0)) && (
                     <div className="space-y-2 text-right">
                       <button
@@ -631,22 +586,31 @@ export function MultiSkillAssessmentPage() {
                         {t('Continue', 'Continua')}
                       </button>
                       <button
-                        onClick={() => handleResetSection(section.id)}
+                        onClick={() => handleSkipSection(section.id)}
                         disabled={actionLoading}
                         className="block text-xs text-gray-500 hover:text-gray-700 underline disabled:opacity-50 ml-auto"
                       >
-                        {t('Reset Section', 'Resetta Sezione')}
+                        {t('Skip Section', 'Salta Sezione')}
                       </button>
                     </div>
                   )}
 
                   {section.status === 'PENDING' && canStart && !((section as any).answers?.length > 0) && (
-                    <button
-                      onClick={() => handleStartSection(section)}
-                      className="px-5 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 shadow-sm hover:shadow-md transition-all"
-                    >
-                      {t('Start', 'Inizia')}
-                    </button>
+                    <div className="space-y-2 text-right">
+                      <button
+                        onClick={() => handleStartSection(section)}
+                        className="px-5 py-2 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 shadow-sm hover:shadow-md transition-all"
+                      >
+                        {t('Start', 'Inizia')}
+                      </button>
+                      <button
+                        onClick={() => handleSkipSection(section.id)}
+                        disabled={actionLoading}
+                        className="block text-xs text-gray-500 hover:text-gray-700 underline disabled:opacity-50 ml-auto"
+                      >
+                        {t('Skip Section', 'Salta Sezione')}
+                      </button>
+                    </div>
                   )}
 
                   {section.status === 'PENDING' && !canStart && (

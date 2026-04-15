@@ -57,7 +57,7 @@ export function AssessmentReviewPage() {
     )
   }
 
-  const { assessment, student, levelBreakdown, answers } = data
+  const { assessment, student, levelBreakdown, answers, sections: sectionOverview } = data
   const isAdmin = user?.role === 'ADMIN'
 
   const filteredAnswers = answers.filter(a => {
@@ -129,6 +129,40 @@ export function AssessmentReviewPage() {
           </div>
         </div>
       </Card>
+
+      {/* Section Overview (multi-skill) */}
+      {sectionOverview && sectionOverview.length > 0 && (
+        <Card>
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Section Overview</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {sectionOverview.map((s: any) => (
+              <div key={s.id} className={`p-3 rounded-lg border ${
+                s.status === 'SKIPPED' ? 'bg-gray-50 border-gray-200' : 'bg-white border-gray-200'
+              }`}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-sm font-semibold text-gray-700">{s.skill}</span>
+                  {s.cefrLevel && (
+                    <span className={`text-xs font-bold px-1.5 py-0.5 rounded ${LEVEL_COLORS[s.cefrLevel] || 'bg-gray-100'}`}>
+                      {s.cefrLevel}
+                    </span>
+                  )}
+                </div>
+                {s.status === 'SKIPPED' ? (
+                  <p className="text-xs text-gray-400">Skipped</p>
+                ) : (
+                  <>
+                    <p className="text-xl font-bold text-gray-900">{s.percentageScore ?? 0}%</p>
+                    <p className="text-xs text-gray-500">{s.questionsAnswered}/{s.questionsTotal} questions</p>
+                    {s.completionReason && s.completionReason !== 'MANUAL' && (
+                      <p className="text-xs text-amber-600 mt-0.5">{s.completionReason === 'EXPIRED' ? 'Time expired' : s.completionReason}</p>
+                    )}
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        </Card>
+      )}
 
       {/* Level Breakdown */}
       <Card>
@@ -233,6 +267,11 @@ export function AssessmentReviewPage() {
                   <span className="text-xs text-gray-400 capitalize">
                     {answer.questionType.replace('_', ' ').toLowerCase()}
                   </span>
+                  {(answer as any).skill && (
+                    <span className="text-xs px-1.5 py-0.5 rounded bg-blue-50 text-blue-600 font-medium">
+                      {(answer as any).skill}
+                    </span>
+                  )}
                 </div>
                 <span className="text-xs text-gray-400">
                   {answer.points > 0 ? `+${answer.points} pts` : '0 pts'}

@@ -12,21 +12,33 @@ export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComp
   const audioRef = useRef<HTMLAudioElement>(null)
   const [playCount, setPlayCount] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
-  const [useFallback, setUseFallback] = useState(!src)
+  const [audioError, setAudioError] = useState(false)
 
-  const canPlay = playCount < maxPlays
+  const canPlay = playCount < maxPlays && !!src && !audioError
 
+  // Stop audio when question changes or component unmounts
   useEffect(() => {
+    const audio = audioRef.current
+    if (audio) {
+      audio.pause()
+      audio.currentTime = 0
+    }
     setPlayCount(0)
     setIsPlaying(false)
+    setAudioError(false)
+
+    return () => {
+      if (audio) {
+        audio.pause()
+        audio.currentTime = 0
+      }
+    }
   }, [src, ttsScript])
 
   const handleStop = () => {
-    if (!useFallback && audioRef.current) {
+    if (audioRef.current) {
       audioRef.current.pause()
       audioRef.current.currentTime = 0
-    } else if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel()
     }
     setIsPlaying(false)
     setPlayCount(c => c + 1)
@@ -39,39 +51,10 @@ export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComp
       return
     }
 
-    if (!canPlay) return
+    if (!canPlay || !audioRef.current) return
 
-    if (!useFallback && audioRef.current) {
-      audioRef.current.play()
-      setIsPlaying(true)
-    } else if (ttsScript && 'speechSynthesis' in window) {
-      // Client-side TTS fallback — try to pick a voice matching the language
-      const langCode = language === 'Italian' ? 'it' :
-                       language === 'Spanish' ? 'es' :
-                       language === 'French' ? 'fr' :
-                       language === 'German' ? 'de' : 'en'
-      const voices = window.speechSynthesis.getVoices()
-      const langVoices = voices.filter(v => v.lang.startsWith(langCode))
-
-      const utterance = new SpeechSynthesisUtterance(ttsScript)
-      utterance.lang = `${langCode}-${langCode === 'en' ? 'US' : langCode.toUpperCase()}`
-      // Pick a consistent voice per question (hash the script text so same question = same voice)
-      if (langVoices.length > 0) {
-        let hash = 0
-        for (let i = 0; i < ttsScript.length; i++) {
-          hash = ((hash << 5) - hash + ttsScript.charCodeAt(i)) | 0
-        }
-        utterance.voice = langVoices[Math.abs(hash) % langVoices.length]
-      }
-      utterance.rate = 0.9
-      utterance.onstart = () => setIsPlaying(true)
-      utterance.onend = () => {
-        setIsPlaying(false)
-        setPlayCount(c => c + 1)
-        onPlayComplete?.()
-      }
-      window.speechSynthesis.speak(utterance)
-    }
+    audioRef.current.play()
+    setIsPlaying(true)
   }
 
   const handleAudioEnd = () => {
@@ -82,12 +65,12 @@ export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComp
 
   return (
     <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-      {src && !useFallback && (
+      {src && (
         <audio
           ref={audioRef}
           src={src}
           onEnded={handleAudioEnd}
-          onError={() => setUseFallback(true)}
+          onError={() => setAudioError(true)}
           preload="auto"
         />
       )}
@@ -115,11 +98,13 @@ export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComp
 
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-700">
-            {isPlaying ? 'Playing... click to stop' : canPlay ? 'Click to play audio' : 'No more plays available'}
+            {audioError ? 'Audio unavailable — please try again later' :
+             !src ? 'Audio is loading...' :
+             isPlaying ? 'Playing... click to stop' :
+             canPlay ? 'Click to play audio' : 'No more plays available'}
           </p>
           <p className="text-xs text-gray-500">
             Plays: {playCount}/{maxPlays}
-            {useFallback && ' (using browser speech)'}
           </p>
         </div>
       </div>

@@ -281,6 +281,12 @@ export const assessmentApi = {
     return response.data.data
   },
 
+  // Skip a section (unanswered questions treated as null)
+  async skipSection(assessmentId: string, sectionId: string): Promise<any> {
+    const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/skip`)
+    return response.data.data
+  },
+
   // Request retry on a completed section
   async requestSectionRetry(assessmentId: string, sectionId: string): Promise<any> {
     const response = await api.post(`/assessments/multi-skill/${assessmentId}/sections/${sectionId}/request-retry`)
