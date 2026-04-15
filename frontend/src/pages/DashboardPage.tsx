@@ -97,14 +97,14 @@ function AdminDashboard({ data }: { data: any }) {
           href="/schools"
         />
         <StatCard
-          title="Total Teachers"
+          title="Total Trainers"
           value={data?.stats?.totalTeachers || 0}
           icon={GraduationCap}
           color="green"
           href="/teachers"
         />
         <StatCard
-          title="Total Students"
+          title="Total Learners"
           value={data?.stats?.totalStudents || 0}
           icon={Users}
           color="blue"
@@ -182,14 +182,14 @@ function SchoolDashboard({ data }: { data: any }) {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          title="Teachers"
+          title="Trainers"
           value={data?.stats?.teachers || 0}
           icon={GraduationCap}
           color="green"
           href="/teachers"
         />
         <StatCard
-          title="Students"
+          title="Learners"
           value={data?.stats?.students || 0}
           icon={Users}
           color="blue"

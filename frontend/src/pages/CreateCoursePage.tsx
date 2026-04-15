@@ -85,7 +85,7 @@ export function CreateCoursePage() {
           Back to Courses
         </Link>
         <h1 className="text-2xl font-bold text-gray-900">Create Course</h1>
-        <p className="text-gray-600 mt-1">Set up a new course for your students</p>
+        <p className="text-gray-600 mt-1">Set up a new course for your learners</p>
       </div>
 
       {submitError && (
@@ -138,10 +138,10 @@ export function CreateCoursePage() {
               <input type="hidden" {...register('courseType')} />
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3" role="radiogroup" aria-labelledby="courseTypeLabel">
                 {[
-                  { value: 'LIVE_REMOTE', icon: Video, label: 'Live — Remote', desc: 'Online lessons via Zoom, Meet, or Teams. Teacher and students connect remotely with video link.', color: 'border-blue-500 bg-blue-50', iconColor: 'text-blue-600 bg-blue-100' },
+                  { value: 'LIVE_REMOTE', icon: Video, label: 'Live — Remote', desc: 'Online lessons via Zoom, Meet, or Teams. Trainer and learners connect remotely with video link.', color: 'border-blue-500 bg-blue-50', iconColor: 'text-blue-600 bg-blue-100' },
                   { value: 'LIVE_IN_PERSON', icon: MapPin, label: 'Live — In Person', desc: 'Face-to-face lessons at a physical location. Address and Google Maps link shared with participants.', color: 'border-amber-500 bg-amber-50', iconColor: 'text-amber-600 bg-amber-100' },
-                  { value: 'ROUNDTABLE', icon: Users, label: 'Roundtable', desc: 'Group discussion sessions. Students vote on topics and participate in collaborative conversations.', color: 'border-purple-500 bg-purple-50', iconColor: 'text-purple-600 bg-purple-100' },
-                  { value: 'SELF_PACED', icon: BookOpen, label: 'Self-Paced', desc: 'Students learn at their own pace with videos, exercises, and materials. No live sessions.', color: 'border-green-500 bg-green-50', iconColor: 'text-green-600 bg-green-100' },
+                  { value: 'ROUNDTABLE', icon: Users, label: 'Roundtable', desc: 'Group discussion sessions. Learners vote on topics and participate in collaborative conversations.', color: 'border-purple-500 bg-purple-50', iconColor: 'text-purple-600 bg-purple-100' },
+                  { value: 'SELF_PACED', icon: BookOpen, label: 'Self-Paced', desc: 'Learners learn at their own pace with videos, exercises, and materials. No live sessions.', color: 'border-green-500 bg-green-50', iconColor: 'text-green-600 bg-green-100' },
                 ].map(type => {
                   const Icon = type.icon
                   const isSelected = watch('courseType') === type.value
@@ -236,7 +236,7 @@ export function CreateCoursePage() {
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label htmlFor="maxStudents" className="block text-sm font-medium text-gray-700 mb-1">
-                  Max Students
+                  Max Learners
                 </label>
                 <input
                   type="number"

@@ -13,10 +13,10 @@ interface ReportType {
 const REPORT_TYPES: ReportType[] = [
   {
     id: 'student-progress',
-    name: 'Student Progress Report',
-    description: 'Overview of student performance, assessments, and certificates earned',
+    name: 'Learner Progress Report',
+    description: 'Overview of learner performance, assessments, and certificates earned',
     icon: Users,
-    category: 'Students'
+    category: 'Learners'
   },
   {
     id: 'course-analytics',
@@ -263,7 +263,7 @@ export const ReportsPage: React.FC = () => {
               <p>Reports are exported as CSV files that you can open in Excel or Google Sheets.</p>
               <p>Select a report type, choose a date range, and click Generate to download.</p>
               <div className="mt-4 p-3 bg-blue-50 rounded-lg text-blue-700 text-xs">
-                <strong>Tip:</strong> For a full overview, select "Student Progress" with the widest date range.
+                <strong>Tip:</strong> For a full overview, select "Learner Progress" with the widest date range.
               </div>
             </div>
           </div>

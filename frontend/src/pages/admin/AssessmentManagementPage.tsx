@@ -241,7 +241,7 @@ export default function AssessmentManagementPage() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Search by student name or email..."
+              placeholder="Search by learner name or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
@@ -294,7 +294,7 @@ export default function AssessmentManagementPage() {
                       className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
                     />
                   </th>
-                  <th className="text-left py-3 px-4 font-medium text-gray-500">Student</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-500">Learner</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Language</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-500">Status</th>
                   <th className="text-left py-3 px-4 font-medium text-gray-500 hidden md:table-cell">Sections</th>
@@ -387,7 +387,7 @@ export default function AssessmentManagementPage() {
                           <span className="text-xs text-gray-400">Pending</span>
                         )}
                         <button
-                          onClick={() => handleDelete(a.id, a.student?.user?.name || 'this student')}
+                          onClick={() => handleDelete(a.id, a.student?.user?.name || 'this learner')}
                           className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
                           title="Delete assessment"
                         >
@@ -532,7 +532,7 @@ function AssignModal({
 
   const handleAssign = () => {
     if (selectedStudents.length === 0) {
-      onError('Please select at least one student')
+      onError('Please select at least one learner')
       return
     }
     if (!language) {
@@ -641,7 +641,7 @@ function AssignModal({
               onChange={(e) => { setSelectedOrg(e.target.value); setSelectedStudents([]) }}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-primary-500"
             >
-              <option value="">All Students</option>
+              <option value="">All Learners</option>
               {orgs.map((o: any) => (
                 <option key={o.id} value={o.id}>{o.name}</option>
               ))}
@@ -652,7 +652,7 @@ function AssignModal({
           <div>
             <div className="flex items-center justify-between mb-2">
               <label className="block text-sm font-medium text-gray-700">
-                Students ({selectedStudents.length} selected)
+                Learners ({selectedStudents.length} selected)
               </label>
               <div className="flex gap-2">
                 <button onClick={selectAll} className="text-xs text-primary-600 hover:text-primary-700">
@@ -679,7 +679,7 @@ function AssignModal({
               {loadingStudents ? (
                 <p className="p-3 text-sm text-gray-500">Loading...</p>
               ) : filteredStudents.length === 0 ? (
-                <p className="p-3 text-sm text-gray-500">No students found</p>
+                <p className="p-3 text-sm text-gray-500">No learners found</p>
               ) : (
                 filteredStudents.map((s: any) => (
                   <label
@@ -710,7 +710,7 @@ function AssignModal({
               ? 'Placement Test: Adaptive difficulty across Reading, Listening, Writing, Speaking (~70 min). Determines CEFR level (A1-C2).'
               : `Level ${fixedLevel || '...'} Test: All questions at ${fixedLevel || 'selected'} level across Reading, Listening, Writing, Speaking (~70 min). Verifies competency at this level.`
             }
-            {' '}Students will receive a notification and can start when ready.
+            {' '}Learners will receive a notification and can start when ready.
           </div>
         </div>
 
@@ -722,7 +722,7 @@ function AssignModal({
             Cancel
           </button>
           <Button onClick={handleAssign} disabled={assignMutation.isLoading}>
-            {assignMutation.isLoading ? 'Assigning...' : `Assign to ${selectedStudents.length} Student(s)`}
+            {assignMutation.isLoading ? 'Assigning...' : `Assign to ${selectedStudents.length} Learner(s)`}
           </Button>
         </div>
       </div>

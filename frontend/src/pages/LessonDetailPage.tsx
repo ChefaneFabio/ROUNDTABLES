@@ -178,7 +178,7 @@ export function LessonDetailPage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {lesson.teacher?.user && (
           <div className="bg-white rounded-xl border border-gray-200 p-4">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Teacher</span>
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Trainer</span>
             <div className="mt-2 flex items-center gap-2">
               <div className="h-7 w-7 rounded-full bg-gray-100 flex items-center justify-center flex-shrink-0">
                 <span className="text-gray-600 text-xs font-medium">
@@ -192,7 +192,7 @@ export function LessonDetailPage() {
         <div className="bg-white rounded-xl border border-gray-200 p-4">
           <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Attendance</span>
           <p className="text-2xl font-bold text-gray-900 mt-1">{attendanceList.length}</p>
-          <p className="text-xs text-gray-400">students</p>
+          <p className="text-xs text-gray-400">learners</p>
         </div>
         {lesson.module && (
           <div className="bg-white rounded-xl border border-gray-200 p-4">
@@ -285,7 +285,7 @@ export function LessonDetailPage() {
                         setSendLinkMsg(null)
                         const { default: api } = await import('../services/api')
                         await api.post(`/lessons/${id}/send-reminder`)
-                        setSendLinkMsg({ type: 'success', text: 'Meeting link sent to all students and teachers' })
+                        setSendLinkMsg({ type: 'success', text: 'Meeting link sent to all learners and trainers' })
                         setTimeout(() => setSendLinkMsg(null), 5000)
                       } catch (err: any) {
                         setSendLinkMsg({ type: 'error', text: err.response?.data?.error || 'Failed to send' })
@@ -426,7 +426,7 @@ export function LessonDetailPage() {
                     </span>
                   </div>
                   <span className="text-sm text-gray-900 font-medium">
-                    {record.student?.user?.name || 'Unknown Student'}
+                    {record.student?.user?.name || 'Unknown Learner'}
                   </span>
                 </div>
                 <div className="flex items-center gap-1.5">

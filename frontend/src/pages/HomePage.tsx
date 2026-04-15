@@ -194,14 +194,14 @@ export function HomePage() {
                 Versant-Aligned Assessment
               </h2>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                Our placement test follows the Versant/Pearson standard. Students are assessed on 4 skills across all CEFR levels (A1-C2).
+                Our placement test follows the Versant/Pearson standard. Learners are assessed on 4 skills across all CEFR levels (A1-C2).
                 Results map to GSE scores and are immediately available to HR.
               </p>
               <div className="space-y-3 mb-8">
                 {[
-                  'Adaptive difficulty — test adjusts based on student performance',
+                  'Adaptive difficulty — test adjusts based on learner performance',
                   'Bilingual instructions (English + Italian)',
-                  'Students can pause, save progress, and resume later',
+                  'Learners can pause, save progress, and resume later',
                   'HR monitors all employees in real-time',
                   'Export results to Excel or download PDF reports',
                   'Level-specific tests (A1-C2) also available',
@@ -278,8 +278,8 @@ export function HomePage() {
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { icon: Building2, title: 'HR / Company', desc: 'Monitor employee assessments in real-time. View per-skill progress, export results, download reports.', href: '/business', color: 'bg-gray-900 text-white' },
-              { icon: Users, title: 'Students', desc: 'Take placement tests, attend lessons, view results and certificates. Pause and resume anytime.', href: '/login', color: 'bg-gray-100 text-gray-900' },
-              { icon: Award, title: 'Teachers', desc: 'Manage lessons, review assessments, score writing and speaking, track student progress.', href: '/login', color: 'bg-gray-100 text-gray-900' },
+              { icon: Users, title: 'Learners', desc: 'Take placement tests, attend lessons, view results and certificates. Pause and resume anytime.', href: '/login', color: 'bg-gray-100 text-gray-900' },
+              { icon: Award, title: 'Trainers', desc: 'Manage lessons, review assessments, score writing and speaking, track learner progress.', href: '/login', color: 'bg-gray-100 text-gray-900' },
             ].map(portal => (
               <Link key={portal.title} to={portal.href} className="group">
                 <div className={`${portal.color} rounded-xl p-6 h-full transition-all hover:shadow-lg`}>

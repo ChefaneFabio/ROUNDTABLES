@@ -165,8 +165,8 @@ export const StudentsPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Students</h1>
-          <p className="text-sm text-gray-500 mt-1">Manage your student enrollments</p>
+          <h1 className="text-2xl font-bold text-gray-900">Learners</h1>
+          <p className="text-sm text-gray-500 mt-1">Manage your learner enrollments</p>
         </div>
         <div className="flex items-center gap-3">
           {selectedStudents.size > 0 && (
@@ -183,7 +183,7 @@ export const StudentsPage: React.FC = () => {
             className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors text-sm"
           >
             <Plus className="w-4 h-4" />
-            Add Student
+            Add Learner
           </button>
         </div>
       </div>
@@ -306,7 +306,7 @@ export const StudentsPage: React.FC = () => {
         <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
           <GraduationCap className="w-10 h-10 text-gray-300 mx-auto mb-3" />
           <p className="text-gray-500 text-sm">
-            {searchQuery || filterLevel ? 'No students found matching your criteria' : 'No students enrolled yet'}
+            {searchQuery || filterLevel ? 'No learners found matching your criteria' : 'No learners enrolled yet'}
           </p>
         </div>
       ) : (
@@ -465,7 +465,7 @@ export const StudentsPage: React.FC = () => {
           <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Assign Placement Test</h2>
             <p className="text-sm text-gray-600 mb-4">
-              Assign a timed placement test to {selectedStudents.size} selected student{selectedStudents.size !== 1 ? 's' : ''}.
+              Assign a timed placement test to {selectedStudents.size} selected learner{selectedStudents.size !== 1 ? 's' : ''}.
             </p>
 
             <div className="space-y-4">
@@ -519,7 +519,7 @@ export const StudentsPage: React.FC = () => {
       {editingStudent && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-1">Edit Student</h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-1">Edit Learner</h2>
             <p className="text-sm text-gray-500 mb-5">{editingStudent.user.name} &middot; {editingStudent.user.email}</p>
             <EditStudentForm
               student={editingStudent}
@@ -531,7 +531,7 @@ export const StudentsPage: React.FC = () => {
                   loadStudents()
                 } catch (e) {
                   console.error('Failed to update:', e)
-                  toast.error('Failed to update student')
+                  toast.error('Failed to update learner')
                 }
               }}
             />
@@ -562,7 +562,7 @@ function EditStudentForm({ student, onClose, onSave }: {
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">Bio</label>
         <textarea value={bio} onChange={e => setBio(e.target.value)} rows={3}
-          placeholder="Notes about this student..."
+          placeholder="Notes about this learner..."
           className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-400 text-sm" />
       </div>
       <div className="flex justify-end gap-3 pt-3 border-t border-gray-100">
@@ -605,7 +605,7 @@ function AddStudentModal({ onClose, onSuccess }: { onClose: () => void; onSucces
       })
       setCreated({ email: form.email, password })
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to create student account')
+      setError(err.response?.data?.error || 'Failed to create learner account')
     } finally {
       setLoading(false)
     }
@@ -622,7 +622,7 @@ function AddStudentModal({ onClose, onSuccess }: { onClose: () => void; onSucces
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">
-          {created ? 'Student Account Created' : 'Create Student Account'}
+          {created ? 'Learner Account Created' : 'Create Learner Account'}
         </h2>
 
         {created ? (
@@ -635,7 +635,7 @@ function AddStudentModal({ onClose, onSuccess }: { onClose: () => void; onSucces
               </div>
             </div>
             <p className="text-xs text-gray-500">
-              Share these credentials with the student. They can change their password after logging in.
+              Share these credentials with the learner. They can change their password after logging in.
             </p>
             <div className="flex justify-end gap-3">
               <button

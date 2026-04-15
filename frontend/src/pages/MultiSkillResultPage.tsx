@@ -271,10 +271,10 @@ export function MultiSkillResultPage() {
             <span className="font-semibold text-gray-800">{assessment.language} Placement Test</span>
           </div>
           <p className="text-gray-600">
-            Thank you for completing your assessment. Your results have been submitted and will be reviewed by your teacher.
+            Thank you for completing your assessment. Your results have been submitted and will be reviewed by your trainer.
           </p>
           <p className="text-gray-500 text-sm">
-            Your teacher or Maka staff will share your results and recommended learning path with you.
+            Your trainer or Maka staff will share your results and recommended learning path with you.
           </p>
         </div>
         <button
@@ -306,10 +306,10 @@ export function MultiSkillResultPage() {
           </div>
 
           <div className="px-8 py-10">
-            {/* ─── Student Info ─── */}
+            {/* ─── Learner Info ─── */}
             <div className="text-center mb-8">
               <p className="text-lg text-gray-500 mb-1">Congratulations</p>
-              <h2 className="text-3xl font-bold text-gray-900 mb-1">{results.student?.name || 'Student'}</h2>
+              <h2 className="text-3xl font-bold text-gray-900 mb-1">{results.student?.name || 'Learner'}</h2>
               {formatDate(assessment.completedAt) && (
                 <p className="text-sm text-gray-400">{formatDate(assessment.completedAt)}</p>
               )}
@@ -575,7 +575,7 @@ export function MultiSkillResultPage() {
                           {section.teacherScore && (
                             <div className="flex items-center gap-1 mt-1">
                               <CheckCircle className="w-3 h-3 text-emerald-500" />
-                              <span className="text-xs text-emerald-600 font-medium">Teacher reviewed</span>
+                              <span className="text-xs text-emerald-600 font-medium">Trainer reviewed</span>
                             </div>
                           )}
                         </div>
@@ -721,7 +721,7 @@ export function MultiSkillResultPage() {
                                     ) : (
                                       <div className="mt-1 space-y-0.5">
                                         <p className="text-xs">
-                                          <span className="text-gray-400">Student: </span>
+                                          <span className="text-gray-400">Learner: </span>
                                           <span className={ans.isCorrect ? 'text-green-700 font-medium' : 'text-red-600'}>{ans.studentAnswer}</span>
                                         </p>
                                         {!ans.isCorrect && ans.correctAnswer && (

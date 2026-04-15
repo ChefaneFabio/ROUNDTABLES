@@ -246,7 +246,7 @@ export function CourseDetailPage() {
             )}
             <div className="flex items-center text-sm text-gray-600">
               <Users className="h-4 w-4 mr-2 text-gray-400" />
-              <span className="font-medium mr-1">Max Students:</span> {course.maxStudents}
+              <span className="font-medium mr-1">Max Learners:</span> {course.maxStudents}
             </div>
             <div className="flex items-center text-sm text-gray-600">
               <BookOpen className="h-4 w-4 mr-2 text-gray-400" />
@@ -323,7 +323,7 @@ export function CourseDetailPage() {
       {teachers.length > 0 && (
         <Card>
           <CardHeader>
-            <h2 className="text-lg font-semibold text-gray-900">Teachers</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Trainers</h2>
           </CardHeader>
           <CardBody>
             <div className="space-y-3">
@@ -336,7 +336,7 @@ export function CourseDetailPage() {
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-900">
-                      {ct.teacher?.user?.name || 'Unknown Teacher'}
+                      {ct.teacher?.user?.name || 'Unknown Trainer'}
                     </p>
                     {ct.teacher?.user?.email && (
                       <p className="text-xs text-gray-500">{ct.teacher.user.email}</p>
@@ -663,7 +663,7 @@ export function CourseDetailPage() {
                   <thead>
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Lesson</th>
-                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Student</th>
+                      <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Learner</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Score</th>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                     </tr>
@@ -779,7 +779,7 @@ export function CourseDetailPage() {
                       setCodeSendResult('')
                       try {
                         const result = await materialCodesApi.sendAll(id!)
-                        setCodeSendResult(`Sent to ${result.sentToStudents} student(s) and ${result.sentToTeachers} teacher(s)`)
+                        setCodeSendResult(`Sent to ${result.sentToStudents} learner(s) and ${result.sentToTeachers} trainer(s)`)
                         queryClient.invalidateQueries(['course-material-codes', id])
                       } catch (err) {
                         setCodeSendResult('Failed to send codes')
@@ -907,7 +907,7 @@ export function CourseDetailPage() {
                         <td className="px-3 py-2 text-sm font-mono text-gray-600">{mc.code}</td>
                         <td className="px-3 py-2 text-sm text-gray-600">
                           {mc.isGroupCode ? (
-                            <span className="text-gray-400 italic">All students</span>
+                            <span className="text-gray-400 italic">All learners</span>
                           ) : mc.student?.user?.name ? (
                             mc.student.user.name
                           ) : (
@@ -960,7 +960,7 @@ export function CourseDetailPage() {
                 <thead>
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
-                      Student
+                      Learner
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                       Enrollment Status
@@ -977,7 +977,7 @@ export function CourseDetailPage() {
                   {enrollments.map((enrollment: any) => (
                     <tr key={enrollment.id}>
                       <td className="px-4 py-3 text-sm text-gray-900">
-                        {enrollment.student?.user?.name || 'Unknown Student'}
+                        {enrollment.student?.user?.name || 'Unknown Learner'}
                       </td>
                       <td className="px-4 py-3">
                         <StatusBadge status={enrollment.status} />

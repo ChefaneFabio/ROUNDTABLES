@@ -301,15 +301,15 @@ export const SettingsPage: React.FC = () => {
             {isStaff && (
               <div className="bg-white rounded-xl border border-gray-200 p-6">
                 <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">
-                  {isAdmin ? 'Admin' : 'Teacher'} Notifications
+                  {isAdmin ? 'Admin' : 'Trainer'} Notifications
                 </h2>
                 <div className="space-y-0 divide-y divide-gray-100">
                   {[
-                    { key: 'notifyTestCompletion', label: 'Test Completions', desc: 'When a student completes their full assessment' },
+                    { key: 'notifyTestCompletion', label: 'Test Completions', desc: 'When a learner completes their full assessment' },
                     { key: 'notifyAiScoring', label: 'AI Scoring Results', desc: 'When AI finishes evaluating Writing/Speaking responses' },
-                    { key: 'notifySectionCompletion', label: 'Section Completions', desc: 'When a student completes each individual section' },
-                    { key: 'notifyRetryRequests', label: 'Retry Requests', desc: 'When a student requests to retake a section' },
-                    ...(isAdmin ? [{ key: 'notifyNewEnrollments', label: 'New Enrollments', desc: 'When a new student is added to the platform' }] : []),
+                    { key: 'notifySectionCompletion', label: 'Section Completions', desc: 'When a learner completes each individual section' },
+                    { key: 'notifyRetryRequests', label: 'Retry Requests', desc: 'When a learner requests to retake a section' },
+                    ...(isAdmin ? [{ key: 'notifyNewEnrollments', label: 'New Enrollments', desc: 'When a new learner is added to the platform' }] : []),
                   ].map(item => (
                     <div key={item.key} className="flex items-center justify-between py-4 first:pt-0 last:pb-0">
                       <div>
@@ -403,15 +403,15 @@ export const SettingsPage: React.FC = () => {
                 <div className="space-y-0 divide-y divide-gray-100">
                   {[
                     { key: 'aiAutoScore', label: 'Auto AI Scoring', desc: 'Automatically score Writing/Speaking with AI when section completes', admin: true },
-                    { key: 'allowPause', label: 'Allow Pause & Resume', desc: 'Students can pause the test and come back later to finish', admin: true },
-                    { key: 'showTimer', label: 'Show Countdown Timer', desc: 'Display the remaining time to students during the test', admin: true },
+                    { key: 'allowPause', label: 'Allow Pause & Resume', desc: 'Learners can pause the test and come back later to finish', admin: true },
+                    { key: 'showTimer', label: 'Show Countdown Timer', desc: 'Display the remaining time to learners during the test', admin: true },
                     { key: 'autoSubmitOnExpiry', label: 'Auto-submit on Time Expiry', desc: 'Automatically submit and close the section when time runs out', admin: true },
-                    { key: 'blockTabSwitch', label: 'Block Tab Switching', desc: 'Detect and log when students switch tabs or lose focus during the test', admin: true },
-                    { key: 'blockCopyPaste', label: 'Block Copy/Paste & Right-Click', desc: 'Prevent students from copying content or right-clicking during the test', admin: true },
+                    { key: 'blockTabSwitch', label: 'Block Tab Switching', desc: 'Detect and log when learners switch tabs or lose focus during the test', admin: true },
+                    { key: 'blockCopyPaste', label: 'Block Copy/Paste & Right-Click', desc: 'Prevent learners from copying content or right-clicking during the test', admin: true },
                     { key: 'requireFullscreen', label: 'Require Fullscreen Mode', desc: 'Force the test to run in fullscreen — exit is logged as a violation and re-requested', admin: true },
-                    { key: 'warnOnLeave', label: 'Warn on Page Leave', desc: 'Show a browser warning if the student tries to navigate away during the test', admin: true },
-                    { key: 'showCorrectAnswersToStudents', label: 'Show Correct Answers to Students', desc: 'Students can see the correct answers after completing the test', admin: true },
-                    { key: 'allowRetryRequests', label: 'Allow Retry Requests', desc: 'Students can request to retake completed sections', admin: true },
+                    { key: 'warnOnLeave', label: 'Warn on Page Leave', desc: 'Show a browser warning if the learner tries to navigate away during the test', admin: true },
+                    { key: 'showCorrectAnswersToStudents', label: 'Show Correct Answers to Learners', desc: 'Learners can see the correct answers after completing the test', admin: true },
+                    { key: 'allowRetryRequests', label: 'Allow Retry Requests', desc: 'Learners can request to retake completed sections', admin: true },
                     { key: 'showStudentTranscripts', label: 'Show Speaking Transcripts', desc: 'Display speech-to-text transcripts in review panel', admin: false },
                     { key: 'showAiEvaluation', label: 'Show AI Evaluation Details', desc: 'Show full AI scoring breakdown when reviewing responses', admin: false },
                   ]
@@ -464,7 +464,7 @@ export const SettingsPage: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm font-medium text-gray-900">Auto-assign Placement Test</p>
-                      <p className="text-sm text-gray-500 mt-0.5">Automatically assign a placement test when a new student enrolls</p>
+                      <p className="text-sm text-gray-500 mt-0.5">Automatically assign a placement test when a new learner enrolls</p>
                     </div>
                     <Toggle
                       enabled={settings.autoAssignOnEnroll}
@@ -520,9 +520,9 @@ export const SettingsPage: React.FC = () => {
               <p className="text-xs text-gray-400 mb-3">Quick overview of team members with access</p>
               <div className="space-y-2">
                 {[
-                  { role: 'Administrators', desc: 'Full access to all settings, students, and assessments', icon: Shield },
-                  { role: 'Teachers', desc: 'Can review assessments, score responses, and manage lessons', icon: Users },
-                  { role: 'Students', desc: 'Can take assessments, view courses, and track progress', icon: GraduationCap },
+                  { role: 'Administrators', desc: 'Full access to all settings, learners, and assessments', icon: Shield },
+                  { role: 'Trainers', desc: 'Can review assessments, score responses, and manage lessons', icon: Users },
+                  { role: 'Learners', desc: 'Can take assessments, view courses, and track progress', icon: GraduationCap },
                 ].map(item => (
                   <div key={item.role} className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-50">
                     <item.icon className="w-5 h-5 text-gray-400" />

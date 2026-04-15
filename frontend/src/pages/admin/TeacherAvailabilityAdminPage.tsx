@@ -45,8 +45,8 @@ export default function TeacherAvailabilityAdminPage() {
       <div className="flex items-center gap-3">
         <Clock className="w-8 h-8 text-primary-600" />
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Teacher Availability</h1>
-          <p className="text-sm text-gray-500">View and manage teacher schedules</p>
+          <h1 className="text-2xl font-bold text-gray-900">Trainer Availability</h1>
+          <p className="text-sm text-gray-500">View and manage trainer schedules</p>
         </div>
       </div>
 
@@ -54,10 +54,10 @@ export default function TeacherAvailabilityAdminPage() {
         {/* Teacher List */}
         <div>
           <Card>
-            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Teachers</h2>
+            <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">Trainers</h2>
             <div className="space-y-1">
               {teacherList.length === 0 ? (
-                <p className="text-sm text-gray-400 py-4 text-center">No teachers found</p>
+                <p className="text-sm text-gray-400 py-4 text-center">No trainers found</p>
               ) : (
                 teacherList.map((t: any) => (
                   <button
@@ -87,7 +87,7 @@ export default function TeacherAvailabilityAdminPage() {
             <Card>
               <div className="text-center py-12 text-gray-400">
                 <Users className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-                <p className="font-medium">Select a teacher to view their availability</p>
+                <p className="font-medium">Select a trainer to view their availability</p>
               </div>
             </Card>
           ) : loadingAvailability ? (
@@ -101,7 +101,7 @@ export default function TeacherAvailabilityAdminPage() {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h2 className="text-lg font-semibold text-gray-900">
-                    {teacherAvailability?.teacher?.user?.name || 'Teacher'}
+                    {teacherAvailability?.teacher?.user?.name || 'Trainer'}
                   </h2>
                   <p className="text-sm text-gray-500">{teacherAvailability?.teacher?.user?.email}</p>
                 </div>

@@ -77,7 +77,7 @@ export function AssessmentReviewPage() {
         className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900"
       >
         <ArrowLeft className="w-4 h-4" />
-        {isAdmin ? 'Back to Student Assessments' : 'Back to Assessments'}
+        {isAdmin ? 'Back to Learner Assessments' : 'Back to Assessments'}
       </Link>
 
       {/* Header Card */}
@@ -91,7 +91,7 @@ export function AssessmentReviewPage() {
             </h1>
             {isAdmin && (
               <p className="text-gray-500 mt-1">
-                Student: <strong>{student.name}</strong> ({student.email})
+                Learner: <strong>{student.name}</strong> ({student.email})
               </p>
             )}
             <p className="text-sm text-gray-400 mt-1">
@@ -321,7 +321,7 @@ export function AssessmentReviewPage() {
                         )}
                         <span>{opt.label?.length <= 2 ? opt.value : opt.label}</span>
                         {isStudentChoice && !answer.isCorrect && (
-                          <span className="ml-auto text-xs text-red-500 font-medium">Student's answer</span>
+                          <span className="ml-auto text-xs text-red-500 font-medium">Learner's answer</span>
                         )}
                         {isCorrectOption && (
                           <span className="ml-auto text-xs text-green-600 font-medium">Correct answer</span>
@@ -343,7 +343,7 @@ export function AssessmentReviewPage() {
                     ) : (
                       <XCircle className="w-4 h-4 text-red-500" />
                     )}
-                    <span>Student's answer: <strong>{answer.studentAnswer}</strong></span>
+                    <span>Learner's answer: <strong>{answer.studentAnswer}</strong></span>
                   </div>
                   {!answer.isCorrect && (
                     <div className="flex items-center gap-2 px-3 py-2 rounded-lg border bg-green-50 border-green-300 text-green-800 text-sm">

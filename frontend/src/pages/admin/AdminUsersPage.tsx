@@ -45,16 +45,16 @@ interface PaginatedResponse {
 
 const ROLE_BADGES: Record<string, { label: string; color: string; icon: React.ElementType }> = {
   ADMIN: { label: 'Admin', color: 'bg-slate-100 text-slate-700 border-slate-200', icon: Shield },
-  TEACHER: { label: 'Teacher', color: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: GraduationCap },
-  STUDENT: { label: 'Student', color: 'bg-sky-50 text-sky-700 border-sky-200', icon: BookOpen },
+  TEACHER: { label: 'Trainer', color: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: GraduationCap },
+  STUDENT: { label: 'Learner', color: 'bg-sky-50 text-sky-700 border-sky-200', icon: BookOpen },
   ORG_ADMIN: { label: 'HR / Org Admin', color: 'bg-violet-50 text-violet-700 border-violet-200', icon: Building2 },
 }
 
 const ROLE_FILTERS: { value: RoleFilter; label: string }[] = [
   { value: 'ALL', label: 'All Roles' },
   { value: 'ADMIN', label: 'Admin' },
-  { value: 'TEACHER', label: 'Teacher' },
-  { value: 'STUDENT', label: 'Student' },
+  { value: 'TEACHER', label: 'Trainer' },
+  { value: 'STUDENT', label: 'Learner' },
   { value: 'ORG_ADMIN', label: 'HR / Org Admin' },
 ]
 
@@ -525,7 +525,7 @@ export default function AdminUsersPage() {
               {/* Teacher-specific */}
               {form.role === 'TEACHER' && !editingUser && (
                 <div className="border-t border-gray-100 pt-4 space-y-3">
-                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Teacher Details</p>
+                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Trainer Details</p>
                   <FormField label="Expertise (comma-separated)" value={form.expertise} onChange={v => setForm({ ...form, expertise: v })} placeholder="English, Business English, IELTS" />
                 </div>
               )}
@@ -533,7 +533,7 @@ export default function AdminUsersPage() {
               {/* Student-specific */}
               {form.role === 'STUDENT' && !editingUser && (
                 <div className="border-t border-gray-100 pt-4 space-y-3">
-                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Student Details</p>
+                  <p className="text-xs font-medium text-gray-400 uppercase tracking-wide">Learner Details</p>
                   <div>
                     <label className="block text-xs font-medium text-gray-500 mb-1">Language Level</label>
                     <select

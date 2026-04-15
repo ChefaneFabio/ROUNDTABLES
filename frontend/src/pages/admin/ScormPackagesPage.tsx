@@ -362,7 +362,7 @@ const ScormPackagesPage: React.FC = () => {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[80vh] flex flex-col">
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">Student Attempts</h2>
+              <h2 className="text-lg font-semibold text-gray-900">Learner Attempts</h2>
               <button onClick={() => { setShowAttemptsModal(null); setAttempts([]) }} className="text-gray-400 hover:text-gray-600">
                 <X className="w-5 h-5" />
               </button>
@@ -374,7 +374,7 @@ const ScormPackagesPage: React.FC = () => {
                 <table className="w-full">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="text-left px-3 py-2 text-xs font-medium text-gray-500 uppercase">Student</th>
+                      <th className="text-left px-3 py-2 text-xs font-medium text-gray-500 uppercase">Learner</th>
                       <th className="text-left px-3 py-2 text-xs font-medium text-gray-500 uppercase">Status</th>
                       <th className="text-left px-3 py-2 text-xs font-medium text-gray-500 uppercase">Score</th>
                       <th className="text-left px-3 py-2 text-xs font-medium text-gray-500 uppercase">Time</th>

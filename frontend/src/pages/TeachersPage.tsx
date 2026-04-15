@@ -73,7 +73,7 @@ export const TeachersPage: React.FC = () => {
       toast.success(`${teacher.user.name} deactivated`)
       loadTeachers()
     } catch (e) {
-      toast.error('Failed to deactivate teacher')
+      toast.error('Failed to deactivate trainer')
     } finally {
       setDeletingId(null)
       setConfirmDelete(null)
@@ -84,10 +84,10 @@ export const TeachersPage: React.FC = () => {
     try {
       await teachersApi.update(id, data)
       setEditingTeacher(null)
-      toast.success('Teacher updated')
+      toast.success('Trainer updated')
       loadTeachers()
     } catch (e) {
-      toast.error('Failed to update teacher')
+      toast.error('Failed to update trainer')
     }
   }
 
@@ -105,7 +105,7 @@ export const TeachersPage: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Teachers</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Trainers</h1>
           <p className="text-sm text-gray-500 mt-1">
             {activeCount} active of {teachers.length} total &middot; {totalLessons} lessons delivered
           </p>
@@ -115,7 +115,7 @@ export const TeachersPage: React.FC = () => {
           className="flex items-center gap-2 px-4 py-2 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors"
         >
           <Plus className="w-4 h-4" />
-          Add Teacher
+          Add Trainer
         </button>
       </div>
 
@@ -159,7 +159,7 @@ export const TeachersPage: React.FC = () => {
         <div className="text-center py-16 bg-white rounded-xl border border-gray-200">
           <BookOpen className="w-10 h-10 text-gray-300 mx-auto mb-3" />
           <p className="text-gray-500 text-sm">
-            {searchQuery ? 'No teachers found matching your search' : 'No teachers added yet'}
+            {searchQuery ? 'No trainers found matching your search' : 'No trainers added yet'}
           </p>
         </div>
       ) : (
@@ -331,7 +331,7 @@ export const TeachersPage: React.FC = () => {
       {/* Confirm Delete Dialog */}
       <ConfirmDialog
         open={!!confirmDelete}
-        title="Deactivate Teacher"
+        title="Deactivate Trainer"
         message={`Are you sure you want to deactivate ${confirmDelete?.user?.name}? They will no longer be able to access the platform.`}
         confirmLabel="Deactivate"
         variant="danger"
@@ -376,7 +376,7 @@ function EditTeacherModal({ teacher, onClose, onSave }: {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-xl max-w-lg w-full p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-1">Edit Teacher</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-1">Edit Trainer</h2>
         <p className="text-sm text-gray-500 mb-5">{teacher.user.name} &middot; {teacher.user.email}</p>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -385,7 +385,7 @@ function EditTeacherModal({ teacher, onClose, onSave }: {
               value={bio}
               onChange={e => setBio(e.target.value)}
               rows={3}
-              placeholder="Short description of this teacher's background..."
+              placeholder="Short description of this trainer's background..."
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-400 text-sm"
             />
           </div>
@@ -398,7 +398,7 @@ function EditTeacherModal({ teacher, onClose, onSave }: {
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-400 text-sm"
               placeholder="English, Business English, IELTS"
             />
-            <p className="mt-1 text-xs text-gray-400">Languages and specializations this teacher covers</p>
+            <p className="mt-1 text-xs text-gray-400">Languages and specializations this trainer covers</p>
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Hourly Rate (EUR)</label>
@@ -458,7 +458,7 @@ function AddTeacherModal({ onClose, onSuccess }: { onClose: () => void; onSucces
       })
       setCreated({ email: form.email, password })
     } catch (err: any) {
-      setError(err.response?.data?.error || 'Failed to create teacher account')
+      setError(err.response?.data?.error || 'Failed to create trainer account')
     } finally {
       setLoading(false)
     }
@@ -475,7 +475,7 @@ function AddTeacherModal({ onClose, onSuccess }: { onClose: () => void; onSucces
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
         <h2 className="text-xl font-semibold text-gray-900 mb-4">
-          {created ? 'Teacher Account Created' : 'Create Teacher Account'}
+          {created ? 'Trainer Account Created' : 'Create Trainer Account'}
         </h2>
 
         {created ? (
@@ -488,7 +488,7 @@ function AddTeacherModal({ onClose, onSuccess }: { onClose: () => void; onSucces
               </div>
             </div>
             <p className="text-xs text-gray-500">
-              Share these credentials with the teacher. They can change their password after logging in.
+              Share these credentials with the trainer. They can change their password after logging in.
             </p>
             <div className="flex justify-end gap-3">
               <button

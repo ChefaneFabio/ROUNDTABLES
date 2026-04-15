@@ -190,7 +190,7 @@ export function LoginPage() {
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200/60 hover:bg-emerald-100 hover:border-emerald-300 transition-all duration-150 hover:shadow-sm"
               >
                 <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                Teacher
+                Trainer
               </button>
               <button
                 type="button"
@@ -198,7 +198,7 @@ export function LoginPage() {
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200/60 hover:bg-amber-100 hover:border-amber-300 transition-all duration-150 hover:shadow-sm"
               >
                 <span className="w-2 h-2 rounded-full bg-amber-500" />
-                Student
+                Learner
               </button>
             </div>
             <p className="mt-2 text-center text-[11px] text-gray-400">

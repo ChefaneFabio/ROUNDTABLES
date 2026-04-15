@@ -368,7 +368,7 @@ export function CatalogCourseDetailPage() {
                   <div className="flex items-center justify-between text-gray-600">
                     <span className="flex items-center">
                       <Users className="h-4 w-4 mr-2 text-gray-400" />
-                      Students
+                      Learners
                     </span>
                     <span className="font-medium text-gray-900">{course._count.enrollments}</span>
                   </div>

@@ -78,8 +78,8 @@ export const ProfilePage: React.FC = () => {
   const getRoleBadge = () => {
     switch (user?.role) {
       case 'ADMIN': return { text: 'Administrator', color: 'bg-gray-100 text-gray-700' }
-      case 'TEACHER': return { text: 'Teacher', color: 'bg-gray-100 text-gray-700' }
-      case 'STUDENT': return { text: 'Student', color: 'bg-gray-100 text-gray-700' }
+      case 'TEACHER': return { text: 'Trainer', color: 'bg-gray-100 text-gray-700' }
+      case 'STUDENT': return { text: 'Learner', color: 'bg-gray-100 text-gray-700' }
       case 'ORG_ADMIN': return { text: 'HR Manager', color: 'bg-gray-100 text-gray-700' }
       default: return { text: 'User', color: 'bg-gray-100 text-gray-700' }
     }

@@ -87,7 +87,7 @@ export function StudentAssessmentsPage() {
       {/* Back link */}
       <Link to="/students" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900">
         <ArrowLeft className="w-4 h-4" />
-        Back to Students
+        Back to Learners
       </Link>
 
       {/* Header */}
@@ -98,7 +98,7 @@ export function StudentAssessmentsPage() {
           </span>
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{student?.user?.name || 'Student'}</h1>
+          <h1 className="text-2xl font-bold text-gray-900">{student?.user?.name || 'Learner'}</h1>
           <p className="text-gray-500">{student?.user?.email}</p>
         </div>
         {student?.languageLevel && (
@@ -123,7 +123,7 @@ export function StudentAssessmentsPage() {
         </h2>
 
         {!assessments || assessments.length === 0 ? (
-          <p className="text-gray-500 text-center py-8">This student has not taken any assessments yet.</p>
+          <p className="text-gray-500 text-center py-8">This learner has not taken any assessments yet.</p>
         ) : (
           <div className="space-y-3">
             {assessments.map((a: any) => {
@@ -197,7 +197,7 @@ export function StudentAssessmentsPage() {
           <div className="bg-white rounded-xl shadow-xl max-w-md w-full mx-4 p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Assign Placement Test</h2>
             <p className="text-sm text-gray-600 mb-4">
-              Assign a timed placement test to {student?.user?.name || 'this student'}.
+              Assign a timed placement test to {student?.user?.name || 'this learner'}.
             </p>
 
             <div className="space-y-4">

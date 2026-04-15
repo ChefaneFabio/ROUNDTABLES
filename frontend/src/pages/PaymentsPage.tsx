@@ -49,7 +49,7 @@ export const PaymentsPage: React.FC = () => {
 
   const handleExport = () => {
     const csvRows = [
-      ['Date', 'Student', 'Course', 'Amount', 'Currency', 'Status'].join(','),
+      ['Date', 'Learner', 'Course', 'Amount', 'Currency', 'Status'].join(','),
       ...payments.map((p: any) => [
         new Date(p.createdAt).toISOString().split('T')[0],
         `"${p.enrollment?.student?.user?.name || ''}"`,
@@ -141,7 +141,7 @@ export const PaymentsPage: React.FC = () => {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by student, course..."
+            placeholder="Search by learner, course..."
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
           />
         </div>
@@ -179,7 +179,7 @@ export const PaymentsPage: React.FC = () => {
             <thead className="bg-gray-50 border-b">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Course</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Student</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Learner</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>

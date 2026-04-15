@@ -24,8 +24,8 @@ const AVAILABLE_PERMISSIONS = [
   { value: 'write:courses', label: 'Write Courses' },
   { value: 'read:enrollments', label: 'Read Enrollments' },
   { value: 'write:enrollments', label: 'Write Enrollments' },
-  { value: 'read:students', label: 'Read Students' },
-  { value: 'write:students', label: 'Write Students' },
+  { value: 'read:students', label: 'Read Learners' },
+  { value: 'write:students', label: 'Write Learners' },
   { value: 'read:progress', label: 'Read Progress' },
   { value: 'read:analytics', label: 'Read Analytics' },
   { value: '*', label: 'Full Access' }

@@ -43,7 +43,7 @@ function TeacherFeedbackView() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Feedback</h1>
-          <p className="text-gray-600 mt-1">Manage feedback you've written for students</p>
+          <p className="text-gray-600 mt-1">Manage feedback you've written for learners</p>
         </div>
       </div>
 
@@ -98,7 +98,7 @@ function TeacherFeedbackView() {
                         <StatusBadge status={feedback.status} />
                       </div>
                       <div className="flex items-center gap-3 text-xs text-gray-500">
-                        <span>Student: {feedback.student?.user?.name || 'Unknown'}</span>
+                        <span>Learner: {feedback.student?.user?.name || 'Unknown'}</span>
                         {feedback.score !== null && feedback.score !== undefined && (
                           <Badge variant="info">Score: {feedback.score}</Badge>
                         )}
@@ -179,7 +179,7 @@ function StudentFeedbackView() {
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">My Feedback</h1>
-        <p className="text-gray-600 mt-1">View feedback from your teachers</p>
+        <p className="text-gray-600 mt-1">View feedback from your trainers</p>
       </div>
 
       {isLoading ? (
@@ -192,7 +192,7 @@ function StudentFeedbackView() {
             <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">No feedback yet</h3>
             <p className="text-gray-500">
-              You'll see feedback from your teachers here once it's been shared.
+              You'll see feedback from your trainers here once it's been shared.
             </p>
           </CardBody>
         </Card>
@@ -207,7 +207,7 @@ function StudentFeedbackView() {
                       {feedback.lesson?.title || `Lesson ${feedback.lesson?.lessonNumber || ''}`}
                     </p>
                     <p className="text-xs text-gray-500 mt-0.5">
-                      Teacher: {feedback.teacher?.user?.name || 'Unknown'}
+                      Trainer: {feedback.teacher?.user?.name || 'Unknown'}
                       {' · '}
                       {format(new Date(feedback.createdAt), 'MMM d, yyyy')}
                     </p>
