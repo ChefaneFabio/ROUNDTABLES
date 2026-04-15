@@ -8,7 +8,7 @@ interface AudioPlayerProps {
   onPlayComplete?: () => void
 }
 
-export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComplete }: AudioPlayerProps) {
+export function AudioPlayer({ src, ttsScript, language: _language, maxPlays = 2, onPlayComplete }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
   const [playCount, setPlayCount] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)

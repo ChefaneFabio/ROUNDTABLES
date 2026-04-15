@@ -30,6 +30,7 @@ export interface Assessment {
   errorCorrectionLevel?: string
   sentenceTransformationLevel?: string
   sections?: AssessmentSection[]
+  metadata?: Record<string, any> | null
 }
 
 export interface AssessmentSection {
@@ -206,6 +207,7 @@ export const assessmentApi = {
       questionText: string
       questionType: string
       cefrLevel: string
+      skill?: string | null
       options: { label: string; value: string }[] | null
       passage: string | null
       passageTitle: string | null
@@ -214,6 +216,17 @@ export const assessmentApi = {
       isCorrect: boolean
       points: number
     }>
+    sections?: Array<{
+      id: string
+      skill: string
+      status: string
+      cefrLevel: string | null
+      percentageScore: number | null
+      questionsAnswered: number
+      questionsTotal: number
+      completionReason: string | null
+      completedAt: string | null
+    }> | null
   }> {
     const response = await api.get(`/assessments/${assessmentId}/detailed-results`)
     return response.data.data
