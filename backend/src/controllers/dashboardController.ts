@@ -1,4 +1,5 @@
 import { Router, Request, Response } from 'express'
+import { Prisma } from '@prisma/client'
 import { prisma } from '../config/database'
 import { authenticate } from '../middleware/auth'
 import { apiResponse, handleError } from '../utils/apiResponse'
@@ -162,7 +163,9 @@ async function getTeacherDashboard(teacherId: string) {
     upcomingLessons,
     pendingQuestions,
     pendingFeedback,
-    lessonStats
+    lessonStats,
+    pendingWritingSpeaking,
+    recentAssessments
   ] = await Promise.all([
     prisma.teacher.findUnique({
       where: { id: teacherId },
@@ -201,7 +204,36 @@ async function getTeacherDashboard(teacherId: string) {
     }),
     prisma.question.count({ where: { teacherId, status: { in: ['PENDING', 'NEEDS_REVISION'] } } }),
     prisma.feedback.count({ where: { teacherId, status: { in: ['PENDING', 'NEEDS_REVISION'] } } }),
-    getTeacherLessonStats(teacherId)
+    getTeacherLessonStats(teacherId),
+    // Sections awaiting teacher review (writing/speaking with AI score but no teacher score)
+    prisma.assessmentSection.count({
+      where: {
+        skill: { in: ['WRITING', 'SPEAKING'] },
+        status: 'COMPLETED',
+        NOT: { aiScore: { equals: Prisma.DbNull } },
+        teacherScore: { equals: Prisma.DbNull }
+      }
+    }),
+    // Recent completed assessments (all students)
+    prisma.assessment.findMany({
+      where: {
+        status: 'COMPLETED',
+        completedAt: { gte: subDays(new Date(), 14) }
+      },
+      take: 10,
+      orderBy: { completedAt: 'desc' },
+      select: {
+        id: true,
+        language: true,
+        cefrLevel: true,
+        score: true,
+        completedAt: true,
+        isMultiSkill: true,
+        student: {
+          select: { id: true, user: { select: { name: true } } }
+        }
+      }
+    })
   ])
 
   return {
@@ -211,10 +243,12 @@ async function getTeacherDashboard(teacherId: string) {
       upcomingLessonsCount: upcomingLessons.length,
       pendingQuestions,
       pendingFeedback,
+      pendingWritingSpeaking,
       ...lessonStats
     },
     courses: assignedCourses.map(ct => ct.course),
-    upcomingLessons
+    upcomingLessons,
+    recentAssessments
   }
 }
 

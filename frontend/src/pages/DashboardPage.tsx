@@ -62,7 +62,7 @@ export function DashboardPage() {
         </h1>
         <p className={clsx('text-sm mt-0.5', isStudent ? 'text-white/70' : 'text-gray-500')}>
           {isAdmin && (data?.school ? `Here's an overview of ${data.school.name || 'your school'}.` : "Here's an overview of your platform.")}
-          {isTeacher && "Here's your teaching schedule and tasks."}
+          {isTeacher && "Here's your training schedule and assessment reviews."}
           {isStudent && "Here's your learning progress."}
         </p>
       </div>
@@ -310,12 +310,19 @@ function TeacherDashboard({ data }: { data: any }) {
       </div>
 
       {/* Pending Tasks */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <StatCard
+          title="Writing/Speaking to Review"
+          value={data?.stats?.pendingWritingSpeaking || 0}
+          icon={ClipboardCheck}
+          color="yellow"
+          href="/admin/review-queue"
+        />
         <StatCard
           title="Questions to Review"
           value={data?.stats?.pendingQuestions || 0}
           icon={MessageSquare}
-          color="yellow"
+          color="blue"
         />
         <StatCard
           title="Feedback to Submit"
@@ -340,7 +347,7 @@ function TeacherDashboard({ data }: { data: any }) {
                 <div>
                   <p className="font-medium text-gray-900">{course.name}</p>
                   <p className="text-sm text-gray-500">
-                    {course._count?.enrollments || 0} students •{' '}
+                    {course._count?.enrollments || 0} learners •{' '}
                     {course._count?.lessons || 0} lessons
                   </p>
                 </div>
@@ -354,6 +361,45 @@ function TeacherDashboard({ data }: { data: any }) {
                   {course.status.replace(/_/g, ' ')}
                 </span>
               </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Recent Assessments */}
+      {data?.recentAssessments && data.recentAssessments.length > 0 && (
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">Recent Assessments</h3>
+            <Link to="/admin/assessments" className="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1">
+              View all <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+          <div className="space-y-3">
+            {data.recentAssessments.map((a: any) => (
+              <Link
+                key={a.id}
+                to={a.isMultiSkill ? `/assessment/multi-skill/${a.id}/results` : `/assessment/review/${a.id}`}
+                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <Award className="w-5 h-5 text-primary-500" />
+                  <div>
+                    <p className="font-medium text-gray-900 text-sm">{a.student?.user?.name || 'Learner'}</p>
+                    <p className="text-xs text-gray-500">{a.language} • {a.completedAt ? new Date(a.completedAt).toLocaleDateString() : ''}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  {a.cefrLevel && (
+                    <span className="inline-block px-2 py-0.5 bg-primary-100 text-primary-700 text-xs font-bold rounded">
+                      {a.cefrLevel}
+                    </span>
+                  )}
+                  {a.score != null && (
+                    <p className="text-xs text-gray-400 mt-0.5">{a.score}%</p>
+                  )}
+                </div>
+              </Link>
             ))}
           </div>
         </div>
