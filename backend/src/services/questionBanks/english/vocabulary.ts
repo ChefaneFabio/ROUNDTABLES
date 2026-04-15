@@ -456,4 +456,200 @@ export const englishVocabularyQuestions: MultiSkillQuestionData[] = [
     questionText: 'A ___ analysis cuts straight to the heart of the matter. (sharp/incisive — literary adjective)',
     correctAnswer: 'trenchant', points: 2, orderIndex: 68, tags: ['definitions', 'literary adjectives']
   },
+
+  // ============================================================
+  // PHRASAL VERBS — 30 questions (orderIndex 69–98)
+  // Mixed MULTIPLE_CHOICE & FILL_BLANK, workplace/professional contexts
+  // ============================================================
+
+  // ============================================================
+  // A1 — Beginner Phrasal Verbs (3 questions)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'Please ___ the computer before you leave the office.',
+    options: [{ label: 'turn on', value: 'turn on' }, { label: 'turn off', value: 'turn off' }, { label: 'turn up', value: 'turn up' }, { label: 'turn down', value: 'turn down' }],
+    correctAnswer: 'turn off', points: 1, orderIndex: 69, tags: ['phrasal verbs', 'daily life']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Can you ___ ___ that pen from the floor? (collect from the ground)',
+    correctAnswer: 'pick up', points: 1, orderIndex: 70, tags: ['phrasal verbs', 'daily life']
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'I ___ at 7 a.m. every day for work.',
+    options: [{ label: 'get up', value: 'get up' }, { label: 'get on', value: 'get on' }, { label: 'get off', value: 'get off' }, { label: 'get in', value: 'get in' }],
+    correctAnswer: 'get up', points: 1, orderIndex: 71, tags: ['phrasal verbs', 'daily life']
+  },
+
+  // ============================================================
+  // A2 — Elementary Phrasal Verbs (5 questions)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'I\'m ___ my glasses. Have you seen them?',
+    options: [{ label: 'looking for', value: 'looking for' }, { label: 'looking at', value: 'looking at' }, { label: 'looking up', value: 'looking up' }, { label: 'looking after', value: 'looking after' }],
+    correctAnswer: 'looking for', points: 1, orderIndex: 72, tags: ['phrasal verbs', 'daily life']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'It\'s cold outside. You should ___ ___ a jacket before you go out.',
+    correctAnswer: 'put on', points: 1, orderIndex: 73, tags: ['phrasal verbs', 'clothes']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'Please ___ those old files — we don\'t need them anymore.',
+    options: [{ label: 'throw away', value: 'throw away' }, { label: 'throw up', value: 'throw up' }, { label: 'throw in', value: 'throw in' }, { label: 'throw out', value: 'throw out' }],
+    correctAnswer: 'throw away', points: 1, orderIndex: 74, tags: ['phrasal verbs', 'office']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'I lent him my book last week. He needs to ___ it ___ tomorrow.',
+    correctAnswer: 'give back', points: 1, orderIndex: 75, tags: ['phrasal verbs', 'daily life']
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'What time did you ___ this morning?',
+    options: [{ label: 'wake up', value: 'wake up' }, { label: 'wake off', value: 'wake off' }, { label: 'wake out', value: 'wake out' }, { label: 'wake in', value: 'wake in' }],
+    correctAnswer: 'wake up', points: 1, orderIndex: 76, tags: ['phrasal verbs', 'daily life']
+  },
+
+  // ============================================================
+  // B1 — Intermediate Phrasal Verbs (6 questions)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'Let\'s ___ with the meeting — we\'re already behind schedule.',
+    options: [{ label: 'carry on', value: 'carry on' }, { label: 'carry out', value: 'carry out' }, { label: 'carry off', value: 'carry off' }, { label: 'carry over', value: 'carry over' }],
+    correctAnswer: 'carry on', points: 1, orderIndex: 77, tags: ['phrasal verbs', 'workplace']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'She decided to ___ ___ the issue of overtime pay at the next team meeting.',
+    correctAnswer: 'bring up', points: 1, orderIndex: 78, tags: ['phrasal verbs', 'workplace']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'How do you ___ difficult clients in your department?',
+    options: [{ label: 'deal with', value: 'deal with' }, { label: 'deal in', value: 'deal in' }, { label: 'deal out', value: 'deal out' }, { label: 'deal for', value: 'deal for' }],
+    correctAnswer: 'deal with', points: 1, orderIndex: 79, tags: ['phrasal verbs', 'workplace']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The IT team will ___ ___ the new software on all office computers next week.',
+    correctAnswer: 'set up', points: 1, orderIndex: 80, tags: ['phrasal verbs', 'workplace']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'I\'m really ___ the company retreat next month.',
+    options: [{ label: 'looking forward to', value: 'looking forward to' }, { label: 'looking up to', value: 'looking up to' }, { label: 'looking down on', value: 'looking down on' }, { label: 'looking out for', value: 'looking out for' }],
+    correctAnswer: 'looking forward to', points: 1, orderIndex: 81, tags: ['phrasal verbs', 'workplace']
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'Don\'t ___ ___ the report any longer — the deadline is tomorrow.',
+    correctAnswer: 'put off', points: 1, orderIndex: 82, tags: ['phrasal verbs', 'workplace']
+  },
+
+  // ============================================================
+  // B2 — Upper Intermediate Phrasal Verbs (6 questions)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'The marketing team needs to ___ a new strategy for the product launch.',
+    options: [{ label: 'come up with', value: 'come up with' }, { label: 'come down to', value: 'come down to' }, { label: 'come across as', value: 'come across as' }, { label: 'come around to', value: 'come around to' }],
+    correctAnswer: 'come up with', points: 2, orderIndex: 83, tags: ['phrasal verbs', 'business']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'She doesn\'t ___ ___ ___ her new manager — they have very different working styles.',
+    correctAnswer: 'get along with', points: 2, orderIndex: 84, tags: ['phrasal verbs', 'business']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'It\'s hard to ___ all the changes in this fast-moving industry.',
+    options: [{ label: 'keep up with', value: 'keep up with' }, { label: 'keep on with', value: 'keep on with' }, { label: 'keep out of', value: 'keep out of' }, { label: 'keep away from', value: 'keep away from' }],
+    correctAnswer: 'keep up with', points: 2, orderIndex: 85, tags: ['phrasal verbs', 'business']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The board will ___ ___ the feasibility of expanding into Asian markets.',
+    correctAnswer: 'look into', points: 2, orderIndex: 86, tags: ['phrasal verbs', 'business']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'He was offered a promotion but decided to ___ it ___ because of the relocation.',
+    options: [{ label: 'turn down', value: 'turn down' }, { label: 'turn off', value: 'turn off' }, { label: 'turn over', value: 'turn over' }, { label: 'turn up', value: 'turn up' }],
+    correctAnswer: 'turn down', points: 2, orderIndex: 87, tags: ['phrasal verbs', 'business']
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'I\'d like to ___ ___ that client satisfaction has dropped by 15% this quarter.',
+    correctAnswer: 'point out', points: 2, orderIndex: 88, tags: ['phrasal verbs', 'business']
+  },
+
+  // ============================================================
+  // C1 — Advanced Phrasal Verbs (5 questions)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'The company plans to ___ its legacy IT systems over the next two years.',
+    options: [{ label: 'phase out', value: 'phase out' }, { label: 'phase in', value: 'phase in' }, { label: 'phase off', value: 'phase off' }, { label: 'phase up', value: 'phase up' }],
+    correctAnswer: 'phase out', points: 2, orderIndex: 89, tags: ['phrasal verbs', 'formal']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The legal team will ___ ___ a new contract before the end of the quarter.',
+    correctAnswer: 'draw up', points: 2, orderIndex: 90, tags: ['phrasal verbs', 'formal']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'The merger ___ at the last minute due to regulatory concerns.',
+    options: [{ label: 'fell through', value: 'fell through' }, { label: 'fell out', value: 'fell out' }, { label: 'fell behind', value: 'fell behind' }, { label: 'fell apart', value: 'fell apart' }],
+    correctAnswer: 'fell through', points: 2, orderIndex: 91, tags: ['phrasal verbs', 'formal']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The budget must ___ ___ unexpected expenses such as equipment repairs.',
+    correctAnswer: 'account for', points: 2, orderIndex: 92, tags: ['phrasal verbs', 'formal']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'We cannot ___ the possibility that the delay was caused by a supplier issue.',
+    options: [{ label: 'rule out', value: 'rule out' }, { label: 'rule over', value: 'rule over' }, { label: 'rule off', value: 'rule off' }, { label: 'rule up', value: 'rule up' }],
+    correctAnswer: 'rule out', points: 2, orderIndex: 93, tags: ['phrasal verbs', 'formal']
+  },
+
+  // ============================================================
+  // C2 — Sophisticated Phrasal Verbs (5 questions)
+  // ============================================================
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'Management tried to ___ the growing divisions within the leadership team.',
+    options: [{ label: 'paper over', value: 'paper over' }, { label: 'paper up', value: 'paper up' }, { label: 'paper through', value: 'paper through' }, { label: 'paper out', value: 'paper out' }],
+    correctAnswer: 'paper over', points: 2, orderIndex: 94, tags: ['phrasal verbs', 'literary']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The CEO managed to ___ ___ a hostile takeover bid from a rival corporation.',
+    correctAnswer: 'fend off', points: 2, orderIndex: 95, tags: ['phrasal verbs', 'literary']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'After weeks of tense negotiations, the two parties finally ___ a deal.',
+    options: [{ label: 'hammered out', value: 'hammered out' }, { label: 'hammered in', value: 'hammered in' }, { label: 'hammered up', value: 'hammered up' }, { label: 'hammered on', value: 'hammered on' }],
+    correctAnswer: 'hammered out', points: 2, orderIndex: 96, tags: ['phrasal verbs', 'literary']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
+    questionText: 'The board decided to ___ ___ key stakeholders before announcing the restructuring.',
+    correctAnswer: 'sound out', points: 2, orderIndex: 97, tags: ['phrasal verbs', 'literary']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
+    questionText: 'The government has pledged to ___ public spending to reduce the national debt.',
+    options: [{ label: 'rein in', value: 'rein in' }, { label: 'rein out', value: 'rein out' }, { label: 'rein off', value: 'rein off' }, { label: 'rein up', value: 'rein up' }],
+    correctAnswer: 'rein in', points: 2, orderIndex: 98, tags: ['phrasal verbs', 'literary']
+  },
 ]
