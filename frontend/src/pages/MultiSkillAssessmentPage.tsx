@@ -95,13 +95,17 @@ export function MultiSkillAssessmentPage() {
         const meta = assessment.metadata as Record<string, any> | null
         const anyHasPreTest = meta?.preTestData ||
           myAssessments.some((a: any) => (a.metadata as any)?.preTestData)
-        if (anyHasPreTest) {
+        // Also skip pre-test form if user already started sections on any assessment
+        const alreadyTesting = assessment.status === 'IN_PROGRESS' ||
+          myAssessments.some((a: any) => a.status === 'IN_PROGRESS' || a.status === 'COMPLETED')
+        if (anyHasPreTest || alreadyTesting) {
           setHasPreTestData(true)
         }
       }
-      // Show intro if no sections have been started yet
+      // Show intro only if no sections have been started/completed/skipped yet
       const anyStarted = data.some((s: AssessmentSection) => s.status !== 'PENDING')
-      setShowIntro(!anyStarted)
+      const assessmentInProgress = assessment?.status === 'IN_PROGRESS' && anyStarted
+      setShowIntro(!anyStarted && !assessmentInProgress)
     } catch (err: any) {
       setError(err.response?.data?.error || err.message)
     } finally {
