@@ -341,17 +341,37 @@ router.get('/:id/results', authenticate, async (req: Request, res: Response) => 
 
     const results = await sectionAssessmentService.getMultiSkillResults(req.params.id)
 
-    // Students only see CEFR level — no scores, answers, or detailed breakdown
+    // Students see CEFR levels but no scores, answers, or detailed breakdown
     const isStudent = role === 'STUDENT' || (!role && assessment.studentId === req.user?.studentId)
     if (isStudent) {
       const studentView = {
-        assessmentId: results.assessment.id,
-        language: results.assessment.language,
-        cefrLevel: results.assessment.cefrLevel,
-        cefrSublevel: results.assessment.cefrSublevel,
-        cefrName: results.assessment.cefrName,
-        completedAt: results.assessment.completedAt,
-        // Strip: answers, scores, per-section details, skill breakdowns
+        assessment: {
+          id: results.assessment.id,
+          language: results.assessment.language,
+          cefrLevel: results.assessment.cefrLevel,
+          cefrSublevel: results.assessment.cefrSublevel,
+          cefrName: results.assessment.cefrName,
+          cefrSublevelName: results.assessment.cefrSublevelName,
+          completedAt: results.assessment.completedAt,
+          readingLevel: results.assessment.readingLevel,
+          listeningLevel: results.assessment.listeningLevel,
+          writingLevel: results.assessment.writingLevel,
+          speakingLevel: results.assessment.speakingLevel,
+        },
+        student: results.student,
+        sections: results.sections.map((s: any) => ({
+          id: s.id,
+          skill: s.skill,
+          status: s.status,
+          cefrLevel: s.cefrLevel,
+          cefrSublevel: s.cefrSublevel,
+          cefrName: s.cefrName,
+          cefrSublevelName: s.cefrSublevelName,
+          questionsAnswered: s.questionsAnswered,
+          questionsTotal: s.questionsTotal,
+        })),
+        writingResponses: [],
+        speakingResponses: [],
       }
       return res.json(apiResponse.success(studentView))
     }
