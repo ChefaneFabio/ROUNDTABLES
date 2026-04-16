@@ -1,41 +1,36 @@
 import fs from 'fs'
 import path from 'path'
-import OpenAI from 'openai'
 
-// TTS speed varies by CEFR level
-const SPEED_BY_LEVEL: Record<string, number> = {
-  A1: 0.8, A2: 0.85, B1: 0.9, B2: 1.0, C1: 1.1, C2: 1.15
+// ElevenLabs multilingual voices — these support all 5 languages
+// Using v2 multilingual model for natural pronunciation
+const VOICES = [
+  { id: 'pFZP5JQG7iQjIQuC4Bku', name: 'Lily', gender: 'female' },
+  { id: 'TX3LPaxmHKxFdv7VOQHJ', name: 'Liam', gender: 'male' },
+  { id: 'XB0fDUnXU5powFXDhCwa', name: 'Charlotte', gender: 'female' },
+  { id: 'pqHfZKP75CvOlQylNhV4', name: 'Bill', gender: 'male' },
+  { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah', gender: 'female' },
+  { id: 'bIHbv24MWmeRgasZH58o', name: 'Will', gender: 'male' },
+]
+
+// Stability/similarity settings by CEFR — lower levels get slower, clearer speech
+const SETTINGS_BY_LEVEL: Record<string, { stability: number; similarity_boost: number; speed: number }> = {
+  A1: { stability: 0.85, similarity_boost: 0.6, speed: 0.75 },
+  A2: { stability: 0.80, similarity_boost: 0.65, speed: 0.8 },
+  B1: { stability: 0.75, similarity_boost: 0.7, speed: 0.85 },
+  B2: { stability: 0.65, similarity_boost: 0.75, speed: 0.95 },
+  C1: { stability: 0.55, similarity_boost: 0.8, speed: 1.0 },
+  C2: { stability: 0.50, similarity_boost: 0.85, speed: 1.05 },
 }
 
-// Multiple voices per language for variety
-const VOICES_BY_LANGUAGE: Record<string, string[]> = {
-  English: ['alloy', 'nova', 'echo', 'shimmer', 'onyx', 'fable'],
-  Italian: ['onyx', 'nova', 'alloy', 'shimmer'],
-  Spanish: ['nova', 'alloy', 'shimmer', 'echo'],
-  French: ['shimmer', 'nova', 'alloy', 'onyx'],
-  German: ['echo', 'onyx', 'alloy', 'nova']
-}
-
-// Default single voice per language (backward compatible)
-const DEFAULT_VOICE: Record<string, string> = {
-  English: 'alloy',
-  Italian: 'onyx',
-  Spanish: 'nova',
-  French: 'shimmer',
-  German: 'echo'
-}
-
-// Dialogue line separator — ttsScript uses "SPEAKER_A:" / "SPEAKER_B:" prefixes
+const ELEVENLABS_API_URL = 'https://api.elevenlabs.io/v1'
 const DIALOGUE_PATTERN = /^(SPEAKER_[A-Z]|PERSON_[A-Z]|[A-Z]+)\s*:\s*/gm
 
 export class TtsService {
-  private openai: OpenAI | null = null
+  private apiKey: string | null = null
   private audioDir: string
 
   constructor() {
-    if (process.env.OPENAI_API_KEY) {
-      this.openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
-    }
+    this.apiKey = process.env.ELEVENLABS_API_KEY || null
     this.audioDir = path.join(__dirname, '../../public/audio')
     if (!fs.existsSync(this.audioDir)) {
       fs.mkdirSync(this.audioDir, { recursive: true })
@@ -43,34 +38,23 @@ export class TtsService {
   }
 
   isConfigured(): boolean {
-    return !!this.openai
+    return !!this.apiKey
   }
 
-  /**
-   * Pick a voice for a question — rotates through available voices
-   * based on questionId hash for consistency (same question = same voice)
-   */
-  private pickVoice(language: string, questionId: string): string {
-    const voices = VOICES_BY_LANGUAGE[language] || VOICES_BY_LANGUAGE['English']
-    // Simple hash from questionId to pick a consistent voice
+  /** Pick a voice based on questionId hash for consistency */
+  private pickVoice(questionId: string): typeof VOICES[0] {
     let hash = 0
     for (let i = 0; i < questionId.length; i++) {
       hash = ((hash << 5) - hash + questionId.charCodeAt(i)) | 0
     }
-    return voices[Math.abs(hash) % voices.length]
+    return VOICES[Math.abs(hash) % VOICES.length]
   }
 
-  /**
-   * Check if a ttsScript contains dialogue markers (multi-speaker)
-   */
   private isDialogue(ttsScript: string): boolean {
+    DIALOGUE_PATTERN.lastIndex = 0
     return DIALOGUE_PATTERN.test(ttsScript)
   }
 
-  /**
-   * Parse dialogue script into speaker segments
-   * Format: "SPEAKER_A: Hello!\nSPEAKER_B: Hi there!"
-   */
   private parseDialogue(ttsScript: string): Array<{ speaker: string; text: string }> {
     const lines = ttsScript.split('\n').filter(l => l.trim())
     const segments: Array<{ speaker: string; text: string }> = []
@@ -80,10 +64,8 @@ export class TtsService {
       if (match) {
         segments.push({ speaker: match[1], text: match[2].trim() })
       } else if (segments.length > 0) {
-        // Continuation of previous speaker
         segments[segments.length - 1].text += ' ' + line.trim()
       } else {
-        // No speaker prefix — treat as single narrator
         segments.push({ speaker: 'NARRATOR', text: line.trim() })
       }
     }
@@ -91,130 +73,115 @@ export class TtsService {
     return segments
   }
 
-  /**
-   * Assign distinct voices to dialogue speakers
-   */
-  private assignSpeakerVoices(speakers: string[], language: string): Record<string, string> {
-    const voices = VOICES_BY_LANGUAGE[language] || VOICES_BY_LANGUAGE['English']
-    const assignment: Record<string, string> = {}
-
-    // Assign male+female alternating for natural dialogue
-    const maleVoices = ['alloy', 'echo', 'onyx', 'fable']
-    const femaleVoices = ['nova', 'shimmer']
-    const availableMale = maleVoices.filter(v => voices.includes(v))
-    const availableFemale = femaleVoices.filter(v => voices.includes(v))
+  /** Assign male/female voices alternating for dialogue */
+  private assignSpeakerVoices(speakers: string[]): Record<string, typeof VOICES[0]> {
+    const males = VOICES.filter(v => v.gender === 'male')
+    const females = VOICES.filter(v => v.gender === 'female')
+    const assignment: Record<string, typeof VOICES[0]> = {}
 
     speakers.forEach((speaker, i) => {
       if (i % 2 === 0) {
-        assignment[speaker] = availableMale[Math.floor(i / 2) % availableMale.length] || voices[0]
+        assignment[speaker] = females[Math.floor(i / 2) % females.length]
       } else {
-        assignment[speaker] = availableFemale[Math.floor(i / 2) % availableFemale.length] || voices[1]
+        assignment[speaker] = males[Math.floor(i / 2) % males.length]
       }
     })
 
     return assignment
   }
 
-  /**
-   * Generate single-voice audio
-   */
-  private async generateSingleVoice(
-    text: string, voice: string, speed: number
-  ): Promise<Buffer> {
-    if (!this.openai) throw new Error('OpenAI API key not configured')
+  /** Call ElevenLabs TTS API and return audio buffer */
+  private async generateSingleVoice(text: string, voiceId: string, cefrLevel: string): Promise<Buffer> {
+    if (!this.apiKey) throw new Error('ElevenLabs API key not configured')
 
-    const mp3 = await this.openai.audio.speech.create({
-      model: 'tts-1',
-      voice: voice as any,
-      input: text,
-      speed,
-      response_format: 'mp3'
+    const settings = SETTINGS_BY_LEVEL[cefrLevel] || SETTINGS_BY_LEVEL['B1']
+
+    const response = await fetch(`${ELEVENLABS_API_URL}/text-to-speech/${voiceId}`, {
+      method: 'POST',
+      headers: {
+        'xi-api-key': this.apiKey,
+        'Content-Type': 'application/json',
+        'Accept': 'audio/mpeg',
+      },
+      body: JSON.stringify({
+        text,
+        model_id: 'eleven_multilingual_v2',
+        voice_settings: {
+          stability: settings.stability,
+          similarity_boost: settings.similarity_boost,
+          speed: settings.speed,
+        }
+      })
     })
 
-    return Buffer.from(await mp3.arrayBuffer())
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => 'Unknown error')
+      throw new Error(`ElevenLabs API error ${response.status}: ${errorText}`)
+    }
+
+    return Buffer.from(await response.arrayBuffer())
   }
 
-  /**
-   * Generate dialogue audio — concatenates multiple voice segments
-   */
+  /** Generate dialogue audio — concatenate multiple voice segments */
   private async generateDialogueAudio(
     segments: Array<{ speaker: string; text: string }>,
-    voiceAssignment: Record<string, string>,
-    speed: number
+    voiceAssignment: Record<string, typeof VOICES[0]>,
+    cefrLevel: string
   ): Promise<Buffer> {
-    if (!this.openai) throw new Error('OpenAI API key not configured')
-
     const buffers: Buffer[] = []
 
     for (const segment of segments) {
-      const voice = voiceAssignment[segment.speaker] || 'alloy'
-
-      const mp3 = await this.openai.audio.speech.create({
-        model: 'tts-1',
-        voice: voice as any,
-        input: segment.text,
-        speed,
-        response_format: 'mp3'
-      })
-
-      buffers.push(Buffer.from(await mp3.arrayBuffer()))
+      const voice = voiceAssignment[segment.speaker] || VOICES[0]
+      const buffer = await this.generateSingleVoice(segment.text, voice.id, cefrLevel)
+      buffers.push(buffer)
     }
 
-    // Simple concatenation of MP3 buffers — works for sequential playback
     return Buffer.concat(buffers)
   }
 
-  /**
-   * Generate TTS audio for a question and return the file path
-   */
-  async generateAudio(questionId: string, text: string, language: string, cefrLevel: string): Promise<string> {
+  /** Generate TTS audio for a question and save to disk */
+  async generateAudio(questionId: string, text: string, _language: string, cefrLevel: string): Promise<string> {
     const filename = `tts_${questionId}.mp3`
     const filePath = path.join(this.audioDir, filename)
 
-    // Return existing file if already generated
     if (fs.existsSync(filePath)) {
       return `/audio/${filename}`
     }
 
-    if (!this.openai) {
-      throw new Error('OpenAI API key not configured. Set OPENAI_API_KEY in .env')
+    if (!this.apiKey) {
+      throw new Error('ElevenLabs API key not configured. Set ELEVENLABS_API_KEY in env.')
     }
 
-    const speed = SPEED_BY_LEVEL[cefrLevel] || 1.0
     let buffer: Buffer
 
-    // Check if this is a dialogue script
-    DIALOGUE_PATTERN.lastIndex = 0 // Reset regex state
+    DIALOGUE_PATTERN.lastIndex = 0
     if (this.isDialogue(text)) {
       DIALOGUE_PATTERN.lastIndex = 0
       const segments = this.parseDialogue(text)
       const uniqueSpeakers = [...new Set(segments.map(s => s.speaker))]
-      const voiceAssignment = this.assignSpeakerVoices(uniqueSpeakers, language)
-      buffer = await this.generateDialogueAudio(segments, voiceAssignment, speed)
+      const voiceAssignment = this.assignSpeakerVoices(uniqueSpeakers)
+      buffer = await this.generateDialogueAudio(segments, voiceAssignment, cefrLevel)
     } else {
-      // Single voice — rotate per question for variety
-      const voice = this.pickVoice(language, questionId)
-      buffer = await this.generateSingleVoice(text, voice, speed)
+      const voice = this.pickVoice(questionId)
+      buffer = await this.generateSingleVoice(text, voice.id, cefrLevel)
     }
 
     fs.writeFileSync(filePath, buffer)
     return `/audio/${filename}`
   }
 
-  // Get existing audio URL or generate on demand
+  /** Get existing audio URL or generate on demand */
   async getAudioUrl(questionId: string, ttsScript: string, language: string, cefrLevel: string): Promise<string | null> {
     const filename = `tts_${questionId}.mp3`
     const filePath = path.join(this.audioDir, filename)
 
     const baseUrl = process.env.BACKEND_URL || process.env.RENDER_EXTERNAL_URL || ''
 
-    // Check if already exists
     if (fs.existsSync(filePath)) {
       return `${baseUrl}/audio/${filename}`
     }
 
-    // Generate if API is configured
-    if (this.openai && ttsScript) {
+    if (this.apiKey && ttsScript) {
       try {
         const relativePath = await this.generateAudio(questionId, ttsScript, language, cefrLevel)
         return `${baseUrl}${relativePath}`
@@ -227,7 +194,7 @@ export class TtsService {
     return null
   }
 
-  // Bulk pre-generate audio for all listening questions
+  /** Bulk pre-generate audio for all listening questions */
   async preGenerateAll(questions: Array<{ id: string; ttsScript: string; language: string; cefrLevel: string }>) {
     const results: Array<{ id: string; status: 'success' | 'skipped' | 'error'; url?: string; error?: string }> = []
 
