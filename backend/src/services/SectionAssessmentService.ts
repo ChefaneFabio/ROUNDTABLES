@@ -338,9 +338,9 @@ export class SectionAssessmentService {
         maxScore: null,
         percentageScore: null,
         cefrLevel: null,
-        aiScore: null,
-        teacherScore: null,
-        finalScore: null,
+        aiScore: Prisma.JsonNull,
+        teacherScore: Prisma.JsonNull,
+        finalScore: Prisma.JsonNull,
       }
     })
   }
@@ -404,9 +404,9 @@ export class SectionAssessmentService {
         maxScore: null,
         percentageScore: null,
         cefrLevel: null,
-        aiScore: null,
-        teacherScore: null,
-        finalScore: null,
+        aiScore: Prisma.JsonNull,
+        teacherScore: Prisma.JsonNull,
+        finalScore: Prisma.JsonNull,
       }
     })
 
@@ -549,7 +549,7 @@ export class SectionAssessmentService {
 
     // Map skill to question types and allowed skill tags for querying
     const skillQuestionTypes = this.getQuestionTypesForSkill(section.skill)
-    const allowedSkills = this.getSkillsForSection(section.skill)
+    const allowedSkills = this.getSkillsForSection(section.skill) as AssessmentSkill[]
 
     // Get available questions from the target level, then pick one randomly
     const baseWhere = {

@@ -345,12 +345,12 @@ router.get('/:id/results', authenticate, async (req: Request, res: Response) => 
     const isStudent = role === 'STUDENT' || (!role && assessment.studentId === req.user?.studentId)
     if (isStudent) {
       const studentView = {
-        assessmentId: results.assessmentId,
-        language: results.language,
-        cefrLevel: results.cefrLevel,
-        cefrSublevel: results.cefrSublevel,
-        cefrName: results.cefrName,
-        completedAt: results.completedAt,
+        assessmentId: results.assessment.id,
+        language: results.assessment.language,
+        cefrLevel: results.assessment.cefrLevel,
+        cefrSublevel: results.assessment.cefrSublevel,
+        cefrName: results.assessment.cefrName,
+        completedAt: results.assessment.completedAt,
         // Strip: answers, scores, per-section details, skill breakdowns
       }
       return res.json(apiResponse.success(studentView))

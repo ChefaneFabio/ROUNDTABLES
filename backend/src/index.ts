@@ -159,7 +159,9 @@ app.use('/api/dashboard', dashboardRoutes)
 app.use('/api/availability', availabilityRoutes)
 app.use('/api/payroll', payrollRoutes)
 app.use('/api/invoices', invoiceRoutes)
-// New feature routes
+// New feature routes — multi-skill must be registered BEFORE /assessments
+// so Express matches the more specific prefix first
+app.use('/api/assessments/multi-skill', sectionAssessmentRoutes)
 app.use('/api/assessments', assessmentRoutes)
 app.use('/api/certificates', certificateRoutes)
 app.use('/api/analytics', analyticsRoutes)
@@ -171,8 +173,6 @@ app.use('/api/chat', chatRoutes)
 app.use('/api/videos', videoLibraryRoutes)
 app.use('/api/exercises', exerciseRoutes)
 app.use('/api/speech', speechRoutes)
-// Phase 3: Multi-skill assessment routes
-app.use('/api/assessments/multi-skill', sectionAssessmentRoutes)
 // B2B feature routes
 app.use('/api/organizations', organizationRoutes)
 app.use('/api/seat-licenses', seatLicenseRoutes)
