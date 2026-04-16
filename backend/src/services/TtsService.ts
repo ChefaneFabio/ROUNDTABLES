@@ -206,15 +206,18 @@ export class TtsService {
     const filename = `tts_${questionId}.mp3`
     const filePath = path.join(this.audioDir, filename)
 
+    const baseUrl = process.env.BACKEND_URL || process.env.RENDER_EXTERNAL_URL || ''
+
     // Check if already exists
     if (fs.existsSync(filePath)) {
-      return `/audio/${filename}`
+      return `${baseUrl}/audio/${filename}`
     }
 
     // Generate if API is configured
     if (this.openai && ttsScript) {
       try {
-        return await this.generateAudio(questionId, ttsScript, language, cefrLevel)
+        const relativePath = await this.generateAudio(questionId, ttsScript, language, cefrLevel)
+        return `${baseUrl}${relativePath}`
       } catch (error) {
         console.error(`TTS generation failed for question ${questionId}:`, error)
         return null
