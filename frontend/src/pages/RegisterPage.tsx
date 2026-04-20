@@ -89,6 +89,13 @@ export function RegisterPage() {
             Sign in
           </Link>
         </p>
+        <p className="mt-1 text-center text-xs text-gray-400">
+          Or try a{' '}
+          <Link to="/login" className="text-primary-500 hover:text-primary-600">
+            demo account
+          </Link>{' '}
+          (Admin / Trainer / Learner)
+        </p>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
