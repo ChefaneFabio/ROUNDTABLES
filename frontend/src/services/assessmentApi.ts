@@ -312,6 +312,28 @@ export const assessmentApi = {
     return response.data.data
   },
 
+  // Admin: List pending retry requests
+  async getRetryRequests(): Promise<Array<{
+    notificationId: string
+    requestedAt: string
+    assessmentId?: string
+    sectionId?: string
+    skill?: string
+    language?: string
+    studentName: string
+    studentEmail: string | null
+    alreadyHandled: boolean
+  }>> {
+    const response = await api.get('/assessments/multi-skill/admin/retry-requests')
+    return response.data.data
+  },
+
+  // Admin: Deny a retry request
+  async denyRetryRequest(notificationId: string): Promise<any> {
+    const response = await api.post(`/assessments/multi-skill/admin/retry-requests/${notificationId}/deny`)
+    return response.data.data
+  },
+
   // Get next question for a section
   async getSectionNextQuestion(assessmentId: string, sectionId: string): Promise<{
     isComplete: boolean

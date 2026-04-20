@@ -38,6 +38,7 @@ import AdminScormPackagesPage from './pages/admin/ScormPackagesPage'
 import AdminAssessmentQuestionsPage from './pages/admin/AssessmentQuestionsPage'
 import AdminAssessmentManagementPage from './pages/admin/AssessmentManagementPage'
 import AdminReviewQueuePage from './pages/admin/ReviewQueuePage'
+import RetryRequestsPage from './pages/admin/RetryRequestsPage'
 import AdminCalendarPage from './pages/admin/CalendarPage'
 // Assessment review pages
 import { AssessmentReviewPage } from './pages/AssessmentReviewPage'
@@ -676,6 +677,18 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN, UserRole.TEACHER]}>
             <Layout>
               <AdminReviewQueuePage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Retry Requests (student requests to retake a section) */}
+      <Route
+        path="/admin/retry-requests"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <RetryRequestsPage />
             </Layout>
           </ProtectedRoute>
         }

@@ -457,6 +457,26 @@ router.post('/:id/sections/:sectionId/approve-retry', authenticate, requireSchoo
   }
 })
 
+// Admin: list pending retry requests
+router.get('/admin/retry-requests', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const result = await sectionAssessmentService.getPendingRetryRequests(req.user!.id)
+    return res.json(apiResponse.success(result))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// Admin denies a retry request
+router.post('/admin/retry-requests/:notificationId/deny', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const result = await sectionAssessmentService.denyRetryRequest(req.params.notificationId, req.user!.id)
+    return res.json(apiResponse.success(result))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // ==================== Teacher/Admin Routes ====================
 
 // Get sections pending teacher review

@@ -432,7 +432,110 @@ export class SectionAssessmentService {
       }
     })
 
+    // Mark all admin retry-request notifications for this section as handled,
+    // so it disappears from every admin's pending queue.
+    await prisma.notification.updateMany({
+      where: {
+        readAt: null,
+        AND: [
+          { metadata: { path: ['type'], equals: 'SECTION_RETRY_REQUEST' } },
+          { metadata: { path: ['sectionId'], equals: sectionId } },
+        ],
+      },
+      data: { readAt: new Date() },
+    })
+
     return { message: 'Section retry approved' }
+  }
+
+  // List unhandled retry requests for an admin (one row per request notification).
+  async getPendingRetryRequests(adminUserId: string) {
+    const notifications = await prisma.notification.findMany({
+      where: {
+        userId: adminUserId,
+        readAt: null,
+        metadata: { path: ['type'], equals: 'SECTION_RETRY_REQUEST' },
+      },
+      orderBy: { createdAt: 'desc' },
+    })
+
+    const enriched = await Promise.all(
+      notifications.map(async (n) => {
+        const meta = (n.metadata as any) || {}
+        const section = meta.sectionId
+          ? await prisma.assessmentSection.findUnique({
+              where: { id: meta.sectionId },
+              include: {
+                assessment: { include: { student: { include: { user: true } } } },
+              },
+            })
+          : null
+
+        return {
+          notificationId: n.id,
+          requestedAt: n.createdAt,
+          assessmentId: meta.assessmentId as string | undefined,
+          sectionId: meta.sectionId as string | undefined,
+          skill: meta.skill as string | undefined,
+          language: meta.language as string | undefined,
+          studentName: section?.assessment.student.user.name ?? 'Unknown',
+          studentEmail: section?.assessment.student.user.email ?? null,
+          // If section is no longer COMPLETED, another admin has already approved.
+          alreadyHandled: section ? section.status !== 'COMPLETED' : true,
+        }
+      })
+    )
+
+    return enriched
+  }
+
+  // Deny a retry request — marks every admin's notification for that section
+  // read and notifies the student.
+  async denyRetryRequest(notificationId: string, adminUserId: string) {
+    const n = await prisma.notification.findUnique({ where: { id: notificationId } })
+    if (!n) throw new Error('Request not found')
+    if (n.userId !== adminUserId) throw new Error('Access denied')
+
+    const meta = (n.metadata as any) || {}
+    const sectionId = meta.sectionId as string | undefined
+    if (!sectionId) throw new Error('Request is missing sectionId')
+
+    await prisma.notification.updateMany({
+      where: {
+        readAt: null,
+        AND: [
+          { metadata: { path: ['type'], equals: 'SECTION_RETRY_REQUEST' } },
+          { metadata: { path: ['sectionId'], equals: sectionId } },
+        ],
+      },
+      data: { readAt: new Date() },
+    })
+
+    const section = await prisma.assessmentSection.findUnique({
+      where: { id: sectionId },
+      include: { assessment: { include: { student: { include: { user: true } } } } },
+    })
+
+    if (section) {
+      await prisma.notification.create({
+        data: {
+          type: 'GENERAL',
+          subject: `Retry Request: ${section.skill} section`,
+          content: `Your request to retry the ${section.skill} section was not approved. Please contact your administrator if you have questions.`,
+          status: 'SENT',
+          sentAt: new Date(),
+          userId: section.assessment.student.user.id,
+          metadata: {
+            assessmentId: section.assessmentId,
+            sectionId,
+            skill: section.skill,
+            type: 'SECTION_RETRY_DENIED',
+          },
+        },
+      })
+    }
+
+    return { message: 'Request denied' }
   }
 
   // Start a section (set timer)
