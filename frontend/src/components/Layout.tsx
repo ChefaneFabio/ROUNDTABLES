@@ -326,7 +326,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }
 
   const getRoleBadge = () => {
-    if (isAdmin) return { text: 'Maka', color: 'bg-red-100 text-red-800' }
+    if (isAdmin) return { text: 'Admin', color: 'bg-red-100 text-red-800' }
     if (isTeacher) return { text: 'Trainer', color: 'bg-green-100 text-green-800' }
     if (isStudent) return { text: 'Learner', color: 'bg-purple-100 text-purple-800' }
     if (user?.role === UserRole.ORG_ADMIN) return { text: 'Org Admin', color: 'bg-blue-100 text-blue-800' }

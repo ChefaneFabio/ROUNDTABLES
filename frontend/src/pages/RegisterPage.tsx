@@ -27,12 +27,21 @@ const schema = yup.object({
 
 type FormData = yup.InferType<typeof schema>
 
+type Role = 'STUDENT' | 'TEACHER' | 'ADMIN'
+
+const ROLE_TABS: Array<{ value: Role; label: string; hint: string }> = [
+  { value: 'STUDENT', label: 'Learner', hint: 'I want to take courses and assessments' },
+  { value: 'TEACHER', label: 'Trainer', hint: 'I deliver lessons and grade students' },
+  { value: 'ADMIN', label: 'Admin', hint: 'I manage the platform' },
+]
+
 export function RegisterPage() {
   const { register: registerUser } = useAuth()
   const navigate = useNavigate()
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [role, setRole] = useState<Role>('STUDENT')
 
   const {
     register,
@@ -52,6 +61,7 @@ export function RegisterPage() {
         password: data.password,
         phone: data.phone,
         company: data.company,
+        role,
       })
       navigate('/')
     } catch (err: any) {
@@ -91,6 +101,28 @@ export function RegisterPage() {
               className="mb-6"
             />
           )}
+
+          {/* Role selector */}
+          <div className="mb-6">
+            <label className="label">I am a…</label>
+            <div className="grid grid-cols-3 gap-2">
+              {ROLE_TABS.map(t => (
+                <button
+                  key={t.value}
+                  type="button"
+                  onClick={() => setRole(t.value)}
+                  className={`px-3 py-2 rounded-lg border-2 text-sm font-semibold transition-all ${
+                    role === t.value
+                      ? 'border-primary-500 bg-primary-50 text-primary-700'
+                      : 'border-gray-200 text-gray-600 hover:border-gray-300'
+                  }`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-gray-500 mt-1.5">{ROLE_TABS.find(t => t.value === role)?.hint}</p>
+          </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div>

@@ -301,7 +301,7 @@ export const SettingsPage: React.FC = () => {
             {isStaff && (
               <div className="bg-white rounded-xl border border-gray-200 p-6">
                 <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-5">
-                  {isAdmin ? 'Maka' : 'Trainer'} Notifications
+                  {isAdmin ? 'Admin' : 'Trainer'} Notifications
                 </h2>
                 <div className="space-y-0 divide-y divide-gray-100">
                   {[

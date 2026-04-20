@@ -36,6 +36,40 @@ export class AuthService {
     return bcrypt.compare(password, hashedPassword)
   }
 
+  // Public self-registration for any of the 3 main roles. Issues a JWT pair so
+  // the new user is logged in immediately. Defaults to the Maka school for
+  // student/teacher profiles.
+  async registerPublic(input: { role: 'ADMIN' | 'TEACHER' | 'STUDENT'; email: string; password: string; name: string }) {
+    const { role, email, password, name } = input
+
+    if (!['ADMIN', 'TEACHER', 'STUDENT'].includes(role)) {
+      throw new Error('Invalid role')
+    }
+
+    const existing = await prisma.user.findUnique({ where: { email } })
+    if (existing) {
+      throw new Error('User with this email already exists')
+    }
+
+    const hashedPassword = await this.hashPassword(password)
+    const defaultSchoolId = 'maka-language-centre'
+
+    const user = await prisma.$transaction(async (tx) => {
+      const u = await tx.user.create({
+        data: { email, password: hashedPassword, name, role: role as UserRole },
+      })
+      if (role === 'TEACHER') {
+        await tx.teacher.create({ data: { userId: u.id, schoolId: defaultSchoolId } })
+      } else if (role === 'STUDENT') {
+        await tx.student.create({ data: { userId: u.id, schoolId: defaultSchoolId, languageLevel: 'B1' } })
+      }
+      return u
+    })
+
+    const tokens = generateTokens(user)
+    return { user: this.sanitizeUser(user), ...tokens }
+  }
+
   // Register a new admin user
   async registerAdmin(input: RegisterUserInput) {
     const { email, password, name } = input

@@ -168,6 +168,19 @@ export const authApi = {
     return response.data.data!
   },
 
+  async registerPublic(data: {
+    role: 'ADMIN' | 'TEACHER' | 'STUDENT'
+    email: string
+    password: string
+    name: string
+  }): Promise<LoginResponse> {
+    const response = await api.post<ApiResponse<LoginResponse>>('/auth/register-public', data)
+    if (response.data.success && response.data.data) {
+      setTokens(response.data.data.accessToken, response.data.data.refreshToken)
+    }
+    return response.data.data!
+  },
+
   async registerOrganization(data: any): Promise<any> {
     const response = await api.post<ApiResponse<any>>('/auth/register/organization', data)
     if (response.data.success && response.data.data) {

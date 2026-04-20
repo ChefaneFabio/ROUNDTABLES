@@ -148,6 +148,29 @@ router.post(
   }
 )
 
+// Public self-registration for any of the three main roles. Used by the
+// frontend register page when a new user picks Maka / Trainer / Learner.
+const publicRegisterSchema = Joi.object({
+  role: Joi.string().valid('ADMIN', 'TEACHER', 'STUDENT').required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().min(8).max(100).required(),
+  name: Joi.string().min(2).max(100).required(),
+})
+
+router.post(
+  '/register-public',
+  authLimiter,
+  validateRequest(publicRegisterSchema),
+  async (req: Request, res: Response) => {
+    try {
+      const result = await authService.registerPublic(req.body)
+      res.status(201).json(apiResponse.success(result, 'Account created'))
+    } catch (error) {
+      handleError(res, error)
+    }
+  }
+)
+
 // Register a new student (school admin or self-registration with school invite)
 router.post(
   '/register/student',

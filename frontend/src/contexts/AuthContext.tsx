@@ -15,6 +15,7 @@ interface AuthContextType {
     name: string
     phone?: string
     company?: string
+    role?: 'ADMIN' | 'TEACHER' | 'STUDENT'
   }) => Promise<void>
   registerOrganization: (data: RegisterOrganizationRequest) => Promise<void>
   refreshUser: () => Promise<void>
@@ -83,14 +84,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     name: string
     phone?: string
     company?: string
+    role?: 'ADMIN' | 'TEACHER' | 'STUDENT'
   }) => {
-    // Register as a student under Maka Learning Management System
-    const response = await authApi.registerStudent({
+    const role = data.role || 'STUDENT'
+    const response = await authApi.registerPublic({
+      role,
       email: data.email,
       password: data.password,
       name: data.name,
-      schoolId: 'maka-language-centre', // Maka LMS's school ID
-      bio: data.company ? `Company: ${data.company}` : undefined,
     })
     setUser(response.user)
     setProfile(response.profile)
