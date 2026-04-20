@@ -44,7 +44,7 @@ interface PaginatedResponse {
 }
 
 const ROLE_BADGES: Record<string, { label: string; color: string; icon: React.ElementType }> = {
-  ADMIN: { label: 'Admin', color: 'bg-slate-100 text-slate-700 border-slate-200', icon: Shield },
+  ADMIN: { label: 'Maka', color: 'bg-slate-100 text-slate-700 border-slate-200', icon: Shield },
   TEACHER: { label: 'Trainer', color: 'bg-emerald-50 text-emerald-700 border-emerald-200', icon: GraduationCap },
   STUDENT: { label: 'Learner', color: 'bg-sky-50 text-sky-700 border-sky-200', icon: BookOpen },
   ORG_ADMIN: { label: 'HR / Org Admin', color: 'bg-violet-50 text-violet-700 border-violet-200', icon: Building2 },
@@ -52,7 +52,7 @@ const ROLE_BADGES: Record<string, { label: string; color: string; icon: React.El
 
 const ROLE_FILTERS: { value: RoleFilter; label: string }[] = [
   { value: 'ALL', label: 'All Roles' },
-  { value: 'ADMIN', label: 'Admin' },
+  { value: 'ADMIN', label: 'Maka' },
   { value: 'TEACHER', label: 'Trainer' },
   { value: 'STUDENT', label: 'Learner' },
   { value: 'ORG_ADMIN', label: 'HR / Org Admin' },

@@ -182,7 +182,7 @@ export function LoginPage() {
                 className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200/60 hover:bg-indigo-100 hover:border-indigo-300 transition-all duration-150 hover:shadow-sm"
               >
                 <span className="w-2 h-2 rounded-full bg-indigo-500" />
-                Admin
+                Maka
               </button>
               <button
                 type="button"

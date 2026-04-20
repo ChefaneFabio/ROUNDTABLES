@@ -52,7 +52,7 @@ export default function TeamPage() {
           </div>
         </div>
         <Button onClick={() => setShowAdd(true)} className="flex items-center gap-2">
-          <Plus className="w-4 h-4" /> Add Admin
+          <Plus className="w-4 h-4" /> Add Maka User
         </Button>
       </div>
 
@@ -64,7 +64,7 @@ export default function TeamPage() {
         <div className="flex items-start gap-3">
           <Shield className="w-5 h-5 text-gray-500 mt-0.5" />
           <div className="text-sm text-gray-600">
-            <p className="font-medium text-gray-800 mb-1">Admin accounts have full access to:</p>
+            <p className="font-medium text-gray-800 mb-1">Maka accounts have full access to:</p>
             <ul className="space-y-1 text-gray-500">
               <li>Manage teachers, students, and organizations</li>
               <li>Assign and monitor placement tests</li>
@@ -107,7 +107,7 @@ export default function TeamPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md mx-4 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-gray-900">Add Admin User</h2>
+              <h2 className="text-lg font-semibold text-gray-900">Add Maka User</h2>
               <button onClick={() => setShowAdd(false)} className="text-gray-400 hover:text-gray-600">
                 <X className="w-5 h-5" />
               </button>
