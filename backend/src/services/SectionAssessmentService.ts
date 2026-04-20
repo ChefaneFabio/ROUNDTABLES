@@ -1623,17 +1623,20 @@ export class SectionAssessmentService {
   private getQuestionTypesForSkill(skill: string): AssessmentQuestionType[] {
     switch (skill) {
       case 'READING':
-        return ['READING', 'MULTIPLE_CHOICE', 'FILL_BLANK', 'SHORT_ANSWER', 'ERROR_CORRECTION', 'SENTENCE_TRANSFORMATION'] as AssessmentQuestionType[]
+        // FILL_BLANK / SHORT_ANSWER produce too many ambiguous answers
+        // (multi-blank, "fire or lay off"). Stick to MC + ERROR_CORRECTION
+        // + SENTENCE_TRANSFORMATION which all have a clear single answer.
+        return ['READING', 'MULTIPLE_CHOICE', 'ERROR_CORRECTION', 'SENTENCE_TRANSFORMATION'] as AssessmentQuestionType[]
       case 'LISTENING':
         return ['LISTENING', 'DICTATION'] as AssessmentQuestionType[]
       case 'WRITING':
-        return ['WRITING', 'SHORT_ANSWER', 'ESSAY'] as AssessmentQuestionType[]
+        return ['WRITING', 'ESSAY'] as AssessmentQuestionType[]
       case 'SPEAKING':
         return ['SPEAKING_PROMPT'] as AssessmentQuestionType[]
       case 'GRAMMAR':
         return ['MULTIPLE_CHOICE'] as AssessmentQuestionType[]
       case 'VOCABULARY':
-        return ['MULTIPLE_CHOICE', 'FILL_BLANK'] as AssessmentQuestionType[]
+        return ['MULTIPLE_CHOICE'] as AssessmentQuestionType[]
       case 'ERROR_CORRECTION':
         return ['ERROR_CORRECTION'] as AssessmentQuestionType[]
       case 'SENTENCE_TRANSFORMATION':
