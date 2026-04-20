@@ -334,6 +334,24 @@ export const assessmentApi = {
     return response.data.data
   },
 
+  // Admin: Download question bank in txt | csv | doc, honoring the filters
+  async exportQuestionBank(params: {
+    language?: string
+    skill?: string
+    cefrLevel?: string
+    search?: string
+    format: 'txt' | 'csv' | 'doc'
+  }): Promise<{ blob: Blob; filename: string }> {
+    const response = await api.get('/assessments/multi-skill/admin/question-bank/export', {
+      params,
+      responseType: 'blob',
+    })
+    const disposition = response.headers['content-disposition'] || ''
+    const match = disposition.match(/filename="?([^"]+)"?/)
+    const filename = match?.[1] || `question-bank.${params.format}`
+    return { blob: response.data, filename }
+  },
+
   // Get next question for a section
   async getSectionNextQuestion(assessmentId: string, sectionId: string): Promise<{
     isComplete: boolean

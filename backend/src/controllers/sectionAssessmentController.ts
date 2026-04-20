@@ -545,6 +545,29 @@ router.get('/admin/question-bank', authenticate, requireTeacher, async (req: Req
   }
 })
 
+// Export question bank as txt / csv / doc (Word)
+router.get('/admin/question-bank/export', authenticate, requireTeacher, async (req: Request, res: Response) => {
+  try {
+    const { language, skill, cefrLevel, search, format } = req.query
+    const fmt = (format as string)?.toLowerCase()
+    if (!['txt', 'csv', 'doc'].includes(fmt)) {
+      return res.status(400).json(apiResponse.error('format must be one of txt, csv, doc', 'INVALID_FORMAT'))
+    }
+    const result = await sectionAssessmentService.exportQuestionBank({
+      language: language as string,
+      skill: skill as string,
+      cefrLevel: cefrLevel as string,
+      search: search as string,
+      format: fmt as 'txt' | 'csv' | 'doc',
+    })
+    res.setHeader('Content-Type', result.contentType)
+    res.setHeader('Content-Disposition', `attachment; filename="${result.filename}"`)
+    return res.send(result.body)
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // Get single question detail
 router.get('/admin/question-bank/:id', authenticate, requireTeacher, async (req: Request, res: Response) => {
   try {

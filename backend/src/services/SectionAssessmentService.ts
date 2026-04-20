@@ -1263,6 +1263,124 @@ export class SectionAssessmentService {
     return question
   }
 
+  async exportQuestionBank(filters: {
+    language?: string
+    skill?: string
+    cefrLevel?: string
+    search?: string
+    format: 'txt' | 'csv' | 'doc'
+  }): Promise<{ filename: string; contentType: string; body: string }> {
+    const { language, skill, cefrLevel, search, format } = filters
+
+    const where: Prisma.AssessmentQuestionWhereInput = { isActive: true }
+    if (language) where.language = language
+    if (skill) where.skill = skill as any
+    if (cefrLevel) where.cefrLevel = cefrLevel
+    if (search) where.questionText = { contains: search, mode: 'insensitive' }
+
+    const questions = await prisma.assessmentQuestion.findMany({
+      where,
+      orderBy: [
+        { language: 'asc' }, { skill: 'asc' }, { cefrLevel: 'asc' }, { orderIndex: 'asc' },
+      ],
+    })
+
+    const fileBase = [
+      'question-bank',
+      language?.toLowerCase(),
+      skill?.toLowerCase(),
+      cefrLevel?.toLowerCase(),
+    ].filter(Boolean).join('_')
+
+    const optionsToString = (opts: unknown): string => {
+      if (!opts || !Array.isArray(opts)) return ''
+      return (opts as any[])
+        .map((o, i) => {
+          const label = o?.label ?? String.fromCharCode(65 + i)
+          const value = o?.value ?? o
+          return `${label}) ${value}`
+        })
+        .join(' | ')
+    }
+
+    if (format === 'csv') {
+      const esc = (s: any) => {
+        if (s === null || s === undefined) return ''
+        const str = String(s).replace(/"/g, '""')
+        return `"${str}"`
+      }
+      const header = [
+        'language', 'skill', 'cefrLevel', 'questionType', 'questionText',
+        'options', 'correctAnswer', 'passageTitle', 'passage',
+        'ttsScript', 'speakingPrompt', 'points',
+      ].join(',')
+      const rows = questions.map(q => [
+        esc(q.language), esc(q.skill ?? ''), esc(q.cefrLevel), esc(q.questionType),
+        esc(q.questionText), esc(optionsToString(q.options)), esc(q.correctAnswer),
+        esc(q.passageTitle ?? ''), esc(q.passage ?? ''),
+        esc(q.ttsScript ?? ''), esc(q.speakingPrompt ?? ''), esc(q.points),
+      ].join(','))
+      return {
+        filename: `${fileBase}.csv`,
+        contentType: 'text/csv; charset=utf-8',
+        body: '\uFEFF' + [header, ...rows].join('\r\n'), // BOM so Excel detects UTF-8
+      }
+    }
+
+    if (format === 'doc') {
+      const escHtml = (s: any) =>
+        String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      const items = questions.map((q, i) => {
+        const opts = optionsToString(q.options)
+        return `
+          <p><b>${i + 1}. [${escHtml(q.language)} · ${escHtml(q.skill ?? '')} · ${escHtml(q.cefrLevel)} · ${escHtml(q.questionType)}]</b></p>
+          ${q.passageTitle || q.passage
+            ? `<p><i>${escHtml(q.passageTitle ?? '')}</i><br/>${escHtml(q.passage ?? '').replace(/\n/g, '<br/>')}</p>`
+            : ''}
+          <p>${escHtml(q.questionText)}</p>
+          ${opts ? `<p>${escHtml(opts)}</p>` : ''}
+          ${q.ttsScript ? `<p><i>TTS:</i> ${escHtml(q.ttsScript)}</p>` : ''}
+          ${q.speakingPrompt ? `<p><i>Prompt:</i> ${escHtml(q.speakingPrompt)}</p>` : ''}
+          <p><b>Answer:</b> ${escHtml(q.correctAnswer ?? '')}</p>
+          <hr/>
+        `
+      }).join('')
+      const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"><title>Question Bank</title></head>
+<body><h1>Question Bank Export</h1><p>${questions.length} questions</p>${items}</body></html>`
+      return {
+        filename: `${fileBase}.doc`,
+        contentType: 'application/msword; charset=utf-8',
+        body: html,
+      }
+    }
+
+    // Default: txt
+    const lines: string[] = []
+    lines.push(`Question Bank Export — ${questions.length} questions`)
+    if (language || skill || cefrLevel) {
+      lines.push(`Filters: ${[language, skill, cefrLevel].filter(Boolean).join(' · ')}`)
+    }
+    lines.push('')
+    questions.forEach((q, i) => {
+      lines.push(`${i + 1}. [${q.language} · ${q.skill ?? '-'} · ${q.cefrLevel} · ${q.questionType}]`)
+      if (q.passageTitle) lines.push(`   Passage (${q.passageTitle}):`)
+      if (q.passage) lines.push(`   ${q.passage.replace(/\n/g, '\n   ')}`)
+      lines.push(`   Q: ${q.questionText}`)
+      const opts = optionsToString(q.options)
+      if (opts) lines.push(`   Options: ${opts}`)
+      if (q.ttsScript) lines.push(`   TTS: ${q.ttsScript}`)
+      if (q.speakingPrompt) lines.push(`   Prompt: ${q.speakingPrompt}`)
+      lines.push(`   Answer: ${q.correctAnswer ?? ''}`)
+      lines.push('')
+    })
+    return {
+      filename: `${fileBase}.txt`,
+      contentType: 'text/plain; charset=utf-8',
+      body: lines.join('\n'),
+    }
+  }
+
   async createMultiSkillQuestion(data: {
     language: string
     cefrLevel: string

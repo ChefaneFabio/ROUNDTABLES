@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import {
   Search, Plus, Eye, Edit, Trash2, X, ChevronLeft, ChevronRight,
-  BookOpen, Headphones, PenTool, Mic, Database
+  BookOpen, Headphones, PenTool, Mic, Database, Download
 } from 'lucide-react'
 import { assessmentApi } from '../../services/assessmentApi'
 
@@ -96,6 +96,37 @@ const AssessmentQuestionsPage: React.FC = () => {
   const [editModal, setEditModal] = useState<{ open: boolean; questionId?: string }>({ open: false })
   const [form, setForm] = useState<QuestionForm>({ ...emptyForm })
   const [saving, setSaving] = useState(false)
+
+  // Export dropdown
+  const [exportOpen, setExportOpen] = useState(false)
+  const [exporting, setExporting] = useState<string | null>(null)
+
+  const handleExport = async (format: 'txt' | 'csv' | 'doc') => {
+    setExporting(format)
+    setExportOpen(false)
+    try {
+      const { blob, filename } = await assessmentApi.exportQuestionBank({
+        language: filterLanguage || undefined,
+        skill: filterSkill || undefined,
+        cefrLevel: filterLevel || undefined,
+        search: searchText || undefined,
+        format,
+      })
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      window.URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error('Export failed:', err)
+      alert('Export failed. Check the console for details.')
+    } finally {
+      setExporting(null)
+    }
+  }
 
   const loadSummary = useCallback(async () => {
     try {
@@ -246,13 +277,45 @@ const AssessmentQuestionsPage: React.FC = () => {
           <h1 className="text-2xl font-bold text-gray-900">Question Bank</h1>
           <p className="text-gray-600">Manage assessment questions across all skills and levels</p>
         </div>
-        <button
-          onClick={openCreateModal}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-        >
-          <Plus className="w-5 h-5" />
-          New Question
-        </button>
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <button
+              onClick={() => setExportOpen(o => !o)}
+              disabled={!!exporting}
+              className="flex items-center gap-2 px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50"
+            >
+              <Download className="w-5 h-5" />
+              {exporting ? `Exporting ${exporting.toUpperCase()}…` : 'Export'}
+            </button>
+            {exportOpen && !exporting && (
+              <div className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden">
+                {[
+                  { label: 'Text (.txt)', value: 'txt' as const },
+                  { label: 'CSV (.csv)', value: 'csv' as const },
+                  { label: 'Word (.doc)', value: 'doc' as const },
+                ].map(opt => (
+                  <button
+                    key={opt.value}
+                    onClick={() => handleExport(opt.value)}
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+                <div className="px-4 py-2 text-xs text-gray-500 border-t bg-gray-50">
+                  Honors current filters
+                </div>
+              </div>
+            )}
+          </div>
+          <button
+            onClick={openCreateModal}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            <Plus className="w-5 h-5" />
+            New Question
+          </button>
+        </div>
       </div>
 
       {/* Summary Cards */}
