@@ -1272,6 +1272,84 @@ export class SectionAssessmentService {
     return question
   }
 
+  // ──────────────────────────────────────────────────────────────────────
+  // Question-bank cleanup
+  // ──────────────────────────────────────────────────────────────────────
+
+  /** Strip inline grammar/style hints from question text. Conservative whitelist:
+   *  only matches annotations we've actually seen in the seed data, so prose
+   *  containing real parentheses (e.g. "Madrid (the capital)") survives. */
+  static cleanQuestionText(input: string): string {
+    if (!input) return input
+    const annotation =
+      'modal\\s+perfect|present\\s+perfect|past\\s+(?:simple|continuous|perfect)|future\\s+\\w+|conditional|imperative|subjunctive|passive(?:\\s+voice)?|active(?:\\s+voice)?|comparative|superlative|literary(?:\\s+adjective)?|slang|formal|informal|colloquial|idiom(?:atic)?|phrasal\\s+verb|gerund|infinitive|participle|negative|interrogative|reported\\s+speech|relative\\s+clause|reflexive|definite\\s+article|indefinite\\s+article|preposition\\s+of\\s+\\w+'
+
+    let s = input
+    // Trailing em-dash / hyphen hint:  "...verb — modal perfect"
+    s = s.replace(new RegExp(`\\s*[\\u2013\\u2014\\-]\\s*(?:${annotation})\\s*$`, 'gi'), '')
+    // Parenthetical hint:  "(modal perfect)" anywhere
+    s = s.replace(new RegExp(`\\s*\\(\\s*(?:${annotation})\\s*\\)`, 'gi'), '')
+    // Bracketed hint:  "[modal perfect]"
+    s = s.replace(new RegExp(`\\s*\\[\\s*(?:${annotation})\\s*\\]`, 'gi'), '')
+    // Collapse double spaces left behind, trim trailing whitespace
+    return s.replace(/[ \t]{2,}/g, ' ').trim()
+  }
+
+  /** Inspect or apply cleanup across the question bank. Preview returns counts
+   *  and a sample of changes; apply mutates the rows. */
+  async cleanupQuestionBank(opts: {
+    mode: 'preview' | 'apply'
+    language?: string
+  }) {
+    const where: Prisma.AssessmentQuestionWhereInput = { isActive: true }
+    if (opts.language) where.language = opts.language
+
+    const questions = await prisma.assessmentQuestion.findMany({ where })
+
+    let textCleaned = 0
+    let deactivated = 0
+    const samples: Array<{ id: string; before: string; after: string; reason?: string }> = []
+
+    for (const q of questions) {
+      const cleaned = SectionAssessmentService.cleanQuestionText(q.questionText)
+      const tooShort = cleaned.replace(/\W/g, '').length < 3
+      const multiBlank = q.questionType === 'FILL_BLANK' &&
+        (cleaned.match(/_{2,}/g) || []).length > 1
+
+      const willDeactivate = tooShort || multiBlank
+
+      if (cleaned !== q.questionText) {
+        textCleaned++
+        if (samples.length < 25) samples.push({ id: q.id, before: q.questionText, after: cleaned })
+      }
+      if (willDeactivate) {
+        deactivated++
+        if (samples.length < 25) samples.push({
+          id: q.id, before: q.questionText, after: '(will be deactivated)',
+          reason: tooShort ? 'too short' : 'multi-blank',
+        })
+      }
+
+      if (opts.mode === 'apply' && (cleaned !== q.questionText || willDeactivate)) {
+        await prisma.assessmentQuestion.update({
+          where: { id: q.id },
+          data: {
+            questionText: cleaned,
+            ...(willDeactivate ? { isActive: false } : {}),
+          },
+        })
+      }
+    }
+
+    return {
+      mode: opts.mode,
+      scanned: questions.length,
+      textCleaned,
+      deactivated,
+      samples,
+    }
+  }
+
   async exportQuestionBank(filters: {
     language?: string
     skill?: string

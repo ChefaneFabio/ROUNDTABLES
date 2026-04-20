@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import {
   Search, Plus, Eye, Edit, Trash2, X, ChevronLeft, ChevronRight,
-  BookOpen, Headphones, PenTool, Mic, Database, Download
+  BookOpen, Headphones, PenTool, Mic, Database, Download, Sparkles
 } from 'lucide-react'
 import { assessmentApi } from '../../services/assessmentApi'
 
@@ -100,6 +100,30 @@ const AssessmentQuestionsPage: React.FC = () => {
   // Export dropdown
   const [exportOpen, setExportOpen] = useState(false)
   const [exporting, setExporting] = useState<string | null>(null)
+
+  // Cleanup modal (preview then apply)
+  const [cleanupOpen, setCleanupOpen] = useState(false)
+  const [cleanupRunning, setCleanupRunning] = useState(false)
+  const [cleanupResult, setCleanupResult] = useState<Awaited<ReturnType<typeof assessmentApi.cleanupQuestionBank>> | null>(null)
+
+  const runCleanup = async (mode: 'preview' | 'apply') => {
+    setCleanupRunning(true)
+    try {
+      const result = await assessmentApi.cleanupQuestionBank({
+        mode,
+        language: filterLanguage || undefined,
+      })
+      setCleanupResult(result)
+      if (mode === 'apply') {
+        await Promise.all([loadSummary(), loadQuestions()])
+      }
+    } catch (err) {
+      console.error('Cleanup failed:', err)
+      alert('Cleanup failed. Check the console for details.')
+    } finally {
+      setCleanupRunning(false)
+    }
+  }
 
   const handleExport = async (format: 'txt' | 'csv' | 'doc') => {
     setExporting(format)
@@ -278,6 +302,13 @@ const AssessmentQuestionsPage: React.FC = () => {
           <p className="text-gray-600">Manage assessment questions across all skills and levels</p>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            onClick={() => { setCleanupOpen(true); setCleanupResult(null) }}
+            className="flex items-center gap-2 px-4 py-2 border border-gray-300 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <Sparkles className="w-5 h-5" />
+            Cleanup
+          </button>
           <div className="relative">
             <button
               onClick={() => setExportOpen(o => !o)}
@@ -822,6 +853,119 @@ const AssessmentQuestionsPage: React.FC = () => {
               >
                 {saving ? 'Saving...' : editModal.questionId ? 'Update' : 'Create'}
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Cleanup modal: dry-run preview, then optional apply */}
+      {cleanupOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" onClick={() => !cleanupRunning && setCleanupOpen(false)}>
+          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full mx-4 max-h-[85vh] flex flex-col" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between px-6 py-4 border-b">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-purple-600" />
+                <h2 className="text-lg font-semibold text-gray-900">Question Bank Cleanup</h2>
+              </div>
+              <button onClick={() => !cleanupRunning && setCleanupOpen(false)} className="p-1 hover:bg-gray-100 rounded">
+                <X className="w-5 h-5 text-gray-400" />
+              </button>
+            </div>
+
+            <div className="px-6 py-4 overflow-y-auto flex-1 space-y-4">
+              <p className="text-sm text-gray-600">
+                Strips grammar/style hints like <code className="bg-gray-100 px-1 rounded text-xs">(modal perfect)</code>,
+                <code className="bg-gray-100 px-1 rounded text-xs ml-1">— literary adjective</code>,
+                <code className="bg-gray-100 px-1 rounded text-xs ml-1">[slang]</code> from question text.
+                Also deactivates fill-blank questions with multiple <code className="bg-gray-100 px-1 rounded text-xs">___ ___</code> blanks
+                and questions with empty/too-short text.
+              </p>
+              {filterLanguage && (
+                <p className="text-xs text-gray-500">
+                  Scope: <strong className="text-gray-700">{filterLanguage}</strong> only (clear the language filter to scan all).
+                </p>
+              )}
+
+              {!cleanupResult && !cleanupRunning && (
+                <button
+                  onClick={() => runCleanup('preview')}
+                  className="w-full px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"
+                >
+                  Run preview
+                </button>
+              )}
+
+              {cleanupRunning && (
+                <div className="text-center py-6 text-gray-500 text-sm">
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-600 mx-auto mb-2" />
+                  Running…
+                </div>
+              )}
+
+              {cleanupResult && (
+                <div className="space-y-3">
+                  <div className="grid grid-cols-3 gap-3">
+                    <div className="bg-gray-50 rounded-lg p-3 text-center">
+                      <div className="text-2xl font-bold text-gray-900">{cleanupResult.scanned}</div>
+                      <div className="text-xs text-gray-500">scanned</div>
+                    </div>
+                    <div className="bg-blue-50 rounded-lg p-3 text-center">
+                      <div className="text-2xl font-bold text-blue-700">{cleanupResult.textCleaned}</div>
+                      <div className="text-xs text-blue-600">text cleaned</div>
+                    </div>
+                    <div className="bg-amber-50 rounded-lg p-3 text-center">
+                      <div className="text-2xl font-bold text-amber-700">{cleanupResult.deactivated}</div>
+                      <div className="text-xs text-amber-600">to deactivate</div>
+                    </div>
+                  </div>
+
+                  {cleanupResult.samples.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                        Sample changes ({cleanupResult.samples.length})
+                      </p>
+                      <div className="space-y-2 max-h-64 overflow-y-auto border border-gray-200 rounded-lg p-2">
+                        {cleanupResult.samples.map(s => (
+                          <div key={s.id} className="text-xs border-b border-gray-100 pb-2 last:border-0">
+                            <div className="text-red-600 line-through">{s.before}</div>
+                            <div className="text-green-700">{s.after}</div>
+                            {s.reason && <div className="text-amber-600 italic mt-0.5">Reason: {s.reason}</div>}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {cleanupResult.mode === 'preview' && (cleanupResult.textCleaned > 0 || cleanupResult.deactivated > 0) && (
+                    <div className="flex items-center gap-2 pt-2">
+                      <button
+                        onClick={() => runCleanup('apply')}
+                        className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors"
+                      >
+                        Apply changes
+                      </button>
+                      <button
+                        onClick={() => { setCleanupResult(null) }}
+                        className="px-4 py-2 text-gray-600 hover:text-gray-800 font-medium transition-colors"
+                      >
+                        Reset
+                      </button>
+                    </div>
+                  )}
+
+                  {cleanupResult.mode === 'apply' && (
+                    <div className="bg-green-50 border border-green-200 text-green-800 text-sm p-3 rounded-lg">
+                      Done — {cleanupResult.textCleaned} questions cleaned, {cleanupResult.deactivated} deactivated.
+                    </div>
+                  )}
+
+                  {cleanupResult.textCleaned === 0 && cleanupResult.deactivated === 0 && cleanupResult.mode === 'preview' && (
+                    <div className="bg-green-50 border border-green-200 text-green-800 text-sm p-3 rounded-lg">
+                      No changes needed — the bank is clean.
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
         </div>

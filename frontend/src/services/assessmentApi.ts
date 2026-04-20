@@ -334,6 +334,18 @@ export const assessmentApi = {
     return response.data.data
   },
 
+  // Admin: Preview or apply a cleanup pass on the question bank
+  async cleanupQuestionBank(params: { mode: 'preview' | 'apply'; language?: string }): Promise<{
+    mode: string
+    scanned: number
+    textCleaned: number
+    deactivated: number
+    samples: Array<{ id: string; before: string; after: string; reason?: string }>
+  }> {
+    const response = await api.post('/assessments/multi-skill/admin/question-bank/cleanup', params)
+    return response.data.data
+  },
+
   // Admin: Download question bank in txt | csv | doc, honoring the filters
   async exportQuestionBank(params: {
     language?: string

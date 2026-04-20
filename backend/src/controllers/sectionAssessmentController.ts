@@ -7,7 +7,7 @@ import { validateRequest } from '../middleware/validateRequest'
 import { authenticate } from '../middleware/auth'
 import { requireTeacher, requireAdmin, requireSchoolAdmin } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
-import { sectionAssessmentService } from '../services/SectionAssessmentService'
+import { sectionAssessmentService, SectionAssessmentService } from '../services/SectionAssessmentService'
 import { prisma } from '../config/database'
 import { ttsService } from '../services/TtsService'
 import { aiScoringService } from '../services/AiScoringService'
@@ -545,6 +545,26 @@ router.get('/admin/question-bank', authenticate, requireTeacher, async (req: Req
   }
 })
 
+// Cleanup pass on the question bank: strip grammar/style hints from text and
+// optionally deactivate broken questions (multi-blank, too-short).
+// Use mode=preview to dry-run, mode=apply to write changes.
+router.post('/admin/question-bank/cleanup', authenticate, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const mode = String(req.body?.mode || req.query?.mode || 'preview').toLowerCase()
+    if (mode !== 'preview' && mode !== 'apply') {
+      return res.status(400).json(apiResponse.error('mode must be "preview" or "apply"', 'INVALID_MODE'))
+    }
+    const language = (req.body?.language || req.query?.language) as string | undefined
+    const result = await sectionAssessmentService.cleanupQuestionBank({
+      mode: mode as 'preview' | 'apply',
+      language: language || undefined,
+    })
+    return res.json(apiResponse.success(result))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // Export question bank as txt / csv / doc (Word)
 router.get('/admin/question-bank/export', authenticate, requireTeacher, async (req: Request, res: Response) => {
   try {
@@ -831,7 +851,9 @@ router.post('/admin/seed-multi-skill', authenticate, requireAdmin, async (req: R
         language: q.language,
         cefrLevel: q.cefrLevel,
         questionType: q.questionType as any,
-        questionText: q.questionText,
+        // Strip parenthetical / em-dash grammar hints from seed data so a
+        // re-seed doesn't re-introduce the issues we cleaned up.
+        questionText: SectionAssessmentService.cleanQuestionText(q.questionText),
         options: q.options || undefined,
         correctAnswer: q.correctAnswer || '',
         passage: q.passage,
