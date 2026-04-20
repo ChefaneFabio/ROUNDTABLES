@@ -1,15 +1,27 @@
 import fs from 'fs'
 import path from 'path'
 
-// ElevenLabs multilingual voices — these support all 5 languages
-// Using v2 multilingual model for natural pronunciation
-const VOICES = [
-  { id: 'pFZP5JQG7iQjIQuC4Bku', name: 'Lily', gender: 'female' },
-  { id: 'TX3LPaxmHKxFdv7VOQHJ', name: 'Liam', gender: 'male' },
-  { id: 'XB0fDUnXU5powFXDhCwa', name: 'Charlotte', gender: 'female' },
-  { id: 'pqHfZKP75CvOlQylNhV4', name: 'Bill', gender: 'male' },
-  { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah', gender: 'female' },
-  { id: 'bIHbv24MWmeRgasZH58o', name: 'Will', gender: 'male' },
+// ElevenLabs multilingual voices — all support eleven_multilingual_v2.
+// Accent variety is important for the Listening test, so the pool spans
+// American, British, Irish, and Australian speakers.
+type Voice = { id: string; name: string; gender: 'male' | 'female'; accent: string }
+const VOICES: Voice[] = [
+  // British
+  { id: 'pFZP5JQG7iQjIQuC4Bku', name: 'Lily',      gender: 'female', accent: 'British' },
+  { id: 'XB0fDUnXU5powFXDhCwa', name: 'Charlotte', gender: 'female', accent: 'British' },
+  { id: 'onwK4e9ZLuTAKqWW03F9', name: 'Daniel',    gender: 'male',   accent: 'British' },
+  { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'George',    gender: 'male',   accent: 'British' },
+  // American
+  { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah',     gender: 'female', accent: 'American' },
+  { id: '21m00Tcm4TlvDq8ikWAM', name: 'Rachel',    gender: 'female', accent: 'American' },
+  { id: 'XrExE9yKIg1WjnnlVkGX', name: 'Matilda',   gender: 'female', accent: 'American' },
+  { id: 'TX3LPaxmHKxFdv7VOQHJ', name: 'Liam',      gender: 'male',   accent: 'American' },
+  { id: 'pNInz6obpgDQGcFmaJgB', name: 'Adam',      gender: 'male',   accent: 'American' },
+  { id: 'nPczCjzI2devNBz1zQrb', name: 'Brian',     gender: 'male',   accent: 'American' },
+  { id: 'pqHfZKP75CvOlQylNhV4', name: 'Bill',      gender: 'male',   accent: 'American' },
+  // Irish / Australian
+  { id: 'D38z5RcWu1voky8WS1ja', name: 'Fin',       gender: 'male',   accent: 'Irish' },
+  { id: 'IKne3meq5aSn9XLyUdCD', name: 'Charlie',   gender: 'male',   accent: 'Australian' },
 ]
 
 // Voice settings by CEFR. Stability is intentionally low (0.35–0.55) — ElevenLabs treats
@@ -42,13 +54,15 @@ export class TtsService {
     return !!this.apiKey
   }
 
-  /** Pick a voice based on questionId hash for consistency */
-  private pickVoice(questionId: string): typeof VOICES[0] {
-    let hash = 0
+  /** Pick a voice deterministically from questionId — same question always uses the
+   *  same voice, but the larger pool spreads selections across accents. */
+  private pickVoice(questionId: string): Voice {
+    // djb2 — better distribution than the previous shift-based hash on short ids
+    let hash = 5381
     for (let i = 0; i < questionId.length; i++) {
-      hash = ((hash << 5) - hash + questionId.charCodeAt(i)) | 0
+      hash = ((hash * 33) ^ questionId.charCodeAt(i)) >>> 0
     }
-    return VOICES[Math.abs(hash) % VOICES.length]
+    return VOICES[hash % VOICES.length]
   }
 
   private isDialogue(ttsScript: string): boolean {
