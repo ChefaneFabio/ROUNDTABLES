@@ -15,6 +15,7 @@ export interface MultiSkillQuestionData {
   ttsScript?: string         // Text for TTS audio generation (listening)
   ttsLanguageCode?: string   // e.g. "en-US", "it-IT"
   speakingPrompt?: string    // Prompt text for speaking questions
+  imageUrl?: string          // Image URL — used for image-description speaking prompts and reading-with-image questions
   rubric?: Record<string, any> // Scoring rubric for writing/speaking
   tags?: string[]
   timeSuggested?: number     // Suggested time in seconds

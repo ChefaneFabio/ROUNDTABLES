@@ -164,11 +164,29 @@ export const englishSpeakingQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'A2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
-    questionText: 'Tell a short story about something that happened to you recently. Speak for about 30 seconds.',
-    speakingPrompt: 'Tell me about something funny or interesting that happened to you last week.',
+    questionText: 'Describe a recent activity. Speak for about 30 seconds.',
+    speakingPrompt: 'Describe what you did at work or at home yesterday. Mention the time, the place, and at least three actions.',
     correctAnswer: '', points: 1, orderIndex: 19,
-    rubric: { criteria: ['past tense', 'narrative sequence', 'basic fluency', 'relevant content'], maxDuration: 45 },
-    tags: ['story', 'past tense'], timeSuggested: 45
+    rubric: { criteria: ['past tense', 'time expressions', 'sequence words', 'clear pronunciation'], maxDuration: 45 },
+    tags: ['routine', 'past tense'], timeSuggested: 45
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Look at the image and describe what you see. Speak for about 45 seconds.',
+    speakingPrompt: 'Describe the image: what is happening, who is in it, where it might be, and what you think happens next.',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Open_office_at_Stack_Exchange.jpg/640px-Open_office_at_Stack_Exchange.jpg',
+    correctAnswer: '', points: 1, orderIndex: 22,
+    rubric: { criteria: ['descriptive vocabulary', 'present continuous', 'spatial language', 'speculation (might / could / probably)'], maxDuration: 60 },
+    tags: ['image description', 'workplace'], timeSuggested: 50
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
+    questionText: 'Look at the image and describe and interpret it. Speak for about 45-60 seconds.',
+    speakingPrompt: 'Describe the scene in detail and explain what story it tells. What emotions does it convey? What might have happened just before?',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/Fronalpstock_big.jpg/640px-Fronalpstock_big.jpg',
+    correctAnswer: '', points: 1, orderIndex: 23,
+    rubric: { criteria: ['rich descriptive vocabulary', 'interpretation', 'speculation', 'fluency without long pauses'], maxDuration: 75 },
+    tags: ['image description', 'landscape'], timeSuggested: 60
   },
 
   // B1 — Give opinions, explain plans

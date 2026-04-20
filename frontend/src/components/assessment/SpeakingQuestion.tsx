@@ -6,6 +6,7 @@ interface SpeakingQuestionProps {
     id: string
     questionText: string
     speakingPrompt?: string
+    imageUrl?: string | null
     timeSuggested?: number | null
   }
   onSubmit: (audioBlob: Blob, duration: number, transcript?: string) => void
@@ -42,6 +43,15 @@ export function SpeakingQuestion({ question, onSubmit, disabled, language }: Spe
         <p className="text-sm text-purple-700 font-medium mb-1">{question.questionText}</p>
         {question.speakingPrompt && (
           <p className="text-lg text-purple-900 font-semibold">{question.speakingPrompt}</p>
+        )}
+        {question.imageUrl && (
+          <div className="mt-3">
+            <img
+              src={question.imageUrl}
+              alt="Speaking prompt"
+              className="w-full max-h-80 object-contain rounded-lg border border-purple-200 bg-white"
+            />
+          </div>
         )}
         <p className="text-xs text-purple-600 mt-2">
           Estimated speaking time: <strong>~{suggested}s</strong>

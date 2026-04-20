@@ -35,9 +35,10 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
 
     const where: any = { deletedAt: null }
 
-    // Apply access control
+    // Apply access control. ADMIN is Maka staff with global access: see every
+    // teacher across every school.
     if (req.user?.role === 'ADMIN') {
-      where.schoolId = req.user.schoolId
+      // No filter — global access.
     } else if (req.user?.role === 'TEACHER') {
       where.schoolId = req.user.schoolId
     } else if (req.user?.role === 'STUDENT') {

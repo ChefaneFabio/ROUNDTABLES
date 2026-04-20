@@ -864,6 +864,7 @@ router.post('/admin/seed-multi-skill', authenticate, requireAdmin, async (req: R
         ttsScript: q.ttsScript,
         ttsLanguageCode: q.ttsLanguageCode,
         speakingPrompt: q.speakingPrompt,
+        imageUrl: q.imageUrl,
         rubric: q.rubric || undefined,
         tags: q.tags || [],
         timeSuggested: q.timeSuggested
