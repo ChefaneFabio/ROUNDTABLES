@@ -3,6 +3,7 @@ import { Prisma, AssessmentStatus, AssessmentSkill, SectionStatus, AssessmentQue
 import { emailService } from './EmailService'
 import { certificateService } from './CertificateService'
 import { aiScoringService } from './AiScoringService'
+import { whisperService } from './WhisperService'
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
@@ -854,6 +855,24 @@ export class SectionAssessmentService {
     if (section.skill !== 'SPEAKING') throw new Error('Not a speaking section')
     if (section.assessment.studentId !== studentId) throw new Error('Access denied')
 
+    // Re-transcribe with Whisper before persisting. The browser's Web Speech API
+    // produces uncapitalized, unpunctuated runs ("yes I think I think") which
+    // hurts AI scoring; Whisper returns proper sentences with punctuation and
+    // respects pauses. We do this synchronously so that AI scoring (which fires
+    // when the section completes) sees the better transcript. Browser transcript
+    // is the fallback if Whisper isn't configured or fails.
+    let finalTranscript = transcript?.trim() || null
+    if (whisperService.isConfigured()) {
+      try {
+        const whisperText = await whisperService.transcribe(audioUrl, section.assessment.language)
+        if (whisperText && whisperText.length > 0) {
+          finalTranscript = whisperText
+        }
+      } catch (err) {
+        console.error('[Whisper] transcription error:', err)
+      }
+    }
+
     const response = await prisma.speakingResponse.create({
       data: {
         assessmentId,
@@ -862,8 +881,8 @@ export class SectionAssessmentService {
         studentId,
         audioUrl,
         duration,
-        transcript: transcript || null,
-        transcribedAt: transcript ? new Date() : null
+        transcript: finalTranscript,
+        transcribedAt: finalTranscript ? new Date() : null
       }
     })
 
