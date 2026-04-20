@@ -233,7 +233,34 @@ export function MultiSkillResultPage() {
     }
   }
 
-  const { assessment, sections } = results
+  const assessment = results?.assessment
+  const sections: any[] = Array.isArray(results?.sections) ? results.sections : []
+
+  if (!assessment) {
+    return (
+      <div className="max-w-lg mx-auto mt-12 space-y-4">
+        <div className="bg-amber-50 border border-amber-200 text-amber-800 p-6 rounded-xl shadow-sm">
+          <p className="font-medium">Your results are still being processed.</p>
+          <p className="text-sm mt-1 text-amber-700">This usually takes a few seconds — try refreshing in a moment.</p>
+        </div>
+        <div className="flex gap-2">
+          <button
+            onClick={() => window.location.reload()}
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-all"
+          >
+            Refresh
+          </button>
+          <button
+            onClick={() => navigate('/assessment')}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-all flex items-center gap-1.5"
+          >
+            <ArrowLeft className="w-4 h-4" /> Back to Assessments
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   const overallLevel = assessment.cefrLevel || 'N/A'
   const levelStyle = LEVEL_COLORS[overallLevel] || LEVEL_COLORS.B1
   const overallGse = cefrToGse(overallLevel)
