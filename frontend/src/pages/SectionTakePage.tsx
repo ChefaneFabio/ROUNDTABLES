@@ -579,45 +579,49 @@ export function SectionTakePage() {
       {currentQuestion && (() => {
         const qType = currentQuestion.questionType
         const skill = section?.skill
+        // key={currentQuestion.id} forces a fresh component instance per
+        // question so internal state (selected answer, AudioPlayer plays
+        // counter, etc.) doesn't leak across questions.
+        const key = currentQuestion.id
 
         // Writing section
         if (skill === 'WRITING' || qType === 'WRITING' || qType === 'ESSAY') {
-          return <WritingQuestion question={currentQuestion} onSubmit={handleWritingSubmit} disabled={submitting} language={assessmentLanguage} />
+          return <WritingQuestion key={key} question={currentQuestion} onSubmit={handleWritingSubmit} disabled={submitting} language={assessmentLanguage} />
         }
         // Speaking section
         if (skill === 'SPEAKING' || qType === 'SPEAKING_PROMPT') {
-          return <SpeakingQuestion question={currentQuestion} onSubmit={handleSpeakingSubmit} disabled={submitting} language={assessmentLanguage} />
+          return <SpeakingQuestion key={key} question={currentQuestion} onSubmit={handleSpeakingSubmit} disabled={submitting} language={assessmentLanguage} />
         }
         // Listening section
         if (skill === 'LISTENING' || qType === 'LISTENING' || qType === 'DICTATION' || qType === 'LISTENING_FILL_BLANK') {
-          return <ListeningQuestion question={{ ...currentQuestion, language: assessmentLanguage || 'English' }} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
+          return <ListeningQuestion key={key} question={{ ...currentQuestion, language: assessmentLanguage || 'English' }} onSubmit={handleReadingListeningAnswer} disabled={submitting} />
         }
         // True/False
         if (qType === 'TRUE_FALSE') {
-          return <TrueFalseQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
+          return <TrueFalseQuestion key={key} question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
         }
         // Matching
         if (qType === 'MATCHING') {
-          return <MatchingQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
+          return <MatchingQuestion key={key} question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
         }
         // Reorder
         if (qType === 'REORDER') {
-          return <ReorderQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
+          return <ReorderQuestion key={key} question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
         }
         // Word formation
         if (qType === 'WORD_FORMATION') {
-          return <WordFormationQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
+          return <WordFormationQuestion key={key} question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
         }
         // Error correction (can appear in Reading section)
         if (qType === 'ERROR_CORRECTION') {
-          return <ErrorCorrectionQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
+          return <ErrorCorrectionQuestion key={key} question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
         }
         // Sentence transformation (can appear in Reading section)
         if (qType === 'SENTENCE_TRANSFORMATION') {
-          return <SentenceTransformationQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
+          return <SentenceTransformationQuestion key={key} question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
         }
         // Default: Reading / MC / Fill-blank / Grammar / Vocabulary
-        return <ReadingQuestion question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
+        return <ReadingQuestion key={key} question={currentQuestion} onSubmit={handleReadingListeningAnswer} disabled={submitting} language={assessmentLanguage} />
       })()}
 
       {submitting && (
