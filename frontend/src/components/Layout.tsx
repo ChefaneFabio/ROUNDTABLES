@@ -346,7 +346,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           </div>
         </Link>
       </div>
-      <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
+      <nav className="flex-1 min-h-0 overflow-y-auto px-3 py-3 space-y-0.5">
         {visibleGroups.map(group => (
           <NavSection
             key={group.title}
@@ -376,7 +376,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
               <X className="h-5 w-5 text-gray-300" />
             </button>
           </div>
-          <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
+          <nav className="flex-1 min-h-0 overflow-y-auto px-3 py-3 space-y-0.5">
             {visibleGroups.map(group => (
               <NavSection
                 key={group.title}
@@ -392,7 +392,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
       {/* Desktop sidebar */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:flex lg:w-60 lg:flex-col">
-        <div className="flex flex-col flex-grow border-r border-gray-200 bg-white">
+        <div className="flex flex-col flex-grow min-h-0 border-r border-gray-200 bg-white">
           {sidebarContent}
         </div>
       </div>
