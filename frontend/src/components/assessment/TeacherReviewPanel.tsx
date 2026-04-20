@@ -1,6 +1,17 @@
 import { useState, useEffect } from 'react'
 import { assessmentApi } from '../../services/assessmentApi'
 
+// Audio is served by the backend at /uploads/... — VITE_API_URL ends in /api
+// so strip that suffix to get the backend host root.
+const BACKEND_ORIGIN = (import.meta.env.VITE_API_URL || 'http://localhost:5000/api')
+  .replace(/\/api\/?$/, '')
+
+function resolveAudioUrl(url?: string | null): string | undefined {
+  if (!url) return undefined
+  if (/^https?:\/\//i.test(url)) return url
+  return `${BACKEND_ORIGIN}${url.startsWith('/') ? '' : '/'}${url}`
+}
+
 interface PendingSection {
   id: string
   skill: string
@@ -132,7 +143,9 @@ export function TeacherReviewPanel() {
             {reviewData.speakingResponses?.map((sr: any) => (
               <div key={sr.id} className="bg-white border rounded-lg p-4">
                 <h4 className="font-medium text-gray-700 mb-2">Speaking Response</h4>
-                {sr.audioUrl && <audio controls src={sr.audioUrl} className="w-full mb-2" />}
+                {sr.audioUrl
+                  ? <audio controls src={resolveAudioUrl(sr.audioUrl)} className="w-full mb-2" />
+                  : <p className="text-xs text-amber-600 mb-2">No audio recording was saved.</p>}
                 {sr.transcript && (
                   <p className="text-gray-800 text-sm bg-gray-50 p-3 rounded italic">{sr.transcript}</p>
                 )}
