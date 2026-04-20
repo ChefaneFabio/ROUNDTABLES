@@ -12,14 +12,15 @@ const VOICES = [
   { id: 'bIHbv24MWmeRgasZH58o', name: 'Will', gender: 'male' },
 ]
 
-// Stability/similarity settings by CEFR — lower levels get slower, clearer speech
-const SETTINGS_BY_LEVEL: Record<string, { stability: number; similarity_boost: number; speed: number }> = {
-  A1: { stability: 0.85, similarity_boost: 0.6, speed: 0.75 },
-  A2: { stability: 0.80, similarity_boost: 0.65, speed: 0.8 },
-  B1: { stability: 0.75, similarity_boost: 0.7, speed: 0.85 },
-  B2: { stability: 0.65, similarity_boost: 0.75, speed: 0.95 },
-  C1: { stability: 0.55, similarity_boost: 0.8, speed: 1.0 },
-  C2: { stability: 0.50, similarity_boost: 0.85, speed: 1.05 },
+// Voice settings by CEFR. Stability is intentionally low (0.35–0.55) — ElevenLabs treats
+// high stability as monotone, which is what users perceive as "robotic". Style adds prosody.
+const SETTINGS_BY_LEVEL: Record<string, { stability: number; similarity_boost: number; style: number; speed: number }> = {
+  A1: { stability: 0.55, similarity_boost: 0.85, style: 0.20, speed: 0.90 },
+  A2: { stability: 0.50, similarity_boost: 0.85, style: 0.25, speed: 0.92 },
+  B1: { stability: 0.45, similarity_boost: 0.80, style: 0.30, speed: 0.95 },
+  B2: { stability: 0.40, similarity_boost: 0.80, style: 0.35, speed: 1.00 },
+  C1: { stability: 0.40, similarity_boost: 0.75, style: 0.40, speed: 1.05 },
+  C2: { stability: 0.35, similarity_boost: 0.75, style: 0.45, speed: 1.05 },
 }
 
 const ELEVENLABS_API_URL = 'https://api.elevenlabs.io/v1'
@@ -109,6 +110,8 @@ export class TtsService {
         voice_settings: {
           stability: settings.stability,
           similarity_boost: settings.similarity_boost,
+          style: settings.style,
+          use_speaker_boost: true,
           speed: settings.speed,
         }
       })

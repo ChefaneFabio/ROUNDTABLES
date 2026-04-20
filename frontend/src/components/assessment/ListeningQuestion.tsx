@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { AudioPlayer } from './AudioPlayer'
 import { assessmentApi } from '../../services/assessmentApi'
 import { SpecialCharactersBar } from './SpecialCharactersBar'
@@ -42,14 +42,26 @@ export function ListeningQuestion({ question, onSubmit, disabled }: ListeningQue
     }
   }, [question.id, question.audioUrl])
 
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     const answer = isDictation ? dictationAnswer.trim() : selectedAnswer
     if (answer) {
       onSubmit(answer)
       setSelectedAnswer('')
       setDictationAnswer('')
     }
-  }
+  }, [isDictation, dictationAnswer, selectedAnswer, onSubmit])
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Enter' || disabled) return
+      const tag = (e.target as HTMLElement)?.tagName
+      // For dictation we don't hijack Enter (textarea uses it for newlines)
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return
+      if (isDictation ? dictationAnswer.trim() : selectedAnswer) handleSubmit()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [selectedAnswer, dictationAnswer, disabled, isDictation, handleSubmit])
 
   return (
     <div className="space-y-4">

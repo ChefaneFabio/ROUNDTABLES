@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useMutation, useQuery } from 'react-query'
-import { Clock, CheckCircle, XCircle, ChevronRight, AlertCircle, BookOpen, ShieldAlert, Timer } from 'lucide-react'
+import { Clock, CheckCircle, XCircle, AlertCircle, BookOpen, ShieldAlert, Timer } from 'lucide-react'
 import { assessmentApi, AssessmentQuestion } from '../services/assessmentApi'
 import { useTestSecurity } from '../hooks/useTestSecurity'
 import { LoadingPage } from '../components/common/LoadingSpinner'
@@ -95,10 +95,11 @@ export function AssessmentTakePage() {
           completeAssessment.mutate()
           return
         }
-        setFeedback(data)
         if (data.shouldAutoComplete) {
           setIsComplete(true)
+          return
         }
+        fetchNextQuestion.mutate()
       }
     }
   )
@@ -122,10 +123,6 @@ export function AssessmentTakePage() {
     if (answer) {
       submitAnswer.mutate(answer)
     }
-  }
-
-  const handleNextQuestion = () => {
-    fetchNextQuestion.mutate()
   }
 
   const handleComplete = () => {
@@ -336,18 +333,12 @@ export function AssessmentTakePage() {
 
           {/* Actions */}
           <div className="flex justify-end gap-3">
-            {!feedback ? (
-              <Button
-                onClick={handleSubmitAnswer}
-                disabled={isSubmitDisabled()}
-              >
-                {submitAnswer.isLoading ? 'Submitting...' : 'Submit Answer'}
-              </Button>
-            ) : (
-              <Button onClick={handleNextQuestion} className="flex items-center gap-2">
-                Next Question <ChevronRight className="w-4 h-4" />
-              </Button>
-            )}
+            <Button
+              onClick={handleSubmitAnswer}
+              disabled={isSubmitDisabled() || submitAnswer.isLoading || fetchNextQuestion.isLoading}
+            >
+              {submitAnswer.isLoading || fetchNextQuestion.isLoading ? 'Submitting...' : 'Submit Answer'}
+            </Button>
           </div>
         </Card>
       )}

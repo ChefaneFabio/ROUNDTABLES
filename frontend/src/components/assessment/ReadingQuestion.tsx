@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { SpecialCharactersBar } from './SpecialCharactersBar'
 
 const OPTION_LETTERS = ['A', 'B', 'C', 'D', 'E', 'F']
@@ -33,6 +33,18 @@ export function ReadingQuestion({ question, onSubmit, disabled, language }: Read
       setFillAnswer('')
     }
   }
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Enter' || disabled) return
+      const tag = (e.target as HTMLElement)?.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA') return
+      const answer = isMC ? selectedAnswer : fillAnswer.trim()
+      if (answer) handleSubmit()
+    }
+    document.addEventListener('keydown', onKey)
+    return () => document.removeEventListener('keydown', onKey)
+  }, [selectedAnswer, fillAnswer, disabled, isMC])
 
   return (
     <div className="space-y-5">
