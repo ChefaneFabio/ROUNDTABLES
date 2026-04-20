@@ -6,11 +6,17 @@ interface SpeakingQuestionProps {
     id: string
     questionText: string
     speakingPrompt?: string
+    timeSuggested?: number | null
   }
   onSubmit: (audioBlob: Blob, duration: number, transcript?: string) => void
   disabled?: boolean
   language?: string
 }
+
+// If a question doesn't carry timeSuggested, default to a 60s suggestion.
+// Hard cap = suggested + 30s buffer, with a sane floor of 60s.
+const DEFAULT_SUGGESTED_SECONDS = 60
+const BUFFER_SECONDS = 30
 
 export function SpeakingQuestion({ question, onSubmit, disabled, language }: SpeakingQuestionProps) {
   const [attempt, setAttempt] = useState(0)
@@ -24,6 +30,11 @@ export function SpeakingQuestion({ question, onSubmit, disabled, language }: Spe
     onSubmit(blob, duration, transcript || undefined)
   }
 
+  const suggested = question.timeSuggested && question.timeSuggested > 0
+    ? question.timeSuggested
+    : DEFAULT_SUGGESTED_SECONDS
+  const maxRecording = Math.max(60, suggested + BUFFER_SECONDS)
+
   return (
     <div className="space-y-4">
       {/* Prompt */}
@@ -32,6 +43,10 @@ export function SpeakingQuestion({ question, onSubmit, disabled, language }: Spe
         {question.speakingPrompt && (
           <p className="text-lg text-purple-900 font-semibold">{question.speakingPrompt}</p>
         )}
+        <p className="text-xs text-purple-600 mt-2">
+          Estimated speaking time: <strong>~{suggested}s</strong>
+          <span className="text-purple-400 ml-2">· recording will auto-stop after {maxRecording}s</span>
+        </p>
       </div>
 
       {/* Recorder — key forces reset on new question */}
@@ -42,6 +57,8 @@ export function SpeakingQuestion({ question, onSubmit, disabled, language }: Spe
         currentAttempt={attempt}
         disabled={disabled}
         language={language}
+        suggestedDurationSeconds={suggested}
+        maxDurationSeconds={maxRecording}
       />
     </div>
   )

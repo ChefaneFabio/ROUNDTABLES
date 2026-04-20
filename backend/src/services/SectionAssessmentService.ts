@@ -607,6 +607,15 @@ export class SectionAssessmentService {
     })
 
     if (!section) throw new Error('Section not found')
+    // Section already finished (e.g. auto-completed after the last answer was
+    // submitted). Treat as a normal terminal state instead of erroring.
+    if (section.status === 'COMPLETED' || section.status === 'EXPIRED') {
+      return {
+        isComplete: true,
+        totalAnswered: ((section.answers as unknown as AnswerRecord[]) || []).length,
+        expired: section.status === 'EXPIRED',
+      }
+    }
     if (section.status !== 'IN_PROGRESS') throw new Error('Section is not in progress')
 
     // Check if section timer expired

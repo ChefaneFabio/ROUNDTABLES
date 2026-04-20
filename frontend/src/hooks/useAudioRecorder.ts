@@ -7,7 +7,7 @@ interface UseAudioRecorderReturn {
   audioUrl: string | null
   duration: number
   transcript: string
-  startRecording: (language?: string) => Promise<void>
+  startRecording: (language?: string, options?: { maxDurationSeconds?: number }) => Promise<void>
   stopRecording: () => void
   resetRecording: () => void
   error: string | null
@@ -44,7 +44,7 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
     }
   }, [])
 
-  const startRecording = useCallback(async (language?: string) => {
+  const startRecording = useCallback(async (language?: string, options?: { maxDurationSeconds?: number }) => {
     try {
       setError(null)
       setTranscript('')
@@ -67,8 +67,8 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
             ? 'audio/webm'
             : ''
 
-      const options = mimeType ? { mimeType } : undefined
-      const recorder = new MediaRecorder(stream, options)
+      const recorderOptions = mimeType ? { mimeType } : undefined
+      const recorder = new MediaRecorder(stream, recorderOptions)
 
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
@@ -101,8 +101,25 @@ export function useAudioRecorder(): UseAudioRecorderReturn {
       startTimeRef.current = Date.now()
       setDuration(0)
 
+      const maxDuration = options?.maxDurationSeconds
       timerRef.current = setInterval(() => {
-        setDuration(Math.floor((Date.now() - startTimeRef.current) / 1000))
+        const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000)
+        setDuration(elapsed)
+        if (maxDuration && elapsed >= maxDuration) {
+          // Hard cap reached — stop the recording automatically.
+          if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+            mediaRecorderRef.current.stop()
+          }
+          if (recognitionRef.current) {
+            try { recognitionRef.current.stop() } catch { /* already stopped */ }
+            recognitionRef.current = null
+          }
+          if (timerRef.current) {
+            clearInterval(timerRef.current)
+            timerRef.current = null
+          }
+          setIsRecording(false)
+        }
       }, 1000)
 
       // Start Web Speech API for live transcription
