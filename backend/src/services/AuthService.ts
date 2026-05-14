@@ -52,29 +52,46 @@ export class AuthService {
     }
 
     const hashedPassword = await this.hashPassword(password)
-    const defaultSchoolId = 'maka-language-centre'
 
     const user = await prisma.$transaction(async (tx) => {
-      // Ensure the default Maka school row exists — first-ever registration
-      // on a fresh DB would otherwise fail the FK on Teacher/Student.schoolId.
+      // Resolve a school for Teacher/Student profiles. School.userId is a
+      // required 1-1 to a User owner, so on a fresh DB we bootstrap both a
+      // stub owner and the school. Prefer any existing school over creating.
+      let schoolId: string | null = null
       if (role === 'TEACHER' || role === 'STUDENT') {
-        await tx.school.upsert({
-          where: { id: defaultSchoolId },
-          update: {},
-          create: {
-            id: defaultSchoolId,
-            name: 'Maka Language Consulting',
-            email: 'info@maka-language.com',
-          },
-        })
+        const existingSchool = await tx.school.findFirst({ select: { id: true } })
+        if (existingSchool) {
+          schoolId = existingSchool.id
+        } else {
+          const stubOwner = await tx.user.upsert({
+            where: { email: 'owner@maka-language.com' },
+            update: {},
+            create: {
+              email: 'owner@maka-language.com',
+              password: hashedPassword, // throwaway; account is not used to log in
+              name: 'Maka Owner',
+              role: 'ADMIN' as UserRole,
+            },
+          })
+          const created = await tx.school.create({
+            data: {
+              id: 'maka-language-centre',
+              name: 'Maka Language Consulting',
+              email: 'info@maka-language.com',
+              userId: stubOwner.id,
+            },
+          })
+          schoolId = created.id
+        }
       }
+
       const u = await tx.user.create({
         data: { email, password: hashedPassword, name, role: role as UserRole },
       })
       if (role === 'TEACHER') {
-        await tx.teacher.create({ data: { userId: u.id, schoolId: defaultSchoolId } })
+        await tx.teacher.create({ data: { userId: u.id, schoolId: schoolId! } })
       } else if (role === 'STUDENT') {
-        await tx.student.create({ data: { userId: u.id, schoolId: defaultSchoolId, languageLevel: 'B1' } })
+        await tx.student.create({ data: { userId: u.id, schoolId: schoolId!, languageLevel: 'B1' } })
       }
       return u
     })
