@@ -1746,7 +1746,8 @@ export class SectionAssessmentService {
         // + SENTENCE_TRANSFORMATION which all have a clear single answer.
         return ['READING', 'MULTIPLE_CHOICE', 'ERROR_CORRECTION', 'SENTENCE_TRANSFORMATION'] as AssessmentQuestionType[]
       case 'LISTENING':
-        return ['LISTENING', 'DICTATION'] as AssessmentQuestionType[]
+        // DICTATION (rewrite-the-whole-clip) is too punitive — keep MC only.
+        return ['LISTENING'] as AssessmentQuestionType[]
       case 'WRITING':
         return ['WRITING', 'ESSAY'] as AssessmentQuestionType[]
       case 'SPEAKING':

@@ -70,7 +70,7 @@ export function ListeningQuestion({ question, onSubmit, disabled }: ListeningQue
         src={audioSrc}
         ttsScript={ttsScript}
         language={question.language}
-        maxPlays={2}
+        maxPlays={3}
       />
 
       {/* Question */}

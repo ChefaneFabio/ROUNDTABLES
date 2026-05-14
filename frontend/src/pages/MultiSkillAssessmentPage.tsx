@@ -24,12 +24,12 @@ const SKILL_INFO: Record<string, { icon: string; title: string; description: str
   },
   LISTENING: {
     icon: '🎧', title: 'Listening',
-    description: 'Listen to audio clips and answer questions. You can play each audio up to 2 times.',
+    description: 'Listen to audio clips and answer questions. You can play each audio up to 3 times.',
     color: 'border-green-300 bg-green-50'
   },
   WRITING: {
     icon: '✍️', title: 'Writing',
-    description: 'Write responses to prompts. Your writing will be evaluated by AI and reviewed by a teacher.',
+    description: '',
     color: 'border-amber-300 bg-amber-50'
   },
   SPEAKING: {
