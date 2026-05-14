@@ -877,4 +877,286 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
     options: [{ label: 'Environmental regulations', value: 'Environmental regulations' }, { label: 'Corporate greenwashing', value: 'Corporate greenwashing' }, { label: 'Government inaction', value: 'Government inaction' }, { label: 'Consumer behavior', value: 'Consumer behavior' }],
     correctAnswer: 'Corporate greenwashing', points: 2, orderIndex: 84, tags: ['satire', 'commentary', 'register-varied'], timeSuggested: 90
   },
+
+  // ============================================================
+  // EVERYDAY DIALOGUES — added per user feedback (more conversation,
+  // less abstract monologue). Two-speaker scripts trigger the
+  // TtsService dialogue parser and rotate male/female voices.
+  // ============================================================
+
+  // ---- A1 dialogues ----
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Hi, can I have a coffee, please?
+SPEAKER_B: Of course. Small or large?
+SPEAKER_A: Small, please. How much is it?
+SPEAKER_B: One euro eighty.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'How much is the coffee?',
+    options: [{ label: '1.50 euros', value: '1.50' }, { label: '1.80 euros', value: '1.80' }, { label: '2.50 euros', value: '2.50' }, { label: '2.80 euros', value: '2.80' }],
+    correctAnswer: '1.80', points: 1, orderIndex: 85, tags: ['dialogue', 'cafe', 'everyday'], timeSuggested: 40
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Hello. What time do you open tomorrow?
+SPEAKER_B: We open at nine in the morning.
+SPEAKER_A: And when do you close?
+SPEAKER_B: At seven in the evening.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'What time does the shop open?',
+    options: [{ label: '7am', value: '7am' }, { label: '8am', value: '8am' }, { label: '9am', value: '9am' }, { label: '10am', value: '10am' }],
+    correctAnswer: '9am', points: 1, orderIndex: 86, tags: ['dialogue', 'shopping', 'everyday'], timeSuggested: 40
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Where can we meet on Saturday?
+SPEAKER_B: Let's meet at the cafe near the park.
+SPEAKER_A: At what time?
+SPEAKER_B: At three o'clock.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'Where do they want to meet?',
+    options: [{ label: 'At the park', value: 'park' }, { label: 'At the cafe', value: 'cafe' }, { label: 'At the cinema', value: 'cinema' }, { label: 'At the library', value: 'library' }],
+    correctAnswer: 'cafe', points: 1, orderIndex: 87, tags: ['dialogue', 'plans', 'everyday'], timeSuggested: 40
+  },
+  {
+    language: 'English', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: One ticket to the centre, please.
+SPEAKER_B: Single or return?
+SPEAKER_A: Just single.
+SPEAKER_B: That's two euros.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'How much is the ticket?',
+    options: [{ label: '1 euro', value: '1' }, { label: '2 euros', value: '2' }, { label: '3 euros', value: '3' }, { label: '4 euros', value: '4' }],
+    correctAnswer: '2', points: 1, orderIndex: 88, tags: ['dialogue', 'transport', 'everyday'], timeSuggested: 40
+  },
+
+  // ---- A2 dialogues ----
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Are you free this weekend? There's a new film at the cinema.
+SPEAKER_B: I'm busy on Saturday, but Sunday is fine.
+SPEAKER_A: Great. Let's go on Sunday afternoon.
+SPEAKER_B: Perfect, see you then.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'When are they going to the cinema?',
+    options: [{ label: 'Saturday morning', value: 'sat-am' }, { label: 'Saturday afternoon', value: 'sat-pm' }, { label: 'Sunday morning', value: 'sun-am' }, { label: 'Sunday afternoon', value: 'sun-pm' }],
+    correctAnswer: 'sun-pm', points: 1, orderIndex: 89, tags: ['dialogue', 'plans', 'everyday'], timeSuggested: 50
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Hello, I'd like to see the doctor. I have a stomach ache.
+SPEAKER_B: We have an appointment at four o'clock today.
+SPEAKER_A: Is there anything earlier?
+SPEAKER_B: I'm afraid not. Four is the only one.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'When is the appointment?',
+    options: [{ label: '2pm', value: '2pm' }, { label: '3pm', value: '3pm' }, { label: '4pm', value: '4pm' }, { label: '5pm', value: '5pm' }],
+    correctAnswer: '4pm', points: 1, orderIndex: 90, tags: ['dialogue', 'health', 'everyday'], timeSuggested: 50
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: How many rooms does the flat have?
+SPEAKER_B: It has two bedrooms, a kitchen and a bathroom.
+SPEAKER_A: And is there a balcony?
+SPEAKER_B: Yes, there's a small one.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'How many bedrooms does the flat have?',
+    options: [{ label: 'One', value: '1' }, { label: 'Two', value: '2' }, { label: 'Three', value: '3' }, { label: 'Four', value: '4' }],
+    correctAnswer: '2', points: 1, orderIndex: 91, tags: ['dialogue', 'housing', 'everyday'], timeSuggested: 50
+  },
+  {
+    language: 'English', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Excuse me, I think I left my umbrella here yesterday.
+SPEAKER_B: What colour is it?
+SPEAKER_A: It's blue, with a wooden handle.
+SPEAKER_B: Yes, we have it. I'll bring it now.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'What colour is the umbrella?',
+    options: [{ label: 'Black', value: 'black' }, { label: 'Red', value: 'red' }, { label: 'Blue', value: 'blue' }, { label: 'Green', value: 'green' }],
+    correctAnswer: 'blue', points: 1, orderIndex: 92, tags: ['dialogue', 'lost-found', 'everyday'], timeSuggested: 50
+  },
+
+  // ---- B1 dialogues ----
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Hi, it's Marco. I'm going to be about thirty minutes late this morning.
+SPEAKER_B: Oh, is everything okay?
+SPEAKER_A: Yes, the trains are delayed because of a strike. I'm sorry.
+SPEAKER_B: No problem, just let the team know when you arrive.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'Why is Marco going to be late?',
+    options: [{ label: "He's sick", value: 'sick' }, { label: 'Train strike', value: 'strike' }, { label: 'Traffic jam', value: 'traffic' }, { label: 'He overslept', value: 'overslept' }],
+    correctAnswer: 'strike', points: 1, orderIndex: 93, tags: ['dialogue', 'work', 'everyday'], timeSuggested: 60
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Excuse me, my pasta is cold.
+SPEAKER_B: Oh, I'm really sorry. I'll take it back to the kitchen straight away.
+SPEAKER_A: Could you also bring some water? I've been waiting for ten minutes.
+SPEAKER_B: Of course. I apologise.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'What two things does the customer complain about?',
+    options: [{ label: 'Cold pasta and slow water', value: 'pasta-water' }, { label: 'Wrong dish and noisy table', value: 'wrong-noise' }, { label: 'Cold pasta and wrong bill', value: 'pasta-bill' }, { label: 'Slow service and bad music', value: 'slow-music' }],
+    correctAnswer: 'pasta-water', points: 1, orderIndex: 94, tags: ['dialogue', 'restaurant', 'everyday'], timeSuggested: 60
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: How much is the monthly membership?
+SPEAKER_B: It's forty euros per month, or three hundred and sixty for the whole year.
+SPEAKER_A: So the annual one saves about eighty euros.
+SPEAKER_B: Exactly. And it includes two free personal training sessions.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'What is included in the annual membership?',
+    options: [{ label: 'Free coffee', value: 'coffee' }, { label: 'Two PT sessions', value: 'pt' }, { label: 'A free t-shirt', value: 'tshirt' }, { label: 'Nutrition plan', value: 'nutrition' }],
+    correctAnswer: 'pt', points: 1, orderIndex: 95, tags: ['dialogue', 'gym', 'everyday'], timeSuggested: 60
+  },
+  {
+    language: 'English', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Should we go to Florence by car or by train?
+SPEAKER_B: The train is faster, but the car is cheaper if we share fuel.
+SPEAKER_A: I'd prefer the train. We can read or sleep.
+SPEAKER_B: Okay, let's book the train then.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'Why do they choose the train?',
+    options: [{ label: "It's cheaper", value: 'cheap' }, { label: "It's faster and more relaxing", value: 'fast-relax' }, { label: "It's safer", value: 'safe' }, { label: 'It has Wi-Fi', value: 'wifi' }],
+    correctAnswer: 'fast-relax', points: 1, orderIndex: 96, tags: ['dialogue', 'travel', 'everyday'], timeSuggested: 60
+  },
+
+  // ---- B2 dialogues ----
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: I don't think we'll finish the report by Friday.
+SPEAKER_B: How much more time do you need?
+SPEAKER_A: Realistically, another week. There are too many open questions with the legal team.
+SPEAKER_B: All right, I'll talk to the client and push it to next Friday.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'Why does the project need more time?',
+    options: [{ label: 'The client is demanding', value: 'client' }, { label: 'Open legal questions', value: 'legal' }, { label: 'Staff are sick', value: 'sick' }, { label: 'Budget cut', value: 'budget' }],
+    correctAnswer: 'legal', points: 2, orderIndex: 97, tags: ['dialogue', 'work', 'everyday'], timeSuggested: 70
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Sorry to bother you, but the music last night was really loud until two in the morning.
+SPEAKER_B: I'm so sorry, my brother had a birthday party. It won't happen again on a weekday.
+SPEAKER_A: I understand it was a special occasion. Just a heads-up next time would be great.
+SPEAKER_B: Absolutely, I'll let you know in advance.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'What does the neighbour ask for in the future?',
+    options: [{ label: 'No more parties', value: 'no-parties' }, { label: 'Advance warning', value: 'warning' }, { label: 'Quieter music', value: 'quieter' }, { label: 'A different day', value: 'day' }],
+    correctAnswer: 'warning', points: 2, orderIndex: 98, tags: ['dialogue', 'neighbours', 'everyday'], timeSuggested: 70
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: So, what would you say is your biggest strength?
+SPEAKER_B: I think it's the way I handle difficult conversations. I stay calm and I always look for common ground.
+SPEAKER_A: Can you give me an example?
+SPEAKER_B: Yes — last year I mediated between two teams who weren't speaking to each other.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'What strength does the candidate describe?',
+    options: [{ label: 'Technical skills', value: 'technical' }, { label: 'Conflict mediation', value: 'mediation' }, { label: 'Public speaking', value: 'speaking' }, { label: 'Time management', value: 'time' }],
+    correctAnswer: 'mediation', points: 2, orderIndex: 99, tags: ['dialogue', 'interview', 'everyday'], timeSuggested: 70
+  },
+  {
+    language: 'English', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: We have two options for August: a beach in Sicily or a hiking trip in the Dolomites.
+SPEAKER_B: Honestly, after such a stressful year, I'd rather not walk uphill for ten days.
+SPEAKER_A: Beach it is, then.
+SPEAKER_B: Yes, with a book and zero alarms.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'Why do they choose the beach?',
+    options: [{ label: "It's cheaper", value: 'cheap' }, { label: 'They want to relax', value: 'relax' }, { label: 'The weather is better', value: 'weather' }, { label: 'Family reasons', value: 'family' }],
+    correctAnswer: 'relax', points: 2, orderIndex: 100, tags: ['dialogue', 'travel', 'everyday'], timeSuggested: 70
+  },
+
+  // ---- C1 dialogues ----
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Overall I'm very pleased with your year. The one area I'd like you to focus on is delegation.
+SPEAKER_B: Yes, I tend to take on too much myself.
+SPEAKER_A: Exactly. Trusting the team will free you up for the more strategic work we discussed.
+SPEAKER_B: Agreed. I'll start by handing over the weekly reporting.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'What is the main development area for the employee?',
+    options: [{ label: 'Public speaking', value: 'speaking' }, { label: 'Delegation', value: 'delegation' }, { label: 'Punctuality', value: 'punctuality' }, { label: 'Technical skill', value: 'technical' }],
+    correctAnswer: 'delegation', points: 2, orderIndex: 101, tags: ['dialogue', 'work', 'review'], timeSuggested: 80
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: I'm calling because my order was meant to arrive last week and there's still no sign of it.
+SPEAKER_B: I do apologise. I can see it's been held up at the warehouse. We can either dispatch a replacement today or refund the full amount.
+SPEAKER_A: A replacement would be fine, as long as it ships today.
+SPEAKER_B: Absolutely, you'll get the tracking number within the hour.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'What does the customer choose?',
+    options: [{ label: 'Full refund', value: 'refund' }, { label: 'Partial refund', value: 'partial' }, { label: 'A replacement shipped today', value: 'replacement' }, { label: 'A discount on the next order', value: 'discount' }],
+    correctAnswer: 'replacement', points: 2, orderIndex: 102, tags: ['dialogue', 'customer-service', 'everyday'], timeSuggested: 80
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: I noticed in the meeting today that you presented the new framework as your idea.
+SPEAKER_B: That wasn't my intention — I assumed everyone knew we worked on it together.
+SPEAKER_A: Most people in that room don't, and it matters for my visibility.
+SPEAKER_B: You're right. I'll send a follow-up email crediting you properly.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'How will the issue be resolved?',
+    options: [{ label: 'A formal complaint', value: 'complaint' }, { label: 'A team meeting', value: 'meeting' }, { label: 'Follow-up email crediting the colleague', value: 'email' }, { label: 'Apology to the manager', value: 'apology-mgr' }],
+    correctAnswer: 'email', points: 2, orderIndex: 103, tags: ['dialogue', 'work', 'conflict'], timeSuggested: 80
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: So you mentioned you used to work at a fintech in Berlin?
+SPEAKER_B: Yes, for almost six years. I left last spring to start my own consultancy.
+SPEAKER_A: Interesting. We're looking for someone who's been on both sides — corporate and founder.
+SPEAKER_B: Happy to chat properly next week if you'd like.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'Why is the first speaker interested in the second?',
+    options: [{ label: 'The Berlin connection', value: 'berlin' }, { label: 'Both corporate and founder experience', value: 'both' }, { label: 'Six years of fintech', value: 'fintech' }, { label: 'They are old friends', value: 'friends' }],
+    correctAnswer: 'both', points: 2, orderIndex: 104, tags: ['dialogue', 'networking', 'everyday'], timeSuggested: 80
+  },
+
+  // ---- C2 dialogues ----
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: I'd like to revisit the assumption that Q3 will mirror Q1.
+SPEAKER_B: You think the seasonal effect is being underestimated?
+SPEAKER_A: I think we're conflating two distinct customer cohorts and the model masks the divergence.
+SPEAKER_B: That's a fair concern. Shall we ask analytics to disaggregate the segments before we sign off?`,
+    ttsLanguageCode: 'en-US',
+    questionText: "What is the first speaker's real concern?",
+    options: [{ label: 'Q3 will be worse than expected', value: 'q3-worse' }, { label: 'Two customer cohorts are being conflated', value: 'cohorts' }, { label: 'Analytics is wrong', value: 'analytics' }, { label: 'Seasonality is overestimated', value: 'season-over' }],
+    correctAnswer: 'cohorts', points: 2, orderIndex: 105, tags: ['dialogue', 'business', 'nuanced'], timeSuggested: 90
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: We'd love to put your name forward as the keynote speaker.
+SPEAKER_B: I'm hugely flattered. Honestly, the timing is the issue — I'm in the final stretch of writing the book and a keynote would derail me.
+SPEAKER_A: Of course. Would a panel later in the year work better?
+SPEAKER_B: That I could absolutely do.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'Why does the second speaker decline the keynote?',
+    options: [{ label: 'Not interested in the topic', value: 'not-interested' }, { label: 'Already committed elsewhere', value: 'committed' }, { label: 'Writing a book', value: 'book' }, { label: "Doesn't like keynotes", value: 'dislike' }],
+    correctAnswer: 'book', points: 2, orderIndex: 106, tags: ['dialogue', 'professional', 'nuanced'], timeSuggested: 90
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Your written analyses are excellent, but in meetings you tend to hedge.
+SPEAKER_B: I know. I'm conscious of not overclaiming.
+SPEAKER_A: Healthy instinct, but the pendulum has swung too far. Lead with the conclusion and only then qualify it.
+SPEAKER_B: Conclusion first, caveats after. Got it.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'What does the mentor suggest?',
+    options: [{ label: 'Speak less in meetings', value: 'less' }, { label: 'Lead with the conclusion', value: 'conclusion-first' }, { label: 'Stop using data', value: 'no-data' }, { label: 'Defer to seniors', value: 'defer' }],
+    correctAnswer: 'conclusion-first', points: 2, orderIndex: 107, tags: ['dialogue', 'mentoring', 'nuanced'], timeSuggested: 90
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Engineering keeps blocking us, and product owns the relationship — but I think the real issue is upstream.
+SPEAKER_B: Meaning?
+SPEAKER_A: The OKRs reward feature shipping, not enabling other teams. So engineering is rationally optimising against helping us.
+SPEAKER_B: Right, so until incentives change, individual conversations won't move the needle.`,
+    ttsLanguageCode: 'en-US',
+    questionText: 'What does the first speaker identify as the root cause?',
+    options: [{ label: 'Engineering is hostile', value: 'hostile' }, { label: 'Product mismanages the relationship', value: 'product' }, { label: 'Misaligned OKRs', value: 'okrs' }, { label: 'Lack of meetings', value: 'meetings' }],
+    correctAnswer: 'okrs', points: 2, orderIndex: 108, tags: ['dialogue', 'organisational', 'nuanced'], timeSuggested: 90
+  },
 ]
