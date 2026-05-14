@@ -55,6 +55,19 @@ export class AuthService {
     const defaultSchoolId = 'maka-language-centre'
 
     const user = await prisma.$transaction(async (tx) => {
+      // Ensure the default Maka school row exists — first-ever registration
+      // on a fresh DB would otherwise fail the FK on Teacher/Student.schoolId.
+      if (role === 'TEACHER' || role === 'STUDENT') {
+        await tx.school.upsert({
+          where: { id: defaultSchoolId },
+          update: {},
+          create: {
+            id: defaultSchoolId,
+            name: 'Maka Language Consulting',
+            email: 'info@maka-language.com',
+          },
+        })
+      }
       const u = await tx.user.create({
         data: { email, password: hashedPassword, name, role: role as UserRole },
       })
