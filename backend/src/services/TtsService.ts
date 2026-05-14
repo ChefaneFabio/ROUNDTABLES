@@ -27,12 +27,12 @@ const VOICES: Voice[] = [
 // Voice settings by CEFR. Stability is intentionally low (0.35–0.55) — ElevenLabs treats
 // high stability as monotone, which is what users perceive as "robotic". Style adds prosody.
 const SETTINGS_BY_LEVEL: Record<string, { stability: number; similarity_boost: number; style: number; speed: number }> = {
-  A1: { stability: 0.55, similarity_boost: 0.85, style: 0.20, speed: 0.90 },
-  A2: { stability: 0.50, similarity_boost: 0.85, style: 0.25, speed: 0.92 },
-  B1: { stability: 0.45, similarity_boost: 0.80, style: 0.30, speed: 0.95 },
-  B2: { stability: 0.40, similarity_boost: 0.80, style: 0.35, speed: 1.00 },
-  C1: { stability: 0.40, similarity_boost: 0.75, style: 0.40, speed: 1.05 },
-  C2: { stability: 0.35, similarity_boost: 0.75, style: 0.45, speed: 1.05 },
+  A1: { stability: 0.55, similarity_boost: 0.85, style: 0.20, speed: 0.85 },
+  A2: { stability: 0.50, similarity_boost: 0.85, style: 0.25, speed: 0.88 },
+  B1: { stability: 0.45, similarity_boost: 0.80, style: 0.30, speed: 0.92 },
+  B2: { stability: 0.40, similarity_boost: 0.80, style: 0.35, speed: 0.95 },
+  C1: { stability: 0.40, similarity_boost: 0.75, style: 0.40, speed: 0.98 },
+  C2: { stability: 0.35, similarity_boost: 0.75, style: 0.45, speed: 1.00 },
 }
 
 const ELEVENLABS_API_URL = 'https://api.elevenlabs.io/v1'
@@ -164,7 +164,7 @@ export class TtsService {
 
   /** Generate TTS audio for a question and save to disk */
   async generateAudio(questionId: string, text: string, _language: string, cefrLevel: string): Promise<string> {
-    const filename = `tts_${questionId}_v2.mp3`
+    const filename = `tts_${questionId}_v3.mp3`
     const filePath = path.join(this.audioDir, filename)
 
     if (fs.existsSync(filePath)) {
@@ -195,7 +195,7 @@ export class TtsService {
 
   /** Get existing audio URL or generate on demand */
   async getAudioUrl(questionId: string, ttsScript: string, language: string, cefrLevel: string): Promise<string | null> {
-    const filename = `tts_${questionId}_v2.mp3`
+    const filename = `tts_${questionId}_v3.mp3`
     const filePath = path.join(this.audioDir, filename)
 
     const baseUrl = process.env.BACKEND_URL || process.env.RENDER_EXTERNAL_URL || ''

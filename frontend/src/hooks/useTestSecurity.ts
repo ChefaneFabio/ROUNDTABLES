@@ -89,19 +89,10 @@ export function useTestSecurity({
     return () => document.removeEventListener('visibilitychange', handler)
   }, [isTimed, blockTabSwitch, reportViolation])
 
-  // Focus loss — only show warning, don't count as separate violation
-  // (visibilitychange already fires on tab switch, so counting blur too would double-count)
-  useEffect(() => {
-    if (!isTimed || !blockTabSwitch) return
-    const handler = () => {
-      // Only warn if the tab didn't also become hidden (avoids double-counting with visibilitychange)
-      if (!document.hidden) {
-        setShowWarning(true)
-      }
-    }
-    window.addEventListener('blur', handler)
-    return () => window.removeEventListener('blur', handler)
-  }, [isTimed, blockTabSwitch])
+  // NOTE: window 'blur' is intentionally NOT listened to. It fires when focus
+  // moves to a textarea with extensions like Grammarly/IMEs, or when an input
+  // is clicked on Windows — producing false-positive "leave test?" warnings.
+  // Real tab/window switches still fire 'visibilitychange' (handled above).
 
   // beforeunload warning
   useEffect(() => {
