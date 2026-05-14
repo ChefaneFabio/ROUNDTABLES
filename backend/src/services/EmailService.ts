@@ -214,6 +214,112 @@ class EmailService {
     })
   }
 
+  /** Internal report sent to Maka HQ when a learner finishes a placement test. */
+  async sendInternalAssessmentReport(params: {
+    to: string
+    studentName: string
+    studentEmail: string
+    language: string
+    overallLevel: string
+    overallLevelName: string
+    overallScore: number
+    completedAt: Date
+    sections: Array<{
+      skill: string
+      cefrLevel: string | null
+      percentageScore: number | null
+      rawScore: number | null
+      teacherReviewed: boolean
+    }>
+    pdfBuffer?: Buffer
+  }): Promise<{ messageId: string }> {
+    const { to, studentName, studentEmail, language, overallLevel, overallLevelName, overallScore, completedAt, sections, pdfBuffer } = params
+
+    const completedAtStr = completedAt.toLocaleString('en-GB', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Rome'
+    })
+
+    const skillRows = sections.map(s => {
+      const score = s.percentageScore != null ? `${s.percentageScore}%` : '—'
+      const raw = s.rawScore != null ? s.rawScore : '—'
+      const reviewed = s.teacherReviewed ? '✓' : ''
+      return `<tr>
+        <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb">${s.skill.charAt(0) + s.skill.slice(1).toLowerCase()}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;font-weight:600">${s.cefrLevel || '—'}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb">${score}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb">${raw}</td>
+        <td style="padding:8px 12px;border-bottom:1px solid #e5e7eb;text-align:center">${reviewed}</td>
+      </tr>`
+    }).join('')
+
+    const html = `
+    <div style="font-family:Arial,sans-serif;max-width:680px;margin:0 auto;background:#fff;color:#111827">
+      <div style="background:#0f172a;color:#fff;padding:20px 24px">
+        <h1 style="margin:0;font-size:18px;font-weight:700">Placement Test Completed</h1>
+        <p style="margin:4px 0 0;opacity:0.8;font-size:13px">Maka Learning Management Centre — Internal Report</p>
+      </div>
+
+      <div style="padding:24px;border:1px solid #e5e7eb;border-top:none">
+        <table style="width:100%;border-collapse:collapse;font-size:14px;margin-bottom:24px">
+          <tr>
+            <td style="padding:6px 0;color:#6b7280;width:140px">Learner</td>
+            <td style="padding:6px 0;font-weight:600">${studentName}</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;color:#6b7280">Email</td>
+            <td style="padding:6px 0">${studentEmail}</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;color:#6b7280">Language</td>
+            <td style="padding:6px 0">${language}</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;color:#6b7280">Completed at</td>
+            <td style="padding:6px 0">${completedAtStr} (Europe/Rome)</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;color:#6b7280">Overall CEFR</td>
+            <td style="padding:6px 0;font-weight:700;color:#4f46e5">${overallLevel} — ${overallLevelName}</td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;color:#6b7280">Overall score</td>
+            <td style="padding:6px 0">${overallScore}%</td>
+          </tr>
+        </table>
+
+        <h2 style="font-size:14px;color:#111827;margin:0 0 8px;text-transform:uppercase;letter-spacing:0.05em">Skill breakdown</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead>
+            <tr style="background:#f3f4f6;text-align:left">
+              <th style="padding:8px 12px;border-bottom:1px solid #e5e7eb">Skill</th>
+              <th style="padding:8px 12px;border-bottom:1px solid #e5e7eb">CEFR</th>
+              <th style="padding:8px 12px;border-bottom:1px solid #e5e7eb">%</th>
+              <th style="padding:8px 12px;border-bottom:1px solid #e5e7eb">Raw</th>
+              <th style="padding:8px 12px;border-bottom:1px solid #e5e7eb;text-align:center">Reviewed</th>
+            </tr>
+          </thead>
+          <tbody>${skillRows}</tbody>
+        </table>
+
+        <p style="margin-top:24px;font-size:12px;color:#6b7280">
+          ${pdfBuffer ? 'A detailed PDF report is attached.' : ''}
+        </p>
+      </div>
+    </div>`
+
+    const attachments = pdfBuffer
+      ? [{ filename: `${studentName.replace(/\s+/g, '_')}-${language}-results.pdf`, content: pdfBuffer, contentType: 'application/pdf' }]
+      : undefined
+
+    return this.sendEmail({
+      to,
+      subject: `[Maka] ${studentName} — ${language} ${overallLevel} (${overallScore}%)`,
+      html,
+      attachments
+    })
+  }
+
   isConfigured(): boolean {
     const user = process.env.SMTP_USER
     const pass = process.env.SMTP_PASSWORD

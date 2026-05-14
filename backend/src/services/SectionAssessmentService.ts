@@ -1707,6 +1707,27 @@ export class SectionAssessmentService {
             })),
             pdfBuffer
           })
+
+          // Internal report to Maka HQ — name, results, timestamp, details.
+          const makaTo = process.env.MAKA_RESULTS_EMAIL || 'training@makaitalia.com'
+          await emailService.sendInternalAssessmentReport({
+            to: makaTo,
+            studentName: assessment.student.user.name,
+            studentEmail: assessment.student.user.email,
+            language: assessment.language,
+            overallLevel: overallSublevel,
+            overallLevelName: SUBLEVEL_NAMES[overallSublevel] || LEVEL_NAMES[overallLevel] || overallLevel,
+            overallScore: avgPercentage,
+            completedAt: assessment.completedAt || new Date(),
+            sections: assessment.sections.map(s => ({
+              skill: s.skill,
+              cefrLevel: s.cefrLevel,
+              percentageScore: s.percentageScore,
+              rawScore: s.rawScore,
+              teacherReviewed: s.teacherScore != null,
+            })),
+            pdfBuffer
+          })
         } catch (e) {
           console.error('Failed to send multi-skill results email:', e)
         }
