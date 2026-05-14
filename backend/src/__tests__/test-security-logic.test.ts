@@ -126,28 +126,14 @@ describe('Test Security - Violation Logic', () => {
       expect(violations[0]).toBe('TAB_SWITCH')
     })
 
-    it('should count blur as violation when tab is NOT hidden (e.g. clicking address bar)', () => {
-      let violations: string[] = []
-      let documentHidden = false
-
-      const onBlur = () => {
-        if (!documentHidden) {
-          violations.push('FOCUS_LOSS')
-        }
-      }
-
-      // Window loses focus but tab is still visible
-      onBlur()
-      expect(violations).toHaveLength(1)
-    })
-
     it('single tab switch should result in exactly 1 violation (regression test)', () => {
-      // This was the bug: a single tab switch caused both visibilitychange AND blur,
-      // registering 2 violations and immediately auto-submitting
+      // The window 'blur' listener was removed entirely (commit 78ffa7a) because
+      // it false-fired when a learner clicked a textarea on Windows / Chrome
+      // with Grammarly/IMEs/password managers. Tab/window switches still fire
+      // visibilitychange, which is the only signal we count.
       const maxViolations = 2
       let violationCount = 0
       let autoSubmitted = false
-      let documentHidden = false
 
       const reportViolation = () => {
         violationCount++
@@ -157,21 +143,54 @@ describe('Test Security - Violation Logic', () => {
       }
 
       const onVisibilityChange = (isHidden: boolean) => {
-        documentHidden = isHidden
         if (isHidden) reportViolation()
       }
 
-      const onBlur = () => {
-        // Fixed: only count if document is NOT hidden
-        if (!documentHidden) reportViolation()
-      }
-
-      // Simulate single tab switch
-      onVisibilityChange(true) // fires first
-      onBlur()                  // fires second — should NOT count
+      // Simulate single tab switch — visibilitychange is the only handler.
+      onVisibilityChange(true)
 
       expect(violationCount).toBe(1)
-      expect(autoSubmitted).toBe(false) // Should NOT auto-submit from 1 tab switch
+      expect(autoSubmitted).toBe(false)
+    })
+  })
+
+  describe('focus loss must not warn (post-78ffa7a regression)', () => {
+    // When the learner clicks into a writing textarea, browser extensions can
+    // cause a transient window blur. Before the fix this popped 'Leave test?'
+    // every click. The fix: don't listen to 'blur' at all. These tests pin
+    // that contract so a future refactor doesn't bring it back.
+    it('clicking a textarea must not raise the leave-test warning', () => {
+      let warningShown = false
+      const visibilityListeners: Array<(hidden: boolean) => void> = []
+      const blurListeners: Array<() => void> = []
+
+      // Production hook only registers visibilitychange — no blur.
+      const installSecurityHandlers = () => {
+        visibilityListeners.push((isHidden: boolean) => {
+          if (!isHidden) warningShown = true
+        })
+      }
+
+      installSecurityHandlers()
+
+      // Simulate the user clicking into a writing field. A blur event may or
+      // may not fire here depending on browser/extension; the security layer
+      // must ignore it either way.
+      blurListeners.forEach(fn => fn())
+
+      expect(warningShown).toBe(false)
+      expect(blurListeners).toHaveLength(0) // no blur handler installed
+    })
+
+    it('real tab return (visibilitychange to visible) still raises the warning', () => {
+      let warningShown = false
+      const onVisibilityChange = (isHidden: boolean) => {
+        if (!isHidden) warningShown = true
+      }
+
+      onVisibilityChange(true)  // user leaves
+      onVisibilityChange(false) // user returns
+      expect(warningShown).toBe(true)
     })
   })
 
