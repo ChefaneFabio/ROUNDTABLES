@@ -54,15 +54,19 @@ export class TtsService {
     return !!this.apiKey
   }
 
+  /** djb2 hash, seeded so the same input deterministically maps to the same output. */
+  private hash(input: string, seed = 5381): number {
+    let h = seed
+    for (let i = 0; i < input.length; i++) {
+      h = ((h * 33) ^ input.charCodeAt(i)) >>> 0
+    }
+    return h
+  }
+
   /** Pick a voice deterministically from questionId — same question always uses the
    *  same voice, but the larger pool spreads selections across accents. */
   private pickVoice(questionId: string): Voice {
-    // djb2 — better distribution than the previous shift-based hash on short ids
-    let hash = 5381
-    for (let i = 0; i < questionId.length; i++) {
-      hash = ((hash * 33) ^ questionId.charCodeAt(i)) >>> 0
-    }
-    return VOICES[hash % VOICES.length]
+    return VOICES[this.hash(questionId) % VOICES.length]
   }
 
   private isDialogue(ttsScript: string): boolean {
@@ -88,17 +92,19 @@ export class TtsService {
     return segments
   }
 
-  /** Assign male/female voices alternating for dialogue */
-  private assignSpeakerVoices(speakers: string[]): Record<string, typeof VOICES[0]> {
+  /** Assign male/female voices alternating for dialogue. Seeded by questionId so
+   *  different dialogue questions actually get different voice pairs. */
+  private assignSpeakerVoices(speakers: string[], questionId: string): Record<string, typeof VOICES[0]> {
     const males = VOICES.filter(v => v.gender === 'male')
     const females = VOICES.filter(v => v.gender === 'female')
+    const seed = this.hash(questionId)
     const assignment: Record<string, typeof VOICES[0]> = {}
 
     speakers.forEach((speaker, i) => {
       if (i % 2 === 0) {
-        assignment[speaker] = females[Math.floor(i / 2) % females.length]
+        assignment[speaker] = females[(seed + Math.floor(i / 2)) % females.length]
       } else {
-        assignment[speaker] = males[Math.floor(i / 2) % males.length]
+        assignment[speaker] = males[(seed + Math.floor(i / 2)) % males.length]
       }
     })
 
@@ -158,7 +164,7 @@ export class TtsService {
 
   /** Generate TTS audio for a question and save to disk */
   async generateAudio(questionId: string, text: string, _language: string, cefrLevel: string): Promise<string> {
-    const filename = `tts_${questionId}.mp3`
+    const filename = `tts_${questionId}_v2.mp3`
     const filePath = path.join(this.audioDir, filename)
 
     if (fs.existsSync(filePath)) {
@@ -176,7 +182,7 @@ export class TtsService {
       DIALOGUE_PATTERN.lastIndex = 0
       const segments = this.parseDialogue(text)
       const uniqueSpeakers = [...new Set(segments.map(s => s.speaker))]
-      const voiceAssignment = this.assignSpeakerVoices(uniqueSpeakers)
+      const voiceAssignment = this.assignSpeakerVoices(uniqueSpeakers, questionId)
       buffer = await this.generateDialogueAudio(segments, voiceAssignment, cefrLevel)
     } else {
       const voice = this.pickVoice(questionId)
@@ -189,7 +195,7 @@ export class TtsService {
 
   /** Get existing audio URL or generate on demand */
   async getAudioUrl(questionId: string, ttsScript: string, language: string, cefrLevel: string): Promise<string | null> {
-    const filename = `tts_${questionId}.mp3`
+    const filename = `tts_${questionId}_v2.mp3`
     const filePath = path.join(this.audioDir, filename)
 
     const baseUrl = process.env.BACKEND_URL || process.env.RENDER_EXTERNAL_URL || ''
