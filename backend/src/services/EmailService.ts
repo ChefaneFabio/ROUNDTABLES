@@ -16,20 +16,23 @@ class EmailService {
 
   private getTransporter(): nodemailer.Transporter {
     if (!this.transporter) {
-      const host = process.env.SMTP_HOST || 'smtp.gmail.com'
+      // Defaults to Microsoft 365 (smtp.office365.com) since training@makaitalia.com
+      // is hosted on Outlook. Override SMTP_HOST/SMTP_PORT for any other provider.
+      const host = process.env.SMTP_HOST || 'smtp.office365.com'
       const port = parseInt(process.env.SMTP_PORT || '587', 10)
       const user = process.env.SMTP_USER
       const pass = process.env.SMTP_PASSWORD
 
       if (!user || !pass || user === 'your-email@gmail.com') {
-        throw new Error('SMTP credentials not configured. Set SMTP_USER and SMTP_PASSWORD in .env')
+        throw new Error('SMTP credentials not configured. Set SMTP_USER and SMTP_PASSWORD in env.')
       }
 
       this.transporter = nodemailer.createTransport({
         host,
         port,
-        secure: port === 465,
-        auth: { user, pass }
+        secure: port === 465,        // 465 = SSL, 587 = STARTTLS (default for M365)
+        requireTLS: port === 587,    // Microsoft 365 enforces STARTTLS on 587
+        auth: { user, pass },
       })
     }
     return this.transporter
