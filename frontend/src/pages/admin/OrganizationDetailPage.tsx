@@ -16,6 +16,7 @@ export default function OrganizationDetailPage() {
   const [editingContact, setEditingContact] = useState<string | null>(null)
   const [showLinkCourses, setShowLinkCourses] = useState<string | null>(null)
   const [showAssignTest, setShowAssignTest] = useState(false)
+  const [showInviteLearner, setShowInviteLearner] = useState(false)
 
   const { data: employeesResp, isLoading: employeesLoading } = useQuery(
     ['org-employees', orgId],
@@ -245,15 +246,24 @@ export default function OrganizationDetailPage() {
               Employees of {organization?.name || 'this company'} who can be assigned placement tests
             </p>
           </div>
-          <button
-            onClick={() => setShowAssignTest(true)}
-            disabled={employees.length === 0}
-            className="flex items-center gap-1.5 px-3 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            title={employees.length === 0 ? 'Add employees first via Invite' : 'Assign a placement test'}
-          >
-            <Send className="h-4 w-4" />
-            Assign Placement Test
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setShowInviteLearner(true)}
+              className="flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50"
+            >
+              <Plus className="h-4 w-4" />
+              Invite Learner
+            </button>
+            <button
+              onClick={() => setShowAssignTest(true)}
+              disabled={employees.length === 0}
+              className="flex items-center gap-1.5 px-3 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              title={employees.length === 0 ? 'Invite a learner first' : 'Assign a placement test'}
+            >
+              <Send className="h-4 w-4" />
+              Assign Placement Test
+            </button>
+          </div>
         </div>
 
         <div className="p-6">
@@ -305,6 +315,19 @@ export default function OrganizationDetailPage() {
           onClose={() => setShowAssignTest(false)}
           onSuccess={() => {
             setShowAssignTest(false)
+            queryClient.invalidateQueries(['org-employees', orgId])
+          }}
+        />
+      )}
+
+      {/* Invite Learner Modal */}
+      {showInviteLearner && (
+        <InviteLearnerModal
+          orgId={orgId!}
+          orgName={organization?.name || 'Company'}
+          onClose={() => setShowInviteLearner(false)}
+          onSuccess={() => {
+            setShowInviteLearner(false)
             queryClient.invalidateQueries(['org-employees', orgId])
           }}
         />
@@ -772,6 +795,122 @@ function AssignPlacementTestModal({
             {loading ? 'Assigning...' : `Assign to ${selected.size} learner${selected.size !== 1 ? 's' : ''}`}
           </button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// Invite Learner Modal
+// ============================================================
+function InviteLearnerModal({
+  orgId,
+  orgName,
+  onClose,
+  onSuccess,
+}: {
+  orgId: string
+  orgName: string
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  const [form, setForm] = useState({
+    name: '',
+    email: '',
+    languageLevel: 'B1' as 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2',
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    try {
+      await organizationApi.inviteEmployee(orgId, form)
+      onSuccess()
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to invite learner')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
+        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Invite Learner</h3>
+            <p className="text-xs text-gray-500 mt-0.5">{orgName}</p>
+          </div>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Full name</label>
+            <input
+              type="text"
+              required
+              value={form.name}
+              onChange={e => setForm({ ...form, name: e.target.value })}
+              placeholder="Mario Rossi"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input
+              type="email"
+              required
+              value={form.email}
+              onChange={e => setForm({ ...form, email: e.target.value })}
+              placeholder="mario.rossi@company.com"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            />
+            <p className="text-xs text-gray-500 mt-1">An email with a temporary password will be sent here.</p>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Initial CEFR level (best guess)</label>
+            <div className="flex gap-1">
+              {(['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const).map(l => (
+                <button
+                  key={l}
+                  type="button"
+                  onClick={() => setForm({ ...form, languageLevel: l })}
+                  className={`flex-1 py-2 text-sm font-medium rounded-lg ${form.languageLevel === l ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                >
+                  {l}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-gray-500 mt-1">The placement test will refine this.</p>
+          </div>
+
+          {error && <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
+
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={loading}
+              className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+            >
+              {loading ? 'Sending invite...' : 'Send invite'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   )

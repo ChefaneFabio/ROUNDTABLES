@@ -8,6 +8,7 @@ import { requireAdmin, requireOrgAdmin, requireOrgAccess } from '../middleware/r
 import { validateRequest } from '../middleware/validateRequest'
 import { apiResponse, handleError } from '../utils/apiResponse'
 import { PAGINATION } from '../utils/constants'
+import { emailService } from '../services/EmailService'
 
 const router = Router()
 
@@ -321,7 +322,41 @@ router.post('/:id/employees/invite', authenticate, requireOrgAdmin, requireOrgAc
       return student
     })
 
-    // In production would send invite email
+    // Send invite email with temporary password so the learner can log in.
+    // (Best practice would be a one-shot magic link — for the demo we ship
+    // the temp password and tell the learner to change it on first login.)
+    if (emailService.isConfigured()) {
+      const loginUrl = `${process.env.FRONTEND_URL || 'https://roundtables-frontend-final.vercel.app'}/login`
+      try {
+        await emailService.sendEmail({
+          to: email,
+          subject: `You've been enrolled at ${organization.name} — Maka Language Consulting`,
+          html: `
+            <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#111827">
+              <div style="background:#4f46e5;color:#fff;padding:24px;border-radius:8px 8px 0 0">
+                <h1 style="margin:0;font-size:22px">Welcome, ${name}</h1>
+                <p style="margin:6px 0 0;opacity:0.9">Maka Language Consulting</p>
+              </div>
+              <div style="padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px">
+                <p>You have been enrolled in the language learning platform by <strong>${organization.name}</strong>.</p>
+                <p>You can sign in with these temporary credentials:</p>
+                <table style="margin:16px 0;font-size:14px">
+                  <tr><td style="padding:4px 12px 4px 0;color:#6b7280">Email</td><td>${email}</td></tr>
+                  <tr><td style="padding:4px 12px 4px 0;color:#6b7280">Temporary password</td><td><code style="background:#f3f4f6;padding:2px 8px;border-radius:4px">${randomPassword}</code></td></tr>
+                </table>
+                <p style="margin:24px 0">
+                  <a href="${loginUrl}" style="background:#4f46e5;color:#fff;padding:10px 20px;text-decoration:none;border-radius:6px;display:inline-block">Sign in</a>
+                </p>
+                <p style="font-size:13px;color:#6b7280">Please change your password as soon as you log in. If you weren't expecting this email, you can ignore it.</p>
+              </div>
+            </div>
+          `,
+        })
+      } catch (e) {
+        console.error('Failed to send invite email:', e)
+      }
+    }
+
     res.status(201).json(apiResponse.success(result, 'Employee invited successfully'))
   } catch (error) {
     handleError(res, error)
