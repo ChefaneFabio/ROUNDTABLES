@@ -149,10 +149,11 @@ export function SectionTakePage() {
     blockCopyPaste: testSettings.blockCopyPaste,
     requireFullscreen: testSettings.requireFullscreen,
     warnOnLeave: testSettings.warnOnLeave,
-    maxViolations: 2,
-    onMaxViolations: () => {
-      handleCompleteSection('INTERRUPTED')
-    },
+    // Don't auto-end the section on tab switch — that was kicking learners out
+    // mid-test on a single accidental window switch. Violations are still
+    // counted and visible to the admin in the report; the timer remains the
+    // hard end. (0 = unlimited; the warning overlay still shows.)
+    maxViolations: 0,
   })
 
   useEffect(() => {

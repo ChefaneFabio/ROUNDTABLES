@@ -14,10 +14,20 @@ interface AudioPlayerProps {
 
 export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComplete }: AudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null)
+  const playStartTimeRef = useRef<number | null>(null)
   const [playCount, setPlayCount] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const [audioError, setAudioError] = useState(false)
   const [useBrowserTts, setUseBrowserTts] = useState(false)
+
+  // A play "counts" only if the learner actually heard meaningful audio.
+  // Otherwise an empty/broken file or load error would silently burn attempts.
+  const MIN_LISTEN_MS = 1500
+  const consumePlay = () => {
+    const elapsed = playStartTimeRef.current ? Date.now() - playStartTimeRef.current : 0
+    playStartTimeRef.current = null
+    if (elapsed >= MIN_LISTEN_MS) setPlayCount(c => c + 1)
+  }
 
   const canPlay = playCount < maxPlays && (!!src || useBrowserTts) && (!audioError || useBrowserTts)
 
@@ -58,7 +68,7 @@ export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComp
       audioRef.current.currentTime = 0
     }
     setIsPlaying(false)
-    setPlayCount(c => c + 1)
+    consumePlay()
     onPlayComplete?.()
   }
 
@@ -70,13 +80,15 @@ export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComp
     utterance.rate = 0.9
     utterance.onend = () => {
       setIsPlaying(false)
-      setPlayCount(c => c + 1)
+      consumePlay()
       onPlayComplete?.()
     }
     utterance.onerror = () => {
       setIsPlaying(false)
-      setPlayCount(c => c + 1)
+      // Failure — do NOT burn the play count.
+      playStartTimeRef.current = null
     }
+    playStartTimeRef.current = Date.now()
     window.speechSynthesis.speak(utterance)
     setIsPlaying(true)
   }
@@ -92,20 +104,25 @@ export function AudioPlayer({ src, ttsScript, language, maxPlays = 2, onPlayComp
     if (useBrowserTts) {
       playBrowserTts()
     } else if (audioRef.current) {
-      audioRef.current.play().catch(() => {
-        // File failed to play — fall back to browser TTS
-        if (ttsScript) {
-          setUseBrowserTts(true)
-          playBrowserTts()
-        }
-      })
-      setIsPlaying(true)
+      playStartTimeRef.current = Date.now()
+      audioRef.current.play()
+        .then(() => setIsPlaying(true))
+        .catch(() => {
+          // File failed to play — fall back to browser TTS without burning a count.
+          playStartTimeRef.current = null
+          if (ttsScript) {
+            setUseBrowserTts(true)
+            playBrowserTts()
+          } else {
+            setAudioError(true)
+          }
+        })
     }
   }
 
   const handleAudioEnd = () => {
     setIsPlaying(false)
-    setPlayCount(c => c + 1)
+    consumePlay()
     onPlayComplete?.()
   }
 

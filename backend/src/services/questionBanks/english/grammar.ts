@@ -935,12 +935,6 @@ export const englishGrammarQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
-    questionText: '[Slang/Dialectal] "She\'s been proper ___ about that exam, ain\'t she?"',
-    options: [{ label: 'stressing', value: 'stressing' }, { label: 'stressed', value: 'stressed' }, { label: 'stress', value: 'stress' }, { label: 'stresses', value: 'stresses' }],
-    correctAnswer: 'stressing', points: 2, orderIndex: 147, tags: ['present perfect continuous', 'British slang', 'dialectal register']
-  },
-  {
-    language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'GRAMMAR',
     questionText: '[Rhetorical/Oratory] "Not only ___ we failed, but we have failed spectacularly and without remorse."',
     options: [{ label: 'have', value: 'have' }, { label: 'did', value: 'did' }, { label: 'had', value: 'had' }, { label: 'do', value: 'do' }],
     correctAnswer: 'have', points: 2, orderIndex: 148, tags: ['inversion', 'rhetorical register', 'oratory']
