@@ -45,12 +45,15 @@ async function timed(label, fn) {
   }
 }
 
+const BYPASS_TOKEN = process.env.LOAD_TEST_BYPASS_TOKEN
+
 async function call(method, path, body, token) {
   const res = await fetch(`${BASE_URL}${path}`, {
     method,
     headers: {
       'Content-Type': 'application/json',
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(BYPASS_TOKEN ? { 'X-Load-Test-Token': BYPASS_TOKEN } : {}),
     },
     body: body ? JSON.stringify(body) : undefined,
   })

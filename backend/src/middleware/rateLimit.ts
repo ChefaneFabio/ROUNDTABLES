@@ -58,6 +58,14 @@ export const rateLimit = (options: RateLimitOptions) => {
       return next()
     }
 
+    // Load-test bypass: enabled only when LOAD_TEST_BYPASS_TOKEN env is set
+    // (default unset → bypass impossible). Used by scripts/load-test.mjs to
+    // simulate many users from a single IP without tripping per-IP limits.
+    const bypassToken = process.env.LOAD_TEST_BYPASS_TOKEN
+    if (bypassToken && req.header('X-Load-Test-Token') === bypassToken) {
+      return next()
+    }
+
     const key = keyGenerator(req)
     const now = Date.now()
 
