@@ -148,10 +148,12 @@ router.post(
   }
 )
 
-// Public self-registration for any of the three main roles. Used by the
-// frontend register page when a new user picks Maka / Trainer / Learner.
+// Public self-registration. ADMIN is intentionally NOT in the allowlist: the
+// only active admin account is training@makaitalia.com (created internally),
+// and admin powers must never be self-claimable from the public internet.
+// Learners and trainers can still self-register from the public register page.
 const publicRegisterSchema = Joi.object({
-  role: Joi.string().valid('ADMIN', 'TEACHER', 'STUDENT').required(),
+  role: Joi.string().valid('TEACHER', 'STUDENT').required(),
   email: Joi.string().email().required(),
   password: Joi.string().min(8).max(100).required(),
   name: Joi.string().min(2).max(100).required(),

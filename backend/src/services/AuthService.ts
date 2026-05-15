@@ -37,13 +37,14 @@ export class AuthService {
     return bcrypt.compare(password, hashedPassword)
   }
 
-  // Public self-registration for any of the 3 main roles. Issues a JWT pair so
-  // the new user is logged in immediately. Defaults to the Maka school for
-  // student/teacher profiles.
-  async registerPublic(input: { role: 'ADMIN' | 'TEACHER' | 'STUDENT'; email: string; password: string; name: string }) {
+  // Public self-registration for learners and trainers only. Admin accounts
+  // (Maka staff with global access) must never be self-created from the
+  // public internet — the controller-level Joi schema also denies ADMIN, but
+  // we double-gate here as defence in depth.
+  async registerPublic(input: { role: 'TEACHER' | 'STUDENT'; email: string; password: string; name: string }) {
     const { role, email, password, name } = input
 
-    if (!['ADMIN', 'TEACHER', 'STUDENT'].includes(role)) {
+    if (!['TEACHER', 'STUDENT'].includes(role)) {
       throw new Error('Invalid role')
     }
 

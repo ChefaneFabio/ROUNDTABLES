@@ -27,12 +27,13 @@ const schema = yup.object({
 
 type FormData = yup.InferType<typeof schema>
 
-type Role = 'STUDENT' | 'TEACHER' | 'ADMIN'
+type Role = 'STUDENT' | 'TEACHER'
 
+// Admin (Maka HQ) accounts are not self-registerable. They are created
+// internally for Maka staff only.
 const ROLE_TABS: Array<{ value: Role; label: string; hint: string }> = [
   { value: 'STUDENT', label: 'Learner', hint: 'I want to take courses and assessments' },
   { value: 'TEACHER', label: 'Trainer', hint: 'I deliver lessons and grade students' },
-  { value: 'ADMIN', label: 'Admin', hint: 'I manage the platform' },
 ]
 
 export function RegisterPage() {
@@ -94,7 +95,7 @@ export function RegisterPage() {
           <Link to="/login" className="text-primary-500 hover:text-primary-600">
             demo account
           </Link>{' '}
-          (Admin / Trainer / Learner)
+          (Trainer / Learner)
         </p>
       </div>
 
