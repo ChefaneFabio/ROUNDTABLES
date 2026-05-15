@@ -265,25 +265,9 @@ export const englishReadingQuestions: MultiSkillQuestionData[] = [
     ],
     correctAnswer: 'echo chambers, attention commodification, trust erosion', points: 3, orderIndex: 36, tags: ['philosophy', 'media']
   },
-  {
-    language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Quantum Consciousness',
-    passage: 'The Orch-OR theory, proposed by physicist Roger Penrose and anesthesiologist Stuart Hameroff, posits that consciousness arises from quantum computations within microtubules inside neurons. This controversial hypothesis suggests the brain operates at a fundamentally quantum level. Critics contend that the warm, wet environment of the brain would cause quantum decoherence far too rapidly for such processes to be biologically relevant. Nevertheless, recent experiments detecting quantum effects in biological systems have lent some credibility to the notion that quantum mechanics may play a role in biology.',
-    questionText: 'What is the main criticism of the Orch-OR theory?',
-    options: [
-      { label: 'It lacks mathematical foundations', value: 'lacks math' },
-      { label: 'Quantum decoherence would occur too quickly in the brain', value: 'decoherence too rapid' },
-      { label: 'Penrose is not a neuroscientist', value: 'not a neuroscientist' },
-      { label: 'Microtubules do not exist in neurons', value: 'microtubules do not exist' }
-    ],
-    correctAnswer: 'decoherence too rapid', points: 3, orderIndex: 38, tags: ['science', 'philosophy']
-  },
-  {
-    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'The Orch-OR theory posits that consciousness arises from quantum computations within microtubules inside neurons.',
-    questionText: 'The Orch-OR theory suggests consciousness arises from quantum computations within ___.',
-    correctAnswer: 'microtubules', points: 3, orderIndex: 40, tags: ['science']
-  },
+  // (Removed: Quantum Consciousness items — too domain-specific for a
+  // language placement test. The C2 reading questions should test reading
+  // comprehension, not physics knowledge.)
   {
     language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
     passageTitle: 'Linguistic Relativity Revisited',

@@ -107,12 +107,7 @@ export const englishVocabularyQuestions: MultiSkillQuestionData[] = [
     options: [{ label: 'seamless', value: 'seamless' }, { label: 'seaming', value: 'seaming' }, { label: 'seemly', value: 'seemly' }, { label: 'seeming', value: 'seeming' }],
     correctAnswer: 'seamless', points: 1, orderIndex: 54, tags: ['art', 'advanced adjectives']
   },
-  {
-    language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'The professor\'s ___ explanation left even the advanced students struggling to follow.',
-    options: [{ label: 'convoluted', value: 'convoluted' }, { label: 'consolidated', value: 'consolidated' }, { label: 'contemplated', value: 'contemplated' }, { label: 'congregated', value: 'congregated' }],
-    correctAnswer: 'convoluted', points: 1, orderIndex: 55, tags: ['academic', 'advanced adjectives']
-  },
+  // (Removed: 'convoluted' — too rare for a placement test.)
 
   // ============================================================
   // NEW QUESTIONS 16-60 (45 additional, ~8 per level)
@@ -270,12 +265,7 @@ export const englishVocabularyQuestions: MultiSkillQuestionData[] = [
     options: [{ label: 'conceal', value: 'conceal' }, { label: 'reveal', value: 'reveal' }, { label: 'appeal', value: 'appeal' }, { label: 'repeal', value: 'repeal' }],
     correctAnswer: 'conceal', points: 2, orderIndex: 37, tags: ['business', 'advanced verbs']
   },
-  {
-    language: 'English', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'His remarks were so ___ that nobody could tell if he was joking or serious.',
-    options: [{ label: 'sardonic', value: 'sardonic' }, { label: 'sympathetic', value: 'sympathetic' }, { label: 'sentimental', value: 'sentimental' }, { label: 'systematic', value: 'systematic' }],
-    correctAnswer: 'sardonic', points: 2, orderIndex: 38, tags: ['personality', 'advanced adjectives']
-  },
+  // (Removed: 'sardonic' — too rare for a placement test.)
   {
     language: 'English', cefrLevel: 'C1', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
     questionText: 'The charity aims to ___ poverty in developing countries.',
@@ -316,12 +306,7 @@ export const englishVocabularyQuestions: MultiSkillQuestionData[] = [
     options: [{ label: 'equivocal', value: 'equivocal' }, { label: 'emphatic', value: 'emphatic' }, { label: 'empirical', value: 'empirical' }, { label: 'endemic', value: 'endemic' }],
     correctAnswer: 'equivocal', points: 2, orderIndex: 44, tags: ['politics', 'nuanced vocabulary']
   },
-  {
-    language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'Years of corruption had led to the ___ of the entire institution.',
-    options: [{ label: 'amelioration', value: 'amelioration' }, { label: 'debacle', value: 'debacle' }, { label: 'renaissance', value: 'renaissance' }, { label: 'proliferation', value: 'proliferation' }],
-    correctAnswer: 'debacle', points: 2, orderIndex: 45, tags: ['formal', 'advanced nouns']
-  },
+  // (Removed: 'debacle' / 'amelioration' — both too rare for a placement test.)
   {
     language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
     questionText: 'His ___ wit ensured that his columns were always the most widely read in the newspaper.',
@@ -436,16 +421,7 @@ export const englishVocabularyQuestions: MultiSkillQuestionData[] = [
   },
 
   // C2 — Literary & rare vocabulary
-  {
-    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
-    questionText: 'His ___ wit made his speeches both cutting and memorable. (sharp/mocking — literary adjective)',
-    correctAnswer: 'sardonic', points: 2, orderIndex: 65, tags: ['definitions', 'literary adjectives']
-  },
-  {
-    language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
-    questionText: 'The negotiation ended in a complete ___. (disaster — formal noun)',
-    correctAnswer: 'debacle', points: 2, orderIndex: 66, tags: ['synonyms', 'advanced nouns']
-  },
+  // (Removed: FILL_BLANK 'sardonic' and 'debacle' — too rare.)
   {
     language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
     questionText: 'The philosopher\'s argument was deliberately ___ — superficially convincing but fundamentally flawed.',
@@ -635,12 +611,8 @@ export const englishVocabularyQuestions: MultiSkillQuestionData[] = [
     questionText: 'The CEO managed to ___ ___ a hostile takeover bid from a rival corporation.',
     correctAnswer: 'fend off', points: 2, orderIndex: 95, tags: ['phrasal verbs', 'literary']
   },
-  {
-    language: 'English', cefrLevel: 'C2', questionType: 'MULTIPLE_CHOICE', skill: 'VOCABULARY',
-    questionText: 'After weeks of tense negotiations, the two parties finally ___ a deal.',
-    options: [{ label: 'hammered out', value: 'hammered out' }, { label: 'hammered in', value: 'hammered in' }, { label: 'hammered up', value: 'hammered up' }, { label: 'hammered on', value: 'hammered on' }],
-    correctAnswer: 'hammered out', points: 2, orderIndex: 96, tags: ['phrasal verbs', 'literary']
-  },
+  // (Removed: 'hammer in/out/up/on' — distractor set too tricky and not
+  // representative of common phrasal-verb usage.)
   {
     language: 'English', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'VOCABULARY',
     questionText: 'The board decided to ___ ___ key stakeholders before announcing the restructuring.',

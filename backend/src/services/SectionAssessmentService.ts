@@ -17,6 +17,35 @@ function shuffleArray<T>(arr: T[]): T[] {
   return arr
 }
 
+// Levenshtein distance with an early-exit cap. Used to forgive single-char
+// typos in answer matching. We never need a value larger than 1 so the loop
+// can short-circuit as soon as the running diff exceeds the cap.
+function isWithinTypoDistance(a: string, b: string, cap = 1): boolean {
+  if (a === b) return true
+  if (Math.abs(a.length - b.length) > cap) return false
+  // Skip very short answers — a 1-char distance on a 2-char word would let
+  // 'no' match 'so', which is too forgiving.
+  if (a.length < 4 || b.length < 4) return false
+  const m = a.length, n = b.length
+  const dp = new Array(n + 1)
+  for (let j = 0; j <= n; j++) dp[j] = j
+  for (let i = 1; i <= m; i++) {
+    let prev = dp[0]
+    dp[0] = i
+    let rowMin = dp[0]
+    for (let j = 1; j <= n; j++) {
+      const tmp = dp[j]
+      dp[j] = a[i - 1] === b[j - 1]
+        ? prev
+        : 1 + Math.min(prev, dp[j], dp[j - 1])
+      prev = tmp
+      if (dp[j] < rowMin) rowMin = dp[j]
+    }
+    if (rowMin > cap) return false
+  }
+  return dp[n] <= cap
+}
+
 const LEVEL_WEIGHTS: Record<string, number> = {
   A1: 1, A2: 1, B1: 2, B2: 2, C1: 3, C2: 3
 }
@@ -866,7 +895,11 @@ export class SectionAssessmentService {
     // Support pipe-separated multiple accepted answers (for error correction / sentence transformation)
     const studentAnswer = answer.toLowerCase().trim()
     const acceptedAnswers = question.correctAnswer.split('|').map(a => a.toLowerCase().trim())
-    const isCorrect = acceptedAnswers.includes(studentAnswer)
+    // Exact match OR within Levenshtein distance 1 of any accepted answer.
+    // Forgives single-character typos / transpositions (e.g. "recieve" → "receive")
+    // which were previously counted as wrong.
+    const isCorrect = acceptedAnswers.includes(studentAnswer) ||
+      acceptedAnswers.some(a => isWithinTypoDistance(studentAnswer, a))
 
     const newAnswer: AnswerRecord = {
       questionId,
