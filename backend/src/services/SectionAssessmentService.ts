@@ -964,24 +964,12 @@ export class SectionAssessmentService {
     if (section.skill !== 'SPEAKING') throw new Error('Not a speaking section')
     if (section.assessment.studentId !== studentId) throw new Error('Access denied')
 
-    // Re-transcribe with Whisper before persisting. The browser's Web Speech API
-    // produces uncapitalized, unpunctuated runs ("yes I think I think") which
-    // hurts AI scoring; Whisper returns proper sentences with punctuation and
-    // respects pauses. We do this synchronously so that AI scoring (which fires
-    // when the section completes) sees the better transcript. Browser transcript
-    // is the fallback if Whisper isn't configured or fails.
-    let finalTranscript = transcript?.trim() || null
-    if (whisperService.isConfigured()) {
-      try {
-        const whisperText = await whisperService.transcribe(audioUrl, section.assessment.language)
-        if (whisperText && whisperText.length > 0) {
-          finalTranscript = whisperText
-        }
-      } catch (err) {
-        console.error('[Whisper] transcription error:', err)
-      }
-    }
-
+    // Persist immediately with the browser transcript so the request returns
+    // fast even at peak load. Whisper retranscription happens in the
+    // background and overwrites `transcript` when done — see below. AI
+    // scoring at completeSection uses whatever transcript exists at that
+    // moment (Whisper if it finished in time, browser otherwise).
+    const initialTranscript = transcript?.trim() || null
     const response = await prisma.speakingResponse.create({
       data: {
         assessmentId,
@@ -990,10 +978,49 @@ export class SectionAssessmentService {
         studentId,
         audioUrl,
         duration,
-        transcript: finalTranscript,
-        transcribedAt: finalTranscript ? new Date() : null
+        transcript: initialTranscript,
+        transcribedAt: null, // null = still pending Whisper
       }
     })
+
+    // Async Whisper retranscription. Fire-and-forget — never blocks the
+    // user-facing submit response. Updates the row in place when done.
+    if (whisperService.isConfigured()) {
+      const responseId = response.id
+      const language = section.assessment.language
+      setImmediate(async () => {
+        try {
+          const whisperText = await whisperService.transcribe(audioUrl, language)
+          if (whisperText && whisperText.length > 0) {
+            await prisma.speakingResponse.update({
+              where: { id: responseId },
+              data: { transcript: whisperText, transcribedAt: new Date() },
+            })
+          } else {
+            // Whisper returned nothing — keep browser transcript, mark done.
+            await prisma.speakingResponse.update({
+              where: { id: responseId },
+              data: { transcribedAt: new Date() },
+            })
+          }
+        } catch (err) {
+          console.error('[Whisper] background transcription error:', err)
+          // Mark done so we don't keep retrying — browser transcript stays.
+          await prisma.speakingResponse.update({
+            where: { id: responseId },
+            data: { transcribedAt: new Date() },
+          }).catch(() => {})
+        }
+      })
+    } else {
+      // No Whisper configured — browser transcript is final.
+      if (initialTranscript) {
+        await prisma.speakingResponse.update({
+          where: { id: response.id },
+          data: { transcribedAt: new Date() },
+        })
+      }
+    }
 
     // Track as an answer in the section
     const answers = (section.answers as unknown as AnswerRecord[]) || []
