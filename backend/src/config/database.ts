@@ -8,11 +8,29 @@ declare global {
   var __prisma: PrismaClient | undefined
 }
 
+// Bump connection pool from Prisma's default (num_cpus * 2 + 1, ≈3 on small
+// Render plans) to a value that survives 200 concurrent placement tests.
+// Override via PRISMA_CONNECTION_LIMIT env var if you need to tune further.
+const withPoolLimit = (rawUrl: string | undefined): string | undefined => {
+  if (!rawUrl) return rawUrl
+  try {
+    const url = new URL(rawUrl)
+    if (!url.searchParams.has('connection_limit')) {
+      url.searchParams.set('connection_limit', process.env.PRISMA_CONNECTION_LIMIT || '30')
+    }
+    return url.toString()
+  } catch {
+    return rawUrl
+  }
+}
+
 const prismaClientSingleton = () => {
+  const datasourceUrl = withPoolLimit(process.env.DATABASE_URL)
   return new PrismaClient({
     log: process.env.NODE_ENV === 'development'
       ? ['query', 'error', 'warn']
       : ['error'],
+    ...(datasourceUrl ? { datasources: { db: { url: datasourceUrl } } } : {}),
   })
 }
 

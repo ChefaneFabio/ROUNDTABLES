@@ -890,6 +890,51 @@ router.post('/admin/seed-multi-skill', authenticate, requireAdmin, async (req: R
   }
 })
 
+// Admin: Pre-generate all listening audio for a language. Run this ONCE
+// per language before a load event (e.g. an HR session with 50+ learners)
+// so ElevenLabs is never the bottleneck during the test.
+router.post('/admin/pregen-audio', authenticate, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const { language } = req.body
+    if (!language) {
+      return res.status(400).json(apiResponse.error('Language is required', 'VALIDATION_ERROR'))
+    }
+
+    const questions = await prisma.assessmentQuestion.findMany({
+      where: {
+        language,
+        skill: 'LISTENING',
+        ttsScript: { not: null },
+        isActive: true,
+      },
+      select: { id: true, ttsScript: true, language: true, cefrLevel: true },
+    })
+
+    const results = await ttsService.preGenerateAll(
+      questions.map(q => ({
+        id: q.id,
+        ttsScript: q.ttsScript || '',
+        language: q.language,
+        cefrLevel: q.cefrLevel || 'B1',
+      }))
+    )
+
+    const success = results.filter(r => r.status === 'success').length
+    const skipped = results.filter(r => r.status === 'skipped').length
+    const errors = results.filter(r => r.status === 'error')
+
+    return res.json(apiResponse.success({
+      total: results.length,
+      success,
+      skipped,
+      failed: errors.length,
+      errors: errors.slice(0, 10), // first 10 for debugging
+    }, `Pre-generated ${success}/${results.length} audio files for ${language}`))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // Admin: Download test questions as PDF (full language or specific skill)
 router.get('/admin/test-pdf', authenticate, requireAdmin, async (req: Request, res: Response) => {
   try {
