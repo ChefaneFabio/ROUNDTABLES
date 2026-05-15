@@ -3,10 +3,11 @@ import { useParams, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import {
   ArrowLeft, Building2, Users, Mail, Phone, MapPin, Plus,
-  Trash2, Edit2, Link2, X, Globe
+  Trash2, Edit2, Link2, X, Globe, GraduationCap, Send
 } from 'lucide-react'
 import { organizationContactsApi, coursesApi } from '../../services/api'
 import { organizationApi } from '../../services/organizationApi'
+import { assessmentApi } from '../../services/assessmentApi'
 
 export default function OrganizationDetailPage() {
   const { id: orgId } = useParams<{ id: string }>()
@@ -14,6 +15,14 @@ export default function OrganizationDetailPage() {
   const [showAddContact, setShowAddContact] = useState(false)
   const [editingContact, setEditingContact] = useState<string | null>(null)
   const [showLinkCourses, setShowLinkCourses] = useState<string | null>(null)
+  const [showAssignTest, setShowAssignTest] = useState(false)
+
+  const { data: employeesResp, isLoading: employeesLoading } = useQuery(
+    ['org-employees', orgId],
+    () => organizationApi.getEmployees(orgId!, { limit: 200 }),
+    { enabled: !!orgId }
+  )
+  const employees: any[] = employeesResp?.data || employeesResp || []
 
   const { data: org, isLoading: orgLoading } = useQuery(
     ['organization', orgId],
@@ -226,6 +235,80 @@ export default function OrganizationDetailPage() {
           )}
         </div>
       </div>
+
+      {/* Learners Section */}
+      <div className="bg-white rounded-lg border border-gray-200">
+        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+          <div>
+            <h2 className="text-lg font-semibold text-gray-900">Company Learners</h2>
+            <p className="text-sm text-gray-500">
+              Employees of {organization?.name || 'this company'} who can be assigned placement tests
+            </p>
+          </div>
+          <button
+            onClick={() => setShowAssignTest(true)}
+            disabled={employees.length === 0}
+            className="flex items-center gap-1.5 px-3 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            title={employees.length === 0 ? 'Add employees first via Invite' : 'Assign a placement test'}
+          >
+            <Send className="h-4 w-4" />
+            Assign Placement Test
+          </button>
+        </div>
+
+        <div className="p-6">
+          {employeesLoading ? (
+            <div className="text-center py-8 text-gray-400">Loading learners...</div>
+          ) : employees.length === 0 ? (
+            <div className="text-center py-8">
+              <GraduationCap className="h-10 w-10 text-gray-300 mx-auto mb-2" />
+              <p className="text-sm text-gray-500">No learners yet for this company</p>
+              <p className="text-xs text-gray-400 mt-1">
+                Invite employees from the company dashboard to get started
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-100">
+              {employees.map((emp: any) => {
+                const name = emp.user?.name || emp.name || 'Unnamed'
+                const email = emp.user?.email || emp.email || ''
+                const level = emp.languageLevel || '—'
+                return (
+                  <div key={emp.id} className="py-3 flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="h-9 w-9 rounded-full bg-gray-100 flex items-center justify-center">
+                        <span className="text-gray-600 font-medium text-sm">
+                          {name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900 text-sm">{name}</p>
+                        <p className="text-xs text-gray-500">{email}</p>
+                      </div>
+                    </div>
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+                      {level}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Assign Placement Test Modal */}
+      {showAssignTest && (
+        <AssignPlacementTestModal
+          orgName={organization?.name || 'Company'}
+          employees={employees}
+          onClose={() => setShowAssignTest(false)}
+          onSuccess={() => {
+            setShowAssignTest(false)
+            queryClient.invalidateQueries(['org-employees', orgId])
+          }}
+        />
+      )}
 
       {/* Add Contact Modal */}
       {showAddContact && (
@@ -495,6 +578,198 @@ function LinkCoursesModal({
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
           >
             {loading ? 'Linking...' : `Link ${selected.size} Course${selected.size !== 1 ? 's' : ''}`}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// Assign Placement Test Modal
+// ============================================================
+function AssignPlacementTestModal({
+  orgName,
+  employees,
+  onClose,
+  onSuccess,
+}: {
+  orgName: string
+  employees: any[]
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  const [language, setLanguage] = useState('English')
+  const [mode, setMode] = useState<'PLACEMENT' | 'PROGRESS'>('PLACEMENT')
+  const [fixedLevel, setFixedLevel] = useState<'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2'>('B1')
+  const [selected, setSelected] = useState<Set<string>>(new Set(employees.map(e => e.id)))
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [result, setResult] = useState<{ success: number; failed: number } | null>(null)
+
+  const toggle = (id: string) => {
+    const next = new Set(selected)
+    next.has(id) ? next.delete(id) : next.add(id)
+    setSelected(next)
+  }
+
+  const allSelected = selected.size === employees.length
+  const toggleAll = () => setSelected(new Set(allSelected ? [] : employees.map(e => e.id)))
+
+  const handleSubmit = async () => {
+    setLoading(true)
+    setError('')
+    setResult(null)
+    try {
+      const results = await assessmentApi.assignMultiSkillAssessment({
+        studentIds: Array.from(selected),
+        language,
+        ...(mode === 'PROGRESS' ? { fixedLevel } : {}),
+      })
+      const failed = results.filter((r: any) => 'error' in r).length
+      const success = results.length - failed
+      setResult({ success, failed })
+      if (failed === 0) {
+        setTimeout(onSuccess, 1500)
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error || 'Failed to assign placement test')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Assign Placement Test</h3>
+            <p className="text-xs text-gray-500 mt-0.5">{orgName}</p>
+          </div>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-5">
+          {/* Language */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Language</label>
+            <select
+              value={language}
+              onChange={e => setLanguage(e.target.value)}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+            >
+              {['English', 'Italian', 'Spanish', 'French', 'German'].map(l => (
+                <option key={l} value={l}>{l}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* Test mode */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Test type</label>
+            <div className="grid grid-cols-2 gap-2">
+              <label className={`flex items-start gap-2 p-3 border rounded-lg cursor-pointer ${mode === 'PLACEMENT' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}>
+                <input
+                  type="radio"
+                  name="mode"
+                  checked={mode === 'PLACEMENT'}
+                  onChange={() => setMode('PLACEMENT')}
+                  className="mt-0.5"
+                />
+                <div>
+                  <p className="text-sm font-medium">Adaptive Placement</p>
+                  <p className="text-xs text-gray-500">Auto-adapts the level. Use for first assessment.</p>
+                </div>
+              </label>
+              <label className={`flex items-start gap-2 p-3 border rounded-lg cursor-pointer ${mode === 'PROGRESS' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200'}`}>
+                <input
+                  type="radio"
+                  name="mode"
+                  checked={mode === 'PROGRESS'}
+                  onChange={() => setMode('PROGRESS')}
+                  className="mt-0.5"
+                />
+                <div>
+                  <p className="text-sm font-medium">Fixed Level (Progress)</p>
+                  <p className="text-xs text-gray-500">All questions from one CEFR level.</p>
+                </div>
+              </label>
+            </div>
+            {mode === 'PROGRESS' && (
+              <div className="mt-3 flex gap-1">
+                {(['A1', 'A2', 'B1', 'B2', 'C1', 'C2'] as const).map(l => (
+                  <button
+                    key={l}
+                    onClick={() => setFixedLevel(l)}
+                    className={`flex-1 py-2 text-sm font-medium rounded-lg ${fixedLevel === l ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Recipients */}
+          <div>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-sm font-medium text-gray-700">
+                Recipients ({selected.size}/{employees.length})
+              </label>
+              <button
+                onClick={toggleAll}
+                className="text-xs text-indigo-600 hover:text-indigo-700"
+              >
+                {allSelected ? 'Deselect all' : 'Select all'}
+              </button>
+            </div>
+            <div className="border border-gray-200 rounded-lg max-h-60 overflow-y-auto divide-y divide-gray-100">
+              {employees.map(emp => {
+                const name = emp.user?.name || emp.name || 'Unnamed'
+                const email = emp.user?.email || emp.email || ''
+                return (
+                  <label key={emp.id} className="flex items-center gap-3 px-3 py-2 hover:bg-gray-50 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selected.has(emp.id)}
+                      onChange={() => toggle(emp.id)}
+                      className="rounded text-indigo-600"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-gray-900 truncate">{name}</p>
+                      <p className="text-xs text-gray-500 truncate">{email}</p>
+                    </div>
+                  </label>
+                )
+              })}
+            </div>
+          </div>
+
+          {error && <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{error}</p>}
+          {result && (
+            <p className="text-sm bg-green-50 text-green-700 px-3 py-2 rounded-lg">
+              Assigned {result.success} / {result.success + result.failed}.
+              {result.failed > 0 && ` ${result.failed} failed (probably already in progress).`}
+            </p>
+          )}
+        </div>
+
+        <div className="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={loading || selected.size === 0}
+            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+          >
+            {loading ? 'Assigning...' : `Assign to ${selected.size} learner${selected.size !== 1 ? 's' : ''}`}
           </button>
         </div>
       </div>
