@@ -44,7 +44,17 @@ export function LoginPage() {
       setIsLoading(true)
       setError('')
       await login(data.email, data.password)
-      navigate(from, { replace: true })
+      // Resume an active assessment if the JWT expired mid-test (set by the
+      // axios interceptor before redirecting to /login).
+      let target = from
+      try {
+        const stashed = sessionStorage.getItem('postLoginRedirect')
+        if (stashed) {
+          sessionStorage.removeItem('postLoginRedirect')
+          target = stashed
+        }
+      } catch {}
+      navigate(target, { replace: true })
     } catch (err: any) {
       setError(err.message || 'Failed to login')
     } finally {

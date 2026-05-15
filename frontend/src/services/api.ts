@@ -105,8 +105,16 @@ api.interceptors.response.use(
       } catch (refreshError) {
         processQueue(refreshError, null)
         clearTokens()
-        // Only redirect if not already on login/register page
-        if (!window.location.pathname.startsWith('/login') && !window.location.pathname.startsWith('/register')) {
+        // Only redirect if not already on login/register page. During an
+        // active assessment, also remember the path so the learner can
+        // resume after re-login instead of losing their place silently.
+        const path = window.location.pathname
+        const onAuthPage = path.startsWith('/login') || path.startsWith('/register')
+        const inAssessment = path.startsWith('/assessment')
+        if (!onAuthPage) {
+          if (inAssessment) {
+            try { sessionStorage.setItem('postLoginRedirect', path) } catch {}
+          }
           window.location.href = '/login'
         }
         return Promise.reject(refreshError)

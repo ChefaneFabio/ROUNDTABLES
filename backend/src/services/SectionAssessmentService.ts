@@ -98,13 +98,14 @@ const SECTION_CONFIG_V2: Record<string, { timeLimitMin: number; questionsLimit: 
   SPEAKING:                { timeLimitMin: 15, questionsLimit: 3,  orderIndex: 7 },
 }
 
-// Versant-style 4-section configuration — Reading absorbs grammar/vocab/error-correction questions
-// Total: ~70 questions in 45 minutes (reduced by ~25% after user feedback: test felt too long)
+// Versant-style 4-section configuration — Reading absorbs grammar/vocab/error-correction questions.
+// Reading lowered from 45 → 28 after live-test feedback (45 felt punitively long
+// and learners fatigued before the listening/speaking sections).
 const SECTION_CONFIG_V3: Record<string, { timeLimitMin: number; questionsLimit: number; orderIndex: number }> = {
-  READING:   { timeLimitMin: 20, questionsLimit: 45, orderIndex: 0 },
-  LISTENING: { timeLimitMin: 12, questionsLimit: 11, orderIndex: 1 },
-  WRITING:   { timeLimitMin: 10, questionsLimit: 8,  orderIndex: 2 },
-  SPEAKING:  { timeLimitMin: 10, questionsLimit: 8,  orderIndex: 3 },
+  READING:   { timeLimitMin: 18, questionsLimit: 28, orderIndex: 0 },
+  LISTENING: { timeLimitMin: 12, questionsLimit: 10, orderIndex: 1 },
+  WRITING:   { timeLimitMin: 10, questionsLimit: 6,  orderIndex: 2 },
+  SPEAKING:  { timeLimitMin: 10, questionsLimit: 6,  orderIndex: 3 },
 }
 
 // Default to V3 (Versant-style) for new assessments
