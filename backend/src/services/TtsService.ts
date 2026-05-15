@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import crypto from 'crypto'
 
 // ElevenLabs multilingual voices — all support eleven_multilingual_v2.
 // Accent variety is important for the Listening test, so the pool spans
@@ -37,10 +38,14 @@ const SETTINGS_BY_LEVEL: Record<string, { stability: number; similarity_boost: n
 
 const ELEVENLABS_API_URL = 'https://api.elevenlabs.io/v1'
 const DIALOGUE_PATTERN = /^(SPEAKER_[A-Z]|PERSON_[A-Z]|[A-Z]+)\s*:\s*/gm
+const CLOUDINARY_FOLDER = 'roundtables-audio'
 
 export class TtsService {
   private apiKey: string | null = null
   private audioDir: string
+  // Process-lifetime cache of public_ids known to exist on Cloudinary.
+  // Avoids a HEAD round-trip on every audio request after the first hit.
+  private cloudinaryHits = new Set<string>()
 
   constructor() {
     this.apiKey = process.env.ELEVENLABS_API_KEY || null
@@ -52,6 +57,76 @@ export class TtsService {
 
   isConfigured(): boolean {
     return !!this.apiKey
+  }
+
+  /** Parse the cloudinary://api_key:api_secret@cloud_name URL. Returns null
+   *  when the env var isn't configured — local-disk path is used instead. */
+  private getCloudinaryConfig(): { apiKey: string; apiSecret: string; cloudName: string } | null {
+    const url = process.env.CLOUDINARY_URL
+    if (!url) return null
+    const m = url.match(/^cloudinary:\/\/([^:]+):([^@]+)@(.+)$/)
+    if (!m) return null
+    return { apiKey: m[1], apiSecret: m[2], cloudName: m[3] }
+  }
+
+  /** Deterministic delivery URL for a given public_id. Audio MP3s use the
+   *  'video' resource type on Cloudinary. */
+  private cloudinaryDeliveryUrl(publicId: string): string | null {
+    const c = this.getCloudinaryConfig()
+    if (!c) return null
+    return `https://res.cloudinary.com/${c.cloudName}/video/upload/${CLOUDINARY_FOLDER}/${publicId}.mp3`
+  }
+
+  /** Signed upload via Cloudinary REST API — no SDK needed. */
+  private async uploadToCloudinary(buffer: Buffer, publicId: string): Promise<string | null> {
+    const c = this.getCloudinaryConfig()
+    if (!c) return null
+    const timestamp = Math.floor(Date.now() / 1000)
+    // params alphabetical for the signature
+    const paramsToSign = `folder=${CLOUDINARY_FOLDER}&public_id=${publicId}&timestamp=${timestamp}`
+    const signature = crypto.createHash('sha1').update(paramsToSign + c.apiSecret).digest('hex')
+
+    const fd = new FormData()
+    fd.append('file', new Blob([buffer], { type: 'audio/mpeg' }), `${publicId}.mp3`)
+    fd.append('api_key', c.apiKey)
+    fd.append('timestamp', String(timestamp))
+    fd.append('signature', signature)
+    fd.append('folder', CLOUDINARY_FOLDER)
+    fd.append('public_id', publicId)
+
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${c.cloudName}/video/upload`, {
+        method: 'POST',
+        body: fd,
+      })
+      if (!res.ok) {
+        console.error('[TTS] Cloudinary upload failed:', res.status, await res.text().catch(() => ''))
+        return null
+      }
+      const data = (await res.json()) as { secure_url: string }
+      this.cloudinaryHits.add(publicId)
+      return data.secure_url
+    } catch (e) {
+      console.error('[TTS] Cloudinary upload error:', e)
+      return null
+    }
+  }
+
+  /** HEAD-check the deterministic Cloudinary URL to see if the file is there. */
+  private async existsOnCloudinary(publicId: string): Promise<boolean> {
+    if (this.cloudinaryHits.has(publicId)) return true
+    const url = this.cloudinaryDeliveryUrl(publicId)
+    if (!url) return false
+    try {
+      const res = await fetch(url, { method: 'HEAD' })
+      if (res.ok) {
+        this.cloudinaryHits.add(publicId)
+        return true
+      }
+      return false
+    } catch {
+      return false
+    }
   }
 
   /** djb2 hash, seeded so the same input deterministically maps to the same output. */
@@ -162,12 +237,16 @@ export class TtsService {
     return Buffer.concat(buffers)
   }
 
-  /** Generate TTS audio for a question and save to disk */
+  /** Generate TTS audio for a question. Returns an absolute URL (Cloudinary)
+   *  if cloud is configured, else a local /audio/ relative path. */
   async generateAudio(questionId: string, text: string, _language: string, cefrLevel: string): Promise<string> {
-    const filename = `tts_${questionId}_v3.mp3`
+    const publicId = `tts_${questionId}_v3`
+    const filename = `${publicId}.mp3`
     const filePath = path.join(this.audioDir, filename)
+    const useCloud = !!this.getCloudinaryConfig()
 
-    if (fs.existsSync(filePath)) {
+    // Local cache hit (only meaningful in non-cloud mode — Render disk wipes)
+    if (!useCloud && fs.existsSync(filePath)) {
       return `/audio/${filename}`
     }
 
@@ -189,21 +268,43 @@ export class TtsService {
       buffer = await this.generateSingleVoice(text, voice.id, cefrLevel)
     }
 
+    if (useCloud) {
+      const cloudUrl = await this.uploadToCloudinary(buffer, publicId)
+      if (cloudUrl) return cloudUrl
+      // Cloud upload failed — fall through to local write so the test still works.
+    }
+
     fs.writeFileSync(filePath, buffer)
     return `/audio/${filename}`
   }
 
-  /** Get existing audio URL or generate on demand */
+  /** Get existing audio URL or generate on demand. */
   async getAudioUrl(questionId: string, ttsScript: string, language: string, cefrLevel: string): Promise<string | null> {
-    const filename = `tts_${questionId}_v3.mp3`
+    const publicId = `tts_${questionId}_v3`
+    const filename = `${publicId}.mp3`
     const filePath = path.join(this.audioDir, filename)
-
     const baseUrl = process.env.BACKEND_URL || process.env.RENDER_EXTERNAL_URL || ''
 
-    if (fs.existsSync(filePath)) {
-      return `${baseUrl}/audio/${filename}`
+    // Cloud-first path: deterministic URL, single HEAD on first hit, then served
+    // straight from the CDN forever. Survives Render restarts.
+    if (this.getCloudinaryConfig()) {
+      const url = this.cloudinaryDeliveryUrl(publicId)!
+      if (await this.existsOnCloudinary(publicId)) return url
+      // Not yet uploaded — generate (which also uploads on cloud mode).
+      if (this.apiKey && ttsScript) {
+        try {
+          const result = await this.generateAudio(questionId, ttsScript, language, cefrLevel)
+          return result.startsWith('http') ? result : `${baseUrl}${result}`
+        } catch (error) {
+          console.error(`TTS generation failed for question ${questionId}:`, error)
+          return null
+        }
+      }
+      return null
     }
 
+    // Local-disk path (unchanged behaviour for setups without Cloudinary).
+    if (fs.existsSync(filePath)) return `${baseUrl}/audio/${filename}`
     if (this.apiKey && ttsScript) {
       try {
         const relativePath = await this.generateAudio(questionId, ttsScript, language, cefrLevel)
@@ -213,7 +314,6 @@ export class TtsService {
         return null
       }
     }
-
     return null
   }
 

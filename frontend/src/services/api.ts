@@ -115,6 +115,20 @@ api.interceptors.response.use(
       }
     }
 
+    // Transient-failure retry (one shot, ~1s backoff). Catches 502/503/504
+    // and pure network/timeout errors which are common on Render free-tier
+    // cold starts and brief ElevenLabs hiccups during a test.
+    const status = error.response?.status
+    const isTransient = status === 502 || status === 503 || status === 504 ||
+      error.code === 'ECONNABORTED' || error.code === 'ERR_NETWORK' || !error.response
+    const method = (originalRequest?.method || 'get').toLowerCase()
+    const isRetryable = !originalRequest._retried && isTransient && (method === 'get' || method === 'head')
+    if (isRetryable) {
+      originalRequest._retried = true
+      await new Promise(r => setTimeout(r, 1000))
+      return api(originalRequest)
+    }
+
     // Extract error message
     const errorMessage =
       (error.response?.data as any)?.error ||

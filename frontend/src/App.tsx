@@ -4,6 +4,7 @@ import { UserRole } from './types'
 
 // Layout
 import { Layout } from './components/Layout'
+import { ErrorBoundary } from './components/common/ErrorBoundary'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { LoadingPage } from './components/common/LoadingSpinner'
 
@@ -392,7 +393,9 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
             <Layout>
-              <AssessmentTakePage />
+              <ErrorBoundary area="the placement test">
+                <AssessmentTakePage />
+              </ErrorBoundary>
             </Layout>
           </ProtectedRoute>
         }
@@ -426,7 +429,9 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
             <Layout>
-              <MultiSkillAssessmentPage />
+              <ErrorBoundary area="the placement test">
+                <MultiSkillAssessmentPage />
+              </ErrorBoundary>
             </Layout>
           </ProtectedRoute>
         }
@@ -436,7 +441,9 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
             <Layout>
-              <SectionTakePage />
+              <ErrorBoundary area="this section">
+                <SectionTakePage />
+              </ErrorBoundary>
             </Layout>
           </ProtectedRoute>
         }

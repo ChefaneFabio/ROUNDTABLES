@@ -181,12 +181,17 @@ export const optionalAuth = async (
   }
 }
 
-// Generate JWT tokens
+// Generate JWT tokens.
+// Access token = 4h. A placement test can take 60-90 minutes; the previous
+// 15-minute TTL meant tokens silently expired mid-test, the refresh dance
+// occasionally raced with concurrent requests, and learners got bounced to
+// the login screen. 4h covers the longest reasonable test session and still
+// limits the blast radius of a leaked token.
 export const generateTokens = (user: { id: string; email: string; role: UserRole }) => {
   const accessToken = jwt.sign(
     { userId: user.id, email: user.email, role: user.role },
     JWT_SECRET,
-    { expiresIn: '15m' }
+    { expiresIn: '4h' }
   )
 
   const refreshToken = jwt.sign(
