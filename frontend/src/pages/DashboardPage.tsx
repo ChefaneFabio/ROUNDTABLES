@@ -16,6 +16,8 @@ import {
   ArrowRight,
   Eye,
   Package,
+  Building2,
+  UserCheck,
 } from 'lucide-react'
 import clsx from 'clsx'
 import { useAuth } from '../contexts/AuthContext'
@@ -87,44 +89,45 @@ export function DashboardPage() {
 function AdminDashboard({ data }: { data: any }) {
   return (
     <>
-      {/* Stats Grid */}
+      {/* Stats Grid — Maka HQ view: companies first, then people */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
-          title="Total Schools"
-          value={data?.stats?.totalSchools || 0}
-          icon={BookOpen}
+          title="Companies"
+          value={data?.stats?.totalOrganizations || 0}
+          icon={Building2}
           color="primary"
-          href="/schools"
+          href="/admin/organizations"
         />
         <StatCard
-          title="Total Trainers"
+          title="HR Contacts"
+          value={data?.stats?.totalHrContacts || 0}
+          icon={UserCheck}
+          color="purple"
+          href="/admin/organizations"
+        />
+        <StatCard
+          title="Trainers"
           value={data?.stats?.totalTeachers || 0}
           icon={GraduationCap}
           color="green"
           href="/teachers"
         />
         <StatCard
-          title="Total Learners"
+          title="Learners"
           value={data?.stats?.totalStudents || 0}
           icon={Users}
           color="blue"
           href="/students"
         />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Active Courses"
           value={data?.stats?.activeCourses || 0}
           icon={Calendar}
           color="purple"
           href="/courses"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard
-          title="Total Courses"
-          value={data?.stats?.totalCourses || 0}
-          icon={BookOpen}
-          color="yellow"
         />
         <StatCard
           title="Total Lessons"
@@ -147,31 +150,78 @@ function AdminDashboard({ data }: { data: any }) {
         />
       </div>
 
-      {/* Recent Schools */}
-      {data?.recentSchools && data.recentSchools.length > 0 && (
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Companies */}
         <div className="bg-white rounded-lg shadow-md p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
-            Recently Registered Schools
-          </h3>
-          <div className="space-y-4">
-            {data.recentSchools.map((school: any) => (
-              <div
-                key={school.id}
-                className="flex items-center justify-between p-4 bg-gray-50 rounded-lg"
-              >
-                <div>
-                  <p className="font-medium text-gray-900">{school.name}</p>
-                  <p className="text-sm text-gray-500">{school.user?.email}</p>
-                </div>
-                <div className="text-right text-sm text-gray-500">
-                  <p>{school._count?.courses || 0} courses</p>
-                  <p>{school._count?.students || 0} students</p>
-                </div>
-              </div>
-            ))}
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">Recent Companies</h3>
+            <Link to="/admin/organizations" className="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1">
+              View all <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
+          {data?.recentOrganizations?.length > 0 ? (
+            <div className="space-y-3">
+              {data.recentOrganizations.map((org: any) => (
+                <Link
+                  key={org.id}
+                  to={`/admin/organizations/${org.id}`}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100"
+                >
+                  <div className="flex items-center gap-3">
+                    <Building2 className="w-5 h-5 text-gray-400" />
+                    <div>
+                      <p className="font-medium text-gray-900 text-sm">{org.name}</p>
+                      <p className="text-xs text-gray-500">{org.email}</p>
+                    </div>
+                  </div>
+                  <div className="text-right text-xs text-gray-500">
+                    <p>{org._count?.employees || 0} learners</p>
+                    <p>{org._count?.orgAdmins || 0} admins</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-400 text-center py-6">No companies yet</p>
+          )}
         </div>
-      )}
+
+        {/* Recent Learners */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">Recent Learners</h3>
+            <Link to="/students" className="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1">
+              View all <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+          {data?.recentLearners?.length > 0 ? (
+            <div className="space-y-3">
+              {data.recentLearners.map((s: any) => (
+                <div
+                  key={s.id}
+                  className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-xs font-medium">
+                      {(s.user?.name || '?').charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900 text-sm">{s.user?.name || '—'}</p>
+                      <p className="text-xs text-gray-500">{s.user?.email}</p>
+                    </div>
+                  </div>
+                  <div className="text-right text-xs text-gray-500">
+                    {s.organization?.name && <p className="font-medium text-gray-700">{s.organization.name}</p>}
+                    <p>{s.languageLevel || '—'}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-gray-400 text-center py-6">No learners yet</p>
+          )}
+        </div>
+      </div>
     </>
   )
 }

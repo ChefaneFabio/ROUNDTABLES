@@ -34,10 +34,12 @@ router.get('/', authenticate, async (req: Request, res: Response) => {
   }
 })
 
-// Admin dashboard
+// Admin dashboard — Maka HQ view. Single school, so we surface companies,
+// HR contacts, trainers and learners instead of school metrics.
 async function getAdminDashboard() {
   const [
-    totalSchools,
+    totalOrganizations,
+    totalHrContacts,
     totalTeachers,
     totalStudents,
     totalCourses,
@@ -45,9 +47,11 @@ async function getAdminDashboard() {
     totalLessons,
     upcomingLessons,
     pendingPayments,
-    recentSchools
+    recentOrganizations,
+    recentLearners
   ] = await Promise.all([
-    prisma.school.count({ where: { deletedAt: null, isActive: true } }),
+    prisma.organization.count({ where: { deletedAt: null, isActive: true } }),
+    prisma.organizationContact.count(),
     prisma.teacher.count({ where: { deletedAt: null, isActive: true } }),
     prisma.student.count({ where: { deletedAt: null, isActive: true } }),
     prisma.course.count({ where: { deletedAt: null } }),
@@ -61,20 +65,29 @@ async function getAdminDashboard() {
       }
     }),
     prisma.enrollment.count({ where: { paymentStatus: { in: ['PENDING', 'OVERDUE'] } } }),
-    prisma.school.findMany({
+    prisma.organization.findMany({
       where: { deletedAt: null },
       take: 5,
       orderBy: { createdAt: 'desc' },
       include: {
+        _count: { select: { employees: true, orgAdmins: true } }
+      }
+    }),
+    prisma.student.findMany({
+      where: { deletedAt: null, isActive: true },
+      take: 5,
+      orderBy: { createdAt: 'desc' },
+      include: {
         user: { select: { name: true, email: true } },
-        _count: { select: { courses: true, teachers: true, students: true } }
+        organization: { select: { name: true } }
       }
     })
   ])
 
   return {
     stats: {
-      totalSchools,
+      totalOrganizations,
+      totalHrContacts,
       totalTeachers,
       totalStudents,
       totalCourses,
@@ -83,7 +96,8 @@ async function getAdminDashboard() {
       upcomingLessons,
       pendingPayments
     },
-    recentSchools
+    recentOrganizations,
+    recentLearners
   }
 }
 
