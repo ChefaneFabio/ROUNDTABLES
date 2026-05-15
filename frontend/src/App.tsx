@@ -39,6 +39,7 @@ import AdminAssessmentQuestionsPage from './pages/admin/AssessmentQuestionsPage'
 import AdminAssessmentManagementPage from './pages/admin/AssessmentManagementPage'
 import AdminReviewQueuePage from './pages/admin/ReviewQueuePage'
 import RetryRequestsPage from './pages/admin/RetryRequestsPage'
+import ActivityLogPage from './pages/admin/ActivityLogPage'
 import AdminCalendarPage from './pages/admin/CalendarPage'
 // Assessment review pages
 import { AssessmentReviewPage } from './pages/AssessmentReviewPage'
@@ -689,6 +690,18 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <RetryRequestsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Activity Log (cross-user feed of who-did-what) */}
+      <Route
+        path="/admin/activity"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <ActivityLogPage />
             </Layout>
           </ProtectedRoute>
         }

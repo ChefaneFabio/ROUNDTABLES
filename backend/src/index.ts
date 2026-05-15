@@ -8,6 +8,7 @@ import { standardLimiter } from './middleware/rateLimit'
 
 // Import routes
 import authRoutes from './controllers/authController'
+import activityLogRoutes from './controllers/activityLogController'
 import schoolRoutes from './controllers/schoolController'
 import courseRoutes from './controllers/courseController'
 import lessonRoutes from './controllers/lessonController'
@@ -143,6 +144,7 @@ app.get('/health', async (req, res) => {
 
 // API Routes
 app.use('/api/auth', authRoutes)
+app.use('/api/activity-log', activityLogRoutes)
 app.use('/api/schools', schoolRoutes)
 app.use('/api/courses', courseRoutes)
 app.use('/api/lessons', lessonRoutes)

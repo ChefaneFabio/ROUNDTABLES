@@ -4,6 +4,7 @@ import { emailService } from './EmailService'
 import { certificateService } from './CertificateService'
 import { aiScoringService } from './AiScoringService'
 import { whisperService } from './WhisperService'
+import { activityLog } from './ActivityLogService'
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
@@ -232,6 +233,30 @@ export class SectionAssessmentService {
       }
     }
 
+    if (assignedById) {
+      activityLog.log({
+        action: 'ASSESSMENT_ASSIGNED',
+        userId: assignedById,
+        subjectType: 'Assessment',
+        subjectId: assessment.id,
+        metadata: { language, testType, startLevel, studentId },
+      })
+    } else if (assessment.status === 'IN_PROGRESS') {
+      const studentUser = await prisma.user.findFirst({ where: { studentProfile: { id: studentId } } })
+      if (studentUser) {
+        activityLog.log({
+          action: 'ASSESSMENT_STARTED',
+          userId: studentUser.id,
+          actorEmail: studentUser.email,
+          actorName: studentUser.name,
+          actorRole: 'STUDENT',
+          subjectType: 'Assessment',
+          subjectId: assessment.id,
+          metadata: { language, testType, startLevel },
+        })
+      }
+    }
+
     // Notify Maka HQ that a learner just started a placement test (skip for
     // tests that are merely assigned for later — those fire when the learner
     // actually opens the test).
@@ -328,7 +353,31 @@ export class SectionAssessmentService {
       include: { sections: { orderBy: { orderIndex: 'asc' } } }
     })
     this.notifyMakaInterruption(assessmentId, 'Placement Test Suspended', 'Suspended by learner')
+    this.logStudentActivity(studentId, 'ASSESSMENT_PAUSED', assessmentId, { language: assessment.language })
     return paused
+  }
+
+  // Helper that resolves Student.id -> User and writes an activity log entry.
+  private async logStudentActivity(
+    studentId: string,
+    action: Parameters<typeof activityLog.log>[0]['action'],
+    assessmentId: string,
+    metadata?: Record<string, any>
+  ) {
+    try {
+      const studentUser = await prisma.user.findFirst({ where: { studentProfile: { id: studentId } } })
+      if (!studentUser) return
+      activityLog.log({
+        action,
+        userId: studentUser.id,
+        actorEmail: studentUser.email,
+        actorName: studentUser.name,
+        actorRole: 'STUDENT',
+        subjectType: 'Assessment',
+        subjectId: assessmentId,
+        metadata,
+      })
+    } catch { /* fire-and-forget */ }
   }
 
   // Resume a paused assessment
@@ -338,11 +387,13 @@ export class SectionAssessmentService {
     if (assessment.studentId !== studentId) throw new Error('Access denied')
     if (assessment.status !== 'PAUSED') throw new Error('Only paused assessments can be resumed')
 
-    return prisma.assessment.update({
+    const resumed = await prisma.assessment.update({
       where: { id: assessmentId },
       data: { status: 'IN_PROGRESS' },
       include: { sections: { orderBy: { orderIndex: 'asc' } } }
     })
+    this.logStudentActivity(studentId, 'ASSESSMENT_RESUMED', assessmentId, { language: assessment.language })
+    return resumed
   }
 
   // Restart: abandon current assessment and create a fresh one
@@ -360,6 +411,7 @@ export class SectionAssessmentService {
       data: { status: 'COMPLETED', completedAt: assessment.completedAt || new Date() }
     })
     this.notifyMakaInterruption(assessmentId, 'Placement Test Cancelled', 'Restarted by learner — previous attempt discarded')
+    this.logStudentActivity(studentId, 'ASSESSMENT_RESTARTED', assessmentId, { language: assessment.language })
 
     // Create a fresh assessment
     return this.createMultiSkillAssessment({
@@ -1698,6 +1750,12 @@ export class SectionAssessmentService {
       await prisma.student.update({
         where: { id: assessment.studentId },
         data: { languageLevel: overallLevel as any }
+      })
+
+      this.logStudentActivity(assessment.studentId, 'ASSESSMENT_COMPLETED', assessmentId, {
+        language: assessment.language,
+        cefrLevel: overallLevel,
+        score: avgPercentage,
       })
 
       // Notify all admins that the full assessment is completed

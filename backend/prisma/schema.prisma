@@ -2100,3 +2100,29 @@ enum ScormStatus {
   PASSED
   FAILED
 }
+
+// Cross-user activity log: a single feed of who-did-what across the platform.
+// Reads are admin-only. Writes are best-effort fire-and-forget — a logging
+// failure must never break a real action. Actor fields are denormalized so
+// the row remains readable even if the user is later soft-deleted.
+model ActivityLog {
+  id          String   @id @default(cuid())
+  // Actor — nullable to allow SYSTEM events (cron, auto-cancel, etc.)
+  userId      String?
+  actorEmail  String?
+  actorName   String?
+  actorRole   String?  // ADMIN | TEACHER | STUDENT | SYSTEM
+  // What happened — free-form short slug (e.g. LOGIN, ASSESSMENT_STARTED)
+  action      String
+  // What was acted upon — both nullable for actor-only events like LOGIN
+  subjectType String?  // Assessment | Student | Organization | User
+  subjectId   String?
+  // Free-form context: language, score, ip, etc.
+  metadata    Json?
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([userId, createdAt])
+  @@index([action, createdAt])
+}

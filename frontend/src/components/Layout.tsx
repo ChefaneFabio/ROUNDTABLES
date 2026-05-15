@@ -11,7 +11,7 @@ import {
   FileText, MessageSquare, ClipboardCheck, Award, BarChart3,
   Key, Video, PenTool, Mic, Building2, Ticket, Clock, Route,
   Timer, DollarSign, Zap, Layers, Wallet, Package, ClipboardList,
-  RotateCcw,
+  RotateCcw, Activity,
 } from 'lucide-react'
 import clsx from 'clsx'
 
@@ -98,6 +98,7 @@ const navGroups: NavGroup[] = [
       { name: 'Question Bank', href: '/admin/assessment-questions', icon: ClipboardCheck, roles: [UserRole.ADMIN, UserRole.TEACHER] },
       { name: 'Review Queue', href: '/admin/review-queue', icon: ClipboardList, roles: [UserRole.ADMIN, UserRole.TEACHER], badgeKey: 'pendingReviews' },
       { name: 'Retry Requests', href: '/admin/retry-requests', icon: RotateCcw, roles: [UserRole.ADMIN], badgeKey: 'pendingRetries' },
+      { name: 'Activity Log', href: '/admin/activity', icon: Activity, roles: [UserRole.ADMIN] },
     ]
   },
 

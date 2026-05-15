@@ -9,6 +9,7 @@ import { validateRequest } from '../middleware/validateRequest'
 import { apiResponse, handleError } from '../utils/apiResponse'
 import { PAGINATION } from '../utils/constants'
 import { emailService } from '../services/EmailService'
+import { activityLog } from '../services/ActivityLogService'
 
 const router = Router()
 
@@ -356,6 +357,14 @@ router.post('/:id/employees/invite', authenticate, requireOrgAdmin, requireOrgAc
         console.error('Failed to send invite email:', e)
       }
     }
+
+    activityLog.log({
+      action: 'LEARNER_INVITED',
+      userId: (req as any).user?.id,
+      subjectType: 'Student',
+      subjectId: result.id,
+      metadata: { organizationId: id, organizationName: organization.name, learnerEmail: email, learnerName: name },
+    })
 
     res.status(201).json(apiResponse.success(result, 'Employee invited successfully'))
   } catch (error) {

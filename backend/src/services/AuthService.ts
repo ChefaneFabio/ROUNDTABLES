@@ -4,6 +4,7 @@ import { prisma } from '../config/database'
 import { generateTokens, verifyRefreshToken } from '../middleware/auth'
 import { UserRole } from '@prisma/client'
 import { emailService } from './EmailService'
+import { activityLog } from './ActivityLogService'
 
 const SALT_ROUNDS = 12
 
@@ -96,6 +97,17 @@ export class AuthService {
         await tx.student.create({ data: { userId: u.id, schoolId: schoolId!, languageLevel: 'B1' } })
       }
       return u
+    })
+
+    activityLog.log({
+      action: 'USER_REGISTERED',
+      userId: user.id,
+      actorEmail: user.email,
+      actorName: user.name,
+      actorRole: user.role,
+      subjectType: 'User',
+      subjectId: user.id,
+      metadata: { source: 'public-register', role },
     })
 
     // Notify Maka HQ about the new sign-up. Fire-and-forget — never block
@@ -294,6 +306,14 @@ export class AuthService {
     await prisma.user.update({
       where: { id: user.id },
       data: { lastLoginAt: new Date() }
+    })
+
+    activityLog.log({
+      action: 'USER_LOGGED_IN',
+      userId: user.id,
+      actorEmail: user.email,
+      actorName: user.name,
+      actorRole: user.role,
     })
 
     const tokens = generateTokens(user)
