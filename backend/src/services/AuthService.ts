@@ -3,6 +3,7 @@ import crypto from 'crypto'
 import { prisma } from '../config/database'
 import { generateTokens, verifyRefreshToken } from '../middleware/auth'
 import { UserRole } from '@prisma/client'
+import { emailService } from './EmailService'
 
 const SALT_ROUNDS = 12
 
@@ -95,6 +96,23 @@ export class AuthService {
       }
       return u
     })
+
+    // Notify Maka HQ about the new sign-up. Fire-and-forget — never block
+    // the user-facing registration response on email delivery.
+    if (role === 'STUDENT' || role === 'TEACHER') {
+      const roleLabel = role === 'STUDENT' ? 'Learner' : 'Trainer'
+      emailService.sendInternalEvent({
+        eventTitle: `New ${roleLabel} Registered`,
+        accentColor: '#4f46e5',
+        studentName: name,
+        studentEmail: email,
+        rows: [
+          { label: 'Role', value: roleLabel },
+          { label: 'Registered at', value: new Date().toLocaleString('en-GB', { timeZone: 'Europe/Rome' }) + ' (Europe/Rome)' },
+        ],
+        note: 'This user signed up through the public registration page and may attempt a placement test shortly.',
+      }).catch(err => console.error('Maka registration notification failed:', err))
+    }
 
     const tokens = generateTokens(user)
     return { user: this.sanitizeUser(user), ...tokens }

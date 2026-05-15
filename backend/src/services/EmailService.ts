@@ -320,6 +320,52 @@ class EmailService {
     })
   }
 
+  /** Lightweight Maka-internal event notification (registration, test start,
+   *  test cancelled/expired). Same visual frame as the completed-test report
+   *  but without rubric tables. Recipient defaults to MAKA_RESULTS_EMAIL. */
+  async sendInternalEvent(params: {
+    eventTitle: string                       // e.g. 'New Learner Registered'
+    accentColor?: string                     // hex; defaults to slate
+    studentName: string
+    studentEmail: string
+    rows: Array<{ label: string; value: string }>
+    note?: string                            // optional plain-text footer (one paragraph)
+    to?: string                              // override; defaults to MAKA_RESULTS_EMAIL or training@makaitalia.com
+  }): Promise<{ messageId: string } | null> {
+    if (!this.isConfigured()) return null
+    const { eventTitle, accentColor, studentName, studentEmail, rows, note } = params
+    const to = params.to || process.env.MAKA_RESULTS_EMAIL || 'training@makaitalia.com'
+    const headerColor = accentColor || '#0f172a'
+
+    const fullRows = [
+      { label: 'Learner', value: `<strong>${studentName}</strong>` },
+      { label: 'Email', value: studentEmail },
+      ...rows,
+    ]
+    const rowHtml = fullRows.map(r => `<tr>
+      <td style="padding:6px 0;color:#6b7280;width:160px">${r.label}</td>
+      <td style="padding:6px 0">${r.value}</td>
+    </tr>`).join('')
+
+    const html = `
+    <div style="font-family:Arial,sans-serif;max-width:680px;margin:0 auto;background:#fff;color:#111827">
+      <div style="background:${headerColor};color:#fff;padding:20px 24px">
+        <h1 style="margin:0;font-size:18px;font-weight:700">${eventTitle}</h1>
+        <p style="margin:4px 0 0;opacity:0.8;font-size:13px">Maka Learning Management Centre — Internal Notification</p>
+      </div>
+      <div style="padding:24px;border:1px solid #e5e7eb;border-top:none">
+        <table style="width:100%;border-collapse:collapse;font-size:14px">${rowHtml}</table>
+        ${note ? `<p style="margin-top:24px;font-size:13px;color:#374151">${note}</p>` : ''}
+      </div>
+    </div>`
+
+    return this.sendEmail({
+      to,
+      subject: `[Maka] ${eventTitle} — ${studentName}`,
+      html,
+    })
+  }
+
   isConfigured(): boolean {
     const user = process.env.SMTP_USER
     const pass = process.env.SMTP_PASSWORD

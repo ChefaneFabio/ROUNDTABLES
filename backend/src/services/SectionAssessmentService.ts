@@ -149,6 +149,7 @@ export class SectionAssessmentService {
           where: { id: existing.id },
           data: { status: 'COMPLETED', completedAt: new Date() }
         })
+        this.notifyMakaInterruption(existing.id, 'Placement Test Cancelled', 'Auto-cancelled — stale > 24h')
         // Fall through to create a new assessment
       } else {
         return existing
@@ -231,7 +232,60 @@ export class SectionAssessmentService {
       }
     }
 
+    // Notify Maka HQ that a learner just started a placement test (skip for
+    // tests that are merely assigned for later — those fire when the learner
+    // actually opens the test).
+    if (!assignedById && assessment.status === 'IN_PROGRESS') {
+      try {
+        const studentUser = await prisma.user.findFirst({ where: { studentProfile: { id: studentId } } })
+        if (studentUser) {
+          emailService.sendInternalEvent({
+            eventTitle: 'Placement Test Started',
+            accentColor: '#0891b2',
+            studentName: studentUser.name,
+            studentEmail: studentUser.email,
+            rows: [
+              { label: 'Language', value: language },
+              { label: 'Test type', value: testType },
+              { label: 'Start level', value: startLevel },
+              { label: 'Sections', value: String(sectionSkills.length) },
+              { label: 'Started at', value: new Date().toLocaleString('en-GB', { timeZone: 'Europe/Rome' }) + ' (Europe/Rome)' },
+            ],
+          }).catch(err => console.error('Maka start notification failed:', err))
+        }
+      } catch (e) {
+        console.error('Failed to look up student for Maka notification:', e)
+      }
+    }
+
     return assessment
+  }
+
+  // Notify Maka HQ when an assessment is suspended/cancelled. Best-effort:
+  // never throws, never blocks the caller.
+  private async notifyMakaInterruption(assessmentId: string, eventTitle: string, reason: string) {
+    try {
+      const a = await prisma.assessment.findUnique({
+        where: { id: assessmentId },
+        include: { student: { include: { user: { select: { name: true, email: true } } } } },
+      })
+      if (!a) return
+      emailService.sendInternalEvent({
+        eventTitle,
+        accentColor: '#dc2626',
+        studentName: a.student.user.name,
+        studentEmail: a.student.user.email,
+        rows: [
+          { label: 'Language', value: a.language },
+          { label: 'Reason', value: reason },
+          { label: 'Previous status', value: a.status },
+          { label: 'Started at', value: a.startedAt ? a.startedAt.toLocaleString('en-GB', { timeZone: 'Europe/Rome' }) + ' (Europe/Rome)' : 'never started' },
+          { label: 'Event time', value: new Date().toLocaleString('en-GB', { timeZone: 'Europe/Rome' }) + ' (Europe/Rome)' },
+        ],
+      }).catch(err => console.error('Maka interruption notification failed:', err))
+    } catch (e) {
+      console.error('Failed to load assessment for Maka interruption notification:', e)
+    }
   }
 
   // Get all sections for an assessment
@@ -268,11 +322,13 @@ export class SectionAssessmentService {
       })
     }
 
-    return prisma.assessment.update({
+    const paused = await prisma.assessment.update({
       where: { id: assessmentId },
       data: { status: 'PAUSED' },
       include: { sections: { orderBy: { orderIndex: 'asc' } } }
     })
+    this.notifyMakaInterruption(assessmentId, 'Placement Test Suspended', 'Suspended by learner')
+    return paused
   }
 
   // Resume a paused assessment
@@ -303,6 +359,7 @@ export class SectionAssessmentService {
       where: { id: assessmentId },
       data: { status: 'COMPLETED', completedAt: assessment.completedAt || new Date() }
     })
+    this.notifyMakaInterruption(assessmentId, 'Placement Test Cancelled', 'Restarted by learner — previous attempt discarded')
 
     // Create a fresh assessment
     return this.createMultiSkillAssessment({
