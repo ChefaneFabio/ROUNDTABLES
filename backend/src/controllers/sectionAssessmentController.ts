@@ -477,6 +477,38 @@ router.post('/admin/retry-requests/:notificationId/deny', authenticate, requireS
   }
 })
 
+// ==================== Test Request Approval Routes ====================
+
+// List learner-initiated test requests awaiting Maka approval
+router.get('/admin/requests', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const requests = await sectionAssessmentService.listPendingRequests(req.user?.schoolId || undefined)
+    return res.json(apiResponse.success(requests))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// Approve a learner test request
+router.post('/admin/requests/:id/approve', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const updated = await sectionAssessmentService.approveAssessmentRequest(req.params.id, req.user!.id)
+    return res.json(apiResponse.success(updated, 'Request approved'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
+// Deny a learner test request
+router.post('/admin/requests/:id/deny', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
+  try {
+    const updated = await sectionAssessmentService.denyAssessmentRequest(req.params.id, req.user!.id, req.body?.reason)
+    return res.json(apiResponse.success(updated, 'Request denied'))
+  } catch (error) {
+    return handleError(res, error)
+  }
+})
+
 // ==================== Teacher/Admin Routes ====================
 
 // Get sections pending teacher review

@@ -40,6 +40,7 @@ import AdminAssessmentQuestionsPage from './pages/admin/AssessmentQuestionsPage'
 import AdminAssessmentManagementPage from './pages/admin/AssessmentManagementPage'
 import AdminReviewQueuePage from './pages/admin/ReviewQueuePage'
 import RetryRequestsPage from './pages/admin/RetryRequestsPage'
+import TestRequestsPage from './pages/admin/TestRequestsPage'
 import ActivityLogPage from './pages/admin/ActivityLogPage'
 import AdminCalendarPage from './pages/admin/CalendarPage'
 // Assessment review pages
@@ -697,6 +698,18 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <RetryRequestsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Test Requests (learner requests to start a placement test) */}
+      <Route
+        path="/admin/test-requests"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <TestRequestsPage />
             </Layout>
           </ProtectedRoute>
         }

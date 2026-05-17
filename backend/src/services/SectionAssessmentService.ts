@@ -167,13 +167,22 @@ export class SectionAssessmentService {
         studentId,
         language,
         isMultiSkill: true,
-        status: { in: ['IN_PROGRESS', 'ASSIGNED', 'PAUSED'] }
+        status: { in: ['REQUESTED', 'IN_PROGRESS', 'ASSIGNED', 'PAUSED'] }
       },
       include: { sections: true }
     })
     if (existing) {
-      // If the assessment is older than 24 hours, abandon it so student can start fresh
-      const ageMs = Date.now() - (existing.startedAt?.getTime() || existing.createdAt.getTime())
+      // REQUESTED assessments wait for Maka approval — never auto-cancel them.
+      if (existing.status === 'REQUESTED') return existing
+
+      // For active tests (IN_PROGRESS/ASSIGNED/PAUSED): if older than 24 hours
+      // since the learner first touched it, abandon so they can start fresh.
+      // Fall back to assignedAt (admin-assigned tests) when startedAt is null.
+      const anchorTime =
+        existing.startedAt?.getTime() ??
+        existing.assignedAt?.getTime() ??
+        Date.now()
+      const ageMs = Date.now() - anchorTime
       const maxAgeMs = 24 * 60 * 60 * 1000
       if (ageMs > maxAgeMs) {
         await prisma.assessment.update({
@@ -195,18 +204,25 @@ export class SectionAssessmentService {
     const testType = fixedLevel ? 'PROGRESS' : 'PLACEMENT'
     const startLevel = fixedLevel || 'A2'
 
+    // Self-started tests need explicit Maka approval before the learner can
+    // actually take them. Admin-assigned tests skip approval and go straight
+    // to ASSIGNED.
+    const initialStatus: AssessmentStatus = assignedById ? 'ASSIGNED' : 'REQUESTED'
+
     const assessment = await prisma.assessment.create({
       data: {
         studentId,
         language,
         type: testType,
-        status: assignedById ? 'ASSIGNED' : 'IN_PROGRESS',
+        status: initialStatus,
         isMultiSkill: true,
         currentSection: 0,
         answers: [],
         targetLevel: startLevel,
         questionsLimit: totalQuestions,
-        startedAt: assignedById ? undefined : new Date(),
+        // startedAt is set only when the learner actually opens the test.
+        // For both REQUESTED and ASSIGNED, leave it undefined.
+        startedAt: undefined,
         assignedById,
         assignedAt: assignedById ? new Date() : undefined,
         sections: {
@@ -271,11 +287,11 @@ export class SectionAssessmentService {
         subjectId: assessment.id,
         metadata: { language, testType, startLevel, studentId },
       })
-    } else if (assessment.status === 'IN_PROGRESS') {
+    } else if (assessment.status === 'REQUESTED') {
       const studentUser = await prisma.user.findFirst({ where: { studentProfile: { id: studentId } } })
       if (studentUser) {
         activityLog.log({
-          action: 'ASSESSMENT_STARTED',
+          action: 'ASSESSMENT_REQUESTED',
           userId: studentUser.id,
           actorEmail: studentUser.email,
           actorName: studentUser.name,
@@ -287,26 +303,28 @@ export class SectionAssessmentService {
       }
     }
 
-    // Notify Maka HQ that a learner just started a placement test (skip for
-    // tests that are merely assigned for later — those fire when the learner
-    // actually opens the test).
-    if (!assignedById && assessment.status === 'IN_PROGRESS') {
+    // Notify Maka HQ. Two flavors:
+    //   REQUESTED  -> learner is waiting on approval; send an approval CTA
+    //   IN_PROGRESS (legacy)-> learner started immediately (no longer happens for
+    //                          self-started tests but kept for safety)
+    if (!assignedById && assessment.status === 'REQUESTED') {
       try {
         const studentUser = await prisma.user.findFirst({ where: { studentProfile: { id: studentId } } })
         if (studentUser) {
+          const approvalUrl = `${process.env.FRONTEND_URL || 'https://roundtables-frontend.vercel.app'}/admin/test-requests`
           emailService.sendInternalEvent({
-            eventTitle: 'Placement Test Started',
-            accentColor: '#0891b2',
+            eventTitle: 'Placement Test Requested — Approval Needed',
+            accentColor: '#ca8a04',
             studentName: studentUser.name,
             studentEmail: studentUser.email,
             rows: [
               { label: 'Language', value: language },
               { label: 'Test type', value: testType },
-              { label: 'Start level', value: startLevel },
-              { label: 'Sections', value: String(sectionSkills.length) },
-              { label: 'Started at', value: new Date().toLocaleString('en-GB', { timeZone: 'Europe/Rome' }) + ' (Europe/Rome)' },
+              { label: 'Requested at', value: new Date().toLocaleString('en-GB', { timeZone: 'Europe/Rome' }) + ' (Europe/Rome)' },
+              { label: 'Approve at', value: approvalUrl },
             ],
-          }).catch(err => console.error('Maka start notification failed:', err))
+            note: 'The learner has requested a placement test. Open the admin Test Requests page to approve or deny.',
+          }).catch(err => console.error('Maka request notification failed:', err))
         }
       } catch (e) {
         console.error('Failed to look up student for Maka notification:', e)
@@ -314,6 +332,145 @@ export class SectionAssessmentService {
     }
 
     return assessment
+  }
+
+  // Admin approves a learner-initiated test request: flip REQUESTED → ASSIGNED,
+  // stamp the approver, and notify the learner that they can now start.
+  async approveAssessmentRequest(assessmentId: string, approverUserId: string) {
+    const assessment = await prisma.assessment.findUnique({
+      where: { id: assessmentId },
+      include: { student: { include: { user: { select: { id: true, name: true, email: true } } } } },
+    })
+    if (!assessment) throw new Error('Assessment not found')
+    if (assessment.status !== 'REQUESTED') {
+      throw new Error(`Cannot approve assessment in status ${assessment.status}`)
+    }
+
+    const updated = await prisma.assessment.update({
+      where: { id: assessmentId },
+      data: {
+        status: 'ASSIGNED',
+        assignedById: approverUserId,
+        assignedAt: new Date(),
+      },
+      include: { sections: { orderBy: { orderIndex: 'asc' } } },
+    })
+
+    activityLog.log({
+      action: 'ASSESSMENT_REQUEST_APPROVED',
+      userId: approverUserId,
+      subjectType: 'Assessment',
+      subjectId: assessmentId,
+      metadata: { language: assessment.language, studentId: assessment.studentId },
+    })
+
+    // Notify the learner in-app + email
+    try {
+      const learnerUser = assessment.student.user
+      await prisma.notification.create({
+        data: {
+          type: 'ASSESSMENT_ASSIGNED',
+          subject: `Your ${assessment.language} Placement Test has been approved`,
+          content: `Your ${assessment.language} placement test request has been approved. Open the Assessment page to begin.`,
+          status: 'SENT',
+          sentAt: new Date(),
+          userId: learnerUser.id,
+          metadata: { assessmentId, language: assessment.language, type: 'TEST_APPROVED' },
+        },
+      })
+      if (emailService.isConfigured()) {
+        await emailService.sendEmail({
+          to: learnerUser.email,
+          subject: `Your ${assessment.language} Placement Test is ready`,
+          html: `
+            <h2>Test approved</h2>
+            <p>Hi ${learnerUser.name},</p>
+            <p>Your <strong>${assessment.language}</strong> placement test request has been approved by Maka Language Consulting.</p>
+            <p>You can now log in and start the test from your Assessment page.</p>
+          `,
+        })
+      }
+    } catch (e) {
+      console.error('Failed to notify learner about test approval:', e)
+    }
+
+    return updated
+  }
+
+  // Reject/deny a learner test request. Soft-cancels the assessment so it
+  // no longer blocks new requests, and notifies the learner.
+  async denyAssessmentRequest(assessmentId: string, approverUserId: string, reason?: string) {
+    const assessment = await prisma.assessment.findUnique({
+      where: { id: assessmentId },
+      include: { student: { include: { user: { select: { id: true, name: true, email: true } } } } },
+    })
+    if (!assessment) throw new Error('Assessment not found')
+    if (assessment.status !== 'REQUESTED') {
+      throw new Error(`Cannot deny assessment in status ${assessment.status}`)
+    }
+
+    const updated = await prisma.assessment.update({
+      where: { id: assessmentId },
+      data: {
+        status: 'COMPLETED',
+        completedAt: new Date(),
+        metadata: { ...(assessment.metadata as Record<string, any> || {}), deniedBy: approverUserId, denyReason: reason || null },
+      },
+    })
+
+    activityLog.log({
+      action: 'ASSESSMENT_REQUEST_DENIED',
+      userId: approverUserId,
+      subjectType: 'Assessment',
+      subjectId: assessmentId,
+      metadata: { language: assessment.language, studentId: assessment.studentId, reason: reason || null },
+    })
+
+    try {
+      const learnerUser = assessment.student.user
+      if (emailService.isConfigured()) {
+        await emailService.sendEmail({
+          to: learnerUser.email,
+          subject: `Your ${assessment.language} Placement Test request`,
+          html: `
+            <h2>Test request update</h2>
+            <p>Hi ${learnerUser.name},</p>
+            <p>Your <strong>${assessment.language}</strong> placement test request was not approved at this time.</p>
+            ${reason ? `<p><strong>Note from Maka:</strong> ${reason}</p>` : ''}
+            <p>Please contact Maka Language Consulting if you have questions.</p>
+          `,
+        })
+      }
+    } catch (e) {
+      console.error('Failed to notify learner about test denial:', e)
+    }
+
+    return updated
+  }
+
+  // List all REQUESTED multi-skill assessments awaiting approval. Optional
+  // schoolId filter limits to a specific school's learners.
+  async listPendingRequests(schoolId?: string) {
+    const where: any = {
+      status: 'REQUESTED',
+      isMultiSkill: true,
+    }
+    if (schoolId) {
+      where.student = { schoolId }
+    }
+    return prisma.assessment.findMany({
+      where,
+      include: {
+        student: {
+          include: {
+            user: { select: { name: true, email: true } },
+            organization: { select: { name: true } },
+          },
+        },
+      },
+      // No createdAt on Assessment; cuids sort by creation time
+      orderBy: { id: 'desc' },
+    })
   }
 
   // Notify Maka HQ when an assessment is suspended/cancelled. Best-effort:
@@ -708,6 +865,11 @@ export class SectionAssessmentService {
       if (!allPrevCompleted) {
         throw new Error('Previous sections must be completed first')
       }
+    }
+
+    // Block REQUESTED — the learner must wait for Maka to approve
+    if (section.assessment.status === 'REQUESTED') {
+      throw new Error('This test is awaiting approval from Maka Language Consulting')
     }
 
     // Ensure the assessment is IN_PROGRESS

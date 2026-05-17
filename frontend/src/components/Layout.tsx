@@ -97,6 +97,7 @@ const navGroups: NavGroup[] = [
       { name: 'Assessments', href: '/admin/assessments', icon: ClipboardCheck, roles: [UserRole.ADMIN, UserRole.TEACHER] },
       { name: 'Question Bank', href: '/admin/assessment-questions', icon: ClipboardCheck, roles: [UserRole.ADMIN, UserRole.TEACHER] },
       { name: 'Review Queue', href: '/admin/review-queue', icon: ClipboardList, roles: [UserRole.ADMIN, UserRole.TEACHER], badgeKey: 'pendingReviews' },
+      { name: 'Test Requests', href: '/admin/test-requests', icon: ClipboardCheck, roles: [UserRole.ADMIN], badgeKey: 'pendingTestRequests' },
       { name: 'Retry Requests', href: '/admin/retry-requests', icon: RotateCcw, roles: [UserRole.ADMIN], badgeKey: 'pendingRetries' },
       { name: 'Activity Log', href: '/admin/activity', icon: Activity, roles: [UserRole.ADMIN] },
     ]
@@ -299,11 +300,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
     }
   )
 
+  // Pending learner test-request count for admin badge
+  const { data: pendingTestRequests = [] } = useQuery(
+    'test-requests-count',
+    () => assessmentApi.listPendingTestRequests(),
+    {
+      enabled: !isTestInProgress && isAdmin,
+      refetchInterval: 60000,
+      staleTime: 30000,
+    }
+  )
+
   const navBadges: Record<string, number> = {
     pendingReviews: Array.isArray(pendingReviews) ? pendingReviews.length : 0,
     pendingRetries: Array.isArray(pendingRetries)
       ? pendingRetries.filter((r: any) => !r.alreadyHandled).length
       : 0,
+    pendingTestRequests: Array.isArray(pendingTestRequests) ? pendingTestRequests.length : 0,
   }
 
   const isActive = (href: string) =>

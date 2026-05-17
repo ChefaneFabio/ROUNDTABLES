@@ -1335,6 +1335,7 @@ enum AssessmentType {
 }
 
 enum AssessmentStatus {
+  REQUESTED // Learner asked for the test; awaits Maka approval before becoming ASSIGNED
   ASSIGNED
   IN_PROGRESS
   PAUSED

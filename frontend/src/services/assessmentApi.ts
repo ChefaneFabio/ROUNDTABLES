@@ -7,7 +7,7 @@ export interface Assessment {
   type: 'PLACEMENT' | 'PROGRESS' | 'FINAL'
   score?: number
   cefrLevel?: string
-  status: 'ASSIGNED' | 'IN_PROGRESS' | 'PAUSED' | 'COMPLETED' | 'EXPIRED'
+  status: 'REQUESTED' | 'ASSIGNED' | 'IN_PROGRESS' | 'PAUSED' | 'COMPLETED' | 'EXPIRED'
   answers?: any[]
   targetLevel?: string
   questionsLimit?: number
@@ -479,6 +479,26 @@ export const assessmentApi = {
       responseType: 'blob',
     })
     return response.data
+  },
+
+  // ==================== Test Request Approval ====================
+
+  // Admin: list learner-initiated test requests awaiting approval
+  async listPendingTestRequests(): Promise<Assessment[]> {
+    const response = await api.get('/assessments/multi-skill/admin/requests')
+    return response.data.data || []
+  },
+
+  // Admin: approve a test request
+  async approveTestRequest(id: string): Promise<Assessment> {
+    const response = await api.post(`/assessments/multi-skill/admin/requests/${id}/approve`)
+    return response.data.data
+  },
+
+  // Admin: deny a test request
+  async denyTestRequest(id: string, reason?: string): Promise<Assessment> {
+    const response = await api.post(`/assessments/multi-skill/admin/requests/${id}/deny`, { reason })
+    return response.data.data
   },
 
   // Admin: Get all multi-skill assessments with filters

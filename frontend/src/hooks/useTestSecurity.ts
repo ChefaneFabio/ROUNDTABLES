@@ -105,35 +105,10 @@ export function useTestSecurity({
     return () => window.removeEventListener('beforeunload', handler)
   }, [isTimed, warnOnLeave])
 
-  // Copy/cut prevention
-  useEffect(() => {
-    if (!isTimed || !blockCopyPaste) return
-    const handleCopy = (e: Event) => {
-      e.preventDefault()
-      reportViolation('COPY_ATTEMPT', 'Student attempted to copy content')
-    }
-    const handleCut = (e: Event) => {
-      e.preventDefault()
-      reportViolation('CUT_ATTEMPT', 'Student attempted to cut content')
-    }
-    document.addEventListener('copy', handleCopy)
-    document.addEventListener('cut', handleCut)
-    return () => {
-      document.removeEventListener('copy', handleCopy)
-      document.removeEventListener('cut', handleCut)
-    }
-  }, [isTimed, blockCopyPaste, reportViolation])
-
-  // Right-click prevention
-  useEffect(() => {
-    if (!isTimed || !blockCopyPaste) return
-    const handler = (e: Event) => {
-      e.preventDefault()
-      reportViolation('RIGHT_CLICK', 'Student attempted right-click')
-    }
-    document.addEventListener('contextmenu', handler)
-    return () => document.removeEventListener('contextmenu', handler)
-  }, [isTimed, blockCopyPaste, reportViolation])
+  // Copy/cut/right-click are intentionally allowed during tests. The
+  // blockCopyPaste flag is preserved on the API surface for backwards
+  // compatibility but no longer wires up handlers (per product request:
+  // learners need to be able to copy/paste and use the right-click menu).
 
   // Fullscreen enforcement
   useEffect(() => {

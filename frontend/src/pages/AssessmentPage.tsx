@@ -13,6 +13,8 @@ import {
   Mic,
   CheckCircle,
   Play,
+  Hourglass,
+  Send,
 } from 'lucide-react'
 import { assessmentApi, Assessment } from '../services/assessmentApi'
 import { LoadingPage } from '../components/common/LoadingSpinner'
@@ -46,10 +48,22 @@ export function AssessmentPage() {
   const { data: assessments, isLoading } = useQuery('myAssessments', assessmentApi.getMyAssessments)
   const { data: assignedAssessments, isLoading: loadingAssigned } = useQuery('myAssignedAssessments', assessmentApi.getAssignedAssessments)
 
+  // For admin/teacher users, creating a multi-skill assessment still goes
+  // straight to the test (they can also pre-assign for others).
+  // For students, the same endpoint now creates a REQUESTED record awaiting
+  // Maka approval — we surface that explicitly in the UI.
   const startMultiSkillMutation = useMutation(
     (language: string) => assessmentApi.createMultiSkill(language),
     {
-      onSuccess: (assessment) => navigate(`/assessment/multi-skill/${assessment.id}`),
+      onSuccess: (assessment) => {
+        queryClient.invalidateQueries('myAssessments')
+        queryClient.invalidateQueries('myAssignedAssessments')
+        if (assessment.status === 'REQUESTED') {
+          // Stay on this page; the card will now show "Awaiting approval"
+          return
+        }
+        navigate(`/assessment/multi-skill/${assessment.id}`)
+      },
       onError: (err: Error) => setError(err.message),
     }
   )
@@ -74,6 +88,13 @@ export function AssessmentPage() {
 
   const inProgressMultiSkill = assessments?.find(a => (a.status === 'IN_PROGRESS' || a.status === 'PAUSED') && a.isMultiSkill)
   const completedAssessments = assessments?.filter(a => a.status === 'COMPLETED' && a.isMultiSkill) || []
+  // Tests the learner has requested but Maka has not yet approved
+  const requestedByLang = new Map<string, Assessment>()
+  ;(assessments || [])
+    .filter(a => a.status === 'REQUESTED' && a.isMultiSkill)
+    .forEach(a => requestedByLang.set(a.language, a))
+  const assignedByLang = new Map<string, Assessment>()
+  uniqueAssigned.forEach(a => { if (a.language) assignedByLang.set(a.language, a) })
 
   // Latest result per language
   const latestByLang = new Map<string, Assessment>()
@@ -203,11 +224,63 @@ export function AssessmentPage() {
 
       {/* Start New Test */}
       <div>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">Start a New Test</h2>
+        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+          {isAdmin ? 'Start a New Test' : 'Available Tests'}
+        </h2>
+        {!isAdmin && (
+          <p className="text-sm text-gray-500 mb-4">
+            Request the placement test you want to take. Maka Language Consulting will approve your request,
+            and you will receive an email when your test is ready.
+          </p>
+        )}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {LANGUAGES.map(lang => {
             const result = latestByLang.get(lang.code)
             const hasInProgress = inProgressMultiSkill?.language === lang.code
+            const requested = requestedByLang.get(lang.code)
+            const assigned = assignedByLang.get(lang.code)
+
+            // Pick the dominant state for the action button.
+            // Completed-only state is special: learners can ONLY view results
+            // (no retake), admins can also retake from here.
+            let state: 'inProgress' | 'assigned' | 'requested' | 'completed' | 'idle'
+            if (hasInProgress) state = 'inProgress'
+            else if (assigned) state = 'assigned'
+            else if (requested) state = 'requested'
+            else if (result) state = 'completed'
+            else state = 'idle'
+
+            const handleClick = () => {
+              setError('')
+              if (state === 'inProgress') {
+                navigate(`/assessment/multi-skill/${inProgressMultiSkill!.id}`)
+              } else if (state === 'assigned') {
+                startAssignedMutation.mutate(assigned!)
+              } else if (state === 'requested') {
+                // No-op; learners cannot start until Maka approves
+              } else if (state === 'completed') {
+                navigate(`/assessment/multi-skill/${result!.id}/results`)
+              } else {
+                startMultiSkillMutation.mutate(lang.code)
+              }
+            }
+
+            const buttonLabel =
+              state === 'inProgress' ? 'Continue'
+              : state === 'assigned' ? 'Begin Test'
+              : state === 'requested' ? 'Awaiting Approval'
+              : state === 'completed' ? 'View Results'
+              : isAdmin ? 'Start Test'
+              : 'Request Test'
+
+            const buttonDisabled =
+              state === 'requested' ||
+              startMultiSkillMutation.isLoading ||
+              startAssignedMutation.isLoading
+
+            const buttonClass = state === 'requested'
+              ? 'w-full py-2.5 px-4 text-sm font-semibold rounded-xl bg-amber-50 text-amber-700 border border-amber-200 cursor-not-allowed'
+              : 'w-full py-2.5 px-4 text-sm font-semibold rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-gray-800 hover:to-primary-600 disabled:opacity-50 transition-all duration-300 shadow-sm hover:shadow-md flex items-center justify-center gap-2'
 
             return (
               <div
@@ -222,7 +295,17 @@ export function AssessmentPage() {
                     <span className="text-3xl">{lang.flag}</span>
                     <div>
                       <h3 className="font-semibold text-gray-900">{lang.name}</h3>
-                      {result ? (
+                      {state === 'requested' ? (
+                        <div className="flex items-center gap-1 text-xs text-amber-700">
+                          <Hourglass className="w-3.5 h-3.5" />
+                          <span className="font-medium">Awaiting Maka approval</span>
+                        </div>
+                      ) : state === 'assigned' ? (
+                        <div className="flex items-center gap-1 text-xs text-blue-600">
+                          <CheckCircle className="w-3.5 h-3.5" />
+                          <span className="font-medium">Approved &mdash; ready to begin</span>
+                        </div>
+                      ) : result ? (
                         <div className="flex items-center gap-1 text-xs text-green-600">
                           <CheckCircle className="w-3.5 h-3.5" />
                           <span className="font-medium">{isAdmin ? `Level: ${result.cefrLevel}` : 'Completed'}</span>
@@ -247,19 +330,32 @@ export function AssessmentPage() {
                   )}
 
                   <button
-                    onClick={() => {
-                      setError('')
-                      if (hasInProgress) {
-                        navigate(`/assessment/multi-skill/${inProgressMultiSkill!.id}`)
-                      } else {
-                        startMultiSkillMutation.mutate(lang.code)
-                      }
-                    }}
-                    disabled={startMultiSkillMutation.isLoading}
-                    className="w-full py-2.5 px-4 text-sm font-semibold rounded-xl bg-gradient-to-r from-gray-900 to-gray-800 text-white hover:from-gray-800 hover:to-primary-600 disabled:opacity-50 transition-all duration-300 shadow-sm hover:shadow-md"
+                    onClick={handleClick}
+                    disabled={buttonDisabled}
+                    className={buttonClass}
                   >
-                    {hasInProgress ? 'Continue' : result ? 'Retake Test' : 'Start Test'}
+                    {state === 'requested' && <Hourglass className="w-4 h-4" />}
+                    {state === 'idle' && !isAdmin && <Send className="w-4 h-4" />}
+                    {state === 'inProgress' && <ChevronRight className="w-4 h-4" />}
+                    {state === 'assigned' && <Play className="w-4 h-4" />}
+                    {state === 'completed' && <CheckCircle className="w-4 h-4" />}
+                    {buttonLabel}
                   </button>
+
+                  {/* Admin-only retake link under the View Results button */}
+                  {state === 'completed' && isAdmin && (
+                    <button
+                      onClick={e => {
+                        e.stopPropagation()
+                        setError('')
+                        startMultiSkillMutation.mutate(lang.code)
+                      }}
+                      disabled={startMultiSkillMutation.isLoading}
+                      className="mt-2 w-full text-xs text-gray-500 hover:text-primary-600 underline"
+                    >
+                      Retake test
+                    </button>
+                  )}
                 </div>
               </div>
             )
