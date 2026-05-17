@@ -204,11 +204,25 @@ export const authApi = {
   },
 
   async registerOrganization(data: any): Promise<any> {
+    // The endpoint now creates a pending account — Maka must approve before
+    // the HR can log in, so no tokens come back and we don't auto-login.
     const response = await api.post<ApiResponse<any>>('/auth/register/organization', data)
-    if (response.data.success && response.data.data) {
-      setTokens(response.data.data.accessToken, response.data.data.refreshToken)
-    }
     return response.data.data!
+  },
+
+  async listOrgRequests(): Promise<any[]> {
+    const response = await api.get<ApiResponse<any[]>>('/auth/admin/org-requests')
+    return response.data.data || []
+  },
+
+  async approveOrgRequest(userId: string): Promise<any> {
+    const response = await api.post<ApiResponse<any>>(`/auth/admin/org-requests/${userId}/approve`)
+    return response.data.data
+  },
+
+  async denyOrgRequest(userId: string, reason?: string): Promise<any> {
+    const response = await api.post<ApiResponse<any>>(`/auth/admin/org-requests/${userId}/deny`, { reason })
+    return response.data.data
   },
 
   async registerEmployee(data: { email: string; name: string; languageLevel?: string }): Promise<any> {

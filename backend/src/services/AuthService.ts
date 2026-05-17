@@ -290,6 +290,10 @@ export class AuthService {
     }
 
     if (!user.isActive) {
+      // ORG_ADMIN accounts start inactive and unlock only after Maka approves
+      if (user.role === 'ORG_ADMIN') {
+        throw new Error('Your organization registration is pending approval by Maka Language Consulting. You will receive an email when your account is activated.')
+      }
       throw new Error('Account is deactivated')
     }
 

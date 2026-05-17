@@ -77,7 +77,14 @@ export function LoginPage() {
             to="/register"
             className="font-medium text-primary-600 hover:text-primary-500"
           >
-            Register here
+            Register as a learner
+          </Link>
+          <span className="mx-1 text-gray-400">|</span>
+          <Link
+            to="/register/organization"
+            className="font-medium text-primary-600 hover:text-primary-500"
+          >
+            Register a company
           </Link>
         </p>
       </div>

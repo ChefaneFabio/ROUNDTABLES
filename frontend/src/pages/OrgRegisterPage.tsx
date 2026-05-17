@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { RegisterOrganizationRequest } from '../types'
 import { Button } from '../components/common/Button'
 import { Alert } from '../components/common/Alert'
-import { Eye, EyeOff, Building2, UserCog, Receipt } from 'lucide-react'
+import { Eye, EyeOff, Building2, UserCog, Receipt, MailCheck } from 'lucide-react'
 
 const STEPS = [
   { label: 'Organization', icon: Building2 },
@@ -16,11 +16,11 @@ const SIZE_OPTIONS = ['1-10', '11-50', '51-200', '201-500', '500+']
 
 export function OrgRegisterPage() {
   const { registerOrganization } = useAuth()
-  const navigate = useNavigate()
 
   const [step, setStep] = useState(1)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
 
@@ -119,7 +119,7 @@ export function OrgRegisterPage() {
       }
 
       await registerOrganization(payload)
-      navigate('/org/dashboard')
+      setSubmitted(true)
     } catch (err: any) {
       setError(err.message || 'Failed to create organization')
     } finally {
@@ -354,6 +354,35 @@ export function OrgRegisterPage() {
       </div>
     </div>
   )
+
+  if (submitted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="flex justify-center">
+            <img src="/favicon.webp" alt="Maka" className="h-16 w-16 rounded-full shadow-lg" />
+          </div>
+          <div className="mt-8 bg-white py-10 px-6 shadow rounded-2xl text-center">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-emerald-100 mb-4">
+              <MailCheck className="w-7 h-7 text-emerald-600" />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Registration received</h2>
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Thank you for registering <strong>{formData.organizationName}</strong>.<br/>
+              Maka Language Consulting will review your request and activate your account shortly.<br/>
+              You will receive an email at <strong>{formData.adminEmail}</strong> once your account is ready.
+            </p>
+            <Link
+              to="/login"
+              className="inline-block mt-6 px-4 py-2 rounded-lg bg-primary-600 text-white text-sm font-medium hover:bg-primary-700"
+            >
+              Back to Login
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">

@@ -41,6 +41,7 @@ import AdminAssessmentManagementPage from './pages/admin/AssessmentManagementPag
 import AdminReviewQueuePage from './pages/admin/ReviewQueuePage'
 import RetryRequestsPage from './pages/admin/RetryRequestsPage'
 import TestRequestsPage from './pages/admin/TestRequestsPage'
+import OrgRequestsPage from './pages/admin/OrgRequestsPage'
 import ActivityLogPage from './pages/admin/ActivityLogPage'
 import AdminCalendarPage from './pages/admin/CalendarPage'
 // Assessment review pages
@@ -710,6 +711,18 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
             <Layout>
               <TestRequestsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin: Org Requests (HR self-registrations awaiting approval) */}
+      <Route
+        path="/admin/org-requests"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.ADMIN]}>
+            <Layout>
+              <OrgRequestsPage />
             </Layout>
           </ProtectedRoute>
         }

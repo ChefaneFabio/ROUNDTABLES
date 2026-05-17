@@ -98,9 +98,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const registerOrganization = async (data: RegisterOrganizationRequest) => {
-    const response = await authApi.registerOrganization(data)
-    setUser(response.user)
-    if (response.user.orgAdminProfile) setProfile(response.user.orgAdminProfile)
+    // No auto-login: the backend creates the account in "pending" state.
+    // The caller (RegisterOrg page) shows a confirmation screen.
+    await authApi.registerOrganization(data)
   }
 
   const refreshUser = async () => {

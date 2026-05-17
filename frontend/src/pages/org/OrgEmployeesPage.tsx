@@ -102,17 +102,12 @@ export default function OrgEmployeesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Employees</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Learners</h1>
           <p className="text-gray-600 mt-1">
-            Manage your organization's employees
+            Read-only view of your organization's learners. To add or remove learners,
+            please contact Maka Language Consulting at training@makaitalia.com.
           </p>
         </div>
-        <button
-          onClick={() => setShowInviteForm(!showInviteForm)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-        >
-          {showInviteForm ? 'Cancel' : 'Invite Employee'}
-        </button>
       </div>
 
       {/* Alerts */}
@@ -269,15 +264,8 @@ export default function OrgEmployeesPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {emp._count?.enrollments || 0}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
-                        <button
-                          onClick={() =>
-                            setRemoveTarget({ id: emp.id, name: emp.user?.name || 'this employee' })
-                          }
-                          className="text-red-600 hover:text-red-800 font-medium"
-                        >
-                          Remove
-                        </button>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-400">
+                        &mdash;
                       </td>
                     </tr>
                   ))}

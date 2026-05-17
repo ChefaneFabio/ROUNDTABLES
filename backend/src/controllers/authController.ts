@@ -4,11 +4,13 @@ import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import { validateRequest } from '../middleware/validateRequest'
 import { authenticate, optionalAuth, generateTokens } from '../middleware/auth'
-import { requireOrgAdmin } from '../middleware/rbac'
+import { requireOrgAdmin, requireAdmin } from '../middleware/rbac'
 import { authLimiter } from '../middleware/rateLimit'
 import { authService } from '../services/AuthService'
 import { prisma } from '../config/database'
 import { apiResponse, handleError } from '../utils/apiResponse'
+import { emailService } from '../services/EmailService'
+import { activityLog } from '../services/ActivityLogService'
 
 const router = Router()
 
@@ -352,7 +354,9 @@ router.post(
   }
 )
 
-// Register a new organization + ORG_ADMIN user (public)
+// Register a new organization + ORG_ADMIN user (public).
+// The HR account lands in a "pending approval" state — Maka has to approve
+// before the user can log in. No tokens are returned here.
 router.post(
   '/register/organization',
   validateRequest(registerOrganizationSchema),
@@ -378,10 +382,36 @@ router.post(
 
       const hashedPassword = await bcrypt.hash(adminPassword, 12)
 
-      // Hardcode Maka Learning Centre school ID
-      const MAKA_SCHOOL_ID = 'maka-language-centre'
-
       const result = await prisma.$transaction(async (tx) => {
+        // Resolve (or bootstrap) the single Maka school — same pattern as
+        // registerPublic. School.userId is required so we upsert a stub
+        // owner if no school exists yet.
+        let schoolId: string
+        const existingSchool = await tx.school.findFirst({ select: { id: true } })
+        if (existingSchool) {
+          schoolId = existingSchool.id
+        } else {
+          const stubOwner = await tx.user.upsert({
+            where: { email: 'owner@maka-language.com' },
+            update: {},
+            create: {
+              email: 'owner@maka-language.com',
+              password: hashedPassword,
+              name: 'Maka Owner',
+              role: 'ADMIN',
+            },
+          })
+          const created = await tx.school.create({
+            data: {
+              id: 'maka-language-centre',
+              name: 'Maka Language Consulting',
+              email: 'info@maka-language.com',
+              userId: stubOwner.id,
+            },
+          })
+          schoolId = created.id
+        }
+
         // Create organization
         const organization = await tx.organization.create({
           data: {
@@ -393,21 +423,22 @@ router.post(
             size,
             vatNumber,
             fiscalCode,
-            schoolId: MAKA_SCHOOL_ID,
+            schoolId,
           }
         })
 
-        // Create ORG_ADMIN user
+        // Create ORG_ADMIN user — INACTIVE until Maka approves.
         const user = await tx.user.create({
           data: {
             email: adminEmail,
             password: hashedPassword,
             name: adminName,
             role: 'ORG_ADMIN',
+            isActive: false,
           }
         })
 
-        // Create OrgAdmin profile
+        // Create OrgAdmin profile linking user to organization
         const orgAdmin = await tx.orgAdmin.create({
           data: {
             userId: user.id,
@@ -418,22 +449,40 @@ router.post(
         return { user, organization, orgAdmin }
       })
 
-      const tokens = generateTokens(result.user)
+      // Fire-and-forget: notify Maka HQ with an approval CTA
+      const approvalUrl = `${process.env.FRONTEND_URL || 'https://roundtables-frontend.vercel.app'}/admin/org-requests`
+      emailService.sendInternalEvent({
+        eventTitle: 'Organization Registration — Approval Needed',
+        accentColor: '#7c3aed',
+        studentName: adminName,
+        studentEmail: adminEmail,
+        rows: [
+          { label: 'Organization', value: organizationName },
+          { label: 'Org email', value: organizationEmail },
+          { label: 'Industry', value: industry || '—' },
+          { label: 'Size', value: size || '—' },
+          { label: 'Requested at', value: new Date().toLocaleString('en-GB', { timeZone: 'Europe/Rome' }) + ' (Europe/Rome)' },
+          { label: 'Approve at', value: approvalUrl },
+        ],
+        note: 'A new HR contact has registered an organization and is waiting on approval. Open the Org Requests page to approve or deny.',
+      }).catch(err => console.error('Maka org registration notification failed:', err))
 
-      // Store refresh token
-      const expiresAt = new Date()
-      expiresAt.setDate(expiresAt.getDate() + 7)
-      await prisma.refreshToken.create({
-        data: { token: tokens.refreshToken, userId: result.user.id, expiresAt }
+      activityLog.log({
+        action: 'USER_REGISTERED',
+        userId: result.user.id,
+        actorEmail: result.user.email,
+        actorName: result.user.name,
+        actorRole: result.user.role,
+        subjectType: 'Organization',
+        subjectId: result.organization.id,
+        metadata: { source: 'public-register', kind: 'organization', organizationName, pendingApproval: true },
       })
 
-      const { password: _, ...sanitizedUser } = result.user
-
       res.status(201).json(apiResponse.success({
-        user: sanitizedUser,
-        organization: result.organization,
-        ...tokens
-      }, 'Organization registered successfully'))
+        pending: true,
+        organizationId: result.organization.id,
+        userEmail: result.user.email,
+      }, 'Registration received — Maka Language Consulting will approve your account shortly. You will receive an email when you can log in.'))
     } catch (error) {
       handleError(res, error)
     }
@@ -501,6 +550,179 @@ router.post(
         user: sanitizedUser,
         student: result.student,
       }, 'Employee registered successfully'))
+    } catch (error) {
+      handleError(res, error)
+    }
+  }
+)
+
+// Admin: list HR registrations awaiting approval (ORG_ADMIN with isActive=false)
+router.get(
+  '/admin/org-requests',
+  authenticate,
+  requireAdmin,
+  async (_req: Request, res: Response) => {
+    try {
+      const pending = await prisma.user.findMany({
+        where: { role: 'ORG_ADMIN', isActive: false, deletedAt: null },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          createdAt: true,
+          orgAdminProfile: {
+            select: {
+              organization: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  industry: true,
+                  size: true,
+                  website: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      })
+      return res.json(apiResponse.success(pending))
+    } catch (error) {
+      handleError(res, error)
+    }
+  }
+)
+
+// Admin: approve a pending org registration
+router.post(
+  '/admin/org-requests/:userId/approve',
+  authenticate,
+  requireAdmin,
+  async (req: Request, res: Response) => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: { id: req.params.userId },
+        include: { orgAdminProfile: { include: { organization: true } } },
+      })
+      if (!user) {
+        return res.status(404).json(apiResponse.error('User not found', 'NOT_FOUND'))
+      }
+      if (user.role !== 'ORG_ADMIN') {
+        return res.status(400).json(apiResponse.error('User is not an organization admin', 'INVALID_ROLE'))
+      }
+      if (user.isActive) {
+        return res.status(400).json(apiResponse.error('Account is already active', 'ALREADY_ACTIVE'))
+      }
+
+      await prisma.user.update({ where: { id: user.id }, data: { isActive: true } })
+
+      activityLog.log({
+        action: 'ASSESSMENT_REQUEST_APPROVED', // reuse the generic approval marker
+        userId: req.user!.id,
+        subjectType: 'Organization',
+        subjectId: user.orgAdminProfile?.organization?.id,
+        metadata: {
+          kind: 'organization-registration',
+          approvedUserId: user.id,
+          approvedUserEmail: user.email,
+          organizationName: user.orgAdminProfile?.organization?.name,
+        },
+      })
+
+      // Notify HR that they can now log in
+      try {
+        if (emailService.isConfigured()) {
+          const loginUrl = `${process.env.FRONTEND_URL || 'https://roundtables-frontend.vercel.app'}/login`
+          await emailService.sendEmail({
+            to: user.email,
+            subject: 'Your Maka LMS account is ready',
+            html: `
+              <h2>Account approved</h2>
+              <p>Hi ${user.name},</p>
+              <p>Maka Language Consulting has approved your organization registration for
+              <strong>${user.orgAdminProfile?.organization?.name || ''}</strong>.</p>
+              <p>You can now log in to manage your learners' placement tests and view results.</p>
+              <p><a href="${loginUrl}">Log in to Maka LMS</a></p>
+            `,
+          })
+        }
+      } catch (e) {
+        console.error('Failed to send HR approval email:', e)
+      }
+
+      return res.json(apiResponse.success({ id: user.id, email: user.email }, 'Organization approved'))
+    } catch (error) {
+      handleError(res, error)
+    }
+  }
+)
+
+// Admin: deny a pending org registration. Soft-deletes the user + org.
+router.post(
+  '/admin/org-requests/:userId/deny',
+  authenticate,
+  requireAdmin,
+  async (req: Request, res: Response) => {
+    try {
+      const reason: string | undefined = req.body?.reason
+      const user = await prisma.user.findUnique({
+        where: { id: req.params.userId },
+        include: { orgAdminProfile: { include: { organization: true } } },
+      })
+      if (!user) {
+        return res.status(404).json(apiResponse.error('User not found', 'NOT_FOUND'))
+      }
+      if (user.role !== 'ORG_ADMIN') {
+        return res.status(400).json(apiResponse.error('User is not an organization admin', 'INVALID_ROLE'))
+      }
+
+      const orgId = user.orgAdminProfile?.organization?.id
+      await prisma.$transaction(async (tx) => {
+        await tx.user.update({
+          where: { id: user.id },
+          data: { isActive: false, deletedAt: new Date() },
+        })
+        if (orgId) {
+          await tx.organization.update({
+            where: { id: orgId },
+            data: { isActive: false, deletedAt: new Date() },
+          })
+        }
+      })
+
+      activityLog.log({
+        action: 'ASSESSMENT_REQUEST_DENIED', // reuse the generic denial marker
+        userId: req.user!.id,
+        subjectType: 'Organization',
+        subjectId: orgId,
+        metadata: {
+          kind: 'organization-registration',
+          deniedUserId: user.id,
+          deniedUserEmail: user.email,
+          reason: reason || null,
+        },
+      })
+
+      try {
+        if (emailService.isConfigured()) {
+          await emailService.sendEmail({
+            to: user.email,
+            subject: 'Your Maka LMS registration',
+            html: `
+              <h2>Registration update</h2>
+              <p>Hi ${user.name},</p>
+              <p>Your registration for <strong>${user.orgAdminProfile?.organization?.name || 'your organization'}</strong> was not approved at this time.</p>
+              ${reason ? `<p><strong>Note from Maka:</strong> ${reason}</p>` : ''}
+              <p>Please contact Maka Language Consulting if you have questions.</p>
+            `,
+          })
+        }
+      } catch (e) {
+        console.error('Failed to send HR denial email:', e)
+      }
+
+      return res.json(apiResponse.success({ id: user.id }, 'Organization denied'))
     } catch (error) {
       handleError(res, error)
     }
