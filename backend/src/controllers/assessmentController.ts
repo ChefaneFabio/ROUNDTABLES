@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express'
 import Joi from 'joi'
 import { validateRequest } from '../middleware/validateRequest'
 import { authenticate } from '../middleware/auth'
-import { requireAdmin, requireSchoolAdmin } from '../middleware/rbac'
+import { requireAdmin, requireSchoolAdmin, canAccessAssessment } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
 import { prisma } from '../config/database'
 import { assessmentService } from '../services/AssessmentService'
@@ -93,13 +93,12 @@ router.get('/my', authenticate, async (req: Request, res: Response) => {
 // Get assessment by ID
 router.get('/:id', authenticate, async (req: Request, res: Response) => {
   try {
-    const assessment = await assessmentService.getAssessment(req.params.id)
-
-    // Verify access
-    if (req.user?.role === 'STUDENT' && assessment.studentId !== req.user.studentId) {
+    // Tenant-aware access check (rejects ORG_ADMIN viewing other orgs' tests)
+    if (!(await canAccessAssessment(req, req.params.id))) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
 
+    const assessment = await assessmentService.getAssessment(req.params.id)
     return res.json(apiResponse.success(assessment))
   } catch (error) {
     return handleError(res, error)
@@ -165,12 +164,10 @@ router.post('/:id/complete', authenticate, async (req: Request, res: Response) =
 // Download assessment results as PDF
 router.get('/:id/download-pdf', authenticate, async (req: Request, res: Response) => {
   try {
-    const assessment = await assessmentService.getAssessment(req.params.id)
-
-    // Verify access (student or school admin)
-    if (req.user?.role === 'STUDENT' && assessment.studentId !== req.user.studentId) {
+    if (!(await canAccessAssessment(req, req.params.id))) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
+    const assessment = await assessmentService.getAssessment(req.params.id)
 
     if (assessment.status !== 'COMPLETED') {
       return res.status(400).json(apiResponse.error('Assessment not yet completed', 'NOT_COMPLETED'))
@@ -193,11 +190,16 @@ const emailResultsSchema = Joi.object({
 
 router.post('/:id/email-results', authenticate, validateRequest(emailResultsSchema), async (req: Request, res: Response) => {
   try {
+    if (!(await canAccessAssessment(req, req.params.id))) {
+      return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
+    }
     const assessment = await assessmentService.getAssessment(req.params.id)
 
-    // Verify access
-    if (req.user?.role === 'STUDENT' && assessment.studentId !== req.user.studentId) {
-      return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
+    // Non-admin callers can only email results to the learner themselves —
+    // never to an arbitrary address (was a vector for HR to exfiltrate
+    // other learners' results before we tightened the access check above).
+    if (req.user?.role !== 'ADMIN' && req.body?.email) {
+      return res.status(403).json(apiResponse.error('Only admins can email results to a custom address', 'FORBIDDEN_CUSTOM_RECIPIENT'))
     }
 
     if (assessment.status !== 'COMPLETED') {
@@ -259,13 +261,10 @@ router.post('/:id/email-results', authenticate, validateRequest(emailResultsSche
   }
 })
 
-// Get detailed results (student views own, admin views any)
+// Get detailed results (student views own, admin views any, HR views their tenant only)
 router.get('/:id/detailed-results', authenticate, async (req: Request, res: Response) => {
   try {
-    const assessment = await assessmentService.getAssessment(req.params.id)
-
-    // Students can only view their own
-    if (req.user?.role === 'STUDENT' && assessment.studentId !== req.user.studentId) {
+    if (!(await canAccessAssessment(req, req.params.id))) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
 

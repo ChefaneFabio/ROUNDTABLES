@@ -93,7 +93,7 @@ export default function AssessmentManagementPage() {
         language: filterLanguage || undefined,
         status: filterStatus || undefined,
       }),
-    { refetchInterval: 30000 }
+    { refetchInterval: 60000 }
   )
 
   const filtered = assessments?.filter((a: any) => {
@@ -405,7 +405,7 @@ export default function AssessmentManagementPage() {
 
       {/* Summary Stats */}
       {assessments && assessments.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <StatCard
             icon={Users}
             label="Total Assigned"
@@ -429,6 +429,12 @@ export default function AssessmentManagementPage() {
             label="Awaiting Start"
             value={assessments.filter((a: any) => a.status === 'ASSIGNED').length}
             color="text-amber-600"
+          />
+          <StatCard
+            icon={AlertCircle}
+            label="Awaiting Approval"
+            value={assessments.filter((a: any) => a.status === 'REQUESTED').length}
+            color="text-purple-600"
           />
         </div>
       )}

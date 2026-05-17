@@ -5,6 +5,12 @@ import { certificateService } from './CertificateService'
 import { aiScoringService } from './AiScoringService'
 import { whisperService } from './WhisperService'
 import { activityLog } from './ActivityLogService'
+import { pLimit } from '../utils/concurrencyLimit'
+
+// Cap concurrent Whisper calls across all in-flight speaking submissions.
+// 200 learners x 6 speaking responses = 1200 potential calls if unbounded;
+// at concurrency 5 we trade latency-per-job for socket/memory safety.
+const whisperLimit = pLimit(Number(process.env.WHISPER_CONCURRENCY) || 5)
 
 const CEFR_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
 
@@ -470,6 +476,9 @@ export class SectionAssessmentService {
       },
       // No createdAt on Assessment; cuids sort by creation time
       orderBy: { id: 'desc' },
+      // Cap to keep the polled queue lightweight even if Maka stops
+      // reviewing for a while.
+      take: 200,
     })
   }
 
@@ -756,32 +765,37 @@ export class SectionAssessmentService {
       orderBy: { createdAt: 'desc' },
     })
 
-    const enriched = await Promise.all(
-      notifications.map(async (n) => {
-        const meta = (n.metadata as any) || {}
-        const section = meta.sectionId
-          ? await prisma.assessmentSection.findUnique({
-              where: { id: meta.sectionId },
-              include: {
-                assessment: { include: { student: { include: { user: true } } } },
-              },
-            })
-          : null
+    // Single batched section lookup instead of N+1. Polled every 30s by
+    // each admin so the per-request fan-out was the dominant DB load.
+    const sectionIds = notifications
+      .map(n => (n.metadata as any)?.sectionId as string | undefined)
+      .filter((id): id is string => !!id)
+    const sections = sectionIds.length
+      ? await prisma.assessmentSection.findMany({
+          where: { id: { in: sectionIds } },
+          include: {
+            assessment: { include: { student: { include: { user: true } } } },
+          },
+        })
+      : []
+    const sectionMap = new Map(sections.map(s => [s.id, s]))
 
-        return {
-          notificationId: n.id,
-          requestedAt: n.createdAt,
-          assessmentId: meta.assessmentId as string | undefined,
-          sectionId: meta.sectionId as string | undefined,
-          skill: meta.skill as string | undefined,
-          language: meta.language as string | undefined,
-          studentName: section?.assessment.student.user.name ?? 'Unknown',
-          studentEmail: section?.assessment.student.user.email ?? null,
-          // If section is no longer COMPLETED, another admin has already approved.
-          alreadyHandled: section ? section.status !== 'COMPLETED' : true,
-        }
-      })
-    )
+    const enriched = notifications.map((n) => {
+      const meta = (n.metadata as any) || {}
+      const section = meta.sectionId ? sectionMap.get(meta.sectionId) : null
+      return {
+        notificationId: n.id,
+        requestedAt: n.createdAt,
+        assessmentId: meta.assessmentId as string | undefined,
+        sectionId: meta.sectionId as string | undefined,
+        skill: meta.skill as string | undefined,
+        language: meta.language as string | undefined,
+        studentName: section?.assessment.student.user.name ?? 'Unknown',
+        studentEmail: section?.assessment.student.user.email ?? null,
+        // If section is no longer COMPLETED, another admin has already approved.
+        alreadyHandled: section ? section.status !== 'COMPLETED' : true,
+      }
+    })
 
     return enriched
   }
@@ -1184,7 +1198,7 @@ export class SectionAssessmentService {
     if (whisperService.isConfigured()) {
       const responseId = response.id
       const language = section.assessment.language
-      setImmediate(async () => {
+      setImmediate(() => whisperLimit(async () => {
         try {
           const whisperText = await whisperService.transcribe(audioUrl, language)
           if (whisperText && whisperText.length > 0) {
@@ -1207,7 +1221,7 @@ export class SectionAssessmentService {
             data: { transcribedAt: new Date() },
           }).catch(() => {})
         }
-      })
+      }))
     } else {
       // No Whisper configured — browser transcript is final.
       if (initialTranscript) {

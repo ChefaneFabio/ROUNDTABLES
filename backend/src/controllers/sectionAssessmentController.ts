@@ -5,7 +5,7 @@ import path from 'path'
 import fs from 'fs'
 import { validateRequest } from '../middleware/validateRequest'
 import { authenticate } from '../middleware/auth'
-import { requireTeacher, requireAdmin, requireSchoolAdmin } from '../middleware/rbac'
+import { requireTeacher, requireAdmin, requireSchoolAdmin, canAccessAssessment } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
 import { sectionAssessmentService, SectionAssessmentService } from '../services/SectionAssessmentService'
 import { prisma } from '../config/database'
@@ -160,6 +160,9 @@ router.post('/', authenticate, validateRequest(createMultiSkillSchema), async (r
 // Get all sections for an assessment
 router.get('/:id/sections', authenticate, async (req: Request, res: Response) => {
   try {
+    if (!(await canAccessAssessment(req, req.params.id))) {
+      return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
+    }
     const sections = await sectionAssessmentService.getSections(req.params.id)
     return res.json(apiResponse.success(sections))
   } catch (error) {
@@ -188,6 +191,9 @@ router.post('/:id/sections/:sectionId/start', authenticate, async (req: Request,
 // Get next question for a section
 router.get('/:id/sections/:sectionId/next-question', authenticate, async (req: Request, res: Response) => {
   try {
+    if (!(await canAccessAssessment(req, req.params.id))) {
+      return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
+    }
     const result = await sectionAssessmentService.getNextSectionQuestion(
       req.params.id,
       req.params.sectionId
@@ -675,20 +681,28 @@ router.post('/admin/assign', authenticate, requireSchoolAdmin, validateRequest(a
     const { studentIds, language, timeLimitMin, fixedLevel } = req.body
     const assignedById = req.user!.id
 
+    // Chunked parallelism — 10 at a time keeps Prisma pool happy while
+    // cutting 100-learner assign from ~300 serial round-trips to ~30.
+    const CHUNK = 10
     const results: any[] = []
-    for (const studentId of studentIds) {
-      try {
-        const assessment = await sectionAssessmentService.createMultiSkillAssessment({
-          studentId,
-          language,
-          assignedById,
-          timeLimitMin,
-          fixedLevel,
+    for (let i = 0; i < studentIds.length; i += CHUNK) {
+      const chunk = studentIds.slice(i, i + CHUNK)
+      const chunkResults = await Promise.all(
+        chunk.map(async (studentId: string) => {
+          try {
+            return await sectionAssessmentService.createMultiSkillAssessment({
+              studentId,
+              language,
+              assignedById,
+              timeLimitMin,
+              fixedLevel,
+            })
+          } catch (err: any) {
+            return { studentId, error: err.message }
+          }
         })
-        results.push(assessment)
-      } catch (err: any) {
-        results.push({ studentId, error: err.message })
-      }
+      )
+      results.push(...chunkResults)
     }
 
     return res.status(201).json(apiResponse.success(results, `Assigned ${results.filter(r => !('error' in r)).length} assessments`))
@@ -700,39 +714,56 @@ router.post('/admin/assign', authenticate, requireSchoolAdmin, validateRequest(a
 // List all multi-skill assessments for admin dashboard
 router.get('/admin/assessments', authenticate, requireTeacher, async (req: Request, res: Response) => {
   try {
-    const { language, status, studentId } = req.query
+    const { language, status, studentId, page, limit } = req.query
 
     const where: any = { isMultiSkill: true }
     if (language) where.language = language as string
-    if (status) where.status = status as string
+    if (status) {
+      where.status = status as string
+    } else {
+      // REQUESTED assessments live in /admin/requests — exclude from the
+      // generic dashboard so the queue stays clean.
+      where.status = { not: 'REQUESTED' }
+    }
     if (studentId) where.studentId = studentId as string
 
-    // Privacy: filter by school — teachers/admins only see their own school's students
-    if (req.user?.schoolId) {
-      where.student = { schoolId: req.user.schoolId }
-    }
+    // Pagination (defaults: page=1, limit=50, cap=200) to keep payload
+    // bounded once the assessment table grows.
+    const pageNum = Math.max(1, parseInt((page as string) || '1') || 1)
+    const limitNum = Math.min(200, Math.max(1, parseInt((limit as string) || '50') || 50))
+    const skip = (pageNum - 1) * limitNum
 
-    const assessments = await prisma.assessment.findMany({
-      where,
-      include: {
-        student: {
-          include: { user: { select: { name: true, email: true } } }
-        },
-        sections: {
-          orderBy: { orderIndex: 'asc' },
-          select: {
-            id: true,
-            skill: true,
-            status: true,
-            cefrLevel: true,
-            percentageScore: true
+    const [assessments, total] = await Promise.all([
+      prisma.assessment.findMany({
+        where,
+        include: {
+          student: {
+            include: { user: { select: { name: true, email: true } } }
+          },
+          sections: {
+            orderBy: { orderIndex: 'asc' },
+            select: {
+              id: true,
+              skill: true,
+              status: true,
+              cefrLevel: true,
+              percentageScore: true
+            }
           }
-        }
-      },
-      orderBy: { assignedAt: 'desc' }
-    })
+        },
+        orderBy: { assignedAt: 'desc' },
+        skip,
+        take: limitNum,
+      }),
+      prisma.assessment.count({ where }),
+    ])
 
-    return res.json(apiResponse.success(assessments))
+    return res.json(apiResponse.success(assessments, undefined, {
+      page: pageNum,
+      limit: limitNum,
+      total,
+      totalPages: Math.ceil(total / limitNum),
+    }))
   } catch (error) {
     return handleError(res, error)
   }
@@ -1122,10 +1153,8 @@ router.get('/:id/results/pdf', authenticate, async (req: Request, res: Response)
     if (!assessment) return res.status(404).json(apiResponse.error('Assessment not found', 'NOT_FOUND'))
     if (assessment.status !== 'COMPLETED') return res.status(400).json(apiResponse.error('Assessment not yet completed', 'NOT_COMPLETED'))
 
-    // Allow student who owns it, admin, teacher, or org admin
-    const studentId = (req as any).user?.studentId
-    const role = (req as any).user?.role
-    if (role !== 'ADMIN' && role !== 'TEACHER' && role !== 'ORG_ADMIN' && assessment.studentId !== studentId) {
+    // Tenant-aware access check (rejects ORG_ADMIN viewing other orgs' PDFs)
+    if (!(await canAccessAssessment(req, id))) {
       return res.status(403).json(apiResponse.error('Not authorized', 'FORBIDDEN'))
     }
 

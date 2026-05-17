@@ -3,7 +3,7 @@ import Joi from 'joi'
 import * as XLSX from 'xlsx'
 import { validateRequest } from '../middleware/validateRequest'
 import { authenticate } from '../middleware/auth'
-import { requireSchoolAdmin, requireAdmin } from '../middleware/rbac'
+import { requireSchoolAdmin, requireAdmin, requireOrgAdmin, canAccessStudent } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
 import { analyticsService } from '../services/AnalyticsService'
 import { prisma } from '../config/database'
@@ -60,19 +60,12 @@ router.get('/corporate/:schoolId', authenticate, requireAdmin, async (req: Reque
 // Get student report
 router.get('/student/:studentId', authenticate, async (req: Request, res: Response) => {
   try {
-    // Students can view their own report, school admins can view any student in their school
-    if (req.user?.role === 'STUDENT' && req.user.studentId !== req.params.studentId) {
+    // Tenant-aware access check (rejects ORG_ADMIN reading cross-org reports)
+    if (!(await canAccessStudent(req, req.params.studentId))) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
 
     const report = await analyticsService.getStudentReport(req.params.studentId)
-
-    // Verify school access for school admins
-    if (req.user?.role === 'ADMIN' && req.user.schoolId) {
-      // The student report includes school info, we can verify it matches
-      // This is a simplified check - in production, add proper validation
-    }
-
     return res.json(apiResponse.success(report))
   } catch (error) {
     return handleError(res, error)
@@ -93,16 +86,11 @@ router.get('/my-report', authenticate, async (req: Request, res: Response) => {
   }
 })
 
-// Get course report
-router.get('/course/:courseId', authenticate, async (req: Request, res: Response) => {
+// Get course report — admin/teacher only (course reports show aggregated
+// student data across the whole course; HR should use /org/reports instead)
+router.get('/course/:courseId', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
   try {
     const report = await analyticsService.getCourseReport(req.params.courseId)
-
-    // Verify access - school admin, teacher assigned to course, or admin
-    if (req.user?.role === 'ADMIN') {
-      // Would need to verify course belongs to their school
-    }
-
     return res.json(apiResponse.success(report))
   } catch (error) {
     return handleError(res, error)
@@ -282,7 +270,10 @@ const exportAssessmentsSchema = Joi.object({
   language: Joi.string().optional(),
 })
 
-router.post('/export/assessments/xlsx', authenticate, requireSchoolAdmin, validateRequest(exportAssessmentsSchema), async (req: Request, res: Response) => {
+// ORG_ADMIN may export results — but only for learners in their own org.
+// The where clause below enforces that via student.organizationId filter
+// (cannot be overridden by query params).
+router.post('/export/assessments/xlsx', authenticate, requireOrgAdmin, validateRequest(exportAssessmentsSchema), async (req: Request, res: Response) => {
   try {
     const { studentIds, assessmentIds, language } = req.body
 
@@ -299,6 +290,14 @@ router.post('/export/assessments/xlsx', authenticate, requireSchoolAdmin, valida
     }
     if (language) {
       where.language = language
+    }
+
+    // Tenant scoping for ORG_ADMIN — cannot export learners from other orgs.
+    if (req.user?.role === 'ORG_ADMIN') {
+      if (!req.user.organizationId) {
+        return res.status(403).json(apiResponse.error('No organization on profile', 'NO_ORG'))
+      }
+      where.student = { organizationId: req.user.organizationId }
     }
 
     const assessments = await prisma.assessment.findMany({

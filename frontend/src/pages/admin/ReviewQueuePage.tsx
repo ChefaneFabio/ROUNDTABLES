@@ -7,7 +7,7 @@ export default function ReviewQueuePage() {
   const { data: pendingSections = [], isLoading } = useQuery(
     'pending-review-sections',
     () => assessmentApi.getPendingReview(),
-    { refetchInterval: 30000 }
+    { refetchInterval: 60000 }
   )
 
   return (

@@ -1,6 +1,12 @@
 import fs from 'fs'
 import path from 'path'
 import crypto from 'crypto'
+import { pLimit } from '../utils/concurrencyLimit'
+
+// Bound concurrent ElevenLabs requests (default 4). Without this a fresh
+// cohort hitting unseeded listening questions would open one socket per
+// learner and exhaust the Node process.
+const elevenLabsLimit = pLimit(Number(process.env.ELEVENLABS_CONCURRENCY) || 4)
 
 // ElevenLabs multilingual voices — all support eleven_multilingual_v2.
 // Accent variety is important for the Listening test, so the pool spans
@@ -238,7 +244,9 @@ export class TtsService {
   }
 
   /** Generate TTS audio for a question. Returns an absolute URL (Cloudinary)
-   *  if cloud is configured, else a local /audio/ relative path. */
+   *  if cloud is configured, else a local /audio/ relative path.
+   *  Bounded by elevenLabsLimit so a 200-learner cohort hitting fresh
+   *  questions can't open hundreds of parallel ElevenLabs sockets. */
   async generateAudio(questionId: string, text: string, _language: string, cefrLevel: string): Promise<string> {
     const publicId = `tts_${questionId}_v3`
     const filename = `${publicId}.mp3`
@@ -250,32 +258,48 @@ export class TtsService {
       return `/audio/${filename}`
     }
 
+    // Cloud cache hit — never re-generate or re-upload.
+    if (useCloud && await this.existsOnCloudinary(publicId)) {
+      return this.cloudinaryDeliveryUrl(publicId)!
+    }
+
     if (!this.apiKey) {
       throw new Error('ElevenLabs API key not configured. Set ELEVENLABS_API_KEY in env.')
     }
 
-    let buffer: Buffer
+    return elevenLabsLimit(async () => {
+      // Re-check cache after acquiring the slot — another waiter may have
+      // just generated the same publicId.
+      if (useCloud && await this.existsOnCloudinary(publicId)) {
+        return this.cloudinaryDeliveryUrl(publicId)!
+      }
+      if (!useCloud && fs.existsSync(filePath)) {
+        return `/audio/${filename}`
+      }
 
-    DIALOGUE_PATTERN.lastIndex = 0
-    if (this.isDialogue(text)) {
+      let buffer: Buffer
+
       DIALOGUE_PATTERN.lastIndex = 0
-      const segments = this.parseDialogue(text)
-      const uniqueSpeakers = [...new Set(segments.map(s => s.speaker))]
-      const voiceAssignment = this.assignSpeakerVoices(uniqueSpeakers, questionId)
-      buffer = await this.generateDialogueAudio(segments, voiceAssignment, cefrLevel)
-    } else {
-      const voice = this.pickVoice(questionId)
-      buffer = await this.generateSingleVoice(text, voice.id, cefrLevel)
-    }
+      if (this.isDialogue(text)) {
+        DIALOGUE_PATTERN.lastIndex = 0
+        const segments = this.parseDialogue(text)
+        const uniqueSpeakers = [...new Set(segments.map(s => s.speaker))]
+        const voiceAssignment = this.assignSpeakerVoices(uniqueSpeakers, questionId)
+        buffer = await this.generateDialogueAudio(segments, voiceAssignment, cefrLevel)
+      } else {
+        const voice = this.pickVoice(questionId)
+        buffer = await this.generateSingleVoice(text, voice.id, cefrLevel)
+      }
 
-    if (useCloud) {
-      const cloudUrl = await this.uploadToCloudinary(buffer, publicId)
-      if (cloudUrl) return cloudUrl
-      // Cloud upload failed — fall through to local write so the test still works.
-    }
+      if (useCloud) {
+        const cloudUrl = await this.uploadToCloudinary(buffer, publicId)
+        if (cloudUrl) return cloudUrl
+        // Cloud upload failed — fall through to local write so the test still works.
+      }
 
-    fs.writeFileSync(filePath, buffer)
-    return `/audio/${filename}`
+      fs.writeFileSync(filePath, buffer)
+      return `/audio/${filename}`
+    })
   }
 
   /** Get existing audio URL or generate on demand. */
@@ -317,13 +341,23 @@ export class TtsService {
     return null
   }
 
-  /** Bulk pre-generate audio for all listening questions */
+  /** Bulk pre-generate audio for all listening questions. Idempotent —
+   *  questions already in Cloudinary are skipped so re-running the endpoint
+   *  doesn't re-burn ElevenLabs credits. generateAudio itself short-circuits
+   *  on cache hits, so this is mostly an annotation pass + faster bulk run. */
   async preGenerateAll(questions: Array<{ id: string; ttsScript: string; language: string; cefrLevel: string }>) {
     const results: Array<{ id: string; status: 'success' | 'skipped' | 'error'; url?: string; error?: string }> = []
+    const useCloud = !!this.getCloudinaryConfig()
 
     for (const q of questions) {
       if (!q.ttsScript) {
         results.push({ id: q.id, status: 'skipped' })
+        continue
+      }
+
+      const publicId = `tts_${q.id}_v3`
+      if (useCloud && await this.existsOnCloudinary(publicId)) {
+        results.push({ id: q.id, status: 'skipped', url: this.cloudinaryDeliveryUrl(publicId)! })
         continue
       }
 

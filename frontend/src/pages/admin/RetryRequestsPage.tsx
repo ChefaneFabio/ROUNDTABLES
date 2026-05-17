@@ -18,7 +18,7 @@ export default function RetryRequestsPage() {
   const { data: requests = [], isLoading } = useQuery(
     'retry-requests',
     () => assessmentApi.getRetryRequests(),
-    { refetchInterval: 30000 }
+    { refetchInterval: 60000 }
   )
 
   const invalidate = () => {

@@ -53,6 +53,7 @@ const registerEmployeeSchema = Joi.object({
   email: Joi.string().email().required(),
   name: Joi.string().min(2).max(100).required(),
   languageLevel: Joi.string().valid('A1', 'A2', 'B1', 'B2', 'C1', 'C2').optional(),
+  organizationId: Joi.string().required(),
 })
 
 const loginSchema = Joi.object({
@@ -489,17 +490,23 @@ router.post(
   }
 )
 
-// Register an employee under an organization (ORG_ADMIN only)
+// Register an employee under an organization. Maka admin only —
+// HR contacts are read-only per ASSESSMENT_WORKFLOW.md H8.
+// Admin must pass `organizationId` in body since they have no
+// implicit organizationId on their account.
 router.post(
   '/register/employee',
   authenticate,
-  requireOrgAdmin,
+  requireAdmin,
   validateRequest(registerEmployeeSchema),
   async (req: Request, res: Response) => {
     try {
-      if (!req.user || !req.user.organizationId) {
-        return res.status(403).json(apiResponse.error('Organization admin profile required', 'NO_ORG_PROFILE'))
+      const targetOrgId: string | undefined = req.body?.organizationId
+      if (!targetOrgId) {
+        return res.status(400).json(apiResponse.error('organizationId is required', 'VALIDATION_ERROR'))
       }
+      // Override req.user.organizationId so the existing flow uses the target org
+      req.user = { ...req.user!, organizationId: targetOrgId }
 
       const { email, name, languageLevel } = req.body
 

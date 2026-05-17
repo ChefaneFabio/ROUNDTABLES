@@ -301,6 +301,49 @@ export const requireOrgAccess = async (
   next()
 }
 
+// =======================================================
+// Tenant-aware async access checks. Use in route handlers
+// where the legacy `schoolId` shortcut leaks data across
+// organizations (all orgs share the single Maka school,
+// so schoolId equality is useless for ORG_ADMIN scoping).
+// =======================================================
+
+export async function canAccessStudent(req: Request, studentId: string): Promise<boolean> {
+  if (!req.user) return false
+  const role = req.user.role
+  if (role === 'ADMIN' || role === 'TEACHER') return true
+  if (role === 'STUDENT') return req.user.studentId === studentId
+  if (role === 'ORG_ADMIN') {
+    if (!req.user.organizationId) return false
+    const s = await prisma.student.findUnique({
+      where: { id: studentId },
+      select: { organizationId: true },
+    })
+    return !!s && s.organizationId === req.user.organizationId
+  }
+  return false
+}
+
+export async function canAccessAssessment(req: Request, assessmentId: string): Promise<boolean> {
+  if (!req.user) return false
+  const role = req.user.role
+  if (role === 'ADMIN' || role === 'TEACHER') return true
+  const a = await prisma.assessment.findUnique({
+    where: { id: assessmentId },
+    select: {
+      studentId: true,
+      student: { select: { organizationId: true } },
+    },
+  })
+  if (!a) return false
+  if (role === 'STUDENT') return req.user.studentId === a.studentId
+  if (role === 'ORG_ADMIN') {
+    if (!req.user.organizationId) return false
+    return a.student.organizationId === req.user.organizationId
+  }
+  return false
+}
+
 // Owner or admin only - for resources that belong to a specific user
 export const requireOwnerOrAdmin = (
   getOwnerId: (req: Request) => string | undefined

@@ -21,6 +21,8 @@ const STATUS_STYLES: Record<string, { bg: string; icon: typeof CheckCircle }> = 
   COMPLETED: { bg: 'bg-green-100 text-green-700', icon: CheckCircle },
   IN_PROGRESS: { bg: 'bg-yellow-100 text-yellow-700', icon: Clock },
   ASSIGNED: { bg: 'bg-amber-100 text-amber-700', icon: ClipboardCheck },
+  REQUESTED: { bg: 'bg-amber-50 text-amber-700', icon: Clock },
+  PAUSED: { bg: 'bg-gray-100 text-gray-700', icon: Clock },
   EXPIRED: { bg: 'bg-red-100 text-red-700', icon: XCircle }
 }
 

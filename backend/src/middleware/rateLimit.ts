@@ -7,7 +7,11 @@ interface RateLimitStore {
   }
 }
 
-// In-memory rate limit store (use Redis in production for distributed systems)
+// In-memory rate limit store. NOTE: this is per-process — on Render with
+// multiple instances, each replica counts independently, so the effective
+// limit is (max × instance count) and is racy. Acceptable for a single
+// Render service; if we scale horizontally, swap for Redis (e.g.
+// rate-limiter-flexible with RedisStore). See ASSESSMENT_WORKFLOW.md backlog.
 const stores: Map<string, RateLimitStore> = new Map()
 
 interface RateLimitOptions {
@@ -114,14 +118,19 @@ export const standardLimiter = rateLimit({
   message: 'Too many requests, please try again in 15 minutes'
 })
 
+// Auth limiter — composite key (ip + email) so a shared corporate IP doesn't
+// lock out multiple legitimate users at once, and a single user can't bypass
+// the limit by hopping IPs without also rotating email. Limit raised from
+// 10/h → 20/h after a real onboarding session where the previous 10 was
+// hit by an admin retrying their own password.
 export const authLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,  // 1 hour
-  max: 10,                    // 10 attempts per hour
+  max: 20,                    // 20 attempts per hour
   message: 'Too many authentication attempts, please try again later',
   keyGenerator: (req) => {
-    // Rate limit by email for login attempts
-    const email = req.body?.email
-    return email ? `auth_${email}` : req.ip || 'unknown'
+    const email = (req.body?.email || '').toLowerCase()
+    const ip = req.ip || 'unknown'
+    return email ? `auth_${ip}_${email}` : `auth_ip_${ip}`
   }
 })
 

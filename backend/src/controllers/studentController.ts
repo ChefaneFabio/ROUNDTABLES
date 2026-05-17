@@ -3,7 +3,7 @@ import Joi from 'joi'
 import { prisma } from '../config/database'
 import { validateRequest } from '../middleware/validateRequest'
 import { authenticate } from '../middleware/auth'
-import { requireSchoolAdmin } from '../middleware/rbac'
+import { requireSchoolAdmin, canAccessStudent } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
 import { PAGINATION, LANGUAGE_LEVELS } from '../utils/constants'
 
@@ -167,20 +167,9 @@ router.get('/:id', authenticate, async (req: Request, res: Response) => {
       return res.status(404).json(apiResponse.error('Student not found', 'NOT_FOUND'))
     }
 
-    // Check access — each role only sees students in their scope
-    let canAccessStudent = req.user?.role === 'ADMIN' ||
-      req.user?.schoolId === student.schoolId ||
-      req.user?.studentId === id
-
-    // ORG_ADMIN can see students in their organization
-    if (!canAccessStudent && req.user?.role === 'ORG_ADMIN') {
-      const orgAdmin = await prisma.orgAdmin.findFirst({ where: { userId: req.user!.id } })
-      if (orgAdmin && student.organizationId === orgAdmin.organizationId) {
-        canAccessStudent = true
-      }
-    }
-
-    if (!canAccessStudent) {
+    // Tenant-aware access check (ADMIN/TEACHER: all; STUDENT: self;
+    // ORG_ADMIN: same organization)
+    if (!(await canAccessStudent(req, id))) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
 
@@ -309,12 +298,8 @@ router.get('/:id/courses', authenticate, async (req: Request, res: Response) => 
       return res.status(404).json(apiResponse.error('Student not found', 'NOT_FOUND'))
     }
 
-    // Check access
-    const canAccess = req.user?.role === 'ADMIN' ||
-      req.user?.schoolId === student.schoolId ||
-      req.user?.studentId === id
-
-    if (!canAccess) {
+    // Tenant-aware access check
+    if (!(await canAccessStudent(req, id))) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
 
@@ -361,12 +346,8 @@ router.get('/:id/attendance', authenticate, async (req: Request, res: Response) 
       return res.status(404).json(apiResponse.error('Student not found', 'NOT_FOUND'))
     }
 
-    // Check access
-    const canAccess = req.user?.role === 'ADMIN' ||
-      req.user?.schoolId === student.schoolId ||
-      req.user?.studentId === id
-
-    if (!canAccess) {
+    // Tenant-aware access check
+    if (!(await canAccessStudent(req, id))) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
 
@@ -418,12 +399,8 @@ router.get('/:id/feedback', authenticate, async (req: Request, res: Response) =>
       return res.status(404).json(apiResponse.error('Student not found', 'NOT_FOUND'))
     }
 
-    // Check access
-    const canAccess = req.user?.role === 'ADMIN' ||
-      req.user?.schoolId === student.schoolId ||
-      req.user?.studentId === id
-
-    if (!canAccess) {
+    // Tenant-aware access check
+    if (!(await canAccessStudent(req, id))) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
 
@@ -469,12 +446,8 @@ router.get('/:id/stats', authenticate, async (req: Request, res: Response) => {
       return res.status(404).json(apiResponse.error('Student not found', 'NOT_FOUND'))
     }
 
-    // Check access
-    const canAccess = req.user?.role === 'ADMIN' ||
-      req.user?.schoolId === student.schoolId ||
-      req.user?.studentId === id
-
-    if (!canAccess) {
+    // Tenant-aware access check
+    if (!(await canAccessStudent(req, id))) {
       return res.status(403).json(apiResponse.error('Access denied', 'FORBIDDEN'))
     }
 

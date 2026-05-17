@@ -269,8 +269,9 @@ router.get('/:id/employees', authenticate, requireOrgAdmin, requireOrgAccess, as
   }
 })
 
-// POST /:id/employees/invite - Invite employee by email
-router.post('/:id/employees/invite', authenticate, requireOrgAdmin, requireOrgAccess, validateRequest(inviteEmployeeSchema), async (req: Request, res: Response) => {
+// POST /:id/employees/invite - Invite employee by email (Maka admin only;
+// HR is read-only per ASSESSMENT_WORKFLOW.md H8)
+router.post('/:id/employees/invite', authenticate, requireAdmin, validateRequest(inviteEmployeeSchema), async (req: Request, res: Response) => {
   try {
     const { id } = req.params
     const { email, name, languageLevel } = req.body
@@ -396,8 +397,8 @@ router.put('/:id/employees/:studentId', authenticate, requireOrgAdmin, requireOr
   }
 })
 
-// DELETE /:id/employees/:studentId - Remove employee from org
-router.delete('/:id/employees/:studentId', authenticate, requireOrgAdmin, requireOrgAccess, async (req: Request, res: Response) => {
+// DELETE /:id/employees/:studentId - Remove employee from org (Maka admin only)
+router.delete('/:id/employees/:studentId', authenticate, requireAdmin, async (req: Request, res: Response) => {
   try {
     const { id, studentId } = req.params
 
@@ -442,20 +443,18 @@ router.get('/:id/dashboard', authenticate, requireOrgAdmin, requireOrgAccess, as
           status: 'ACTIVE'
         }
       }),
-      prisma.progress.findMany({
-        where: {
-          student: { organizationId: id }
-        },
-        select: { percentage: true }
-      })
+      prisma.progress.aggregate({
+        where: { student: { organizationId: id } },
+        _avg: { percentage: true },
+      }),
     ])
 
     const totalSeatLicenses = seatLicenses.length
     const totalSeats = seatLicenses.reduce((sum, sl) => sum + sl.totalSeats, 0)
     const usedSeats = seatLicenses.reduce((sum, sl) => sum + sl.usedSeats, 0)
 
-    const averageProgress = enrollmentsWithProgress.length > 0
-      ? enrollmentsWithProgress.reduce((sum, p) => sum + Number(p.percentage), 0) / enrollmentsWithProgress.length
+    const averageProgress = enrollmentsWithProgress._avg.percentage
+      ? Number(enrollmentsWithProgress._avg.percentage)
       : 0
 
     const stats = {
@@ -513,10 +512,13 @@ router.get('/:id/payments', authenticate, requireOrgAdmin, requireOrgAccess, asy
   }
 })
 
-// Get employee progress report for organization
+// Get employee progress report for organization (paginated)
 router.get('/:id/reports', authenticate, requireOrgAdmin, requireOrgAccess, async (req: Request, res: Response) => {
   try {
     const { id } = req.params
+    const { page, limit } = req.query
+    const pageNum = Math.max(1, parseInt((page as string) || '1') || 1)
+    const limitNum = Math.min(200, Math.max(1, parseInt((limit as string) || '50') || 50))
 
     const employees = await prisma.student.findMany({
       where: { organizationId: id, deletedAt: null },
@@ -534,7 +536,10 @@ router.get('/:id/reports', authenticate, requireOrgAdmin, requireOrgAccess, asyn
           },
           orderBy: { updatedAt: 'desc' }
         }
-      }
+      },
+      orderBy: { createdAt: 'desc' },
+      skip: (pageNum - 1) * limitNum,
+      take: limitNum,
     })
 
     const report = employees.map(emp => {
@@ -585,21 +590,18 @@ router.get('/:id/reports', authenticate, requireOrgAdmin, requireOrgAccess, asyn
 router.get('/:id/assessments', authenticate, requireOrgAdmin, requireOrgAccess, async (req: Request, res: Response) => {
   try {
     const { id } = req.params
-    const { status, language } = req.query
+    const { status, language, page, limit } = req.query
+    const pageNum = Math.max(1, parseInt((page as string) || '1') || 1)
+    const limitNum = Math.min(200, Math.max(1, parseInt((limit as string) || '50') || 50))
 
-    // Get all students in this org
-    const students = await prisma.student.findMany({
-      where: { organizationId: id, deletedAt: null as any },
-      select: { id: true }
-    })
-    const studentIds = students.map(s => s.id)
-
-    if (studentIds.length === 0) {
-      return res.json(apiResponse.success([]))
+    // Single query via student relation filter — no separate student lookup.
+    const where: any = { student: { organizationId: id, deletedAt: null as any } }
+    if (status) {
+      where.status = status as string
+    } else if (req.user?.role !== 'ADMIN') {
+      // HR doesn't triage approvals — those live in Maka's own queue.
+      where.status = { not: 'REQUESTED' }
     }
-
-    const where: any = { studentId: { in: studentIds } }
-    if (status) where.status = status as string
     if (language) where.language = language as string
 
     const assessments = await prisma.assessment.findMany({
@@ -608,7 +610,10 @@ router.get('/:id/assessments', authenticate, requireOrgAdmin, requireOrgAccess, 
         student: { include: { user: { select: { name: true, email: true } } } },
         sections: { orderBy: { orderIndex: 'asc' } },
       },
-      orderBy: { createdAt: 'desc' },
+      // Assessment has no createdAt; order by assignedAt then startedAt
+      orderBy: [{ assignedAt: 'desc' }, { startedAt: 'desc' }],
+      skip: (pageNum - 1) * limitNum,
+      take: limitNum,
     })
 
     const result = assessments.map(a => ({

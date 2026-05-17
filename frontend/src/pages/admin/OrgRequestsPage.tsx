@@ -38,7 +38,7 @@ export default function OrgRequestsPage() {
   const { data: requests = [], isLoading } = useQuery(
     'org-requests',
     () => authApi.listOrgRequests() as Promise<PendingOrgRequest[]>,
-    { refetchInterval: 30000 }
+    { refetchInterval: 60000 }
   )
 
   const invalidate = () => {

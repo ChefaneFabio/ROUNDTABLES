@@ -32,7 +32,7 @@ export default function TestRequestsPage() {
   const { data: requests = [], isLoading } = useQuery(
     'test-requests',
     () => assessmentApi.listPendingTestRequests() as Promise<PendingRequest[]>,
-    { refetchInterval: 30000 }
+    { refetchInterval: 60000 }
   )
 
   const invalidate = () => {

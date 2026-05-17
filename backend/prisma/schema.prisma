@@ -61,6 +61,8 @@ model User {
 
   @@index([email])
   @@index([role])
+  // /admin/org-requests polls every 30s on (role=ORG_ADMIN, isActive=false)
+  @@index([role, isActive])
   @@map("users")
 }
 
@@ -223,6 +225,8 @@ model Student {
   @@index([userId])
   @@index([schoolId])
   @@index([organizationId])
+  // Soft-delete-aware org employee lists
+  @@index([organizationId, deletedAt])
   @@map("students")
 }
 
@@ -1185,6 +1189,10 @@ model Assessment {
   @@index([studentId])
   @@index([language])
   @@index([studentId, language])
+  // Hot paths: admin queues, polled badge counts, listings ordered by recency
+  @@index([status])
+  @@index([isMultiSkill, status, assignedAt])
+  @@index([status, startedAt])
   @@map("assessments")
 }
 
@@ -1259,6 +1267,7 @@ model AssessmentSection {
 
   @@unique([assessmentId, skill])
   @@index([assessmentId])
+  @@index([status])
   @@map("assessment_sections")
 }
 
