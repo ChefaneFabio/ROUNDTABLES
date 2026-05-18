@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
-import { ArrowLeft, ClipboardCheck, Clock, CheckCircle, XCircle, Plus, ShieldAlert } from 'lucide-react'
+import { ArrowLeft, ClipboardCheck, Clock, CheckCircle, XCircle, Plus, ShieldAlert, TrendingUp, ArrowRight } from 'lucide-react'
 import { assessmentApi } from '../services/assessmentApi'
 import { studentsApi } from '../services/api'
 import { LoadingPage } from '../components/common/LoadingSpinner'
@@ -109,6 +109,9 @@ export function StudentAssessmentsPage() {
           Assign Placement Test
         </button>
       </div>
+
+      {/* Progress over time — only shown when there are 2+ completed tests */}
+      <ProgressStrip assessments={assessments || []} />
 
       {/* Assessments List */}
       <Card>
@@ -239,3 +242,103 @@ export function StudentAssessmentsPage() {
 }
 
 export default StudentAssessmentsPage
+
+// ─── Progress over time strip ──────────────────────────────────────────
+// When a learner has completed 2+ placement tests, show a compact strip
+// comparing their CEFR levels and percentages between the first and the
+// most recent test. Helps Maka see at a glance whether the learner is
+// improving (or regressing) without scrolling through individual results.
+const CEFR_ORDER = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+
+function ProgressStrip({ assessments }: { assessments: any[] }) {
+  const completed = (assessments || [])
+    .filter(a => a.status === 'COMPLETED' && a.cefrLevel && a.completedAt)
+    .sort((x, y) => new Date(x.completedAt).getTime() - new Date(y.completedAt).getTime())
+
+  if (completed.length < 2) return null
+
+  const first = completed[0]
+  const latest = completed[completed.length - 1]
+  const firstIdx = CEFR_ORDER.indexOf(first.cefrLevel)
+  const latestIdx = CEFR_ORDER.indexOf(latest.cefrLevel)
+  const delta = latestIdx - firstIdx
+  const scoreDelta = (latest.score ?? 0) - (first.score ?? 0)
+
+  const deltaColor = delta > 0 ? 'text-green-700 bg-green-50 border-green-200'
+    : delta < 0 ? 'text-red-700 bg-red-50 border-red-200'
+    : 'text-gray-700 bg-gray-50 border-gray-200'
+
+  return (
+    <Card>
+      <div className="flex items-center gap-3 mb-3">
+        <TrendingUp className="w-5 h-5 text-primary-600" />
+        <h2 className="text-lg font-semibold text-gray-900">Progress over time</h2>
+        <span className="text-xs text-gray-500">({completed.length} completed tests)</span>
+      </div>
+      <div className="flex items-center gap-4 flex-wrap">
+        {/* First test pill */}
+        <div className="flex-1 min-w-[140px]">
+          <p className="text-xs text-gray-500 mb-1">First test</p>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl font-bold text-gray-900">{first.cefrLevel}</span>
+            <span className="text-sm text-gray-500">· {first.score ?? '—'}%</span>
+          </div>
+          <p className="text-xs text-gray-400 mt-1">
+            {new Date(first.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+          </p>
+        </div>
+
+        <ArrowRight className="w-5 h-5 text-gray-300" />
+
+        {/* Latest test pill */}
+        <div className="flex-1 min-w-[140px]">
+          <p className="text-xs text-gray-500 mb-1">Latest test</p>
+          <div className="flex items-center gap-2">
+            <span className="text-2xl font-bold text-gray-900">{latest.cefrLevel}</span>
+            <span className="text-sm text-gray-500">· {latest.score ?? '—'}%</span>
+          </div>
+          <p className="text-xs text-gray-400 mt-1">
+            {new Date(latest.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+          </p>
+        </div>
+
+        {/* Delta badge */}
+        <div className={`px-3 py-2 rounded-lg border ${deltaColor}`}>
+          <p className="text-xs uppercase tracking-wide font-semibold">Change</p>
+          <p className="text-sm font-bold mt-0.5">
+            {delta === 0 ? 'Same level' : `${delta > 0 ? '+' : ''}${delta} level${Math.abs(delta) !== 1 ? 's' : ''}`}
+          </p>
+          <p className="text-xs">
+            {scoreDelta > 0 ? '+' : ''}{scoreDelta}% score
+          </p>
+        </div>
+      </div>
+
+      {/* CEFR ladder visualization */}
+      <div className="mt-4">
+        <div className="flex justify-between">
+          {CEFR_ORDER.map((level, i) => {
+            const isFirst = i === firstIdx
+            const isLatest = i === latestIdx
+            const isBetween = (firstIdx < latestIdx && i > firstIdx && i < latestIdx)
+            return (
+              <div key={level} className="flex flex-col items-center flex-1">
+                <div className={`w-3 h-3 rounded-full ${
+                  isLatest ? 'bg-primary-600 ring-4 ring-primary-200'
+                  : isFirst ? 'bg-gray-400'
+                  : isBetween ? 'bg-primary-300'
+                  : 'bg-gray-200'
+                }`} />
+                <span className={`text-xs mt-1 ${
+                  isLatest ? 'font-bold text-primary-700'
+                  : isFirst ? 'font-medium text-gray-700'
+                  : 'text-gray-400'
+                }`}>{level}</span>
+              </div>
+            )
+          })}
+        </div>
+      </div>
+    </Card>
+  )
+}

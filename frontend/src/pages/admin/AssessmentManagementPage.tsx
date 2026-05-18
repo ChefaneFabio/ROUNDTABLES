@@ -94,7 +94,10 @@ export default function AssessmentManagementPage() {
         language: filterLanguage || undefined,
         status: filterStatus || undefined,
       }),
-    { refetchInterval: 60000 }
+    // Poll every 15s so the live progress bar updates while a learner is
+    // taking a test. Backend payload stays bounded (limit=50 by default,
+    // cap=200) so the cost is small.
+    { refetchInterval: 15000 }
   )
 
   const filtered = assessments?.filter((a: any) => {
@@ -361,23 +364,7 @@ export default function AssessmentManagementPage() {
                       </span>
                     </td>
                     <td className="py-3 px-4 hidden md:table-cell">
-                      <div className="flex gap-1">
-                        {a.sections?.map((s: any) => (
-                          <span
-                            key={s.id}
-                            title={`${s.skill}: ${s.status}${s.cefrLevel ? ` (${s.cefrLevel})` : ''}`}
-                            className={`w-6 h-6 rounded text-xs flex items-center justify-center font-medium ${
-                              s.status === 'COMPLETED'
-                                ? 'bg-green-100 text-green-700'
-                                : s.status === 'IN_PROGRESS'
-                                ? 'bg-blue-100 text-blue-700'
-                                : 'bg-gray-100 text-gray-400'
-                            }`}
-                          >
-                            {s.skill?.charAt(0)}
-                          </span>
-                        ))}
-                      </div>
+                      <SectionProgress sections={a.sections} status={a.status} />
                     </td>
                     <td className="py-3 px-4 hidden sm:table-cell">
                       {a.status === 'COMPLETED' ? (
@@ -389,6 +376,8 @@ export default function AssessmentManagementPage() {
                             </span>
                           )}
                         </div>
+                      ) : a.status === 'IN_PROGRESS' || a.status === 'PAUSED' ? (
+                        <OverallProgress sections={a.sections} />
                       ) : (
                         <span className="text-gray-400">--</span>
                       )}
@@ -482,6 +471,88 @@ export default function AssessmentManagementPage() {
           onError={(msg: string) => setError(msg)}
         />
       )}
+    </div>
+  )
+}
+
+// ─── Section-by-section progress for an in-progress test ───────────────
+// Shows R / L / W / S pills with a tiny fill bar beneath each, so Maka can
+// see at a glance "Reading is done, Listening is half-way, Writing not
+// started" without opening the test detail.
+function SectionProgress({ sections }: { sections: any[]; status: string }) {
+  if (!sections || sections.length === 0) return <span className="text-gray-400 text-xs">--</span>
+  return (
+    <div className="flex gap-1.5">
+      {sections.map(s => {
+        const answers = Array.isArray(s.answers) ? s.answers.length : 0
+        const total = s.questionsLimit || 0
+        const pct = total > 0 ? Math.min(100, Math.round((answers / total) * 100)) : 0
+
+        // Color logic mirrors status; in-progress shows blue with the
+        // partial fill, completed is green, pending is gray.
+        const isDone = s.status === 'COMPLETED'
+        const isLive = s.status === 'IN_PROGRESS'
+        const pillBg = isDone ? 'bg-green-100 text-green-700'
+          : isLive ? 'bg-blue-100 text-blue-700'
+          : 'bg-gray-100 text-gray-400'
+        const barBg = isDone ? 'bg-green-500'
+          : isLive ? 'bg-blue-500'
+          : 'bg-gray-300'
+
+        const elapsed = s.startedAt && !isDone
+          ? Math.max(0, Math.round((Date.now() - new Date(s.startedAt).getTime()) / 60000))
+          : null
+        const tooltip = [
+          `${s.skill}: ${s.status}`,
+          total > 0 ? `${answers}/${total} questions` : null,
+          s.cefrLevel ? `Level: ${s.cefrLevel}` : null,
+          s.percentageScore != null ? `Score: ${s.percentageScore}%` : null,
+          elapsed != null ? `${elapsed}m elapsed of ${s.timeLimitMin}m` : null,
+        ].filter(Boolean).join(' · ')
+
+        return (
+          <div key={s.id} title={tooltip} className="flex flex-col items-center gap-0.5">
+            <span className={`w-6 h-6 rounded text-xs flex items-center justify-center font-medium ${pillBg}`}>
+              {s.skill?.charAt(0)}
+            </span>
+            <div className="w-6 h-1 rounded-full bg-gray-100 overflow-hidden">
+              <div
+                className={`h-full ${barBg} transition-all`}
+                style={{ width: `${isDone ? 100 : pct}%` }}
+              />
+            </div>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+// ─── Overall test-completion bar for in-progress assessments ──────────
+// Replaces the "--" placeholder in the Score column with a slim bar
+// showing total questions answered across all sections.
+function OverallProgress({ sections }: { sections: any[] }) {
+  if (!sections || sections.length === 0) return <span className="text-gray-400 text-xs">--</span>
+  const { answered, total } = sections.reduce(
+    (acc: { answered: number; total: number }, s: any) => {
+      acc.answered += Array.isArray(s.answers) ? s.answers.length : 0
+      acc.total += s.questionsLimit || 0
+      return acc
+    },
+    { answered: 0, total: 0 }
+  )
+  const pct = total > 0 ? Math.min(100, Math.round((answered / total) * 100)) : 0
+  return (
+    <div className="space-y-1">
+      <div className="flex items-center gap-2 text-xs text-gray-600">
+        <span className="font-medium">{answered}</span>
+        <span className="text-gray-400">/ {total}</span>
+        <span className="text-gray-400">·</span>
+        <span>{pct}%</span>
+      </div>
+      <div className="w-24 h-1.5 rounded-full bg-gray-100 overflow-hidden">
+        <div className="h-full bg-blue-500 transition-all" style={{ width: `${pct}%` }} />
+      </div>
     </div>
   )
 }

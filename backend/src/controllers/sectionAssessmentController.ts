@@ -773,7 +773,17 @@ router.get('/admin/assessments', authenticate, requireTeacher, async (req: Reque
               skill: true,
               status: true,
               cefrLevel: true,
-              percentageScore: true
+              percentageScore: true,
+              // Fields needed by the admin progress bar: we send the answers
+              // array so the frontend can count entries (most sections cap
+              // at ~28 answers — small enough to ship over the wire), plus
+              // timing data for "X minutes elapsed / Y minutes total".
+              answers: true,
+              questionsLimit: true,
+              startedAt: true,
+              expiresAt: true,
+              timeLimitMin: true,
+              completedAt: true,
             }
           }
         },
