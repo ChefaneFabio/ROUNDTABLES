@@ -603,5 +603,36 @@ export const assessmentApi = {
   async updateAssessmentSettings(settings: Record<string, any>): Promise<any> {
     const res = await api.put('/assessments/multi-skill/settings', settings)
     return res.data.data
-  }
+  },
+
+  // ===== Learner-level pre-test (Kate's HubSpot questionnaire) =====
+  // One per learner (not per assessment). Gates self-started placement tests.
+  async getPreTest(): Promise<{
+    completed: boolean
+    completedAt: string | null
+    data: PreTestData | null
+  }> {
+    const res = await api.get('/students/me/pretest')
+    return res.data.data
+  },
+
+  async savePreTest(data: PreTestData): Promise<any> {
+    const res = await api.post('/students/me/pretest', data)
+    return res.data.data
+  },
+}
+
+export type AvailabilitySlot = 'AM' | 'LUNCH' | 'PM' | 'EVENING'
+export type AvailabilityGrid = Partial<Record<
+  'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday',
+  AvailabilitySlot[]
+>>
+export interface PreTestData {
+  needsSpeaking: boolean
+  needsReading: boolean
+  needsWriting: boolean
+  confidence: 'LOW' | 'MEDIUM' | 'HIGH'
+  availability?: AvailabilityGrid
+  jobRole?: string
+  comments?: string
 }

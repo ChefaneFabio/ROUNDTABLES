@@ -146,6 +146,21 @@ router.post('/', authenticate, validateRequest(createMultiSkillSchema), async (r
       return res.status(403).json(apiResponse.error('Only students can take assessments', 'NOT_STUDENT'))
     }
 
+    // Gate: learners must complete the pre-test questionnaire before
+    // requesting a placement test (Kate's HubSpot data). Admin/teacher
+    // assignments bypass this check (they create the assessment for the
+    // learner via /assign), so it only applies to self-started requests.
+    const student = await prisma.student.findUnique({
+      where: { id: req.user.studentId },
+      select: { preTestCompletedAt: true }
+    })
+    if (!student?.preTestCompletedAt) {
+      return res.status(412).json(apiResponse.error(
+        'Pre-test questionnaire required before requesting a placement test',
+        'PRETEST_REQUIRED'
+      ))
+    }
+
     const assessment = await sectionAssessmentService.createMultiSkillAssessment({
       studentId: req.user.studentId,
       language: req.body.language

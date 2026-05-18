@@ -194,6 +194,87 @@ router.get('/:id', authenticate, async (req: Request, res: Response) => {
   }
 })
 
+// =====================================================================
+// Pre-test form (Kate's HubSpot pre-registration questionnaire)
+// =====================================================================
+//
+// Captured before a learner can request a placement test. Stored on the
+// Student row as a JSON blob so the form can evolve without schema churn.
+//
+// Shape:
+//   {
+//     needsSpeaking: boolean,
+//     needsReading:  boolean,
+//     needsWriting:  boolean,
+//     confidence:    'LOW' | 'MEDIUM' | 'HIGH',
+//     availability:  { monday: ['AM','LUNCH','PM','EVENING'], ... },
+//     jobRole:       string,
+//     comments:      string
+//   }
+
+const SLOTS = ['AM', 'LUNCH', 'PM', 'EVENING'] as const
+const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const
+
+const preTestSchema = Joi.object({
+  needsSpeaking: Joi.boolean().required(),
+  needsReading: Joi.boolean().required(),
+  needsWriting: Joi.boolean().required(),
+  confidence: Joi.string().valid('LOW', 'MEDIUM', 'HIGH').required(),
+  availability: Joi.object().pattern(
+    Joi.string().valid(...DAYS),
+    Joi.array().items(Joi.string().valid(...SLOTS)).unique()
+  ).optional(),
+  jobRole: Joi.string().max(200).optional().allow(''),
+  comments: Joi.string().max(2000).optional().allow(''),
+})
+
+// GET /me/pretest - Read current learner's pre-test answers
+router.get('/me/pretest', authenticate, async (req: Request, res: Response) => {
+  try {
+    if (req.user?.role !== 'STUDENT' || !req.user?.studentId) {
+      return res.status(403).json(apiResponse.error('Only learners can access this endpoint', 'FORBIDDEN'))
+    }
+    const student = await prisma.student.findFirst({
+      where: { id: req.user.studentId, deletedAt: null },
+      select: { id: true, preTestData: true, preTestCompletedAt: true }
+    })
+    if (!student) {
+      return res.status(404).json(apiResponse.error('Student profile not found', 'NOT_FOUND'))
+    }
+    res.json(apiResponse.success({
+      completed: !!student.preTestCompletedAt,
+      completedAt: student.preTestCompletedAt,
+      data: student.preTestData ?? null,
+    }))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// POST /me/pretest - Save current learner's pre-test answers
+router.post('/me/pretest', authenticate, validateRequest(preTestSchema), async (req: Request, res: Response) => {
+  try {
+    if (req.user?.role !== 'STUDENT' || !req.user?.studentId) {
+      return res.status(403).json(apiResponse.error('Only learners can submit a pre-test', 'FORBIDDEN'))
+    }
+    const updated = await prisma.student.update({
+      where: { id: req.user.studentId },
+      data: {
+        preTestData: req.body,
+        preTestCompletedAt: new Date(),
+      },
+      select: { id: true, preTestData: true, preTestCompletedAt: true }
+    })
+    res.json(apiResponse.success({
+      completed: true,
+      completedAt: updated.preTestCompletedAt,
+      data: updated.preTestData,
+    }, 'Pre-test saved'))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
 // Get current student profile
 router.get('/me/profile', authenticate, async (req: Request, res: Response) => {
   try {

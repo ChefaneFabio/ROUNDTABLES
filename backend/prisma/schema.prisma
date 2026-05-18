@@ -188,6 +188,13 @@ model Student {
   updatedAt     DateTime      @updatedAt
   deletedAt     DateTime? // Soft delete
 
+  // Pre-test (Kate's HubSpot pre-registration data)
+  // { needsSpeaking, needsReading, needsWriting, confidence, availability, jobRole, comments }
+  // confidence: "LOW" | "MEDIUM" | "HIGH"
+  // availability: { monday: ["AM","LUNCH","PM","EVENING"], tuesday: [...], ... }
+  preTestData        Json?
+  preTestCompletedAt DateTime?
+
   // User account
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)

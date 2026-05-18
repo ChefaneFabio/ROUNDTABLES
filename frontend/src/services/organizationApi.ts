@@ -49,6 +49,24 @@ export const organizationApi = {
     return response.data.data
   },
 
+  async bulkUploadEmployees(orgId: string, file: File, sendInvites: boolean): Promise<any> {
+    const fd = new FormData()
+    fd.append('file', file)
+    fd.append('sendInvites', sendInvites ? 'true' : 'false')
+    const response = await api.post(`/organizations/${orgId}/employees/bulk-upload`, fd, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      timeout: 120000,
+    })
+    return response.data.data
+  },
+
+  async downloadBulkTemplate(orgId: string): Promise<Blob> {
+    const response = await api.get(`/organizations/${orgId}/employees/bulk-template`, {
+      responseType: 'blob',
+    })
+    return response.data
+  },
+
   async removeEmployee(orgId: string, studentId: string): Promise<void> {
     await api.delete(`/organizations/${orgId}/employees/${studentId}`)
   },

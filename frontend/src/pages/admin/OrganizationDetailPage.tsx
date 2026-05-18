@@ -3,7 +3,8 @@ import { useParams, Link } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import {
   ArrowLeft, Building2, Users, Mail, Phone, MapPin, Plus,
-  Trash2, Edit2, Link2, X, Globe, GraduationCap, Send
+  Trash2, Edit2, Link2, X, Globe, GraduationCap, Send,
+  Upload, Download, FileSpreadsheet, CheckCircle2, AlertCircle
 } from 'lucide-react'
 import { organizationContactsApi, coursesApi } from '../../services/api'
 import { organizationApi } from '../../services/organizationApi'
@@ -17,6 +18,7 @@ export default function OrganizationDetailPage() {
   const [showLinkCourses, setShowLinkCourses] = useState<string | null>(null)
   const [showAssignTest, setShowAssignTest] = useState(false)
   const [showInviteLearner, setShowInviteLearner] = useState(false)
+  const [showBulkUpload, setShowBulkUpload] = useState(false)
 
   const { data: employeesResp, isLoading: employeesLoading } = useQuery(
     ['org-employees', orgId],
@@ -255,6 +257,14 @@ export default function OrganizationDetailPage() {
               Invite Learner
             </button>
             <button
+              onClick={() => setShowBulkUpload(true)}
+              className="flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-300 text-gray-700 text-sm rounded-lg hover:bg-gray-50"
+              title="Upload a roster file (.xlsx or .csv) to create many learners at once"
+            >
+              <FileSpreadsheet className="h-4 w-4" />
+              Bulk Upload
+            </button>
+            <button
               onClick={() => setShowAssignTest(true)}
               disabled={employees.length === 0}
               className="flex items-center gap-1.5 px-3 py-2 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -330,6 +340,16 @@ export default function OrganizationDetailPage() {
             setShowInviteLearner(false)
             queryClient.invalidateQueries(['org-employees', orgId])
           }}
+        />
+      )}
+
+      {/* Bulk Upload Modal */}
+      {showBulkUpload && (
+        <BulkUploadModal
+          orgId={orgId!}
+          orgName={organization?.name || 'Company'}
+          onClose={() => setShowBulkUpload(false)}
+          onSuccess={() => queryClient.invalidateQueries(['org-employees', orgId])}
         />
       )}
 
@@ -911,6 +931,235 @@ function InviteLearnerModal({
             </button>
           </div>
         </form>
+      </div>
+    </div>
+  )
+}
+
+// ============================================================
+// Bulk Upload Modal — upload an Excel/CSV roster
+// ============================================================
+function BulkUploadModal({
+  orgId,
+  orgName,
+  onClose,
+  onSuccess,
+}: {
+  orgId: string
+  orgName: string
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  const [file, setFile] = useState<File | null>(null)
+  const [sendInvites, setSendInvites] = useState(true)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [result, setResult] = useState<{
+    total: number
+    created: number
+    skipped: number
+    errored: number
+    results: Array<{ row: number; status: 'created' | 'skipped' | 'error'; email: string; reason?: string }>
+  } | null>(null)
+
+  const handleTemplate = async () => {
+    try {
+      const blob = await organizationApi.downloadBulkTemplate(orgId)
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `${orgName.replace(/[^a-z0-9_-]+/gi, '_')}_learners_template.xlsx`
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+    } catch (e: any) {
+      setError('Failed to download template')
+    }
+  }
+
+  const handleUpload = async () => {
+    if (!file) return
+    setLoading(true)
+    setError('')
+    setResult(null)
+    try {
+      const data = await organizationApi.bulkUploadEmployees(orgId, file, sendInvites)
+      setResult(data)
+      if (data.created > 0) onSuccess()
+    } catch (e: any) {
+      setError(e.response?.data?.error || 'Upload failed')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col">
+        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Bulk upload learners</h3>
+            <p className="text-xs text-gray-500 mt-0.5">{orgName}</p>
+          </div>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="p-6 space-y-4 overflow-y-auto">
+          {!result && (
+            <>
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-2">
+                <p className="text-sm font-medium text-gray-700">Excel format</p>
+                <p className="text-xs text-gray-600">
+                  Required columns: <code className="bg-white px-1.5 py-0.5 rounded">first_name</code>,{' '}
+                  <code className="bg-white px-1.5 py-0.5 rounded">last_name</code>,{' '}
+                  <code className="bg-white px-1.5 py-0.5 rounded">email</code>,{' '}
+                  <code className="bg-white px-1.5 py-0.5 rounded">language</code>.
+                </p>
+                <p className="text-xs text-gray-600">
+                  Optional: <code className="bg-white px-1 rounded">phone</code>,{' '}
+                  <code className="bg-white px-1 rounded">job_role</code>,{' '}
+                  <code className="bg-white px-1 rounded">language_level</code>,{' '}
+                  <code className="bg-white px-1 rounded">needs_speaking</code>,{' '}
+                  <code className="bg-white px-1 rounded">needs_reading</code>,{' '}
+                  <code className="bg-white px-1 rounded">needs_writing</code>,{' '}
+                  <code className="bg-white px-1 rounded">confidence</code>,{' '}
+                  <code className="bg-white px-1 rounded">comments</code>.
+                </p>
+                <button
+                  type="button"
+                  onClick={handleTemplate}
+                  className="inline-flex items-center gap-1.5 text-sm text-indigo-600 hover:text-indigo-800 font-medium"
+                >
+                  <Download className="h-4 w-4" />
+                  Download template
+                </button>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Roster file</label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-indigo-400 transition-colors">
+                  <input
+                    type="file"
+                    id="bulk-file"
+                    accept=".xlsx,.xls,.csv"
+                    onChange={e => setFile(e.target.files?.[0] || null)}
+                    className="hidden"
+                  />
+                  <label htmlFor="bulk-file" className="cursor-pointer">
+                    <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                    {file ? (
+                      <p className="text-sm text-gray-900 font-medium">{file.name}</p>
+                    ) : (
+                      <>
+                        <p className="text-sm text-gray-900 font-medium">Choose .xlsx, .xls or .csv file</p>
+                        <p className="text-xs text-gray-500 mt-1">Up to 1000 rows, 5 MB max</p>
+                      </>
+                    )}
+                  </label>
+                </div>
+              </div>
+
+              <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={sendInvites}
+                  onChange={e => setSendInvites(e.target.checked)}
+                  className="rounded"
+                />
+                Send invite email with temporary password to each new learner
+              </label>
+
+              {error && (
+                <p className="text-sm text-red-600 bg-red-50 px-3 py-2 rounded-lg">{error}</p>
+              )}
+            </>
+          )}
+
+          {result && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-3 gap-3">
+                <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                  <div className="flex items-center gap-2 text-green-700">
+                    <CheckCircle2 className="h-4 w-4" />
+                    <span className="text-xs font-medium uppercase">Created</span>
+                  </div>
+                  <p className="text-2xl font-bold text-green-900 mt-1">{result.created}</p>
+                </div>
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                  <div className="flex items-center gap-2 text-amber-700">
+                    <AlertCircle className="h-4 w-4" />
+                    <span className="text-xs font-medium uppercase">Skipped</span>
+                  </div>
+                  <p className="text-2xl font-bold text-amber-900 mt-1">{result.skipped}</p>
+                </div>
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3">
+                  <div className="flex items-center gap-2 text-red-700">
+                    <X className="h-4 w-4" />
+                    <span className="text-xs font-medium uppercase">Errored</span>
+                  </div>
+                  <p className="text-2xl font-bold text-red-900 mt-1">{result.errored}</p>
+                </div>
+              </div>
+
+              {(result.skipped + result.errored) > 0 && (
+                <div className="border border-gray-200 rounded-lg overflow-hidden">
+                  <div className="bg-gray-50 px-3 py-2 text-xs font-medium text-gray-700">Issues</div>
+                  <div className="max-h-64 overflow-y-auto divide-y divide-gray-100">
+                    {result.results
+                      .filter(r => r.status !== 'created')
+                      .map((r, i) => (
+                        <div key={i} className="px-3 py-2 text-xs flex items-start gap-2">
+                          <span className={`mt-0.5 inline-block w-12 text-right font-mono ${r.status === 'error' ? 'text-red-600' : 'text-amber-600'}`}>
+                            Row {r.row}
+                          </span>
+                          <span className="text-gray-600 truncate flex-1">{r.email || '—'}</span>
+                          <span className="text-gray-500">{r.reason}</span>
+                        </div>
+                      ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        <div className="px-6 py-4 border-t border-gray-200 flex justify-end gap-3">
+          {!result ? (
+            <>
+              <button
+                onClick={onClose}
+                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleUpload}
+                disabled={!file || loading}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50"
+              >
+                {loading ? 'Uploading...' : 'Upload'}
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => { setResult(null); setFile(null) }}
+                className="px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+              >
+                Upload another
+              </button>
+              <button
+                onClick={onClose}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+              >
+                Done
+              </button>
+            </>
+          )}
+        </div>
       </div>
     </div>
   )

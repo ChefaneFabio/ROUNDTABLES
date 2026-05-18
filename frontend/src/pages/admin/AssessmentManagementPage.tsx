@@ -123,15 +123,15 @@ export default function AssessmentManagementPage() {
     }
   }
 
-  const handleExportXlsx = async () => {
-    if (selectedIds.size === 0) return
+  const handleExportXlsx = async (ids?: string[]) => {
+    const targetIds = ids ?? Array.from(selectedIds)
+    if (targetIds.length === 0) return
     try {
       setExporting(true)
       const response = await api.post('/analytics/export/assessments/xlsx', {
-        assessmentIds: Array.from(selectedIds),
+        assessmentIds: targetIds,
       }, { responseType: 'blob' })
 
-      // Trigger download
       const blob = new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' })
       const url = window.URL.createObjectURL(blob)
       const a = document.createElement('a')
@@ -139,14 +139,18 @@ export default function AssessmentManagementPage() {
       a.download = `assessment-results-${new Date().toISOString().slice(0, 10)}.xlsx`
       a.click()
       window.URL.revokeObjectURL(url)
-      setSuccessMsg(`Exported ${selectedIds.size} assessment(s)`)
+      setSuccessMsg(`Exported ${targetIds.length} assessment(s)`)
       setTimeout(() => setSuccessMsg(''), 3000)
     } catch (err: any) {
-      setError('Failed to export. Make sure selected assessments are completed.')
+      setError('Failed to export. Make sure the assessments are completed.')
     } finally {
       setExporting(false)
     }
   }
+
+  // "Export all completed" — flat shortcut so Sara doesn't need to know about
+  // the per-row checkboxes when she just wants every completed test.
+  const completedVisible = filtered?.filter((a: any) => a.status === 'COMPLETED') ?? []
 
   const handleDownloadTestPdf = async (language: string, skill?: string) => {
     try {
@@ -177,9 +181,9 @@ export default function AssessmentManagementPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {selectedIds.size > 0 && (
+          {selectedIds.size > 0 ? (
             <Button
-              onClick={handleExportXlsx}
+              onClick={() => handleExportXlsx()}
               disabled={exporting}
               variant="secondary"
               className="flex items-center gap-2"
@@ -187,7 +191,18 @@ export default function AssessmentManagementPage() {
               <Download className="w-4 h-4" />
               {exporting ? 'Exporting...' : `Export ${selectedIds.size} to XLSX`}
             </Button>
-          )}
+          ) : completedVisible.length > 0 ? (
+            <Button
+              onClick={() => handleExportXlsx(completedVisible.map((a: any) => a.id))}
+              disabled={exporting}
+              variant="secondary"
+              className="flex items-center gap-2"
+              title="Export every completed test currently shown"
+            >
+              <Download className="w-4 h-4" />
+              {exporting ? 'Exporting...' : `Export all ${completedVisible.length} completed`}
+            </Button>
+          ) : null}
           <div className="relative">
             <Button variant="outline" onClick={() => setShowTestPdfMenu(!showTestPdfMenu)} className="flex items-center gap-2">
               <FileText className="w-4 h-4" />

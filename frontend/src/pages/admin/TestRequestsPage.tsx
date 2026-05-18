@@ -28,6 +28,7 @@ export default function TestRequestsPage() {
   const [error, setError] = useState<string | null>(null)
   const [denyingId, setDenyingId] = useState<string | null>(null)
   const [denyReason, setDenyReason] = useState('')
+  const [confirmApprove, setConfirmApprove] = useState<PendingRequest | null>(null)
 
   const { data: requests = [], isLoading } = useQuery(
     'test-requests',
@@ -42,7 +43,7 @@ export default function TestRequestsPage() {
   const approveMutation = useMutation(
     (id: string) => assessmentApi.approveTestRequest(id),
     {
-      onSuccess: invalidate,
+      onSuccess: () => { invalidate(); setConfirmApprove(null) },
       onError: (err: any) => setError(err.response?.data?.error || err.message),
     }
   )
@@ -92,6 +93,56 @@ export default function TestRequestsPage() {
           <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
           <span>{error}</span>
           <button onClick={() => setError(null)} className="ml-auto text-red-600 hover:text-red-800">×</button>
+        </div>
+      )}
+
+      {confirmApprove && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setConfirmApprove(null)}>
+          <div className="bg-white rounded-xl shadow-xl max-w-md w-full" onClick={e => e.stopPropagation()}>
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Approve placement test?</h3>
+            </div>
+            <div className="px-6 py-5 space-y-3">
+              <p className="text-sm text-gray-600">
+                You are about to approve a placement test request. The learner below will receive an
+                email and be allowed to start the test.
+              </p>
+              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 space-y-2 text-sm">
+                <div className="flex justify-between gap-3">
+                  <span className="text-gray-500">Learner</span>
+                  <span className="font-semibold text-gray-900 text-right">{confirmApprove.student?.user?.name || '—'}</span>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <span className="text-gray-500">Email</span>
+                  <span className="text-gray-900 text-right">{confirmApprove.student?.user?.email || '—'}</span>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <span className="text-gray-500">Company</span>
+                  <span className="text-gray-900 text-right">{confirmApprove.student?.organization?.name || 'No organization'}</span>
+                </div>
+                <div className="flex justify-between gap-3">
+                  <span className="text-gray-500">Language</span>
+                  <span className="font-semibold text-blue-700 text-right">{confirmApprove.language}</span>
+                </div>
+              </div>
+            </div>
+            <div className="px-6 py-4 border-t border-gray-200 flex justify-end gap-2">
+              <button
+                onClick={() => setConfirmApprove(null)}
+                className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-lg"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => approveMutation.mutate(confirmApprove.id)}
+                disabled={approveMutation.isLoading}
+                className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50"
+              >
+                <CheckCircle className="w-4 h-4" />
+                {approveMutation.isLoading ? 'Approving...' : 'Approve'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
@@ -184,7 +235,7 @@ export default function TestRequestsPage() {
                             Deny
                           </button>
                           <button
-                            onClick={() => approveMutation.mutate(r.id)}
+                            onClick={() => setConfirmApprove(r)}
                             disabled={busy}
                             className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-semibold text-white bg-green-600 rounded-lg hover:bg-green-700 disabled:opacity-50"
                           >

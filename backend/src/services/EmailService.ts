@@ -335,9 +335,19 @@ class EmailService {
     note?: string                            // optional plain-text footer (one paragraph)
     to?: string                              // override; defaults to MAKA_RESULTS_EMAIL or training@makaitalia.com
   }): Promise<{ messageId: string } | null> {
-    if (!this.isConfigured()) return null
+    if (!this.isConfigured()) {
+      // Sara at Maka reported never receiving these notifications; the silent
+      // return made it impossible to tell whether mails were being skipped or
+      // delivered to spam. Log loudly so Render logs show the cause.
+      console.warn(
+        `[EmailService] Skipping internal event "${params.eventTitle}" for ${params.studentName} — ` +
+        `SMTP not configured. Set SMTP_USER + SMTP_PASSWORD env vars.`
+      )
+      return null
+    }
     const { eventTitle, accentColor, studentName, studentEmail, rows, note } = params
     const to = params.to || process.env.MAKA_RESULTS_EMAIL || 'training@makaitalia.com'
+    console.log(`[EmailService] Sending "${eventTitle}" for ${studentName} → ${to}`)
     const headerColor = accentColor || '#0f172a'
 
     const fullRows = [

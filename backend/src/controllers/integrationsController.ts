@@ -4,6 +4,7 @@ import { requireAdmin } from '../middleware/rbac'
 import { apiResponse, handleError } from '../utils/apiResponse'
 import { hubSpotService } from '../services/HubSpotService'
 import { quickBooksService } from '../services/QuickBooksService'
+import { emailService } from '../services/EmailService'
 
 const router = Router()
 
@@ -18,8 +19,36 @@ router.get('/status', authenticate, requireAdmin, async (req: Request, res: Resp
       quickbooks: {
         configured: quickBooksService.isConfigured(),
         description: 'Accounting — syncs customers, invoices, payments'
+      },
+      email: {
+        configured: emailService.isConfigured(),
+        recipient: process.env.MAKA_RESULTS_EMAIL || 'training@makaitalia.com',
+        smtpUser: process.env.SMTP_USER ? '[set]' : '[missing]',
+        description: 'SMTP — sends approval requests, results, and event notifications to Maka'
       }
     }))
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// Email health check (admin only). Sends a test email to the configured
+// Maka recipient so we can confirm delivery without waiting on a real event.
+router.post('/email/test', authenticate, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    if (!emailService.isConfigured()) {
+      return res.status(503).json(apiResponse.error(
+        'SMTP not configured. Set SMTP_USER and SMTP_PASSWORD env vars.',
+        'SMTP_NOT_CONFIGURED'
+      ))
+    }
+    const to = (req.body?.to as string | undefined) || process.env.MAKA_RESULTS_EMAIL || 'training@makaitalia.com'
+    const info = await emailService.sendEmail({
+      to,
+      subject: '[Maka] Email health check',
+      html: `<p>This is a Maka LMS health-check email. If you're reading this, SMTP delivery to <strong>${to}</strong> is working.</p>`
+    })
+    res.json(apiResponse.success({ to, messageId: info.messageId }, 'Test email sent'))
   } catch (error) {
     handleError(res, error)
   }

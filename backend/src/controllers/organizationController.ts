@@ -2,6 +2,8 @@ import { Router, Request, Response } from 'express'
 import Joi from 'joi'
 import crypto from 'crypto'
 import bcrypt from 'bcryptjs'
+import multer from 'multer'
+import * as XLSX from 'xlsx'
 import { prisma } from '../config/database'
 import { authenticate } from '../middleware/auth'
 import { requireAdmin, requireOrgAdmin, requireOrgAccess } from '../middleware/rbac'
@@ -10,6 +12,13 @@ import { apiResponse, handleError } from '../utils/apiResponse'
 import { PAGINATION } from '../utils/constants'
 import { emailService } from '../services/EmailService'
 import { activityLog } from '../services/ActivityLogService'
+
+// In-memory multer for spreadsheet uploads — bulk roster files are small
+// (a few hundred rows max) and we parse them synchronously.
+const bulkUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB hard cap
+})
 
 const router = Router()
 
@@ -372,6 +381,336 @@ router.post('/:id/employees/invite', authenticate, requireAdmin, validateRequest
     handleError(res, error)
   }
 })
+
+// =====================================================================
+// Bulk learner upload (Maka admin only)
+// =====================================================================
+//
+// HR-sized organizations can have hundreds of employees. The single-row
+// /employees/invite endpoint is fine for ad-hoc additions, but Maka asked
+// for an Excel-driven bulk path so they can drop a roster file from a
+// client and get every learner provisioned in one go.
+//
+// Required columns: first_name, last_name, email, language
+// Optional columns: phone, job_role, language_level, needs_speaking,
+//                   needs_reading, needs_writing, confidence, comments
+//
+// Bulk upload creates learners only — no placement tests are auto-assigned
+// (Maka still triggers those from the org page or from the test-requests
+// queue). Pre-test data captured in the spreadsheet is stored on the
+// Student row so the learner doesn't have to re-fill the questionnaire.
+
+type BulkRowResult =
+  | { row: number; status: 'created'; email: string; studentId: string }
+  | { row: number; status: 'skipped'; email: string; reason: string }
+  | { row: number; status: 'error'; email: string; reason: string }
+
+const SUPPORTED_LANGUAGES = ['English', 'Spanish', 'French', 'German', 'Italian']
+const VALID_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2']
+const VALID_CONFIDENCE = ['LOW', 'MEDIUM', 'HIGH']
+
+function normalizeKey(k: string): string {
+  return String(k || '').trim().toLowerCase().replace(/\s+/g, '_')
+}
+
+function pickRow(row: Record<string, any>, ...aliases: string[]): string | undefined {
+  for (const a of aliases) {
+    const key = normalizeKey(a)
+    for (const k of Object.keys(row)) {
+      if (normalizeKey(k) === key) {
+        const val = row[k]
+        if (val === undefined || val === null || val === '') continue
+        return String(val).trim()
+      }
+    }
+  }
+  return undefined
+}
+
+function parseBool(s: string | undefined): boolean | undefined {
+  if (!s) return undefined
+  const v = s.toLowerCase()
+  if (['y', 'yes', 'true', '1', 'si', 'sì'].includes(v)) return true
+  if (['n', 'no', 'false', '0'].includes(v)) return false
+  return undefined
+}
+
+// GET /:id/employees/bulk-template - Download Excel template
+router.get('/:id/employees/bulk-template', authenticate, requireAdmin, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+
+    const organization = await prisma.organization.findFirst({
+      where: { id, deletedAt: null },
+      select: { id: true, name: true }
+    })
+
+    if (!organization) {
+      return res.status(404).json(apiResponse.error('Organization not found', 'NOT_FOUND'))
+    }
+
+    const example = [
+      {
+        first_name: 'Mario',
+        last_name: 'Rossi',
+        email: 'mario.rossi@example.com',
+        language: 'English',
+        language_level: 'B1',
+        phone: '+39 333 1234567',
+        job_role: 'Sales Manager',
+        needs_speaking: 'Y',
+        needs_reading: 'Y',
+        needs_writing: 'N',
+        confidence: 'MEDIUM',
+        comments: 'Optional notes',
+      },
+    ]
+
+    const wb = XLSX.utils.book_new()
+    const ws = XLSX.utils.json_to_sheet(example, {
+      header: [
+        'first_name', 'last_name', 'email', 'language', 'language_level',
+        'phone', 'job_role', 'needs_speaking', 'needs_reading', 'needs_writing',
+        'confidence', 'comments',
+      ],
+    })
+    XLSX.utils.book_append_sheet(wb, ws, 'Learners')
+
+    const buf: Buffer = XLSX.write(wb, { type: 'buffer', bookType: 'xlsx' })
+
+    const filename = `${organization.name.replace(/[^a-z0-9_-]+/gi, '_')}_learners_template.xlsx`
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`)
+    res.send(buf)
+  } catch (error) {
+    handleError(res, error)
+  }
+})
+
+// POST /:id/employees/bulk-upload - Bulk-create learners from Excel/CSV
+router.post(
+  '/:id/employees/bulk-upload',
+  authenticate,
+  requireAdmin,
+  bulkUpload.single('file'),
+  async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params
+      if (!req.file) {
+        return res.status(400).json(apiResponse.error('No file uploaded', 'NO_FILE'))
+      }
+
+      const organization = await prisma.organization.findFirst({
+        where: { id, deletedAt: null }
+      })
+      if (!organization) {
+        return res.status(404).json(apiResponse.error('Organization not found', 'NOT_FOUND'))
+      }
+
+      // Maka can pass ?sendInvites=false (or form field) for dry-roster imports
+      // that should not spam every learner with a "welcome" email. Default is
+      // to send invites because that's what a typical onboarding wants.
+      const sendInvitesRaw = String(req.body?.sendInvites ?? req.query?.sendInvites ?? 'true').toLowerCase()
+      const sendInvites = sendInvitesRaw !== 'false' && sendInvitesRaw !== '0'
+
+      let rows: Record<string, any>[]
+      try {
+        const wb = XLSX.read(req.file.buffer, { type: 'buffer' })
+        const sheetName = wb.SheetNames[0]
+        if (!sheetName) {
+          return res.status(400).json(apiResponse.error('Spreadsheet has no sheets', 'EMPTY_FILE'))
+        }
+        rows = XLSX.utils.sheet_to_json(wb.Sheets[sheetName], { defval: '' })
+      } catch (e: any) {
+        return res.status(400).json(apiResponse.error(`Could not parse spreadsheet: ${e.message}`, 'PARSE_ERROR'))
+      }
+
+      if (!rows.length) {
+        return res.status(400).json(apiResponse.error('Spreadsheet is empty', 'EMPTY_FILE'))
+      }
+
+      const HARD_LIMIT = 1000
+      if (rows.length > HARD_LIMIT) {
+        return res.status(400).json(apiResponse.error(
+          `Too many rows (${rows.length}). Split into files of ${HARD_LIMIT} or fewer.`,
+          'TOO_LARGE'
+        ))
+      }
+
+      const results: BulkRowResult[] = []
+      const loginUrl = `${process.env.FRONTEND_URL || 'https://roundtables-frontend-final.vercel.app'}/login`
+      const emailConfigured = emailService.isConfigured() && sendInvites
+
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i]
+        const rowNum = i + 2 // +2 because spreadsheet is 1-indexed with a header row
+
+        // Allow either full_name or first_name/last_name
+        const fullName = pickRow(row, 'full_name', 'name')
+        const firstName = pickRow(row, 'first_name', 'firstname', 'given_name')
+        const lastName = pickRow(row, 'last_name', 'lastname', 'surname', 'family_name')
+        const email = pickRow(row, 'email', 'e-mail')?.toLowerCase()
+
+        const name = fullName || [firstName, lastName].filter(Boolean).join(' ').trim()
+
+        if (!email) {
+          results.push({ row: rowNum, status: 'error', email: '', reason: 'Missing email' })
+          continue
+        }
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          results.push({ row: rowNum, status: 'error', email, reason: 'Invalid email format' })
+          continue
+        }
+        if (!name) {
+          results.push({ row: rowNum, status: 'error', email, reason: 'Missing first_name/last_name (or full_name)' })
+          continue
+        }
+
+        const language = pickRow(row, 'language', 'target_language')
+        if (language && !SUPPORTED_LANGUAGES.map(l => l.toLowerCase()).includes(language.toLowerCase())) {
+          results.push({ row: rowNum, status: 'error', email, reason: `Unsupported language '${language}'` })
+          continue
+        }
+
+        const levelRaw = pickRow(row, 'language_level', 'level', 'cefr')
+        let languageLevel: 'A1' | 'A2' | 'B1' | 'B2' | 'C1' | 'C2' | undefined
+        if (levelRaw) {
+          const lvl = levelRaw.toUpperCase()
+          if (!VALID_LEVELS.includes(lvl)) {
+            results.push({ row: rowNum, status: 'error', email, reason: `Invalid level '${levelRaw}'` })
+            continue
+          }
+          languageLevel = lvl as any
+        }
+
+        const phone = pickRow(row, 'phone', 'telephone', 'mobile')
+        const jobRole = pickRow(row, 'job_role', 'role', 'position')
+        const needsSpeaking = parseBool(pickRow(row, 'needs_speaking', 'speaking'))
+        const needsReading = parseBool(pickRow(row, 'needs_reading', 'reading'))
+        const needsWriting = parseBool(pickRow(row, 'needs_writing', 'writing'))
+        const confidenceRaw = pickRow(row, 'confidence', 'self_eval', 'self_evaluation')
+        let confidence: string | undefined
+        if (confidenceRaw) {
+          const c = confidenceRaw.toUpperCase()
+          if (!VALID_CONFIDENCE.includes(c)) {
+            results.push({ row: rowNum, status: 'error', email, reason: `Invalid confidence '${confidenceRaw}' (use LOW/MEDIUM/HIGH)` })
+            continue
+          }
+          confidence = c
+        }
+        const comments = pickRow(row, 'comments', 'notes')
+
+        // Build pre-test data only if any pre-test field is present
+        const preTestData: Record<string, any> = {}
+        if (needsSpeaking !== undefined) preTestData.needsSpeaking = needsSpeaking
+        if (needsReading !== undefined) preTestData.needsReading = needsReading
+        if (needsWriting !== undefined) preTestData.needsWriting = needsWriting
+        if (confidence) preTestData.confidence = confidence
+        if (jobRole) preTestData.jobRole = jobRole
+        if (comments) preTestData.comments = comments
+        if (language) preTestData.language = language
+        const hasPreTest = Object.keys(preTestData).length > 0
+
+        // Email uniqueness
+        const existing = await prisma.user.findUnique({ where: { email } })
+        if (existing) {
+          results.push({ row: rowNum, status: 'skipped', email, reason: 'User with this email already exists' })
+          continue
+        }
+
+        const randomPassword = crypto.randomBytes(12).toString('hex')
+        const hashedPassword = await bcrypt.hash(randomPassword, 12)
+
+        try {
+          const student = await prisma.$transaction(async (tx) => {
+            const user = await tx.user.create({
+              data: {
+                email,
+                name,
+                password: hashedPassword,
+                role: 'STUDENT',
+                ...(phone && { phone }),
+              }
+            })
+            return tx.student.create({
+              data: {
+                userId: user.id,
+                schoolId: organization.schoolId,
+                organizationId: id,
+                ...(languageLevel && { languageLevel }),
+                ...(hasPreTest && {
+                  preTestData,
+                  preTestCompletedAt: new Date(),
+                }),
+              },
+            })
+          })
+
+          results.push({ row: rowNum, status: 'created', email, studentId: student.id })
+
+          if (emailConfigured) {
+            // Fire-and-forget; one failed email shouldn't kill the rest of the batch.
+            emailService.sendEmail({
+              to: email,
+              subject: `You've been enrolled at ${organization.name} — Maka Language Consulting`,
+              html: `
+                <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#111827">
+                  <div style="background:#4f46e5;color:#fff;padding:24px;border-radius:8px 8px 0 0">
+                    <h1 style="margin:0;font-size:22px">Welcome, ${name}</h1>
+                    <p style="margin:6px 0 0;opacity:0.9">Maka Language Consulting</p>
+                  </div>
+                  <div style="padding:24px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 8px 8px">
+                    <p>You have been enrolled in the language learning platform by <strong>${organization.name}</strong>.</p>
+                    <p>You can sign in with these temporary credentials:</p>
+                    <table style="margin:16px 0;font-size:14px">
+                      <tr><td style="padding:4px 12px 4px 0;color:#6b7280">Email</td><td>${email}</td></tr>
+                      <tr><td style="padding:4px 12px 4px 0;color:#6b7280">Temporary password</td><td><code style="background:#f3f4f6;padding:2px 8px;border-radius:4px">${randomPassword}</code></td></tr>
+                    </table>
+                    <p style="margin:24px 0">
+                      <a href="${loginUrl}" style="background:#4f46e5;color:#fff;padding:10px 20px;text-decoration:none;border-radius:6px;display:inline-block">Sign in</a>
+                    </p>
+                    <p style="font-size:13px;color:#6b7280">Please change your password as soon as you log in.</p>
+                  </div>
+                </div>
+              `,
+            }).catch(err => console.error(`Bulk invite email failed for ${email}:`, err))
+          }
+        } catch (e: any) {
+          results.push({ row: rowNum, status: 'error', email, reason: e?.message || 'DB error' })
+        }
+      }
+
+      const created = results.filter(r => r.status === 'created').length
+      const skipped = results.filter(r => r.status === 'skipped').length
+      const errored = results.filter(r => r.status === 'error').length
+
+      activityLog.log({
+        action: 'LEARNER_BULK_UPLOAD',
+        userId: (req as any).user?.id,
+        subjectType: 'Organization',
+        subjectId: id,
+        metadata: {
+          organizationName: organization.name,
+          totalRows: rows.length,
+          created,
+          skipped,
+          errored,
+          sendInvites,
+        },
+      })
+
+      res.status(200).json(apiResponse.success({
+        total: rows.length,
+        created,
+        skipped,
+        errored,
+        results,
+      }, `Bulk upload finished: ${created} created, ${skipped} skipped, ${errored} errored`))
+    } catch (error) {
+      handleError(res, error)
+    }
+  }
+)
 
 // PUT /:id/employees/:studentId - Update employee details
 router.put('/:id/employees/:studentId', authenticate, requireOrgAdmin, requireOrgAccess, validateRequest(updateEmployeeSchema), async (req: Request, res: Response) => {

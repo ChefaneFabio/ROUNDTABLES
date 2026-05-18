@@ -47,6 +47,8 @@ export function AssessmentPage() {
 
   const { data: assessments, isLoading } = useQuery('myAssessments', assessmentApi.getMyAssessments)
   const { data: assignedAssessments, isLoading: loadingAssigned } = useQuery('myAssignedAssessments', assessmentApi.getAssignedAssessments)
+  const { data: preTest } = useQuery('myPreTest', assessmentApi.getPreTest, { enabled: !isAdmin })
+  const preTestRequired = !isAdmin && !preTest?.completed
 
   // For admin/teacher users, creating a multi-skill assessment still goes
   // straight to the test (they can also pre-assign for others).
@@ -64,7 +66,15 @@ export function AssessmentPage() {
         }
         navigate(`/assessment/multi-skill/${assessment.id}`)
       },
-      onError: (err: Error) => setError(err.message),
+      onError: (err: any) => {
+        // Backend returns 412 PRETEST_REQUIRED when the learner hasn't filled
+        // the questionnaire yet. Bounce them to the form instead of an error.
+        if (err?.response?.status === 412 || err?.response?.data?.code === 'PRETEST_REQUIRED') {
+          navigate('/assessment/pretest')
+          return
+        }
+        setError(err?.message || 'Failed to request test')
+      },
     }
   )
 
@@ -156,6 +166,24 @@ export function AssessmentPage() {
             className="mt-4 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
           >
             Retry
+          </button>
+        </div>
+      )}
+
+      {preTestRequired && (
+        <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-5 flex items-center justify-between gap-4">
+          <div>
+            <p className="font-semibold text-amber-900">Finish your pre-test questionnaire first</p>
+            <p className="text-sm text-amber-700 mt-1">
+              A 2-minute form helps us pick the right placement and match you with the right learning group.
+            </p>
+          </div>
+          <button
+            onClick={() => navigate('/assessment/pretest')}
+            className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium text-sm"
+          >
+            Start questionnaire
+            <ChevronRight className="h-4 w-4" />
           </button>
         </div>
       )}

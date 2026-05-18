@@ -18,6 +18,7 @@ import { LessonsPage } from './pages/LessonsPage'
 import { VotingPage } from './pages/VotingPage'
 // New feature pages
 import { AssessmentPage } from './pages/AssessmentPage'
+import { PreTestPage } from './pages/PreTestPage'
 import { AssessmentTakePage } from './pages/AssessmentTakePage'
 import { AssessmentResultPage } from './pages/AssessmentResultPage'
 import { AnalyticsPage } from './pages/AnalyticsPage'
@@ -386,6 +387,16 @@ function App() {
           <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
             <Layout>
               <AssessmentPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/assessment/pretest"
+        element={
+          <ProtectedRoute allowedRoles={[UserRole.STUDENT]}>
+            <Layout>
+              <PreTestPage />
             </Layout>
           </ProtectedRoute>
         }

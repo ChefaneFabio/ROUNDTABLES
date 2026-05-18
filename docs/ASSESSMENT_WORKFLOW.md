@@ -30,6 +30,8 @@ Learner self-registers (/register)         →  Account created (active)
         OR                                    Email to Maka
 Maka creates the learner internally        →  Email to learner with creds
         OR
+Maka bulk-uploads .xlsx roster              →  N learners created, optional invite emails
+        OR
 HR registers org, Maka approves, Maka       
 adds learners under that org
 ```
@@ -37,6 +39,34 @@ adds learners under that org
 A learner exists once a User row exists with `role = STUDENT` and a Student
 profile that points to their `schoolId` and, optionally, an `organizationId`
 for B2B learners.
+
+**Bulk upload** (`POST /organizations/:id/employees/bulk-upload`, Maka admin
+only). Accepts a `.xlsx` / `.xls` / `.csv` file. Required columns:
+`first_name`, `last_name`, `email`, `language`. Optional: `phone`,
+`job_role`, `language_level`, `needs_speaking`, `needs_reading`,
+`needs_writing`, `confidence`, `comments`. Up to 1000 rows / 5 MB per file.
+Returns a per-row report (`created` / `skipped` / `error` with reason).
+Template downloadable at `GET /organizations/:id/employees/bulk-template`.
+
+### 2.1.1 Pre-test questionnaire (gate)
+
+Before a learner can self-request a placement test, they must complete a
+short questionnaire at `/assessment/pretest`:
+
+- Skills needed (Speaking / Reading / Writing — multi-select)
+- Self-evaluated confidence (Low / Medium / High)
+- Availability grid (Mon–Sun × AM / Lunch / PM / Evening)
+- Job role (optional)
+- Comments (optional)
+
+Data is persisted on `Student.preTestData` + `preTestCompletedAt`. The
+multi-skill assessment endpoint returns `412 PRETEST_REQUIRED` when the
+gate isn't satisfied; the frontend bounces the learner to the form.
+
+**Bulk-uploaded learners** with pre-test fields in their row have
+`preTestCompletedAt` set at import time so they bypass the gate.
+
+**Admin-assigned tests** bypass the gate entirely (Maka decides).
 
 ### 2.2 Test request → approval → start
 
@@ -213,10 +243,11 @@ User stories are in the format:
 
 | ID | Story | Acceptance criteria |
 |----|-------|---------------------|
-| M1 | As Maka, I want to see every learner test request in one queue so I can approve them quickly. | `/admin/test-requests` lists all `REQUESTED` assessments with one-click Approve/Deny. Pending count badge in sidebar. |
+| M1 | As Maka, I want to see every learner test request in one queue so I can approve them quickly. | `/admin/test-requests` lists all `REQUESTED` assessments with Approve/Deny. Approve opens a confirmation modal showing learner name + email + company + language so Maka never approves blindly. Pending count badge in sidebar. |
 | M2 | As Maka, I want to see every HR registration in one queue so I can vet organizations. | `/admin/org-requests` lists all pending ORG_ADMIN signups with company details (industry, size, website). Approve/Deny with optional reason. |
 | M3 | As Maka, I want to assign placement tests to specific learners from a company page. | `AssignPlacementTestModal` on `/admin/organizations/:id` — picks learners + language. These tests bypass the approval queue (status=ASSIGNED directly). |
 | M4 | As Maka, I want to invite new learners with one click. | Invite Learner button on `/admin/organizations/:id` — emails a temp password + login link. |
+| M4b | As Maka, I want to upload a roster of dozens of learners in one shot. | Bulk Upload button on `/admin/organizations/:id` — accepts `.xlsx`/`.csv`, downloads template, returns row-by-row success/error report. |
 | M5 | As Maka, I want a cross-user activity feed so I can audit who did what. | `/admin/activity` shows USER_REGISTERED, ASSESSMENT_REQUESTED/APPROVED/DENIED/STARTED/COMPLETED, LEARNER_INVITED, etc. |
 | M6 | As Maka, I want every test lifecycle event by email so I'm not blind to what happens off-hours. | Emails to `training@makaitalia.com` for: request, suspended, cancelled, completed (with PDF). HR registration also emails Maka. |
 | M7 | As Maka, I want to override AI scoring with my own judgement on writing/speaking. | `/admin/review-queue` lets a teacher view the response and submit `teacherScore`, which becomes `finalScore`. |
@@ -256,6 +287,9 @@ User stories are in the format:
 - Multi-school federation.
 - Open API for external systems (use Maka admin for now).
 - Email-based one-click approve link (use the admin page).
+- 40-minute test target — current ~70-min duration is acceptable.
+- Fractional answer-penalty scoring (NC − NI/3) — current adaptive scoring stays.
+- Strict anti-cheat enforcement — tab-switch warning + allowed copy/paste is intentional.
 
 ---
 
