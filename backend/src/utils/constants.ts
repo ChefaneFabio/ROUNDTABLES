@@ -67,8 +67,15 @@ export const NOTIFICATION_TIMING = {
 } as const
 
 // Session/Token configuration
+//
+// The access token used to be 15 minutes, which silently knocked learners
+// out mid-Writing section: a typical placement-test sitting is ~60 minutes,
+// and a Writing prompt alone can take 10-15 minutes of typing. By the time
+// the learner clicked Submit Writing, the JWT was dead and the axios
+// interceptor sent them to /login. Bumped to 4h so a full test sitting
+// (plus a break) survives without re-auth. Refresh stays at 7d.
 export const TOKEN = {
-  ACCESS_TOKEN_EXPIRY: '15m',
+  ACCESS_TOKEN_EXPIRY: '4h',
   REFRESH_TOKEN_EXPIRY: '7d',
   PASSWORD_RESET_EXPIRY: 60 * 60 * 1000  // 1 hour
 } as const

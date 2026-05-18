@@ -130,7 +130,16 @@ api.interceptors.response.use(
     const isTransient = status === 502 || status === 503 || status === 504 ||
       error.code === 'ECONNABORTED' || error.code === 'ERR_NETWORK' || !error.response
     const method = (originalRequest?.method || 'get').toLowerCase()
-    const isRetryable = !originalRequest._retried && isTransient && (method === 'get' || method === 'head')
+    const url = (originalRequest?.url || '') as string
+    // Writing submission is the highest-stakes POST in the system (the user
+    // typed for minutes and a transient blip would otherwise lose it). Allow
+    // ONE retry for that endpoint specifically — it's safe because the
+    // backend keys responses by (assessmentId, sectionId, questionId) so a
+    // duplicate just overwrites the same row.
+    const isWritingSubmit = method === 'post' && /\/sections\/[^/]+\/writing(\?|$)/.test(url)
+    const isRetryable = !originalRequest._retried && isTransient && (
+      method === 'get' || method === 'head' || isWritingSubmit
+    )
     if (isRetryable) {
       originalRequest._retried = true
       await new Promise(r => setTimeout(r, 1000))

@@ -9,7 +9,10 @@ interface WritingQuestionProps {
     rubric?: { minWords?: number; maxWords?: number }
     cefrLevel?: string
   }
-  onSubmit: (responseText: string) => void
+  // May return a Promise; if it rejects (e.g. network failure, JWT expiry)
+  // we keep the localStorage draft so the learner can retry without losing
+  // their text.
+  onSubmit: (responseText: string) => void | Promise<unknown>
   disabled?: boolean
   language?: string
 }
@@ -71,12 +74,30 @@ export function WritingQuestion({ question, onSubmit, disabled, language }: Writ
   const maxWords = question.rubric?.maxWords || 150
   const isOverMax = wordCount > maxWords
 
-  const handleSubmit = () => {
-    if (text.trim()) {
-      onSubmit(text.trim())
+  const handleSubmit = async () => {
+    const trimmed = text.trim()
+    if (!trimmed) return
+    // Snapshot the draft synchronously before the network call: the
+    // debounced autosave above runs 600ms after the last keystroke, so if
+    // the user types fast and clicks Submit immediately the draft may not
+    // be in localStorage yet. Saving here guarantees the text survives any
+    // failure between this line and the server confirming the response.
+    try { localStorage.setItem(draftKey(question.id), trimmed) } catch { /* */ }
+    try {
+      const maybePromise = onSubmit(trimmed)
+      // Await if the parent returned a Promise; otherwise fall through
+      // immediately. Either way, only clear the draft after the parent
+      // signals success (or returns sync).
+      if (maybePromise && typeof (maybePromise as any).then === 'function') {
+        await maybePromise
+      }
       try { localStorage.removeItem(draftKey(question.id)) } catch { /* */ }
       setText('')
       setSavedAt(null)
+    } catch {
+      // Parent rejected — leave the draft in place so the user can retry
+      // without retyping. The textarea also keeps its current value because
+      // we don't reset state on failure.
     }
   }
 

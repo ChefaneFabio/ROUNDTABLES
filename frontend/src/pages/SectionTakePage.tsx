@@ -281,6 +281,9 @@ export function SectionTakePage() {
     } catch (err: any) {
       setError(err.response?.data?.error || err.message)
       setSubmitting(false)
+      // Re-throw so WritingQuestion knows the submit failed and can keep
+      // the localStorage draft + textarea content in place for retry.
+      throw err
     }
   }
 
