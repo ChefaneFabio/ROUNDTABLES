@@ -34,9 +34,11 @@ const LANGUAGES = [
 
 const STATUS_OPTIONS = [
   { value: '', label: 'All Statuses' },
-  { value: 'ASSIGNED', label: 'Assigned' },
+  { value: 'ASSIGNED', label: 'Assigned (not started)' },
   { value: 'IN_PROGRESS', label: 'In Progress' },
+  { value: 'PAUSED', label: 'Paused' },
   { value: 'COMPLETED', label: 'Completed' },
+  { value: 'EXPIRED', label: 'Expired / abandoned' },
 ]
 
 function getStatusBadge(status: string) {
@@ -461,10 +463,10 @@ export default function AssessmentManagementPage() {
             color="text-amber-600"
           />
           <StatCard
-            icon={AlertCircle}
-            label="Awaiting Approval"
-            value={assessments.filter((a: any) => a.status === 'REQUESTED').length}
-            color="text-purple-600"
+            icon={Clock}
+            label="Paused / Partial"
+            value={assessments.filter((a: any) => a.status === 'PAUSED').length}
+            color="text-orange-600"
           />
         </div>
       )}

@@ -746,17 +746,21 @@ router.get('/admin/assessments', authenticate, requireTeacher, async (req: Reque
     if (language) where.language = language as string
     if (status) {
       where.status = status as string
-    } else {
-      // REQUESTED assessments live in /admin/requests — exclude from the
-      // generic dashboard so the queue stays clean.
-      where.status = { not: 'REQUESTED' }
     }
+    // No default status filter — show everything (ASSIGNED, IN_PROGRESS,
+    // PAUSED, COMPLETED, EXPIRED, and any legacy REQUESTED records). The
+    // approval queue was removed (commit 6c6e7c7) so REQUESTED is now an
+    // edge case but we still want it visible: Alessia's test had gone
+    // missing because the old "not REQUESTED" default silently hid it.
     if (studentId) where.studentId = studentId as string
 
-    // Hide synthetic/demo accounts by default. Maka was seeing 40+ rows of
-    // "Demo Student" and "Load Test N" entries that drowned out real
-    // learners. The filter is reversible via ?includeTestData=true so we
-    // can still see them when needed for debugging.
+    // Hide CLEARLY synthetic accounts by default — only the load-test
+    // script's auto-generated emails and the placeholder @example.com
+    // domain. We intentionally do NOT filter @demo.com any more: Maka
+    // staff have historically used demo-style emails for internal users
+    // (e.g. alessia@demo, corporate@demo) and hiding them by default made
+    // their tests invisible. The filter is reversible via
+    // ?includeTestData=true if Maka wants the synthetics back.
     const showTestData = String(includeTestData ?? 'false').toLowerCase() === 'true'
     if (!showTestData) {
       where.student = {
@@ -764,7 +768,6 @@ router.get('/admin/assessments', authenticate, requireTeacher, async (req: Reque
         user: {
           AND: [
             { email: { not: { contains: 'loadtest-' } } },
-            { email: { not: { endsWith: '@demo.com' } } },
             { email: { not: { endsWith: '@example.com' } } },
           ],
         },
