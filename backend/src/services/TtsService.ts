@@ -93,7 +93,7 @@ export class TtsService {
     const signature = crypto.createHash('sha1').update(paramsToSign + c.apiSecret).digest('hex')
 
     const fd = new FormData()
-    fd.append('file', new Blob([buffer], { type: 'audio/mpeg' }), `${publicId}.mp3`)
+    fd.append('file', new Blob([new Uint8Array(buffer)], { type: 'audio/mpeg' }), `${publicId}.mp3`)
     fd.append('api_key', c.apiKey)
     fd.append('timestamp', String(timestamp))
     fd.append('signature', signature)
