@@ -482,152 +482,224 @@ export class CertificateService {
       A1: '#9ca3af', A2: '#22c55e', B1: '#3b82f6', B2: '#6366f1', C1: '#a855f7', C2: '#f59e0b'
     }
 
+    const LEVEL_DESCRIPTIONS: Record<string, string> = {
+      A1: 'Can understand and use familiar everyday expressions and very basic phrases aimed at the satisfaction of needs of a concrete type.',
+      A2: 'Can communicate in simple and routine tasks requiring a simple and direct exchange of information on familiar and routine matters.',
+      B1: 'Can deal with most situations likely to arise whilst travelling in an area where the language is spoken. Can produce simple connected text on familiar topics.',
+      B2: 'Can interact with a degree of fluency and spontaneity that makes regular interaction with native speakers quite possible. Can produce clear, detailed text on a wide range of subjects.',
+      C1: 'Can express ideas fluently and spontaneously without much obvious searching for expressions. Can use language flexibly and effectively for social, academic and professional purposes.',
+      C2: 'Can understand with ease virtually everything heard or read. Can express him/herself spontaneously, very fluently and precisely.',
+    }
+
     const logoPath = path.join(__dirname, '../../public/logo.png')
     const hasLogo = fs.existsSync(logoPath)
 
     return new Promise(async (resolve, reject) => {
-      const doc = new PDFDocument({ size: 'A4', margin: 50, bufferPages: true })
+      // Tighter margin so we can use the page width better; we manage our own
+      // padding per section.
+      const doc = new PDFDocument({ size: 'A4', margin: 40, bufferPages: true })
       const chunks: Buffer[] = []
 
       doc.on('data', (chunk: Buffer) => chunks.push(chunk))
       doc.on('end', () => resolve(Buffer.concat(chunks)))
       doc.on('error', reject)
 
-      const w = doc.page.width - 100
       const pageW = doc.page.width
+      const pageH = doc.page.height
+      const MARGIN = 40
+      const contentW = pageW - MARGIN * 2
 
-      // ─── Header ───
-      doc.rect(0, 0, pageW, 70).fill('#1e293b')
-
-      if (hasLogo) {
-        try { doc.image(logoPath, 50, 15, { height: 40 }) } catch { /* skip if logo fails */ }
-      }
-
-      doc.fillColor('#ffffff').fontSize(18)
-        .text('Maka Language Consulting', hasLogo ? 100 : 50, 20)
-      doc.fontSize(10).fillColor('#94a3b8')
-        .text('4-Skills Placement Test Results', hasLogo ? 100 : 50, 42)
-
-      // Date top-right
-      if (assessment.completedAt) {
-        doc.fontSize(9).fillColor('#94a3b8')
-          .text(new Date(assessment.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
-            pageW - 200, 28, { width: 150, align: 'right' })
-      }
-
-      // ─── Student info ───
-      let y = 90
-      doc.fillColor('#111827').fontSize(16).text(assessment.student.user.name, 50, y)
-      doc.fillColor('#6b7280').fontSize(10).text(assessment.student.user.email, 50, y + 20)
-      doc.text(`${assessment.language} Placement Test`, 50, y + 34)
-
-      // ─── Overall result card ───
-      y += 60
       const overallLevel = assessment.cefrLevel || 'A1'
       const overallColor = CEFR_COLORS[overallLevel] || '#6366f1'
 
-      // Left: CEFR badge
-      doc.roundedRect(50, y, 130, 80, 8).fill(overallColor)
-      doc.fillColor('#ffffff').fontSize(9).text('Overall CEFR', 50, y + 10, { width: 130, align: 'center' })
-      doc.fontSize(32).text(overallLevel, 50, y + 25, { width: 130, align: 'center' })
-      doc.fontSize(10).text(LEVEL_NAMES[overallLevel] || '', 50, y + 58, { width: 130, align: 'center' })
+      // ─── Header band (dark, with brand stripe) ─────────────────────────
+      // Deep slate bar across the top with a thin colored accent at the
+      // bottom drawn in the user's overall-CEFR color.
+      doc.rect(0, 0, pageW, 90).fill('#0f172a')
+      doc.rect(0, 88, pageW, 4).fill(overallColor)
 
-      // Right: GSE score + bar
-      const gse = CEFR_GSE[overallLevel] || 22
-      doc.fillColor('#111827').fontSize(9).text('GSE Score', 200, y + 5)
-      doc.fontSize(28).text(`${gse}`, 200, y + 18)
-      doc.fillColor('#6b7280').fontSize(9).text('/ 90', 240, y + 28)
-
-      // GSE bar
-      const barW = w - 170
-      doc.rect(200, y + 54, barW, 10).fill('#e5e7eb')
-      doc.rect(200, y + 54, (gse / 90) * barW, 10).fill(overallColor)
-
-      // CEFR scale labels under bar
-      doc.fontSize(7).fillColor('#9ca3af')
-      CEFR_LEVELS.forEach((lv, i) => {
-        const x = 200 + (CEFR_GSE[lv] / 90) * barW
-        doc.text(lv, x - 5, y + 67)
-      })
-
-      if (assessment.score != null) {
-        doc.fillColor('#6b7280').fontSize(9)
-          .text(`Accuracy: ${assessment.score}%`, 200 + barW - 80, y + 5, { width: 80, align: 'right' })
+      if (hasLogo) {
+        try { doc.image(logoPath, MARGIN, 22, { height: 46 }) } catch { /* skip */ }
       }
 
-      // ─── Per-skill breakdown table ───
-      y += 100
-      doc.fillColor('#111827').fontSize(13).text('Skill Breakdown', 50, y)
-      y += 25
+      const titleX = hasLogo ? MARGIN + 60 : MARGIN
+      doc.fillColor('#ffffff').fontSize(18).text('MAKA Language Consulting', titleX, 28)
+      doc.fillColor('#cbd5e1').fontSize(10).text('Placement Test Results · Confidential', titleX, 52)
 
-      // Table header
-      doc.rect(50, y, w, 22).fill('#f1f5f9')
-      doc.fillColor('#475569').fontSize(8)
-      doc.text('SKILL', 60, y + 7)
-      doc.text('CEFR', 170, y + 7)
-      doc.text('GSE', 220, y + 7)
-      doc.text('LEVEL BAR', 260, y + 7)
-      doc.text('SCORE', 410, y + 7)
-      doc.text('QUESTIONS', 460, y + 7)
-      y += 22
+      if (assessment.completedAt) {
+        const dateStr = new Date(assessment.completedAt).toLocaleDateString('en-GB', {
+          day: 'numeric', month: 'long', year: 'numeric'
+        })
+        doc.fillColor('#94a3b8').fontSize(9).text('COMPLETED', pageW - MARGIN - 150, 30, { width: 150, align: 'right' })
+        doc.fillColor('#ffffff').fontSize(11).text(dateStr, pageW - MARGIN - 150, 44, { width: 150, align: 'right' })
+      }
 
-      for (const section of (assessment as any).sections) {
-        const skillColor = SKILL_COLORS[section.skill] || '#6b7280'
+      // ─── Learner info strip ────────────────────────────────────────────
+      let y = 115
+      doc.fillColor('#0f172a').fontSize(22).text(assessment.student.user.name, MARGIN, y)
+      y += 28
+      doc.fillColor('#64748b').fontSize(10)
+      doc.text(`${assessment.student.user.email}    ·    ${assessment.language} placement`, MARGIN, y)
+      y += 24
+
+      // ─── Hero result card ─────────────────────────────────────────────
+      // A big card that does the heavy lifting visually: huge CEFR letter,
+      // friendly name, descriptive sentence, a strip showing the GSE scale
+      // with the learner's position marked.
+      const heroY = y
+      const heroH = 200
+      // Card body
+      doc.roundedRect(MARGIN, heroY, contentW, heroH, 12).fill('#f8fafc')
+      // Color block on the left (CEFR letter showcase)
+      doc.roundedRect(MARGIN, heroY, 160, heroH, 12).fill(overallColor)
+      // Re-clip the right side of the color block so only the left half is colored
+      doc.save()
+      doc.rect(MARGIN + 145, heroY, 20, heroH).fill('#f8fafc')
+      doc.restore()
+
+      // Big CEFR letter
+      doc.fillColor('#ffffff').fontSize(11).text('YOUR LEVEL', MARGIN, heroY + 24, { width: 160, align: 'center' })
+      doc.fontSize(64).text(overallLevel, MARGIN, heroY + 48, { width: 160, align: 'center' })
+      doc.fontSize(11).text(LEVEL_NAMES[overallLevel] || '', MARGIN, heroY + 125, { width: 160, align: 'center' })
+
+      // Right side: description + GSE + scale
+      const rightX = MARGIN + 184
+      const rightW = contentW - 184 - 20
+      doc.fillColor('#0f172a').fontSize(13).text(`${LEVEL_NAMES[overallLevel] || ''} — what this means`, rightX, heroY + 22)
+      doc.fillColor('#475569').fontSize(9)
+        .text(LEVEL_DESCRIPTIONS[overallLevel] || '', rightX, heroY + 42, { width: rightW, lineGap: 1.5 })
+
+      // Two-stat row: GSE + accuracy
+      const statY = heroY + 110
+      const statW = (rightW - 10) / 2
+      // GSE pill
+      doc.fillColor('#475569').fontSize(8).text('GSE SCORE', rightX, statY)
+      doc.fillColor('#0f172a').fontSize(22).text(`${CEFR_GSE[overallLevel] || 22}`, rightX, statY + 12)
+      doc.fillColor('#94a3b8').fontSize(10).text(' / 90', rightX + 30, statY + 22)
+      // Accuracy
+      if (assessment.score != null) {
+        doc.fillColor('#475569').fontSize(8).text('OVERALL ACCURACY', rightX + statW + 10, statY)
+        doc.fillColor('#0f172a').fontSize(22).text(`${assessment.score}%`, rightX + statW + 10, statY + 12)
+      }
+
+      // GSE scale with marker dot at user's position
+      const scaleY = heroY + heroH - 32
+      const scaleX = rightX
+      const scaleW = rightW
+      // Track
+      doc.roundedRect(scaleX, scaleY, scaleW, 6, 3).fill('#e2e8f0')
+      // Filled portion
+      const fillW = ((CEFR_GSE[overallLevel] || 22) / 90) * scaleW
+      doc.roundedRect(scaleX, scaleY, fillW, 6, 3).fill(overallColor)
+      // Tick marks + labels
+      doc.fontSize(7).fillColor('#64748b')
+      CEFR_LEVELS.forEach((lv) => {
+        const tickX = scaleX + (CEFR_GSE[lv] / 90) * scaleW
+        const isUser = lv === overallLevel
+        // Tick
+        doc.rect(tickX - 0.5, scaleY - 3, 1, 12).fill(isUser ? overallColor : '#cbd5e1')
+        // Label
+        doc.fillColor(isUser ? overallColor : '#64748b').fontSize(isUser ? 9 : 7)
+          .text(lv, tickX - 8, scaleY + 12, { width: 16, align: 'center' })
+        if (isUser) {
+          // Filled dot marker
+          doc.circle(tickX, scaleY + 3, 4).fill(overallColor)
+          doc.circle(tickX, scaleY + 3, 2).fill('#ffffff')
+        }
+      })
+
+      y = heroY + heroH + 24
+
+      // ─── Skill cards (2x2 grid) ───────────────────────────────────────
+      doc.fillColor('#0f172a').fontSize(14).text('Skill breakdown', MARGIN, y)
+      y += 24
+
+      const sections = (assessment as any).sections as any[]
+      const cardGap = 12
+      const cardW = (contentW - cardGap) / 2
+      const cardH = 100
+
+      sections.forEach((section, i) => {
+        const col = i % 2
+        const row = Math.floor(i / 2)
+        const cx = MARGIN + col * (cardW + cardGap)
+        const cy = y + row * (cardH + cardGap)
+
+        const skillColor = SKILL_COLORS[section.skill] || '#6366f1'
         const level = section.cefrLevel || 'A1'
-        const sGse = CEFR_GSE[level] || 22
         const lvColor = CEFR_COLORS[level] || '#9ca3af'
+        const sGse = CEFR_GSE[level] || 22
 
-        // Skill name
-        doc.fillColor(skillColor).fontSize(10)
-          .text(SKILL_LABELS[section.skill] || section.skill, 60, y + 5)
+        // Card body
+        doc.roundedRect(cx, cy, cardW, cardH, 8).fill('#ffffff')
+        // Hairline border via stroke (PDFKit: fill then stroke a second time)
+        doc.roundedRect(cx, cy, cardW, cardH, 8).lineWidth(0.8).stroke('#e2e8f0')
+        // Accent stripe left
+        doc.rect(cx, cy, 4, cardH).fill(skillColor)
 
-        // CEFR level badge
-        doc.roundedRect(170, y + 3, 32, 16, 3).fill(lvColor)
-        doc.fillColor('#ffffff').fontSize(8).text(level, 170, y + 7, { width: 32, align: 'center' })
+        // Skill name + CEFR badge in one row
+        doc.fillColor('#0f172a').fontSize(12).text(SKILL_LABELS[section.skill] || section.skill, cx + 16, cy + 14)
 
-        // GSE number
-        doc.fillColor('#111827').fontSize(9).text(`${sGse}`, 222, y + 6)
+        // CEFR badge at top-right
+        doc.roundedRect(cx + cardW - 60, cy + 12, 48, 22, 6).fill(lvColor)
+        doc.fillColor('#ffffff').fontSize(11).text(level, cx + cardW - 60, cy + 18, { width: 48, align: 'center' })
 
-        // Level bar (visual)
-        const lBarW = 130
-        doc.rect(260, y + 5, lBarW, 12).fill('#e5e7eb')
-        doc.rect(260, y + 5, Math.max(2, (sGse / 90) * lBarW), 12).fill(lvColor)
+        // GSE row
+        doc.fillColor('#64748b').fontSize(8).text('GSE', cx + 16, cy + 40)
+        doc.fillColor('#0f172a').fontSize(13).text(`${sGse}`, cx + 36, cy + 36)
 
-        // Score percentage
+        // Score row
         if (section.percentageScore != null) {
-          doc.fillColor('#111827').fontSize(9).text(`${section.percentageScore}%`, 412, y + 6)
-        } else {
-          doc.fillColor('#9ca3af').fontSize(9).text('—', 412, y + 6)
+          doc.fillColor('#64748b').fontSize(8).text('ACCURACY', cx + 80, cy + 40)
+          doc.fillColor('#0f172a').fontSize(13).text(`${section.percentageScore}%`, cx + 130, cy + 36)
         }
 
         // Questions answered
-        const answered = section.questionsAnswered || 0
+        const answered = section.questionsAnswered ?? 0
         const total = section.questionsTotal || section.questionsLimit || 0
-        doc.fillColor('#6b7280').fontSize(9).text(`${answered}/${total}`, 465, y + 6)
+        if (total > 0) {
+          doc.fillColor('#94a3b8').fontSize(8)
+            .text(`${answered} / ${total} questions`, cx + cardW - 96, cy + 42, { width: 80, align: 'right' })
+        }
 
-        doc.moveTo(50, y + 24).lineTo(50 + w, y + 24).lineWidth(0.5).stroke('#e5e7eb')
-        y += 26
-      }
-
-      // ─── CEFR Scale Reference ───
-      y += 15
-      doc.fillColor('#111827').fontSize(11).text('CEFR Scale Reference', 50, y)
-      y += 18
-      const scaleW = w / 6
-      CEFR_LEVELS.forEach((lv, i) => {
-        const x = 50 + i * scaleW
-        doc.rect(x, y, scaleW - 2, 24).fill(CEFR_COLORS[lv])
-        doc.fillColor('#ffffff').fontSize(8)
-          .text(`${lv} - ${LEVEL_NAMES[lv]}`, x + 4, y + 4, { width: scaleW - 8 })
-        doc.text(`GSE ${CEFR_GSE[lv]}`, x + 4, y + 14, { width: scaleW - 8 })
+        // Progress bar at the bottom of the card
+        const barX = cx + 16
+        const barY = cy + 72
+        const barW = cardW - 32
+        doc.roundedRect(barX, barY, barW, 6, 3).fill('#f1f5f9')
+        doc.roundedRect(barX, barY, Math.max(4, (sGse / 90) * barW), 6, 3).fill(skillColor)
       })
 
-      // ─── Footer ───
-      const footerY = doc.page.height - 50
-      doc.moveTo(50, footerY - 10).lineTo(50 + w, footerY - 10).lineWidth(0.5).stroke('#e5e7eb')
-      doc.fillColor('#9ca3af').fontSize(8)
-        .text('Maka Language Consulting — makalmc.com', 50, footerY, { width: w / 2 })
-      doc.text('Confidential Assessment Report', 50 + w / 2, footerY, { width: w / 2, align: 'right' })
+      const rows = Math.ceil(sections.length / 2)
+      y += rows * (cardH + cardGap) + 16
+
+      // ─── CEFR Scale Reference ─────────────────────────────────────────
+      doc.fillColor('#0f172a').fontSize(12).text('CEFR scale reference', MARGIN, y)
+      y += 20
+      const refCellW = contentW / 6
+      CEFR_LEVELS.forEach((lv, i) => {
+        const x = MARGIN + i * refCellW
+        const cellH = 38
+        const isUser = lv === overallLevel
+        doc.roundedRect(x + 2, y, refCellW - 6, cellH, 6).fill(CEFR_COLORS[lv])
+        if (isUser) {
+          doc.roundedRect(x + 2, y, refCellW - 6, cellH, 6).lineWidth(2).stroke('#0f172a')
+        }
+        doc.fillColor('#ffffff').fontSize(10).text(lv, x + 8, y + 6)
+        doc.fontSize(7).text(LEVEL_NAMES[lv], x + 8, y + 19, { width: refCellW - 14 })
+        doc.fillColor('rgba(255,255,255,0.85)').fontSize(7)
+          .text(`GSE ${CEFR_GSE[lv]}`, x + 8, y + 28)
+      })
+
+      // ─── Footer ───────────────────────────────────────────────────────
+      const footerY = pageH - 36
+      doc.moveTo(MARGIN, footerY - 8).lineTo(pageW - MARGIN, footerY - 8).lineWidth(0.5).stroke('#e2e8f0')
+      doc.fillColor('#94a3b8').fontSize(8)
+        .text('Maka Language Consulting · makalmc.com', MARGIN, footerY, { width: contentW / 2 })
+      doc.text('Confidential Assessment Report', MARGIN + contentW / 2, footerY, { width: contentW / 2, align: 'right' })
+
+      // Legacy alias used by the detailed-breakdown block below
+      const w = contentW
 
       // ─── Detailed Answer Breakdown (optional) ───
       if (detailed) {
