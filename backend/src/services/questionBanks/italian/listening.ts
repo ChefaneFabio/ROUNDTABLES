@@ -869,4 +869,287 @@ export const italianListeningQuestions: MultiSkillQuestionData[] = [
     options: [{ label: 'Le normative ambientali', value: 'Le normative ambientali' }, { label: 'Il greenwashing aziendale', value: 'Il greenwashing aziendale' }, { label: 'L\'inazione del governo', value: 'L\'inazione del governo' }, { label: 'Il comportamento dei consumatori', value: 'Il comportamento dei consumatori' }],
     correctAnswer: 'Il greenwashing aziendale', points: 2, orderIndex: 84, tags: ['satira', 'commento', 'register-varied'], timeSuggested: 90
   },
+
+  // ============================================================
+  // DIALOGHI QUOTIDIANI — aggiunti su feedback Maka (voce robotica
+  // monotona, no dialoghi). Due interlocutori con marker SPEAKER_A/B
+  // attivano il parser di TtsService che ruota voci maschili/femminili.
+  // Temi everyday + work-life (no filosofia / politica / scienza specialistica).
+  // ============================================================
+
+  // ---- A1 dialoghi ----
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Buongiorno, vorrei un caffè per favore.
+SPEAKER_B: Certo. Piccolo o grande?
+SPEAKER_A: Piccolo, grazie. Quanto costa?
+SPEAKER_B: Un euro e venti.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quanto costa il caffè?',
+    options: [{ label: '1,00 euro', value: '1,00' }, { label: '1,20 euro', value: '1,20' }, { label: '1,50 euro', value: '1,50' }, { label: '2,00 euro', value: '2,00' }],
+    correctAnswer: '1,20', points: 1, orderIndex: 85, tags: ['dialogo', 'caffè', 'everyday'], timeSuggested: 40
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Buongiorno. A che ora aprite domani?
+SPEAKER_B: Apriamo alle nove di mattina.
+SPEAKER_A: E quando chiudete?
+SPEAKER_B: Alle sette di sera.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'A che ora apre il negozio?',
+    options: [{ label: 'Alle 7', value: '7' }, { label: 'Alle 8', value: '8' }, { label: 'Alle 9', value: '9' }, { label: 'Alle 10', value: '10' }],
+    correctAnswer: '9', points: 1, orderIndex: 86, tags: ['dialogo', 'negozio', 'everyday'], timeSuggested: 40
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Dove possiamo vederci sabato?
+SPEAKER_B: Vediamoci al bar vicino al parco.
+SPEAKER_A: A che ora?
+SPEAKER_B: Alle tre del pomeriggio.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Dove si vogliono incontrare?',
+    options: [{ label: 'Al parco', value: 'parco' }, { label: 'Al bar', value: 'bar' }, { label: 'Al cinema', value: 'cinema' }, { label: 'In ufficio', value: 'ufficio' }],
+    correctAnswer: 'bar', points: 1, orderIndex: 87, tags: ['dialogo', 'piani', 'everyday'], timeSuggested: 40
+  },
+  {
+    language: 'Italian', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Un biglietto per il centro, per favore.
+SPEAKER_B: Solo andata o andata e ritorno?
+SPEAKER_A: Solo andata.
+SPEAKER_B: Sono due euro.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quanto costa il biglietto?',
+    options: [{ label: '1 euro', value: '1' }, { label: '2 euro', value: '2' }, { label: '3 euro', value: '3' }, { label: '4 euro', value: '4' }],
+    correctAnswer: '2', points: 1, orderIndex: 88, tags: ['dialogo', 'trasporti', 'everyday'], timeSuggested: 40
+  },
+
+  // ---- A2 dialoghi ----
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Sei libero questo fine settimana? C'è un film nuovo al cinema.
+SPEAKER_B: Sabato sono occupato, ma domenica va bene.
+SPEAKER_A: Perfetto. Andiamo domenica pomeriggio?
+SPEAKER_B: Va bene, ci vediamo allora.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quando andranno al cinema?',
+    options: [{ label: 'Sabato mattina', value: 'sab-mat' }, { label: 'Sabato sera', value: 'sab-sera' }, { label: 'Domenica pomeriggio', value: 'dom-pom' }, { label: 'Domenica sera', value: 'dom-sera' }],
+    correctAnswer: 'dom-pom', points: 1, orderIndex: 89, tags: ['dialogo', 'piani', 'everyday'], timeSuggested: 45
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Buongiorno, vorrei prenotare un tavolo per due.
+SPEAKER_B: Per quando, signore?
+SPEAKER_A: Venerdì sera alle otto, se possibile.
+SPEAKER_B: Va bene. Posso avere un nome per la prenotazione?`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Per quante persone è la prenotazione?',
+    options: [{ label: 'Una', value: '1' }, { label: 'Due', value: '2' }, { label: 'Tre', value: '3' }, { label: 'Quattro', value: '4' }],
+    correctAnswer: '2', points: 1, orderIndex: 90, tags: ['dialogo', 'ristorante', 'everyday'], timeSuggested: 45
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Ciao, sono nuova in azienda. Lavoro nel team marketing.
+SPEAKER_B: Benvenuta! Io sono in commerciale. Vieni, ti faccio conoscere il team.
+SPEAKER_A: Grazie mille. Da quanto tempo lavori qui?
+SPEAKER_B: Sono qui da circa tre anni.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'In quale reparto lavora la nuova collega?',
+    options: [{ label: 'Commerciale', value: 'commerciale' }, { label: 'Marketing', value: 'marketing' }, { label: 'Risorse umane', value: 'hr' }, { label: 'IT', value: 'it' }],
+    correctAnswer: 'marketing', points: 1, orderIndex: 91, tags: ['dialogo', 'ufficio', 'work-life'], timeSuggested: 45
+  },
+  {
+    language: 'Italian', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Scusi, come arrivo alla stazione?
+SPEAKER_B: Vada dritto per due isolati, poi giri a sinistra.
+SPEAKER_A: A sinistra dopo due isolati. Quanto ci vuole a piedi?
+SPEAKER_B: Circa dieci minuti.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quanto tempo ci vuole a piedi?',
+    options: [{ label: '5 minuti', value: '5' }, { label: '10 minuti', value: '10' }, { label: '15 minuti', value: '15' }, { label: '20 minuti', value: '20' }],
+    correctAnswer: '10', points: 1, orderIndex: 92, tags: ['dialogo', 'indicazioni', 'everyday'], timeSuggested: 45
+  },
+
+  // ---- B1 dialoghi ----
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Allora, vedo che hai esperienza nel servizio clienti. Cosa ti ha attratto di questa posizione?
+SPEAKER_B: Sono interessato a passare a un ruolo più strategico. Qui potrei usare le mie competenze analitiche oltre alla comunicazione.
+SPEAKER_A: Capisco. Come gestiresti un cliente molto insoddisfatto?
+SPEAKER_B: Lo ascolterei con attenzione, riconoscerei il problema e cercherei una soluzione concreta entro la fine della giornata.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Perché il candidato vuole questa posizione?',
+    options: [{ label: 'Per uno stipendio più alto', value: 'stipendio' }, { label: 'Per un ruolo più strategico', value: 'strategico' }, { label: 'Per lavorare da remoto', value: 'remoto' }, { label: 'Per cambiare città', value: 'città' }],
+    correctAnswer: 'strategico', points: 1, orderIndex: 93, tags: ['dialogo', 'colloquio', 'work-life'], timeSuggested: 60
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Vorrei prenotare una camera per tre notti, dal quindici al diciotto marzo.
+SPEAKER_B: Per quante persone?
+SPEAKER_A: Due adulti. Avete camere con vista sul mare?
+SPEAKER_B: Sì, abbiamo una doppia con vista a centosessanta euro a notte. Colazione inclusa.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quanto costa la camera per notte?',
+    options: [{ label: '140 euro', value: '140' }, { label: '150 euro', value: '150' }, { label: '160 euro', value: '160' }, { label: '180 euro', value: '180' }],
+    correctAnswer: '160', points: 1, orderIndex: 94, tags: ['dialogo', 'hotel', 'everyday'], timeSuggested: 60
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Buongiorno dottoressa. Ho mal di gola da tre giorni e mi sento debole.
+SPEAKER_B: Ha avuto febbre?
+SPEAKER_A: Sì, ieri ho avuto trentotto e mezzo. Oggi è scesa.
+SPEAKER_B: Le prescrivo un antibiotico per sette giorni. Prenda due compresse al giorno dopo i pasti.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Per quanti giorni deve prendere l\'antibiotico?',
+    options: [{ label: '3 giorni', value: '3' }, { label: '5 giorni', value: '5' }, { label: '7 giorni', value: '7' }, { label: '10 giorni', value: '10' }],
+    correctAnswer: '7', points: 1, orderIndex: 95, tags: ['dialogo', 'medico', 'everyday'], timeSuggested: 60
+  },
+  {
+    language: 'Italian', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: La riunione di domani è stata spostata alle dieci. Riusciresti a venire?
+SPEAKER_B: Alle dieci ho una call con il cliente di Milano. Posso unirmi dopo?
+SPEAKER_A: Inizia tu in ritardo, va bene. Manderemo i punti principali nel canale Slack.
+SPEAKER_B: Perfetto, grazie. Cercherò di arrivare entro le dieci e trenta.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Perché il collega arriverà in ritardo?',
+    options: [{ label: 'Ha un altro impegno', value: 'altro' }, { label: 'Il treno è in ritardo', value: 'treno' }, { label: 'È malato', value: 'malato' }, { label: 'Si è dimenticato', value: 'dimenticato' }],
+    correctAnswer: 'altro', points: 1, orderIndex: 96, tags: ['dialogo', 'riunione', 'work-life'], timeSuggested: 60
+  },
+
+  // ---- B2 dialoghi ----
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Il cliente ha anticipato la deadline al venerdì. Riusciamo a consegnare in tempo?
+SPEAKER_B: Sarà stretta. Sviluppo finisce mercoledì, QA ha bisogno di almeno due giorni completi.
+SPEAKER_A: Possiamo ridurre lo scope? La parte di reporting può aspettare.
+SPEAKER_B: Sì, se rimandiamo il reporting alla prossima release, ce la facciamo. Avviso il PM.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Come faranno a rispettare la nuova deadline?',
+    options: [{ label: 'Lavorando di notte', value: 'notte' }, { label: 'Rimandando una funzionalità', value: 'rimandando' }, { label: 'Aggiungendo persone al team', value: 'persone' }, { label: 'Chiedendo una proroga', value: 'proroga' }],
+    correctAnswer: 'rimandando', points: 1, orderIndex: 97, tags: ['dialogo', 'progetto', 'work-life'], timeSuggested: 75
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Buongiorno, vorrei un rimborso. Il prodotto che ho ricevuto è difettoso.
+SPEAKER_B: Mi dispiace. Ha la ricevuta e una foto del difetto?
+SPEAKER_A: Sì, le ho già inviate per email tre giorni fa, ma nessuno mi ha ancora risposto.
+SPEAKER_B: Verifico subito. Le confermo: posso autorizzare il rimborso completo entro oggi.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Cosa fa l\'operatore alla fine?',
+    options: [{ label: 'Rifiuta il rimborso', value: 'rifiuta' }, { label: 'Chiede altri documenti', value: 'documenti' }, { label: 'Autorizza il rimborso completo', value: 'autorizza' }, { label: 'Trasferisce la chiamata', value: 'trasferisce' }],
+    correctAnswer: 'autorizza', points: 1, orderIndex: 98, tags: ['dialogo', 'reclamo', 'work-life'], timeSuggested: 75
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Vorrei discutere il mio pacchetto retributivo per il prossimo anno.
+SPEAKER_B: Certo. Sappi che il budget è limitato, ma sono disponibile ad ascoltare.
+SPEAKER_A: Negli ultimi mesi ho preso in carico due nuovi progetti e ho gestito il team durante l'assenza del responsabile. Cerco un riconoscimento di questo.
+SPEAKER_B: Hai ragione, il tuo contributo è cresciuto. Posso offrire un aumento del sei percento più un bonus variabile legato ai risultati.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Cosa offre il manager?',
+    options: [{ label: 'Solo un bonus una tantum', value: 'bonus' }, { label: 'Solo un aumento di stipendio', value: 'aumento' }, { label: 'Aumento più bonus variabile', value: 'entrambi' }, { label: 'Una promozione', value: 'promozione' }],
+    correctAnswer: 'entrambi', points: 1, orderIndex: 99, tags: ['dialogo', 'negoziazione', 'work-life'], timeSuggested: 75
+  },
+  {
+    language: 'Italian', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Allora, come è andato il corso di formazione la scorsa settimana?
+SPEAKER_B: I contenuti erano utili, ma il ritmo era troppo veloce per chi parte da zero.
+SPEAKER_A: Hai qualche suggerimento concreto?
+SPEAKER_B: Sì. Aggiungerei una sessione introduttiva opzionale prima del modulo avanzato, così tutti partono dalla stessa base.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Cosa suggerisce il dipendente?',
+    options: [{ label: 'Cambiare formatore', value: 'formatore' }, { label: 'Una sessione introduttiva opzionale', value: 'introduttiva' }, { label: 'Allungare la durata totale', value: 'allungare' }, { label: 'Eliminare il modulo avanzato', value: 'eliminare' }],
+    correctAnswer: 'introduttiva', points: 1, orderIndex: 100, tags: ['dialogo', 'formazione', 'work-life'], timeSuggested: 75
+  },
+
+  // ---- C1 dialoghi ----
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Stiamo perdendo quote di mercato nel segmento giovani. Le opzioni sul tavolo sono due: una campagna social aggressiva oppure rivedere il prodotto.
+SPEAKER_B: La campagna ci darebbe visibilità immediata, ma se il prodotto non risponde alle aspettative bruciamo il budget e basta.
+SPEAKER_A: Quindi proponi di partire dalla revisione del prodotto?
+SPEAKER_B: Esatto. Tre mesi di test su un panel ridotto, e poi il marketing arriva di conseguenza con un messaggio credibile.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Su cosa è d\'accordo SPEAKER_B?',
+    options: [{ label: 'Lanciare subito la campagna social', value: 'social' }, { label: 'Aumentare il budget marketing', value: 'budget' }, { label: 'Rivedere prima il prodotto', value: 'prodotto' }, { label: 'Abbandonare il segmento giovani', value: 'abbandonare' }],
+    correctAnswer: 'prodotto', points: 2, orderIndex: 101, tags: ['dialogo', 'strategia', 'work-life'], timeSuggested: 90
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Guardando l'anno appena chiuso, hai centrato tre obiettivi su quattro. Ottimo lavoro sul progetto Alfa.
+SPEAKER_B: Grazie. L'unico obiettivo che non ho centrato è stata la riduzione dei tempi di risposta del team.
+SPEAKER_A: Sì, e voglio essere onesto: quel risultato dipendeva anche da risorse che non ti abbiamo dato. Non lo conto contro di te.
+SPEAKER_B: Lo apprezzo. Per il prossimo anno vorrei farmi carico io della pianificazione delle risorse, così posso gestire meglio le aspettative.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Qual è la posizione del manager sull\'obiettivo non centrato?',
+    options: [{ label: 'Conta interamente come un fallimento', value: 'fallimento' }, { label: 'Lo attribuisce alla mancanza di risorse', value: 'risorse' }, { label: 'Vuole sostituire il dipendente', value: 'sostituire' }, { label: 'Riduce lo stipendio', value: 'stipendio' }],
+    correctAnswer: 'risorse', points: 2, orderIndex: 102, tags: ['dialogo', 'review', 'work-life'], timeSuggested: 90
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: La proposta di contratto ci ha lasciato perplessi sulla clausola di esclusiva, è davvero estesa.
+SPEAKER_B: Capisco. È una clausola standard nei nostri accordi enterprise, però possiamo restringerla al settore in cui operate direttamente.
+SPEAKER_A: Restringerla geograficamente all'Europa potrebbe funzionare per noi.
+SPEAKER_B: Combiniamo le due: esclusiva limitata al vostro settore principale e al mercato europeo, per la durata del primo anno.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Su cosa si accordano alla fine?',
+    options: [{ label: 'Eliminare l\'esclusiva', value: 'elimina' }, { label: 'Esclusiva mondiale per tutti i settori', value: 'mondiale' }, { label: 'Esclusiva limitata a settore + Europa per un anno', value: 'limitata' }, { label: 'Rimandare la decisione', value: 'rimanda' }],
+    correctAnswer: 'limitata', points: 2, orderIndex: 103, tags: ['dialogo', 'contratto', 'work-life'], timeSuggested: 90
+  },
+  {
+    language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Dai dati del primo trimestre vediamo una crescita del fatturato del dodici percento, ma il margine è calato.
+SPEAKER_B: Sì, perché abbiamo investito molto nell'acquisizione clienti. È una scelta voluta.
+SPEAKER_A: Quando ci aspettiamo che il margine torni in linea con l'anno scorso?
+SPEAKER_B: Entro il quarto trimestre, una volta che la base clienti ricorrenti coprirà i costi fissi.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quando il margine dovrebbe normalizzarsi?',
+    options: [{ label: 'Nel secondo trimestre', value: 'q2' }, { label: 'Nel terzo trimestre', value: 'q3' }, { label: 'Nel quarto trimestre', value: 'q4' }, { label: 'L\'anno prossimo', value: 'anno-prossimo' }],
+    correctAnswer: 'q4', points: 2, orderIndex: 104, tags: ['dialogo', 'finanza', 'work-life'], timeSuggested: 90
+  },
+
+  // ---- C2 dialoghi ----
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: La diligenza ha sollevato due aree problematiche: una contingenza fiscale ancora aperta e una dipendenza tecnologica concentrata.
+SPEAKER_B: La contingenza fiscale possiamo affrontarla con un escrow dedicato. Sulla parte tecnologica, mi preoccupa di più: dipendiamo da un singolo fornitore senza piano di uscita.
+SPEAKER_A: Potremmo subordinare il prezzo alla rinegoziazione di quel contratto entro sei mesi dal closing.
+SPEAKER_B: Funziona, ma vorrei aggiungere una clausola di earn-out: se non rinegoziamo, una quota del corrispettivo viene trattenuta.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Cosa propone SPEAKER_B per il rischio tecnologico?',
+    options: [{ label: 'Annullare la transazione', value: 'annulla' }, { label: 'Solo un escrow', value: 'escrow' }, { label: 'Una clausola di earn-out condizionata', value: 'earn-out' }, { label: 'Aumentare il prezzo', value: 'aumenta' }],
+    correctAnswer: 'earn-out', points: 2, orderIndex: 105, tags: ['dialogo', 'M&A', 'work-life'], timeSuggested: 100
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Il mercato premia sempre più le aziende capaci di scalare senza diluire la cultura. Voi come ci riuscite?
+SPEAKER_B: Onestamente, non ci riusciamo del tutto. Cresciamo del trenta percento all'anno, e ogni nuova ondata di assunzioni cambia il tessuto interno.
+SPEAKER_A: Quali contromisure avete adottato?
+SPEAKER_B: Una struttura di mentorship a cascata e una soglia mensile di assunzioni — preferiamo perdere candidati che diluire i valori. Non è scalabile all'infinito, ma per ora regge.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Cosa ammette SPEAKER_B?',
+    options: [{ label: 'Che la cultura aziendale è perfetta', value: 'perfetta' }, { label: 'Che la loro soluzione ha dei limiti', value: 'limiti' }, { label: 'Che non gli interessa la cultura', value: 'no-cultura' }, { label: 'Che assumeranno di meno l\'anno prossimo', value: 'meno' }],
+    correctAnswer: 'limiti', points: 2, orderIndex: 106, tags: ['dialogo', 'leadership', 'work-life'], timeSuggested: 100
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Ho letto il tuo report sul progetto e c'è qualcosa che non torna. I dati sulla customer retention sembrano selezionati.
+SPEAKER_B: Hai ragione, ho escluso la coorte di gennaio perché aveva una promozione anomala.
+SPEAKER_A: Capisco la logica, ma escluderla senza segnalarlo nel report mette in dubbio l'intera analisi.
+SPEAKER_B: Hai ragione. Lo riscrivo includendo entrambe le visualizzazioni e una nota metodologica chiara.`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Qual è il problema sollevato?',
+    options: [{ label: 'I dati sono falsi', value: 'falsi' }, { label: 'L\'esclusione di dati non è dichiarata', value: 'esclusione' }, { label: 'Il report è troppo lungo', value: 'lungo' }, { label: 'I numeri sono troppo bassi', value: 'bassi' }],
+    correctAnswer: 'esclusione', points: 2, orderIndex: 107, tags: ['dialogo', 'feedback', 'work-life'], timeSuggested: 100
+  },
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: La nuova normativa europea sulla protezione dei dati impone audit trimestrali per i fornitori critici.
+SPEAKER_B: Significa che dovremo rivedere tutti i contratti in essere. Quanto tempo abbiamo?
+SPEAKER_A: La compliance è obbligatoria dal primo gennaio, quindi sei mesi.
+SPEAKER_B: Ok, proporrò una task force congiunta con il team legale e il vendor management. Devo darti un piano dettagliato entro fine mese?`,
+    ttsLanguageCode: 'it-IT',
+    questionText: 'Quanto tempo hanno per essere conformi?',
+    options: [{ label: 'Tre mesi', value: '3-mesi' }, { label: 'Sei mesi', value: '6-mesi' }, { label: 'Un anno', value: '1-anno' }, { label: 'Due anni', value: '2-anni' }],
+    correctAnswer: '6-mesi', points: 2, orderIndex: 108, tags: ['dialogo', 'compliance', 'work-life'], timeSuggested: 100
+  },
 ]
