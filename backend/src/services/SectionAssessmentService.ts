@@ -210,10 +210,14 @@ export class SectionAssessmentService {
     const testType = fixedLevel ? 'PROGRESS' : 'PLACEMENT'
     const startLevel = fixedLevel || 'A2'
 
-    // Self-started tests need explicit Maka approval before the learner can
-    // actually take them. Admin-assigned tests skip approval and go straight
-    // to ASSIGNED.
-    const initialStatus: AssessmentStatus = assignedById ? 'ASSIGNED' : 'REQUESTED'
+    // All new tests are ASSIGNED immediately — both admin-assigned and
+    // learner-self-started. The previous REQUESTED gate (where Maka had to
+    // approve every self-started test before the learner could begin) was
+    // dropped on Fabio's request: it became operational friction at scale
+    // ("così divento matt"). The pre-test questionnaire still gates self
+    // requests, and Maka still receives an email + sees the test in the
+    // admin dashboards.
+    const initialStatus: AssessmentStatus = 'ASSIGNED'
 
     const assessment = await prisma.assessment.create({
       data: {
@@ -230,7 +234,10 @@ export class SectionAssessmentService {
         // For both REQUESTED and ASSIGNED, leave it undefined.
         startedAt: undefined,
         assignedById,
-        assignedAt: assignedById ? new Date() : undefined,
+        // Stamp assignedAt always (REQUESTED is no longer used); for
+        // self-started, assignedById is null but we still record when the
+        // test became available.
+        assignedAt: new Date(),
         sections: {
           create: sectionSkills.map(skill => ({
             skill: skill as any,
@@ -293,47 +300,35 @@ export class SectionAssessmentService {
         subjectId: assessment.id,
         metadata: { language, testType, startLevel, studentId },
       })
-    } else if (assessment.status === 'REQUESTED') {
+    } else {
+      // Self-started: no admin assigner, log under the learner's id
       const studentUser = await prisma.user.findFirst({ where: { studentProfile: { id: studentId } } })
       if (studentUser) {
         activityLog.log({
-          action: 'ASSESSMENT_REQUESTED',
+          action: 'ASSESSMENT_ASSIGNED',
           userId: studentUser.id,
           actorEmail: studentUser.email,
           actorName: studentUser.name,
           actorRole: 'STUDENT',
           subjectType: 'Assessment',
           subjectId: assessment.id,
-          metadata: { language, testType, startLevel },
+          metadata: { language, testType, startLevel, selfStarted: true },
         })
-      }
-    }
 
-    // Notify Maka HQ. Two flavors:
-    //   REQUESTED  -> learner is waiting on approval; send an approval CTA
-    //   IN_PROGRESS (legacy)-> learner started immediately (no longer happens for
-    //                          self-started tests but kept for safety)
-    if (!assignedById && assessment.status === 'REQUESTED') {
-      try {
-        const studentUser = await prisma.user.findFirst({ where: { studentProfile: { id: studentId } } })
-        if (studentUser) {
-          const approvalUrl = `${process.env.FRONTEND_URL || 'https://roundtables-frontend.vercel.app'}/admin/test-requests`
-          emailService.sendInternalEvent({
-            eventTitle: 'Placement Test Requested — Approval Needed',
-            accentColor: '#ca8a04',
-            studentName: studentUser.name,
-            studentEmail: studentUser.email,
-            rows: [
-              { label: 'Language', value: language },
-              { label: 'Test type', value: testType },
-              { label: 'Requested at', value: new Date().toLocaleString('en-GB', { timeZone: 'Europe/Rome' }) + ' (Europe/Rome)' },
-              { label: 'Approve at', value: approvalUrl },
-            ],
-            note: 'The learner has requested a placement test. Open the admin Test Requests page to approve or deny.',
-          }).catch(err => console.error('Maka request notification failed:', err))
-        }
-      } catch (e) {
-        console.error('Failed to look up student for Maka notification:', e)
+        // Maka still gets a heads-up email — it's just informational now,
+        // there's no action required since approval was dropped.
+        emailService.sendInternalEvent({
+          eventTitle: 'Placement Test Started',
+          accentColor: '#22c55e',
+          studentName: studentUser.name,
+          studentEmail: studentUser.email,
+          rows: [
+            { label: 'Language', value: language },
+            { label: 'Test type', value: testType },
+            { label: 'Started at', value: new Date().toLocaleString('en-GB', { timeZone: 'Europe/Rome' }) + ' (Europe/Rome)' },
+          ],
+          note: 'A learner has started a placement test (self-started). No action required — this is informational. You will receive the full report when the test is completed.',
+        }).catch(err => console.error('Maka test-started notification failed:', err))
       }
     }
 

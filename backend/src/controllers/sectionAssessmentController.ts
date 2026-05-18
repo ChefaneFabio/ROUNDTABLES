@@ -140,30 +140,34 @@ router.put('/:id/pre-test-data', authenticate, async (req: Request, res: Respons
 // ==================== Student Routes ====================
 
 // Create a multi-skill assessment
+//
+// Only Maka admins (and trainers for their own students) can create new
+// assessments. Learners do NOT self-pick a language any more — Alessia
+// flagged the "ristorante" UX as confusing. Learners only see tests that
+// have been explicitly assigned to them.
 router.post('/', authenticate, validateRequest(createMultiSkillSchema), async (req: Request, res: Response) => {
   try {
-    if (!req.user?.studentId) {
-      return res.status(403).json(apiResponse.error('Only students can take assessments', 'NOT_STUDENT'))
+    // STUDENTs can no longer self-start. They must be assigned a test by
+    // Maka from /admin/users/[id] or from a company page.
+    if (req.user?.role === 'STUDENT') {
+      return res.status(403).json(apiResponse.error(
+        'Learners cannot start tests directly. Please contact Maka to be assigned a placement test.',
+        'ASSIGNMENT_REQUIRED'
+      ))
     }
 
-    // Gate: learners must complete the pre-test questionnaire before
-    // requesting a placement test (Kate's HubSpot data). Admin/teacher
-    // assignments bypass this check (they create the assessment for the
-    // learner via /assign), so it only applies to self-started requests.
-    const student = await prisma.student.findUnique({
-      where: { id: req.user.studentId },
-      select: { preTestCompletedAt: true }
-    })
-    if (!student?.preTestCompletedAt) {
-      return res.status(412).json(apiResponse.error(
-        'Pre-test questionnaire required before requesting a placement test',
-        'PRETEST_REQUIRED'
-      ))
+    // Admin/Teacher path — they can create a test on their own studentId
+    // (e.g. for previewing/testing). Otherwise they should use /admin/assign.
+    if (!req.user?.studentId) {
+      return res.status(403).json(apiResponse.error('No student profile on this account', 'NOT_STUDENT'))
     }
 
     const assessment = await sectionAssessmentService.createMultiSkillAssessment({
       studentId: req.user.studentId,
-      language: req.body.language
+      language: req.body.language,
+      // Self-test by admin/teacher: stamp them as the assigner so it
+      // appears in the activity log without ambiguity.
+      assignedById: req.user.id,
     })
 
     return res.status(201).json(apiResponse.success(assessment, 'Multi-skill assessment created'))
@@ -503,7 +507,14 @@ router.post('/admin/retry-requests/:notificationId/deny', authenticate, requireS
 // List learner-initiated test requests awaiting Maka approval
 router.get('/admin/requests', authenticate, requireSchoolAdmin, async (req: Request, res: Response) => {
   try {
-    const requests = await sectionAssessmentService.listPendingRequests(req.user?.schoolId || undefined)
+    // ADMIN (training@makaitalia.com) sees every pending request across the
+    // platform. School-scoped admins still get filtered to their own school.
+    // The original code always passed req.user.schoolId, which silently
+    // hid requests from learners whose Student.schoolId didn't match the
+    // admin's JWT — the bug Fabio hit when his self-request didn't appear
+    // in /admin/test-requests.
+    const schoolFilter = req.user?.role === 'ADMIN' ? undefined : (req.user?.schoolId || undefined)
+    const requests = await sectionAssessmentService.listPendingRequests(schoolFilter)
     return res.json(apiResponse.success(requests))
   } catch (error) {
     return handleError(res, error)

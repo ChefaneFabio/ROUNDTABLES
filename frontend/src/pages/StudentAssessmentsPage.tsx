@@ -34,19 +34,11 @@ const LANGUAGES = [
   { code: 'German', name: 'German' }
 ]
 
-const TIME_OPTIONS = [
-  { value: 30, label: '30 minutes' },
-  { value: 45, label: '45 minutes' },
-  { value: 60, label: '60 minutes' },
-  { value: 90, label: '90 minutes' }
-]
-
 export function StudentAssessmentsPage() {
   const { studentId } = useParams<{ studentId: string }>()
   const queryClient = useQueryClient()
   const [showAssignModal, setShowAssignModal] = useState(false)
   const [assignLanguage, setAssignLanguage] = useState('English')
-  const [assignTimeLimit, setAssignTimeLimit] = useState(60)
 
   const { data: student, isLoading: loadingStudent } = useQuery(
     ['student', studentId],
@@ -61,10 +53,11 @@ export function StudentAssessmentsPage() {
   )
 
   const assignMutation = useMutation(
-    () => assessmentApi.assignAssessment({
+    // Multi-skill placement is the only active test type; the single-skill
+    // path was a legacy holdover that produced a different format.
+    () => assessmentApi.assignMultiSkillAssessment({
       studentIds: [studentId!],
       language: assignLanguage,
-      timeLimitMin: assignTimeLimit
     }),
     {
       onSuccess: () => {
@@ -216,17 +209,10 @@ export function StudentAssessmentsPage() {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Time Limit</label>
-                <select
-                  value={assignTimeLimit}
-                  onChange={e => setAssignTimeLimit(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  {TIME_OPTIONS.map(t => (
-                    <option key={t.value} value={t.value}>{t.label}</option>
-                  ))}
-                </select>
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs text-slate-600 space-y-1">
+                <p className="font-semibold text-slate-700">Standard 4-skill placement test</p>
+                <p>Reading 18 min · Listening 12 min · Writing 10 min · Speaking 10 min</p>
+                <p className="text-slate-500">Each section has its own timer — total ~60 min realistici. Durata fissa, non modificabile.</p>
               </div>
             </div>
 

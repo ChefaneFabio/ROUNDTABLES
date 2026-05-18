@@ -57,13 +57,6 @@ const LANGUAGES = [
   { code: 'German', name: 'German' }
 ]
 
-const TIME_OPTIONS = [
-  { value: 30, label: '30 minutes' },
-  { value: 45, label: '45 minutes' },
-  { value: 60, label: '60 minutes' },
-  { value: 90, label: '90 minutes' }
-]
-
 function formatDate(dateStr?: string): string {
   if (!dateStr) return 'Never'
   const d = new Date(dateStr)
@@ -89,7 +82,6 @@ export const StudentsPage: React.FC = () => {
   const [selectedStudents, setSelectedStudents] = useState<Set<string>>(new Set())
   const [showAssignModal, setShowAssignModal] = useState(false)
   const [assignLanguage, setAssignLanguage] = useState('English')
-  const [assignTimeLimit, setAssignTimeLimit] = useState(60)
   const [isAssigning, setIsAssigning] = useState(false)
   const [editingStudent, setEditingStudent] = useState<Student | null>(null)
 
@@ -143,10 +135,11 @@ export const StudentsPage: React.FC = () => {
   const handleAssign = async () => {
     setIsAssigning(true)
     try {
-      await assessmentApi.assignAssessment({
+      // Use the multi-skill placement endpoint — single-skill is legacy and
+      // produces a different test format than the one learners actually take.
+      await assessmentApi.assignMultiSkillAssessment({
         studentIds: Array.from(selectedStudents),
         language: assignLanguage,
-        timeLimitMin: assignTimeLimit
       })
       setShowAssignModal(false)
       setSelectedStudents(new Set())
@@ -482,17 +475,10 @@ export const StudentsPage: React.FC = () => {
                 </select>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Time Limit</label>
-                <select
-                  value={assignTimeLimit}
-                  onChange={e => setAssignTimeLimit(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-slate-400 text-sm"
-                >
-                  {TIME_OPTIONS.map(t => (
-                    <option key={t.value} value={t.value}>{t.label}</option>
-                  ))}
-                </select>
+              <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs text-slate-600 space-y-1">
+                <p className="font-semibold text-slate-700">Standard 4-skill placement test</p>
+                <p>Reading 18 min · Listening 12 min · Writing 10 min · Speaking 10 min</p>
+                <p className="text-slate-500">Each section has its own timer — total ~60 min realistici. Durata fissa, non modificabile.</p>
               </div>
             </div>
 

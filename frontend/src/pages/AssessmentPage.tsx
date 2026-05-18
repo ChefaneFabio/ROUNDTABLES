@@ -49,7 +49,9 @@ export function AssessmentPage() {
   const { data: assessments, isLoading } = useQuery('myAssessments', assessmentApi.getMyAssessments)
   const { data: assignedAssessments, isLoading: loadingAssigned } = useQuery('myAssignedAssessments', assessmentApi.getAssignedAssessments)
   const { data: preTest } = useQuery('myPreTest', assessmentApi.getPreTest, { enabled: !isAdmin })
-  const preTestRequired = !isAdmin && !preTest?.completed
+  // Pre-test is OPTIONAL — we only surface a soft suggestion when it
+  // hasn't been filled yet. Never blocks the learner from starting a test.
+  const preTestSuggested = !isAdmin && !preTest?.completed
 
   // For admin/teacher users, creating a multi-skill assessment still goes
   // straight to the test (they can also pre-assign for others).
@@ -67,15 +69,7 @@ export function AssessmentPage() {
         }
         navigate(`/assessment/multi-skill/${assessment.id}`)
       },
-      onError: (err: any) => {
-        // Backend returns 412 PRETEST_REQUIRED when the learner hasn't filled
-        // the questionnaire yet. Bounce them to the form instead of an error.
-        if (err?.response?.status === 412 || err?.response?.data?.code === 'PRETEST_REQUIRED') {
-          navigate('/assessment/pretest')
-          return
-        }
-        setError(err?.message || 'Failed to request test')
-      },
+      onError: (err: any) => setError(err?.message || 'Failed to start test'),
     }
   )
 
@@ -142,10 +136,11 @@ export function AssessmentPage() {
               <HelpHint title="How the placement test works" triggerClass="text-white/70 hover:text-white" iconClass="w-5 h-5">
                 <HelpRole role="learner" />
                 <HelpRow label="The test">4 timed sections — Reading 18m, Listening 12m, Writing 10m, Speaking 10m. ~60 min realistic.</HelpRow>
+                <HelpRow label="Assigned by Maka">your test (language + level) is set up for you by Maka. You'll see it on this page when ready.</HelpRow>
                 <HelpRow label="You can">pause between sections, recover from a session timeout, see your CEFR per skill at the end.</HelpRow>
                 <HelpRow label="Maka">receives your results automatically and can override AI-graded sections (Writing, Speaking).</HelpRow>
                 <HelpRow label="Your HR" tone="good">if you're a B2B learner, your HR contact sees your results too.</HelpRow>
-                <HelpRow label="You can't" tone="warn">redo a finished section without asking Maka to reopen it.</HelpRow>
+                <HelpRow label="You can't" tone="warn">pick a different language, retake a completed test, or redo a finished section without asking Maka.</HelpRow>
               </HelpHint>
             </div>
           </div>
@@ -181,20 +176,20 @@ export function AssessmentPage() {
         </div>
       )}
 
-      {preTestRequired && (
-        <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-5 flex items-center justify-between gap-4">
+      {preTestSuggested && (
+        <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center justify-between gap-4">
           <div>
-            <p className="font-semibold text-amber-900">Finish your pre-test questionnaire first</p>
-            <p className="text-sm text-amber-700 mt-1">
-              A 2-minute form helps us pick the right placement and match you with the right learning group.
+            <p className="font-medium text-slate-900 text-sm">Optional: 2-minute pre-test questionnaire</p>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Tell us about your goals and availability so Maka can tailor your lessons. Skip if you prefer — you can fill it any time.
             </p>
           </div>
           <button
             onClick={() => navigate('/assessment/pretest')}
-            className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-amber-600 text-white rounded-lg hover:bg-amber-700 font-medium text-sm"
+            className="shrink-0 inline-flex items-center gap-1 px-3 py-1.5 text-slate-700 hover:bg-slate-200 rounded-lg text-xs font-medium"
           >
-            Start questionnaire
-            <ChevronRight className="h-4 w-4" />
+            Open
+            <ChevronRight className="h-3.5 w-3.5" />
           </button>
         </div>
       )}
@@ -261,28 +256,32 @@ export function AssessmentPage() {
         </div>
       )}
 
-      {/* Start New Test */}
+      {/* Empty state for learners with no assigned tests at all */}
+      {!isAdmin
+        && uniqueAssigned.length === 0
+        && !inProgressMultiSkill
+        && completedAssessments.length === 0 && (
+        <div className="bg-white border border-gray-200 rounded-2xl p-10 text-center">
+          <div className="mx-auto w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mb-4">
+            <ClipboardCheck className="w-7 h-7 text-gray-400" />
+          </div>
+          <h2 className="text-lg font-semibold text-gray-900 mb-2">No test assigned yet</h2>
+          <p className="text-sm text-gray-500 max-w-md mx-auto">
+            Your placement test will appear here once Maka Language Consulting assigns one to you.
+            If you think this is a mistake, please contact <a className="text-indigo-600 underline" href="mailto:training@makaitalia.com">training@makaitalia.com</a>.
+          </p>
+        </div>
+      )}
+
+      {/* Start New Test — ADMIN-ONLY language picker (Maka uses this to try
+          out tests themselves; learners never see this menu) */}
+      {isAdmin && (
       <div>
         <div className="flex items-center gap-2 mb-4">
           <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
-            {isAdmin ? 'Start a New Test' : 'Available Tests'}
+            Start a New Test
           </h2>
-          {!isAdmin && (
-            <HelpHint title="Requesting a test">
-              <HelpRole role="learner" />
-              <HelpRow label="You">click Request Test → request enters Maka's approval queue.</HelpRow>
-              <HelpRow label="Maka">reviews and approves (usually within hours). You get an email; the card flips to Begin Test.</HelpRow>
-              <HelpRow label="Already done">a test in this language? The card shows View Results — no retakes from your side.</HelpRow>
-              <HelpRow label="You can't" tone="warn">start the test yourself without Maka's approval, or retake a completed test.</HelpRow>
-            </HelpHint>
-          )}
         </div>
-        {!isAdmin && (
-          <p className="text-sm text-gray-500 mb-4">
-            Request the placement test you want to take. Maka Language Consulting will approve your request,
-            and you will receive an email when your test is ready.
-          </p>
-        )}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {LANGUAGES.map(lang => {
             const result = latestByLang.get(lang.code)
@@ -412,6 +411,7 @@ export function AssessmentPage() {
           })}
         </div>
       </div>
+      )}
 
       {/* Previous Results — admin/teacher only */}
       {isAdmin && completedAssessments.length > 0 && (
