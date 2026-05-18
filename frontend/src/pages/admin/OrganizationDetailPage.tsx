@@ -970,8 +970,11 @@ function BulkUploadModal({
     created: number
     skipped: number
     errored: number
-    results: Array<{ row: number; status: 'created' | 'skipped' | 'error'; email: string; reason?: string }>
+    results: Array<{ row: number; status: 'created' | 'skipped' | 'error'; email: string; studentId?: string; reason?: string }>
   } | null>(null)
+  const [assignLanguage, setAssignLanguage] = useState('English')
+  const [assigning, setAssigning] = useState(false)
+  const [assignSummary, setAssignSummary] = useState<string | null>(null)
 
   const handleTemplate = async () => {
     try {
@@ -994,6 +997,7 @@ function BulkUploadModal({
     setLoading(true)
     setError('')
     setResult(null)
+    setAssignSummary(null)
     try {
       const data = await organizationApi.bulkUploadEmployees(orgId, file, sendInvites)
       setResult(data)
@@ -1002,6 +1006,29 @@ function BulkUploadModal({
       setError(e.response?.data?.error || 'Upload failed')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const createdStudentIds = result?.results
+    ?.filter(r => r.status === 'created' && r.studentId)
+    .map(r => r.studentId!) ?? []
+
+  const handleQuickAssign = async () => {
+    if (createdStudentIds.length === 0) return
+    setAssigning(true)
+    setError('')
+    try {
+      const assignments = await assessmentApi.assignMultiSkillAssessment({
+        studentIds: createdStudentIds,
+        language: assignLanguage,
+      })
+      const count = Array.isArray(assignments) ? assignments.length : createdStudentIds.length
+      setAssignSummary(`Assigned ${assignLanguage} placement test to ${count} learner${count !== 1 ? 's' : ''}.`)
+      onSuccess()
+    } catch (e: any) {
+      setError(e.response?.data?.error || 'Assignment failed')
+    } finally {
+      setAssigning(false)
     }
   }
 
@@ -1131,6 +1158,53 @@ function BulkUploadModal({
                         </div>
                       ))}
                   </div>
+                </div>
+              )}
+
+              {/* Quick-assign: assign placement test to the learners just
+                  created, in one click, without leaving this modal. */}
+              {createdStudentIds.length > 0 && !assignSummary && (
+                <div className="border-2 border-indigo-200 bg-indigo-50/40 rounded-lg p-4 space-y-3">
+                  <div className="flex items-start gap-2">
+                    <Send className="h-4 w-4 text-indigo-600 mt-0.5" />
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-indigo-900">
+                        Assign a placement test to these {createdStudentIds.length} learner{createdStudentIds.length !== 1 ? 's' : ''}?
+                      </p>
+                      <p className="text-xs text-indigo-700 mt-0.5">
+                        Same language for everyone in this batch. They'll see the test on their dashboard immediately.
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <select
+                      value={assignLanguage}
+                      onChange={e => setAssignLanguage(e.target.value)}
+                      disabled={assigning}
+                      className="px-3 py-2 border border-indigo-300 bg-white rounded-lg text-sm focus:ring-2 focus:ring-indigo-500"
+                    >
+                      <option value="English">English</option>
+                      <option value="Spanish">Spanish</option>
+                      <option value="French">French</option>
+                      <option value="German">German</option>
+                      <option value="Italian">Italian</option>
+                    </select>
+                    <button
+                      onClick={handleQuickAssign}
+                      disabled={assigning}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:opacity-50 text-sm font-medium"
+                    >
+                      <Send className="h-4 w-4" />
+                      {assigning ? 'Assigning...' : `Assign to ${createdStudentIds.length}`}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {assignSummary && (
+                <div className="border border-green-200 bg-green-50 rounded-lg p-3 text-sm text-green-800 flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                  {assignSummary}
                 </div>
               )}
             </div>
