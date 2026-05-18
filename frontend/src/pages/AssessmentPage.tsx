@@ -20,6 +20,7 @@ import { assessmentApi, Assessment } from '../services/assessmentApi'
 import { LoadingPage } from '../components/common/LoadingSpinner'
 import { Alert } from '../components/common/Alert'
 import { Button } from '../components/common/Button'
+import { HelpHint } from '../components/common/HelpHint'
 
 const LANGUAGES = [
   { code: 'English', name: 'English', flag: '\u{1F1EC}\u{1F1E7}', accent: 'from-blue-500 to-red-500' },
@@ -137,6 +138,14 @@ export function AssessmentPage() {
               <ClipboardCheck className="w-6 h-6" />
             </div>
             <h1 className="text-2xl font-bold tracking-tight">Placement Test</h1>
+            <div className="text-gray-200">
+              <HelpHint title="How the placement test works" triggerClass="text-white/70 hover:text-white" iconClass="w-5 h-5">
+                <p><strong>4 timed sections</strong>, ~50 min of strict timer + a few minutes of intros (~60 min realistic).</p>
+                <p>Reading & Language Use (18&nbsp;min), Listening (12&nbsp;min), Writing (10&nbsp;min), Speaking (10&nbsp;min).</p>
+                <p>You can pause between sections, and a network blip won't kill your progress. Once a section is finished you cannot redo it without asking Maka.</p>
+                <p>At the end you get a CEFR level (A1–C2) per skill plus an overall result.</p>
+              </HelpHint>
+            </div>
           </div>
           <p className="text-gray-300 max-w-xl leading-relaxed">
             Determine your CEFR level (A1-C2) with a comprehensive placement test covering all four language skills.
@@ -152,7 +161,7 @@ export function AssessmentPage() {
           </div>
           <div className="mt-4 inline-flex items-center gap-2 px-3.5 py-1.5 bg-slate-500/20 backdrop-blur-sm rounded-full border border-slate-400/20 text-sm">
             <Clock className="w-3.5 h-3.5 text-gray-400" />
-            <span className="text-gray-300 font-medium">Total: ~70 min &middot; 4 sections</span>
+            <span className="text-gray-300 font-medium">~50 min timed &middot; ~60 min total &middot; 4 sections</span>
           </div>
         </div>
       </div>
@@ -201,7 +210,7 @@ export function AssessmentPage() {
                     <p className="font-semibold text-gray-900">{a.language} Placement Test</p>
                   </div>
                   <div className="flex items-center gap-3 mt-1 text-sm text-gray-500">
-                    <span className="flex items-center gap-1"><Timer className="w-4 h-4" /> ~70 min</span>
+                    <span className="flex items-center gap-1"><Timer className="w-4 h-4" /> ~60 min</span>
                     {a.assignedAt && <span>Assigned {new Date(a.assignedAt).toLocaleDateString()}</span>}
                   </div>
                 </div>
@@ -252,9 +261,18 @@ export function AssessmentPage() {
 
       {/* Start New Test */}
       <div>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
-          {isAdmin ? 'Start a New Test' : 'Available Tests'}
-        </h2>
+        <div className="flex items-center gap-2 mb-4">
+          <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+            {isAdmin ? 'Start a New Test' : 'Available Tests'}
+          </h2>
+          {!isAdmin && (
+            <HelpHint title="Requesting a test">
+              <p>Click <strong>Request Test</strong> on the language you want to be assessed in.</p>
+              <p>Maka will receive your request and approve it (usually within a few hours). You'll get an email when it's ready and the card will change to <strong>Begin Test</strong>.</p>
+              <p>If you already completed a test for a language, the card shows <strong>View Results</strong> instead.</p>
+            </HelpHint>
+          )}
+        </div>
         {!isAdmin && (
           <p className="text-sm text-gray-500 mb-4">
             Request the placement test you want to take. Maka Language Consulting will approve your request,

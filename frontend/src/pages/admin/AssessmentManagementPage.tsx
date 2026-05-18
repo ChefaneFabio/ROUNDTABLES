@@ -22,6 +22,7 @@ import { LoadingPage } from '../../components/common/LoadingSpinner'
 import { Alert } from '../../components/common/Alert'
 import { Button } from '../../components/common/Button'
 import { Card } from '../../components/common/Card'
+import { HelpHint } from '../../components/common/HelpHint'
 
 const LANGUAGES = [
   { code: 'English', name: 'English' },
@@ -176,7 +177,16 @@ export default function AssessmentManagementPage() {
         <div className="flex items-center gap-3">
           <ClipboardCheck className="w-8 h-8 text-primary-600" />
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Assessment Management</h1>
+            <div className="flex items-center gap-1.5">
+              <h1 className="text-2xl font-bold text-gray-900">Assessment Management</h1>
+              <HelpHint title="What you can do here">
+                <p><strong>Search by name or email</strong> to find a learner quickly. Filters narrow by language and status.</p>
+                <p><strong>Export to XLSX</strong> — tick the checkboxes next to completed tests, or use <em>Export all completed</em> when nothing is selected. The file has overall + per-section scores and CEFR levels.</p>
+                <p><strong>Assign New Test</strong> — pick a learner + language to send a test that skips the approval queue.</p>
+                <p><strong>Test PDF</strong> — download the full test or a single section as a PDF for offline review.</p>
+                <p>Pending requests live on the separate <em>Test Requests</em> page.</p>
+              </HelpHint>
+            </div>
             <p className="text-sm text-gray-500">Assign and track 4-skill assessments</p>
           </div>
         </div>
@@ -728,8 +738,8 @@ function AssignModal({
           {/* Info box */}
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700">
             {testMode === 'placement'
-              ? 'Placement Test: Adaptive difficulty across Reading, Listening, Writing, Speaking (~70 min). Determines CEFR level (A1-C2).'
-              : `Level ${fixedLevel || '...'} Test: All questions at ${fixedLevel || 'selected'} level across Reading, Listening, Writing, Speaking (~70 min). Verifies competency at this level.`
+              ? 'Placement Test: Adaptive difficulty across Reading, Listening, Writing, Speaking (~60 min). Determines CEFR level (A1-C2).'
+              : `Level ${fixedLevel || '...'} Test: All questions at ${fixedLevel || 'selected'} level across Reading, Listening, Writing, Speaking (~60 min). Verifies competency at this level.`
             }
             {' '}Learners will receive a notification and can start when ready.
           </div>

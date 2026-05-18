@@ -100,7 +100,9 @@ directly in `ASSIGNED` state.
 
 ### 2.3 Taking the test
 
-The placement test is **4 sections** (~70 min total):
+The placement test is **4 sections**. Strict timer budget = **50 min**;
+real-world completion lands around **~60 min** once you include intro
+pages, section transitions, and a brief between-section pause.
 
 | # | Section | Time | Questions | Skills measured |
 |---|---------|------|-----------|-----------------|
@@ -108,6 +110,10 @@ The placement test is **4 sections** (~70 min total):
 | 2 | Listening | 12 min | 10 | listening comprehension, dialogues |
 | 3 | Writing | 10 min | 6 | written production, AI-scored |
 | 4 | Speaking | 10 min | 6 | spoken production, Whisper transcribed + AI-scored |
+
+Source of truth for section limits: `SECTION_CONFIG_V3` in
+`backend/src/services/SectionAssessmentService.ts`. The UI surfaces a
+conservative "~70 min" estimate so learners book enough calendar time.
 
 **Per-section flow:**
 1. Section starts → timer begins (`expiresAt = now + timeLimitMin`)
@@ -287,7 +293,7 @@ User stories are in the format:
 - Multi-school federation.
 - Open API for external systems (use Maka admin for now).
 - Email-based one-click approve link (use the admin page).
-- 40-minute test target — current ~70-min duration is acceptable.
+- 40-minute test target — current ~50-min timed (~60-min real) duration is acceptable.
 - Fractional answer-penalty scoring (NC − NI/3) — current adaptive scoring stays.
 - Strict anti-cheat enforcement — tab-switch warning + allowed copy/paste is intentional.
 

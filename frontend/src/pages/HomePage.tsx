@@ -241,7 +241,7 @@ export function HomePage() {
                 ))}
               </div>
               <div className="mt-4 pt-4 border-t border-gray-200 text-center">
-                <p className="text-sm text-gray-500">Total: ~70 minutes &middot; CEFR A1-C2 &middot; GSE 10-90</p>
+                <p className="text-sm text-gray-500">Total: ~60 minutes &middot; CEFR A1-C2 &middot; GSE 10-90</p>
               </div>
             </div>
           </div>

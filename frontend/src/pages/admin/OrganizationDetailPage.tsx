@@ -9,6 +9,7 @@ import {
 import { organizationContactsApi, coursesApi } from '../../services/api'
 import { organizationApi } from '../../services/organizationApi'
 import { assessmentApi } from '../../services/assessmentApi'
+import { HelpHint } from '../../components/common/HelpHint'
 
 export default function OrganizationDetailPage() {
   const { id: orgId } = useParams<{ id: string }>()
@@ -243,7 +244,15 @@ export default function OrganizationDetailPage() {
       <div className="bg-white rounded-lg border border-gray-200">
         <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">Company Learners</h2>
+            <div className="flex items-center gap-1.5">
+              <h2 className="text-lg font-semibold text-gray-900">Company Learners</h2>
+              <HelpHint title="Adding learners to this company">
+                <p><strong>Invite Learner</strong> — one learner at a time. Sends a welcome email with a temporary password.</p>
+                <p><strong>Bulk Upload</strong> — for big rosters. Download the template, fill it, drop it back. You'll get a per-row report showing what got created or skipped.</p>
+                <p><strong>Assign Placement Test</strong> — pick learners + language. These tests skip the approval queue.</p>
+                <p>Learners must complete a short pre-test questionnaire before they can self-request a test. Bulk-uploaded learners with pre-test fields in the file skip this gate.</p>
+              </HelpHint>
+            </div>
             <p className="text-sm text-gray-500">
               Employees of {organization?.name || 'this company'} who can be assigned placement tests
             </p>

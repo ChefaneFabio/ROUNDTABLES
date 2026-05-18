@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { organizationApi } from '../../services/organizationApi'
+import { HelpHint } from '../../components/common/HelpHint'
 
 interface DashboardData {
   employeeCount: number
@@ -61,9 +62,21 @@ export default function OrgDashboardPage() {
     <div className="space-y-6">
       {/* Welcome Header */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Welcome back, {user?.name}!
-        </h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-gray-900">
+            Welcome back, {user?.name}!
+          </h1>
+          <HelpHint title="Your HR portal">
+            <p>You can see everything for <strong>your company's learners only</strong> — no other companies are visible.</p>
+            <ul className="list-disc list-inside space-y-1">
+              <li><strong>Employees</strong> — read-only roster of your learners</li>
+              <li><strong>Assessments</strong> — placement test results per learner</li>
+              <li><strong>Reports</strong> — Excel/PDF export for stakeholders</li>
+              <li><strong>Seats &amp; Invoices</strong> — license and billing</li>
+            </ul>
+            <p>To invite a new learner or assign a placement test, contact Maka — those actions are reserved for the platform admin.</p>
+          </HelpHint>
+        </div>
         <p className="text-gray-600 mt-1">
           Here is an overview of your organization.
         </p>

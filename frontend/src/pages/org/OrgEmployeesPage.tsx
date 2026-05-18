@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { organizationApi } from '../../services/organizationApi'
 import { ConfirmDialog } from '../../components/common/ConfirmDialog'
+import { HelpHint } from '../../components/common/HelpHint'
 import { LanguageLevel } from '../../types'
 
 interface Employee {
@@ -102,7 +103,19 @@ export default function OrgEmployeesPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Learners</h1>
+          <div className="flex items-center gap-2">
+            <h1 className="text-2xl font-bold text-gray-900">Learners</h1>
+            <HelpHint title="About this list">
+              <p>This is the full list of your company's learners on the Maka platform.</p>
+              <p>The view is <strong>read-only</strong>:</p>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Need to <strong>add</strong> a learner? Email training@makaitalia.com</li>
+                <li>Need to <strong>remove</strong> a learner? Email training@makaitalia.com</li>
+                <li>To see assessment results, use the <strong>Assessments</strong> tab</li>
+                <li>To export everything, use the <strong>Reports</strong> tab</li>
+              </ul>
+            </HelpHint>
+          </div>
           <p className="text-gray-600 mt-1">
             Read-only view of your organization's learners. To add or remove learners,
             please contact Maka Language Consulting at training@makaitalia.com.
