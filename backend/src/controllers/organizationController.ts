@@ -265,7 +265,26 @@ router.get('/:id/employees', authenticate, requireOrgAdmin, requireOrgAccess, as
               course: { select: { name: true } }
             }
           },
-          progress: true
+          progress: true,
+          // Pull each learner's most recent placement (any status) plus
+          // their latest completed result, so the org page can show at
+          // a glance whether each learner has been tested + their level.
+          // We cap at 5 most recent assessments to keep the payload bounded.
+          assessments: {
+            where: { isMultiSkill: true },
+            orderBy: { assignedAt: 'desc' },
+            take: 5,
+            select: {
+              id: true,
+              language: true,
+              status: true,
+              cefrLevel: true,
+              score: true,
+              assignedAt: true,
+              startedAt: true,
+              completedAt: true,
+            }
+          }
         },
         orderBy: { createdAt: 'desc' }
       }),

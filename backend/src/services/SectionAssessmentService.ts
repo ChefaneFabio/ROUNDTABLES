@@ -1492,6 +1492,12 @@ export class SectionAssessmentService {
       })
 
       const sublevel = calculateSublevel(s.cefrLevel || 'A1', s.percentageScore)
+      // Time spent: completedAt - startedAt in seconds. We compute on the
+      // server so the client can render "8m 12s" without redoing date math.
+      const durationSec = s.startedAt && s.completedAt
+        ? Math.max(0, Math.round((new Date(s.completedAt).getTime() - new Date(s.startedAt).getTime()) / 1000))
+        : null
+
       return {
         id: s.id,
         skill: s.skill,
@@ -1508,6 +1514,10 @@ export class SectionAssessmentService {
         finalScore: s.finalScore,
         questionsAnswered: answers.length,
         questionsTotal: s.questionsLimit,
+        startedAt: s.startedAt,
+        completedAt: s.completedAt,
+        timeLimitMin: s.timeLimitMin,
+        durationSec,
         answers: detailedAnswers
       }
     })

@@ -304,23 +304,61 @@ export default function OrganizationDetailPage() {
                 const name = emp.user?.name || emp.name || 'Unnamed'
                 const email = emp.user?.email || emp.email || ''
                 const level = emp.languageLevel || '—'
+
+                // Most recent placement test (any status) and most recent
+                // completed result — used to show learner activity at a glance.
+                const tests: any[] = emp.assessments || []
+                const latest = tests[0]
+                const latestCompleted = tests.find(t => t.status === 'COMPLETED')
+
                 return (
-                  <div key={emp.id} className="py-3 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="h-9 w-9 rounded-full bg-gray-100 flex items-center justify-center">
+                  <Link
+                    key={emp.id}
+                    to={`/admin/students/${emp.id}/assessments`}
+                    className="py-3 flex items-center justify-between hover:bg-gray-50 rounded-lg -mx-2 px-2 transition-colors"
+                  >
+                    <div className="flex items-center gap-3 min-w-0 flex-1">
+                      <div className="h-9 w-9 rounded-full bg-gray-100 flex items-center justify-center shrink-0">
                         <span className="text-gray-600 font-medium text-sm">
                           {name.charAt(0).toUpperCase()}
                         </span>
                       </div>
-                      <div>
-                        <p className="font-medium text-gray-900 text-sm">{name}</p>
-                        <p className="text-xs text-gray-500">{email}</p>
+                      <div className="min-w-0">
+                        <p className="font-medium text-gray-900 text-sm truncate">{name}</p>
+                        <p className="text-xs text-gray-500 truncate">{email}</p>
                       </div>
                     </div>
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
-                      {level}
-                    </span>
-                  </div>
+
+                    {/* Last test status / result */}
+                    <div className="flex items-center gap-2 shrink-0">
+                      {latestCompleted ? (
+                        <div className="text-right">
+                          <div className="flex items-center gap-1.5">
+                            <span className="px-1.5 py-0.5 rounded text-xs font-bold bg-green-100 text-green-700">
+                              {latestCompleted.cefrLevel}
+                            </span>
+                            <span className="text-xs text-gray-600">{latestCompleted.language}</span>
+                          </div>
+                          <p className="text-[10px] text-gray-400 mt-0.5">
+                            {new Date(latestCompleted.completedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                          </p>
+                        </div>
+                      ) : latest && latest.status !== 'COMPLETED' ? (
+                        <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                          latest.status === 'IN_PROGRESS' || latest.status === 'PAUSED'
+                            ? 'bg-blue-100 text-blue-700'
+                            : 'bg-amber-100 text-amber-700'
+                        }`}>
+                          {latest.language} · {latest.status === 'PAUSED' ? 'paused' : latest.status === 'IN_PROGRESS' ? 'in progress' : 'assigned'}
+                        </span>
+                      ) : (
+                        <span className="text-[10px] text-gray-400 italic">No test yet</span>
+                      )}
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-indigo-50 text-indigo-700">
+                        {level}
+                      </span>
+                    </div>
+                  </Link>
                 )
               })}
             </div>

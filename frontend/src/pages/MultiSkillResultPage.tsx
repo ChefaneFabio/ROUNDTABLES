@@ -6,8 +6,18 @@ import { useAuth } from '../contexts/AuthContext'
 import {
   BookOpen, Headphones, PenTool, Mic, Download, ArrowLeft,
   CheckCircle, BookType, Shuffle, Eraser, FileText, TrendingUp, Lightbulb,
-  Edit3, Save, X, XCircle
+  Edit3, Save, X, XCircle, Clock
 } from 'lucide-react'
+
+// "8m 12s" / "47s" / "1h 03m" — used to show time-per-section in results.
+function formatDuration(sec: number): string {
+  if (sec < 60) return `${sec}s`
+  const m = Math.floor(sec / 60)
+  const s = sec % 60
+  if (m < 60) return s > 0 ? `${m}m ${s.toString().padStart(2, '0')}s` : `${m}m`
+  const h = Math.floor(m / 60)
+  return `${h}h ${(m % 60).toString().padStart(2, '0')}m`
+}
 
 // ─── GSE & CEFR Mapping (from Maka/Versant reference) ───
 
@@ -598,6 +608,12 @@ export function MultiSkillResultPage() {
                           </div>
                           {section.percentageScore != null && (
                             <p className="text-xs text-gray-400 mt-1">{section.questionsAnswered}/{section.questionsTotal} questions &middot; {section.percentageScore}%</p>
+                          )}
+                          {section.durationSec != null && section.timeLimitMin != null && (
+                            <p className="text-xs text-gray-400 mt-0.5">
+                              <Clock className="w-3 h-3 inline mr-1" />
+                              {formatDuration(section.durationSec)} of {section.timeLimitMin}m
+                            </p>
                           )}
                           {section.teacherScore && (
                             <div className="flex items-center gap-1 mt-1">
