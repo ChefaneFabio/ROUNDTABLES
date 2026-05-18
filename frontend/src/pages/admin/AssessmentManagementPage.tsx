@@ -61,6 +61,7 @@ export default function AssessmentManagementPage() {
   const [filterLanguage, setFilterLanguage] = useState('')
   const [filterStatus, setFilterStatus] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [showTestData, setShowTestData] = useState(false)
   const [error, setError] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
@@ -88,11 +89,12 @@ export default function AssessmentManagementPage() {
   }
 
   const { data: assessments, isLoading } = useQuery(
-    ['adminAssessments', filterLanguage, filterStatus],
+    ['adminAssessments', filterLanguage, filterStatus, showTestData],
     () =>
       assessmentApi.getAdminAssessments({
         language: filterLanguage || undefined,
         status: filterStatus || undefined,
+        includeTestData: showTestData,
       }),
     // Poll every 15s so the live progress bar updates while a learner is
     // taking a test. Backend payload stays bounded (limit=50 by default,
@@ -300,6 +302,18 @@ export default function AssessmentManagementPage() {
               </option>
             ))}
           </select>
+          <label
+            className="flex items-center gap-2 text-xs text-gray-600 cursor-pointer select-none whitespace-nowrap"
+            title="Demo Student, Load Test, and *@example.com accounts are filtered out by default to keep this page focused on real learners."
+          >
+            <input
+              type="checkbox"
+              checked={showTestData}
+              onChange={e => setShowTestData(e.target.checked)}
+              className="rounded"
+            />
+            Show demo/test accounts
+          </label>
         </div>
       </Card>
 

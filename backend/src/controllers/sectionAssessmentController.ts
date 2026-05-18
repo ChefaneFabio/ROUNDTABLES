@@ -740,7 +740,7 @@ router.post('/admin/assign', authenticate, requireSchoolAdmin, validateRequest(a
 // List all multi-skill assessments for admin dashboard
 router.get('/admin/assessments', authenticate, requireTeacher, async (req: Request, res: Response) => {
   try {
-    const { language, status, studentId, page, limit } = req.query
+    const { language, status, studentId, page, limit, includeTestData } = req.query
 
     const where: any = { isMultiSkill: true }
     if (language) where.language = language as string
@@ -752,6 +752,24 @@ router.get('/admin/assessments', authenticate, requireTeacher, async (req: Reque
       where.status = { not: 'REQUESTED' }
     }
     if (studentId) where.studentId = studentId as string
+
+    // Hide synthetic/demo accounts by default. Maka was seeing 40+ rows of
+    // "Demo Student" and "Load Test N" entries that drowned out real
+    // learners. The filter is reversible via ?includeTestData=true so we
+    // can still see them when needed for debugging.
+    const showTestData = String(includeTestData ?? 'false').toLowerCase() === 'true'
+    if (!showTestData) {
+      where.student = {
+        ...(where.student || {}),
+        user: {
+          AND: [
+            { email: { not: { contains: 'loadtest-' } } },
+            { email: { not: { endsWith: '@demo.com' } } },
+            { email: { not: { endsWith: '@example.com' } } },
+          ],
+        },
+      }
+    }
 
     // Pagination (defaults: page=1, limit=50, cap=200) to keep payload
     // bounded once the assessment table grows.

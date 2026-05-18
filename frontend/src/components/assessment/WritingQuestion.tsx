@@ -1,4 +1,5 @@
-import { useState, useMemo, useRef } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
+import { Check } from 'lucide-react'
 import { SpecialCharactersBar } from './SpecialCharactersBar'
 
 interface WritingQuestionProps {
@@ -13,9 +14,55 @@ interface WritingQuestionProps {
   language?: string
 }
 
+// localStorage key per writing question — survives session timeouts, page
+// reloads, and accidental tab closes. We scope by question.id because the
+// student is at most writing one draft per question at a time. Cleared on
+// successful submit.
+function draftKey(questionId: string): string {
+  return `roundtables:writingDraft:${questionId}`
+}
+
 export function WritingQuestion({ question, onSubmit, disabled, language }: WritingQuestionProps) {
   const [text, setText] = useState('')
+  const [savedAt, setSavedAt] = useState<number | null>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  // On mount or question change, restore any draft for this question.
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem(draftKey(question.id))
+      if (stored && stored.length > 0) {
+        setText(stored)
+        setSavedAt(Date.now())
+      } else {
+        setText('')
+        setSavedAt(null)
+      }
+    } catch {
+      // localStorage can throw in some private-mode browsers; ignore.
+    }
+  }, [question.id])
+
+  // Debounced autosave — every 600ms after the last keystroke we write the
+  // current text into localStorage. This means the worst case loss is the
+  // last few characters before a crash.
+  useEffect(() => {
+    if (!text) {
+      // Nothing to save; clear the slot so the placeholder reappears.
+      try { localStorage.removeItem(draftKey(question.id)) } catch { /* */ }
+      setSavedAt(null)
+      return
+    }
+    const t = setTimeout(() => {
+      try {
+        localStorage.setItem(draftKey(question.id), text)
+        setSavedAt(Date.now())
+      } catch {
+        // Storage quota errors are rare for plain text — ignore silently.
+      }
+    }, 600)
+    return () => clearTimeout(t)
+  }, [text, question.id])
 
   const wordCount = useMemo(() => {
     return text.trim().split(/\s+/).filter(w => w.length > 0).length
@@ -27,9 +74,21 @@ export function WritingQuestion({ question, onSubmit, disabled, language }: Writ
   const handleSubmit = () => {
     if (text.trim()) {
       onSubmit(text.trim())
+      try { localStorage.removeItem(draftKey(question.id)) } catch { /* */ }
       setText('')
+      setSavedAt(null)
     }
   }
+
+  // "Draft saved 3s ago" style label — purposely vague to avoid implying
+  // the server has the text. This is a local browser draft only.
+  const savedLabel = (() => {
+    if (!savedAt) return null
+    const sec = Math.max(0, Math.round((Date.now() - savedAt) / 1000))
+    if (sec < 5) return 'Draft saved'
+    if (sec < 60) return `Draft saved ${sec}s ago`
+    return `Draft saved ${Math.round(sec / 60)}m ago`
+  })()
 
   return (
     <div className="space-y-4">
@@ -68,11 +127,21 @@ export function WritingQuestion({ question, onSubmit, disabled, language }: Writ
         </div>
       </div>
 
-      {isOverMax && (
-        <p className="text-sm text-red-600">
-          Your response exceeds the maximum word count. Please shorten it.
-        </p>
-      )}
+      <div className="flex items-center justify-between gap-3">
+        <div className="text-xs text-gray-500">
+          {savedLabel && (
+            <span className="inline-flex items-center gap-1 text-emerald-600">
+              <Check className="w-3.5 h-3.5" />
+              {savedLabel} · safe to reload
+            </span>
+          )}
+        </div>
+        {isOverMax && (
+          <p className="text-sm text-red-600">
+            Your response exceeds the maximum word count. Please shorten it.
+          </p>
+        )}
+      </div>
 
       <button
         onClick={handleSubmit}

@@ -506,11 +506,13 @@ export const assessmentApi = {
     language?: string
     status?: string
     studentId?: string
+    includeTestData?: boolean
   }): Promise<any[]> {
     const params = new URLSearchParams()
     if (filters?.language) params.set('language', filters.language)
     if (filters?.status) params.set('status', filters.status)
     if (filters?.studentId) params.set('studentId', filters.studentId)
+    if (filters?.includeTestData) params.set('includeTestData', 'true')
     const response = await api.get(`/assessments/multi-skill/admin/assessments?${params.toString()}`)
     return response.data.data || []
   },
