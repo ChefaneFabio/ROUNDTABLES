@@ -7,7 +7,7 @@ import {
 import { assessmentApi, AvailabilityGrid, AvailabilitySlot, PreTestData } from '../services/assessmentApi'
 import { useAuth } from '../contexts/AuthContext'
 import { Alert } from '../components/common/Alert'
-import { HelpHint } from '../components/common/HelpHint'
+import { HelpHint, HelpRole, HelpRow } from '../components/common/HelpHint'
 
 const DAYS: { key: keyof AvailabilityGrid; label: string }[] = [
   { key: 'monday', label: 'Mon' },
@@ -124,13 +124,11 @@ export function PreTestPage() {
           <h1 className="text-2xl font-bold">Before we start</h1>
           <div className="text-white/80">
             <HelpHint title="Why we ask this" triggerClass="text-white/80 hover:text-white" iconClass="w-5 h-5">
-              <p>Your answers help Maka:</p>
-              <ul className="list-disc list-inside space-y-1">
-                <li>Pick the right placement test for your needs</li>
-                <li>Match you with other learners at a similar level whose schedule overlaps</li>
-                <li>Tailor lesson content (e.g. focus on Speaking if that's your priority)</li>
-              </ul>
-              <p>Only Maka and your HR contact (if you're a B2B learner) see these answers.</p>
+              <HelpRole role="learner" />
+              <HelpRow label="Used by Maka">to pick your placement test, form learning groups, tailor lesson content.</HelpRow>
+              <HelpRow label="Visible to">Maka admins. If you're a B2B learner, your HR contact too.</HelpRow>
+              <HelpRow label="Not visible to">other learners, trainers outside your group, anyone else.</HelpRow>
+              <HelpRow label="Required">to request a self-started placement test. You can update your answers any time.</HelpRow>
             </HelpHint>
           </div>
         </div>
@@ -185,9 +183,10 @@ export function PreTestPage() {
           <div className="flex items-center gap-2 mb-1">
             <h2 className="font-semibold text-gray-900">When are you generally available?</h2>
             <HelpHint title="How we use availability">
-              <p>Each green cell tells Maka one of your usable lesson slots.</p>
-              <p>We try to put learners with similar CEFR levels into the same cohort — your availability is the second filter we apply when forming those groups.</p>
-              <p>This isn't a commitment to a specific time; it's a "could work" map.</p>
+              <HelpRole role="learner" />
+              <HelpRow label="What it is">a "could work" map of when you're generally free — not a commitment to a specific lesson time.</HelpRow>
+              <HelpRow label="Used by Maka">as the second filter when forming groups. First filter is CEFR level (within 0.5 of yours).</HelpRow>
+              <HelpRow label="Can be updated">later from this same page — your availability isn't frozen at sign-up.</HelpRow>
             </HelpHint>
           </div>
           <p className="text-xs text-gray-500 mb-4">

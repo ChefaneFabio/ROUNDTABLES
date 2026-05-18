@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../../contexts/AuthContext'
 import { organizationApi } from '../../services/organizationApi'
-import { HelpHint } from '../../components/common/HelpHint'
+import { HelpHint, HelpRole, HelpRow } from '../../components/common/HelpHint'
 
 interface DashboardData {
   employeeCount: number
@@ -67,14 +67,12 @@ export default function OrgDashboardPage() {
             Welcome back, {user?.name}!
           </h1>
           <HelpHint title="Your HR portal">
-            <p>You can see everything for <strong>your company's learners only</strong> — no other companies are visible.</p>
-            <ul className="list-disc list-inside space-y-1">
-              <li><strong>Employees</strong> — read-only roster of your learners</li>
-              <li><strong>Assessments</strong> — placement test results per learner</li>
-              <li><strong>Reports</strong> — Excel/PDF export for stakeholders</li>
-              <li><strong>Seats &amp; Invoices</strong> — license and billing</li>
-            </ul>
-            <p>To invite a new learner or assign a placement test, contact Maka — those actions are reserved for the platform admin.</p>
+            <HelpRole role="hr" />
+            <HelpRow label="Scope">your company's learners ONLY. No other organizations are visible to you.</HelpRow>
+            <HelpRow label="You can">view employees, see test results, export reports, manage seat licenses and invoices.</HelpRow>
+            <HelpRow label="Maka">invites your learners, approves their tests, and runs the scoring on your behalf.</HelpRow>
+            <HelpRow label="Learners">take the placement test you've been allocated, see their own results.</HelpRow>
+            <HelpRow label="You can't" tone="warn">invite or remove learners, or assign tests. Email training@makaitalia.com for those.</HelpRow>
           </HelpHint>
         </div>
         <p className="text-gray-600 mt-1">

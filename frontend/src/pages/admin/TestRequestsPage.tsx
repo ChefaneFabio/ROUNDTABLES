@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import { ClipboardCheck, CheckCircle, XCircle, Loader2, Mail, AlertTriangle, Building2 } from 'lucide-react'
 import { assessmentApi } from '../../services/assessmentApi'
-import { HelpHint } from '../../components/common/HelpHint'
+import { HelpHint, HelpRole, HelpRow } from '../../components/common/HelpHint'
 
 interface PendingRequest {
   id: string
@@ -72,10 +72,12 @@ export default function TestRequestsPage() {
             <div className="flex items-center gap-1.5">
               <h1 className="text-2xl font-bold text-gray-900">Test Requests</h1>
               <HelpHint title="What happens here">
-                <p>This is the queue of learners who have self-requested a placement test. They cannot start until you <strong>Approve</strong>.</p>
-                <p><strong>Approve</strong> — opens a confirmation showing the learner's name, email, company and language. The learner gets an email and can begin the test immediately.</p>
-                <p><strong>Deny</strong> — you can add an optional reason that's stored on the request for audit.</p>
-                <p>Tests assigned directly from a company page bypass this queue and appear on the learner's dashboard right away.</p>
+                <HelpRole role="maka" />
+                <HelpRow label="The queue">learners who self-requested a placement test. They cannot start until you act.</HelpRow>
+                <HelpRow label="Approve" tone="good">opens a confirmation with full identity. Learner gets an email and can begin immediately.</HelpRow>
+                <HelpRow label="Deny" tone="warn">optional reason stored on the request for audit.</HelpRow>
+                <HelpRow label="Bypass">tests you assign from a company page skip this queue — they're already approved.</HelpRow>
+                <HelpRow label="HR">never sees this page. They can't approve tests for their own learners.</HelpRow>
               </HelpHint>
             </div>
             <p className="text-sm text-gray-500 mt-0.5">Approve or deny learner requests to take a placement test</p>

@@ -4,6 +4,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { RegisterOrganizationRequest } from '../types'
 import { Button } from '../components/common/Button'
 import { Alert } from '../components/common/Alert'
+import { HelpHint, HelpRole, HelpRow } from '../components/common/HelpHint'
 import { Eye, EyeOff, Building2, UserCog, Receipt, MailCheck } from 'lucide-react'
 
 const STEPS = [
@@ -396,6 +397,15 @@ export function OrgRegisterPage() {
         <p className="mt-2 text-center text-sm text-gray-600">
           Set up corporate access to language training, placement tests, and HR monitoring
         </p>
+        <div className="mt-2 flex justify-center">
+          <HelpHint title="What this account does" side="center" label="What can I do as HR?">
+            <HelpRole role="hr" />
+            <HelpRow label="After approval">you can sign in and see your company's learners, their placement test results, and export Excel/PDF reports.</HelpRow>
+            <HelpRow label="Maka">approves your account first, then invites your learners on your behalf. Maka also assigns placement tests.</HelpRow>
+            <HelpRow label="You can't" tone="warn">invite or remove your own learners, assign tests, or see other companies' data.</HelpRow>
+            <HelpRow label="Approval">a Maka admin manually approves the registration. You'll receive an email when access is live.</HelpRow>
+          </HelpHint>
+        </div>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-lg">

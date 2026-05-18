@@ -22,7 +22,7 @@ import { LoadingPage } from '../../components/common/LoadingSpinner'
 import { Alert } from '../../components/common/Alert'
 import { Button } from '../../components/common/Button'
 import { Card } from '../../components/common/Card'
-import { HelpHint } from '../../components/common/HelpHint'
+import { HelpHint, HelpRole, HelpRow } from '../../components/common/HelpHint'
 
 const LANGUAGES = [
   { code: 'English', name: 'English' },
@@ -180,11 +180,13 @@ export default function AssessmentManagementPage() {
             <div className="flex items-center gap-1.5">
               <h1 className="text-2xl font-bold text-gray-900">Assessment Management</h1>
               <HelpHint title="What you can do here">
-                <p><strong>Search by name or email</strong> to find a learner quickly. Filters narrow by language and status.</p>
-                <p><strong>Export to XLSX</strong> — tick the checkboxes next to completed tests, or use <em>Export all completed</em> when nothing is selected. The file has overall + per-section scores and CEFR levels.</p>
-                <p><strong>Assign New Test</strong> — pick a learner + language to send a test that skips the approval queue.</p>
-                <p><strong>Test PDF</strong> — download the full test or a single section as a PDF for offline review.</p>
-                <p>Pending requests live on the separate <em>Test Requests</em> page.</p>
+                <HelpRole role="maka" />
+                <HelpRow label="Scope">every assessment across every company. HR contacts only see their own company's tests.</HelpRow>
+                <HelpRow label="Find a learner">type the name or email — search runs locally on the loaded list. Filters narrow by language + status.</HelpRow>
+                <HelpRow label="Export to XLSX">tick rows, or click "Export all completed" when nothing is selected. File has overall + per-section scores.</HelpRow>
+                <HelpRow label="Assign New Test">picks a learner + language; the test skips the approval queue.</HelpRow>
+                <HelpRow label="Test PDF">full test or a single section, for offline review or pen-and-paper.</HelpRow>
+                <HelpRow label="Pending requests">live on the separate Test Requests page.</HelpRow>
               </HelpHint>
             </div>
             <p className="text-sm text-gray-500">Assign and track 4-skill assessments</p>

@@ -7,6 +7,7 @@ import { Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { Button } from '../components/common/Button'
 import { Alert } from '../components/common/Alert'
+import { HelpHint, HelpRole, HelpRow } from '../components/common/HelpHint'
 
 const schema = yup.object({
   name: yup.string().min(2, 'Name must be at least 2 characters').required('Name is required'),
@@ -90,6 +91,15 @@ export function RegisterPage() {
             Sign in
           </Link>
         </p>
+        <div className="mt-2 flex justify-center">
+          <HelpHint title="What am I signing up for?" side="center" label="Am I in the right place?">
+            <HelpRole role="learner" />
+            <HelpRow label="This form">creates a personal Learner account. You'll request a placement test → Maka approves → you take it.</HelpRow>
+            <HelpRow label="HR contact?">use <Link to="/register/organization" className="text-indigo-600 underline">Register a company</Link> instead — that path waits for Maka's approval before your access goes live.</HelpRow>
+            <HelpRow label="Maka staff?" tone="warn">don't register here. Internal accounts are created by Maka admins directly.</HelpRow>
+            <HelpRow label="Already invited">by your HR or by Maka? Use the email + temporary password from the invite email at the Sign in page instead.</HelpRow>
+          </HelpHint>
+        </div>
         <p className="mt-1 text-center text-xs text-gray-400">
           Or try a{' '}
           <Link to="/login" className="text-primary-500 hover:text-primary-600">

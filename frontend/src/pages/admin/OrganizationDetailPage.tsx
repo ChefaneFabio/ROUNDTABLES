@@ -9,7 +9,7 @@ import {
 import { organizationContactsApi, coursesApi } from '../../services/api'
 import { organizationApi } from '../../services/organizationApi'
 import { assessmentApi } from '../../services/assessmentApi'
-import { HelpHint } from '../../components/common/HelpHint'
+import { HelpHint, HelpRole, HelpRow } from '../../components/common/HelpHint'
 
 export default function OrganizationDetailPage() {
   const { id: orgId } = useParams<{ id: string }>()
@@ -247,10 +247,12 @@ export default function OrganizationDetailPage() {
             <div className="flex items-center gap-1.5">
               <h2 className="text-lg font-semibold text-gray-900">Company Learners</h2>
               <HelpHint title="Adding learners to this company">
-                <p><strong>Invite Learner</strong> — one learner at a time. Sends a welcome email with a temporary password.</p>
-                <p><strong>Bulk Upload</strong> — for big rosters. Download the template, fill it, drop it back. You'll get a per-row report showing what got created or skipped.</p>
-                <p><strong>Assign Placement Test</strong> — pick learners + language. These tests skip the approval queue.</p>
-                <p>Learners must complete a short pre-test questionnaire before they can self-request a test. Bulk-uploaded learners with pre-test fields in the file skip this gate.</p>
+                <HelpRole role="maka" />
+                <HelpRow label="Invite Learner">one at a time. Sends a welcome email with a temporary password.</HelpRow>
+                <HelpRow label="Bulk Upload">big rosters via .xlsx template. Per-row report shows what got created or skipped.</HelpRow>
+                <HelpRow label="Assign Placement Test">pick learners + language. Skips the approval queue — the learner can begin immediately.</HelpRow>
+                <HelpRow label="Pre-test gate">self-started tests require the learner to fill the questionnaire first. Bulk rows with pre-test fields skip the gate.</HelpRow>
+                <HelpRow label="HR" tone="warn">the HR contact at this company can VIEW learners but cannot invite, remove, or assign tests. Only you can.</HelpRow>
               </HelpHint>
             </div>
             <p className="text-sm text-gray-500">

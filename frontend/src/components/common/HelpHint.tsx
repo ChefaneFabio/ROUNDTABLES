@@ -90,3 +90,51 @@ export function HelpHint({
     </div>
   )
 }
+
+/**
+ * Small structured rows for HelpHint content — keeps "who can do what" hints
+ * visually consistent across every screen. Use as children of HelpHint:
+ *
+ *   <HelpHint title="...">
+ *     <HelpRole role="learner" />
+ *     <HelpRow label="You can">take the test, pause, see results</HelpRow>
+ *     <HelpRow label="Maka">approves, exports, reviews</HelpRow>
+ *     <HelpRow label="You can't" tone="warn">invite other learners</HelpRow>
+ *   </HelpHint>
+ */
+const ROLE_STYLES: Record<string, { bg: string; text: string; label: string }> = {
+  learner:  { bg: 'bg-indigo-100',  text: 'text-indigo-700',  label: 'You are a learner' },
+  hr:       { bg: 'bg-emerald-100', text: 'text-emerald-700', label: 'You are an HR contact' },
+  maka:     { bg: 'bg-amber-100',   text: 'text-amber-800',   label: 'You are a Maka admin' },
+  trainer:  { bg: 'bg-purple-100',  text: 'text-purple-700',  label: 'You are a trainer' },
+}
+
+export function HelpRole({ role }: { role: keyof typeof ROLE_STYLES }) {
+  const s = ROLE_STYLES[role]
+  return (
+    <div className={`inline-flex items-center px-2 py-0.5 rounded-full ${s.bg} ${s.text} text-[11px] font-semibold uppercase tracking-wide`}>
+      {s.label}
+    </div>
+  )
+}
+
+export function HelpRow({
+  label,
+  children,
+  tone = 'neutral',
+}: {
+  label: string
+  children: React.ReactNode
+  tone?: 'neutral' | 'warn' | 'good'
+}) {
+  const labelColor =
+    tone === 'warn' ? 'text-red-700' :
+    tone === 'good' ? 'text-emerald-700' :
+    'text-gray-900'
+  return (
+    <div className="text-xs leading-relaxed">
+      <span className={`font-semibold ${labelColor}`}>{label}:</span>{' '}
+      <span className="text-gray-600">{children}</span>
+    </div>
+  )
+}

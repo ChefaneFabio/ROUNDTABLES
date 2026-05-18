@@ -20,7 +20,7 @@ import { assessmentApi, Assessment } from '../services/assessmentApi'
 import { LoadingPage } from '../components/common/LoadingSpinner'
 import { Alert } from '../components/common/Alert'
 import { Button } from '../components/common/Button'
-import { HelpHint } from '../components/common/HelpHint'
+import { HelpHint, HelpRole, HelpRow } from '../components/common/HelpHint'
 
 const LANGUAGES = [
   { code: 'English', name: 'English', flag: '\u{1F1EC}\u{1F1E7}', accent: 'from-blue-500 to-red-500' },
@@ -140,10 +140,12 @@ export function AssessmentPage() {
             <h1 className="text-2xl font-bold tracking-tight">Placement Test</h1>
             <div className="text-gray-200">
               <HelpHint title="How the placement test works" triggerClass="text-white/70 hover:text-white" iconClass="w-5 h-5">
-                <p><strong>4 timed sections</strong>, ~50 min of strict timer + a few minutes of intros (~60 min realistic).</p>
-                <p>Reading & Language Use (18&nbsp;min), Listening (12&nbsp;min), Writing (10&nbsp;min), Speaking (10&nbsp;min).</p>
-                <p>You can pause between sections, and a network blip won't kill your progress. Once a section is finished you cannot redo it without asking Maka.</p>
-                <p>At the end you get a CEFR level (A1–C2) per skill plus an overall result.</p>
+                <HelpRole role="learner" />
+                <HelpRow label="The test">4 timed sections — Reading 18m, Listening 12m, Writing 10m, Speaking 10m. ~60 min realistic.</HelpRow>
+                <HelpRow label="You can">pause between sections, recover from a session timeout, see your CEFR per skill at the end.</HelpRow>
+                <HelpRow label="Maka">receives your results automatically and can override AI-graded sections (Writing, Speaking).</HelpRow>
+                <HelpRow label="Your HR" tone="good">if you're a B2B learner, your HR contact sees your results too.</HelpRow>
+                <HelpRow label="You can't" tone="warn">redo a finished section without asking Maka to reopen it.</HelpRow>
               </HelpHint>
             </div>
           </div>
@@ -267,9 +269,11 @@ export function AssessmentPage() {
           </h2>
           {!isAdmin && (
             <HelpHint title="Requesting a test">
-              <p>Click <strong>Request Test</strong> on the language you want to be assessed in.</p>
-              <p>Maka will receive your request and approve it (usually within a few hours). You'll get an email when it's ready and the card will change to <strong>Begin Test</strong>.</p>
-              <p>If you already completed a test for a language, the card shows <strong>View Results</strong> instead.</p>
+              <HelpRole role="learner" />
+              <HelpRow label="You">click Request Test → request enters Maka's approval queue.</HelpRow>
+              <HelpRow label="Maka">reviews and approves (usually within hours). You get an email; the card flips to Begin Test.</HelpRow>
+              <HelpRow label="Already done">a test in this language? The card shows View Results — no retakes from your side.</HelpRow>
+              <HelpRow label="You can't" tone="warn">start the test yourself without Maka's approval, or retake a completed test.</HelpRow>
             </HelpHint>
           )}
         </div>

@@ -7,6 +7,7 @@ import { Eye, EyeOff } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import { Button } from '../components/common/Button'
 import { Alert } from '../components/common/Alert'
+import { HelpHint, HelpRole } from '../components/common/HelpHint'
 
 const schema = yup.object({
   email: yup.string().email('Invalid email').required('Email is required'),
@@ -87,6 +88,29 @@ export function LoginPage() {
             Register a company
           </Link>
         </p>
+        <div className="mt-2 flex justify-center">
+          <HelpHint title="Which account am I?" side="center" label="Who's who on Maka LMS">
+            <p className="text-gray-700 font-medium pb-1">There are three kinds of users:</p>
+            <div className="space-y-2 pt-1 border-t border-gray-100">
+              <div>
+                <HelpRole role="learner" />
+                <p className="mt-1">An employee or individual taking placement tests and lessons. Registers via "Register as a learner" or is invited by Maka.</p>
+              </div>
+              <div>
+                <HelpRole role="hr" />
+                <p className="mt-1">The contact at a B2B client company. Sees read-only data for their employees only. Registers via "Register a company" (approved by Maka).</p>
+              </div>
+              <div>
+                <HelpRole role="maka" />
+                <p className="mt-1">Maka Language Consulting staff (training@makaitalia.com). Full platform control. Created internally — not via this page.</p>
+              </div>
+              <div>
+                <HelpRole role="trainer" />
+                <p className="mt-1">Optional reviewer of writing/speaking submissions. Created by Maka.</p>
+              </div>
+            </div>
+          </HelpHint>
+        </div>
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
