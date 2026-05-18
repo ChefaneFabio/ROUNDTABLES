@@ -303,11 +303,16 @@ export const frenchListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La crise de la reproductibilité en psychologie fait référence à la découverte que de nombreux résultats publiés dans ce domaine ne peuvent pas être reproduits par des chercheurs indépendants. Une étude majeure de deux mille quinze a tenté de reproduire cent expériences en psychologie et a constaté que seulement trente-neuf pour cent d\'entre elles donnaient les mêmes résultats. Cela a suscité des appels à une plus grande rigueur méthodologique, à l\'enregistrement préalable des études et au partage des données en libre accès.',
+    ttsScript: 'Ces dernières années, beaucoup d\'entreprises ont abandonné l\'évaluation annuelle au profit du feedback continu : de courtes conversations toutes les deux semaines entre le manager et son collaborateur. L\'idée n\'est pas de parler davantage, mais de parler plus tôt. Un petit ajustement en mars évite qu\'un problème ne devienne irrécupérable en décembre. Ce changement exige toutefois plus d\'engagement de la part des managers, qui doivent développer des capacités d\'écoute active qu\'ils n\'ont souvent jamais exercées.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Quel pourcentage d\'expériences en psychologie a été reproduit avec succès ?',
-    options: [{ label: '25 %', value: '25' }, { label: '39 %', value: '39' }, { label: '50 %', value: '50' }, { label: '65 %', value: '65' }],
-    correctAnswer: '39', points: 3, orderIndex: 31, tags: ['science', 'recherche'], timeSuggested: 75
+    questionText: 'Quel est l\'objectif principal du feedback continu ?',
+    options: [
+      { label: 'Détecter de petits problèmes avant qu\'ils ne deviennent graves', value: 'detecter avant que graves' },
+      { label: 'Donner des compliments plus fréquents aux collaborateurs', value: 'compliments fréquents' },
+      { label: 'Remplacer le rôle des Ressources Humaines', value: 'remplacer RH' },
+      { label: 'Surveiller la productivité en temps réel', value: 'surveiller productivité' }
+    ],
+    correctAnswer: 'detecter avant que graves', points: 3, orderIndex: 31, tags: ['travail', 'management'], timeSuggested: 75
   },
   {
     language: 'French', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
@@ -318,16 +323,16 @@ export const frenchListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Le concept de neuroplasticité — la capacité du cerveau à se réorganiser en formant de nouvelles connexions neuronales — a révolutionné notre compréhension de la rééducation cognitive. Les patients victimes d\'un accident vasculaire cérébral, par exemple, peuvent parfois récupérer des fonctions perdues car les parties saines du cerveau compensent les zones endommagées. Ce processus nécessite toutefois une intervention thérapeutique intensive et soutenue.',
+    ttsScript: 'Les recherches sur la rétention des talents montrent que les quatre-vingt-dix premiers jours d\'un collaborateur dans l\'entreprise sont décisifs. Durant cette période se forment des convictions qui influenceront son engagement pendant des années : rester ou non, comment se comporter avec les collègues, à quel point s\'investir émotionnellement dans les projets. Pourtant, beaucoup d\'organisations limitent l\'intégration à la première semaine — remise de l\'ordinateur, livret d\'accueil, rendez-vous avec les RH — et laissent ensuite la nouvelle recrue se débrouiller seule.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Qu\'est-ce que la neuroplasticité ?',
+    questionText: 'Pourquoi les quatre-vingt-dix premiers jours sont-ils si importants ?',
     options: [
-      { label: 'La capacité d\'apprendre plusieurs langues', value: 'langues' },
-      { label: 'La capacité du cerveau à former de nouvelles connexions neuronales', value: 'nouvelles connexions neuronales' },
-      { label: 'Un type de chirurgie cérébrale', value: 'chirurgie' },
-      { label: 'L\'amélioration de la mémoire par des médicaments', value: 'médicaments' }
+      { label: 'Des convictions qui pèsent sur l\'engagement à long terme s\'y installent', value: 'convictions qui pesent sur engagement' },
+      { label: 'Parce que la plupart des démissions ont lieu la première semaine', value: 'demissions premiere semaine' },
+      { label: 'Parce que les évaluations de performance commencent à 90 jours', value: 'evaluations a 90 jours' },
+      { label: 'Parce que les autorisations de travail expirent à cette période', value: 'autorisations expirent' }
     ],
-    correctAnswer: 'nouvelles connexions neuronales', points: 3, orderIndex: 33, tags: ['science'], timeSuggested: 75
+    correctAnswer: 'convictions qui pesent sur engagement', points: 3, orderIndex: 33, tags: ['travail', 'RH'], timeSuggested: 75
   },
   {
     language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
@@ -355,75 +360,75 @@ export const frenchListeningQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Les implications philosophiques de l\'intrication quantique sont peut-être plus profondes que ses propriétés physiques. Lorsque deux particules deviennent intriquées, la mesure de l\'état de l\'une détermine instantanément l\'état de l\'autre, quelle que soit la distance qui les sépare. Einstein a célèbrement qualifié cela d\'« action fantasmagorique à distance », pourtant des expériences ultérieures ont définitivement confirmé son existence, remettant en question nos hypothèses les plus fondamentales sur la localité et la causalité.',
+    ttsScript: 'Le paradoxe de la collaboration moderne, c\'est que plus nous collaborons, moins nous travaillons vraiment. Les études sur l\'usage du temps montrent qu\'un travailleur du savoir passe en moyenne vingt-trois heures par semaine en réunion : un chiffre qui a doublé en quinze ans. Les réunions sont devenues le moyen de montrer son engagement, de partager la responsabilité et d\'éviter de décider seul. Mais chaque heure de réunion est une heure soustraite au travail concentré, et le coût du changement de contexte après chaque rencontre est désormais bien documenté.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Comment Einstein a-t-il qualifié l\'intrication quantique ?',
+    questionText: 'Pourquoi les réunions se sont-elles autant multipliées ?',
     options: [
-      { label: 'Une belle théorie', value: 'belle théorie' },
-      { label: 'Une action fantasmagorique à distance', value: 'action fantasmagorique à distance' },
-      { label: 'Le principe d\'incertitude', value: 'principe d\'incertitude' },
-      { label: 'Une curiosité mathématique', value: 'curiosité mathématique' }
+      { label: 'Elles servent à partager la responsabilité et à montrer son engagement', value: 'partager responsabilite et engagement' },
+      { label: 'Parce qu\'elles remplacent totalement l\'email', value: 'remplacent email' },
+      { label: 'Parce que les entreprises mesurent le travail en heures de réunion', value: 'mesurent en heures' },
+      { label: 'Parce que les salariés préfèrent travailler en groupe', value: 'preference groupe' }
     ],
-    correctAnswer: 'action fantasmagorique à distance', points: 3, orderIndex: 36, tags: ['physique'], timeSuggested: 90
+    correctAnswer: 'partager responsabilite et engagement', points: 3, orderIndex: 36, tags: ['travail', 'management'], timeSuggested: 90
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Les implications philosophiques de l\'intrication quantique sont peut-être plus profondes que ses propriétés physiques. Lorsque deux particules deviennent intriquées, la mesure de l\'état de l\'une détermine instantanément l\'état de l\'autre. Des expériences ultérieures ont définitivement confirmé son existence, remettant en question nos hypothèses les plus fondamentales sur la localité et la causalité.',
+    ttsScript: 'Quand un collaborateur clé démissionne, la réaction instinctive est la contre-offre. Les données montrent pourtant que cette stratégie fonctionne à court terme — la plupart acceptent — mais deux tiers partent quand même dans l\'année. La raison est structurelle : la décision de partir concerne rarement l\'argent. Elle porte sur le manque de perspectives d\'évolution, un conflit avec un manager, le sentiment de ne pas être valorisé. La contre-offre soigne le symptôme, pas la cause. Les entreprises qui retiennent leurs talents investissent dans des conversations bien avant qu\'une lettre de démission n\'arrive.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Quelles hypothèses fondamentales l\'intrication quantique remet-elle en question ?',
+    questionText: 'Pourquoi la contre-offre échoue-t-elle souvent ?',
     options: [
-      { label: 'La gravité et le magnétisme', value: 'gravité et magnétisme' },
-      { label: 'La localité et la causalité', value: 'localité et causalité' },
-      { label: 'Le temps et l\'espace', value: 'temps et espace' },
-      { label: 'L\'énergie et la matière', value: 'énergie et matière' }
+      { label: 'Elle traite le symptôme mais pas la cause structurelle de l\'insatisfaction', value: 'traite symptome pas cause' },
+      { label: 'Les salaires proposés sont insuffisants', value: 'salaires bas' },
+      { label: 'Le collaborateur en redemande après quelques mois', value: 'en redemande' },
+      { label: 'La loi interdit les offres rétroactives', value: 'loi interdit' }
     ],
-    correctAnswer: 'localité et causalité', points: 3, orderIndex: 37, tags: ['physique'], timeSuggested: 90
+    correctAnswer: 'traite symptome pas cause', points: 3, orderIndex: 37, tags: ['travail', 'rétention'], timeSuggested: 90
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La marchandisation des données personnelles a engendré une nouvelle forme de capitalisme de surveillance, dans laquelle l\'extraction et la monétisation des données comportementales constituent le principal modèle de revenus de nombreuses entreprises technologiques. Shoshana Zuboff soutient que cela représente une asymétrie sans précédent de connaissances et de pouvoir, fondamentalement incompatible avec les normes démocratiques.',
+    ttsScript: 'Dans une vaste enquête interne sur ce qui rend les équipes efficaces, Google a identifié un facteur dominant : la sécurité psychologique. C\'est-à-dire le sentiment de pouvoir exprimer une opinion, reconnaître une erreur ou poser une question sans craindre de conséquences professionnelles. Les équipes à forte sécurité psychologique produisent plus d\'innovation, apprennent plus vite de leurs erreurs et fidélisent mieux. Mais cela ne se construit pas avec des politiques d\'entreprise : cela se construit avec ce que le manager dit quand quelqu\'un admet une erreur, et avec ce qu\'il ne dit pas dans les moments de silence.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Selon Zuboff, que crée le capitalisme de surveillance ?',
+    questionText: 'Comment se construit la sécurité psychologique selon le passage ?',
     options: [
-      { label: 'Un accès égal à l\'information', value: 'accès égal' },
-      { label: 'Une asymétrie sans précédent de connaissances et de pouvoir', value: 'asymétrie de connaissances et de pouvoir' },
-      { label: 'De meilleurs produits de consommation', value: 'meilleurs produits' },
-      { label: 'Des marchés plus efficaces', value: 'marchés efficaces' }
+      { label: 'Par le comportement quotidien du manager, pas par les politiques formelles', value: 'comportement du manager' },
+      { label: 'Par des règlements internes sur l\'éthique', value: 'reglements ethiques' },
+      { label: 'En formant les nouveaux managers aux techniques de communication', value: 'formation managers' },
+      { label: 'En sanctionnant sévèrement les erreurs pour éviter qu\'elles ne se répètent', value: 'sanctionner erreurs' }
     ],
-    correctAnswer: 'asymétrie de connaissances et de pouvoir', points: 3, orderIndex: 38, tags: ['technologie', 'philosophie'], timeSuggested: 90
+    correctAnswer: 'comportement du manager', points: 3, orderIndex: 38, tags: ['travail', 'équipe'], timeSuggested: 90
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'Les ramifications épistémologiques de l\'intelligence artificielle s\'étendent bien au-delà de ses applications pratiques immédiates, soulevant des questions fondamentales sur la nature même de la connaissance.',
+    ttsScript: 'Le véritable indicateur du succès d\'un manager n\'est pas le nombre de décisions qu\'il prend chaque jour, mais la qualité des décisions que ses collaborateurs prennent en toute autonomie.',
     ttsLanguageCode: 'fr-FR',
     questionText: 'Écrivez exactement ce que vous entendez.',
-    correctAnswer: 'Les ramifications épistémologiques de l\'intelligence artificielle s\'étendent bien au-delà de ses applications pratiques immédiates, soulevant des questions fondamentales sur la nature même de la connaissance.', points: 3, orderIndex: 39, tags: ['dictée'], timeSuggested: 120
+    correctAnswer: 'Le véritable indicateur du succès d\'un manager n\'est pas le nombre de décisions qu\'il prend chaque jour, mais la qualité des décisions que ses collaborateurs prennent en toute autonomie.', points: 3, orderIndex: 39, tags: ['dictée', 'travail'], timeSuggested: 120
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La soi-disant « crise de la reproductibilité » ne s\'est pas limitée à la psychologie. La médecine, l\'économie et même certains domaines de la physique ont fait l\'objet d\'un examen similaire. Les causes sous-jacentes sont multiples : un biais de publication favorisant les résultats novateurs et statistiquement significatifs, des échantillons insuffisants, des degrés de liberté du chercheur dans l\'analyse des données et des structures d\'incitation perverses au sein du monde universitaire qui privilégient la quantité de publications à la qualité.',
+    ttsScript: 'Les recherches sur le travail cognitif convergent sur une vérité contre-intuitive : ce n\'est pas la durée du travail qui limite la productivité, mais sa fragmentation. Chaque fois que nous passons d\'une tâche à une autre — une notification, un message dans le chat, une réunion imprévue — le cerveau met entre quinze et vingt-cinq minutes à retrouver pleinement son niveau de concentration précédent. Dans une journée typique avec trente interruptions, cela signifie littéralement qu\'une grande partie du temps travaillé ne produit pas de valeur. Certaines entreprises ont commencé à instaurer des plages protégées de deux ou trois heures sans réunion.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Que favorise le « biais de publication » selon le passage ?',
+    questionText: 'Pourquoi les plages de temps protégées sont-elles importantes ?',
     options: [
-      { label: 'Les résultats reproduits', value: 'reproduits' },
-      { label: 'Les résultats novateurs et statistiquement significatifs', value: 'novateurs et significatifs' },
-      { label: 'Les études à grande échelle', value: 'grande échelle' },
-      { label: 'Les résultats négatifs', value: 'négatifs' }
+      { label: 'Le cerveau met de longues minutes à retrouver sa concentration après chaque interruption', value: 'long retour de concentration' },
+      { label: 'Parce que les salariés demandent plus de pauses', value: 'plus de pauses' },
+      { label: 'Parce que les longues réunions sont fatigantes', value: 'reunions fatigantes' },
+      { label: 'Parce que les notifications sont interdites par la loi', value: 'notifications interdites' }
     ],
-    correctAnswer: 'novateurs et significatifs', points: 3, orderIndex: 40, tags: ['science', 'méthodologie'], timeSuggested: 90
+    correctAnswer: 'long retour de concentration', points: 3, orderIndex: 40, tags: ['travail', 'productivité'], timeSuggested: 90
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Le concept d\'humilité épistémique, enraciné dans la philosophie socratique, suggère que reconnaître les limites de ses connaissances est paradoxalement un prérequis pour une compréhension véritable. À une époque de surcharge informationnelle et d\'affirmations péremptoires sur les réseaux sociaux, cultiver une telle humilité est peut-être plus important que jamais, tant pour la cognition individuelle que pour la délibération collective.',
+    ttsScript: 'Donner du feedback dans une équipe internationale est l\'une des tâches les plus sous-estimées du management moderne. Ce qui dans certaines cultures est jugé direct et utile — signaler une erreur en réunion, par exemple — est lu dans d\'autres comme une attaque publique. L\'inverse est également vrai : un feedback clair dans une culture est si feutré pour une autre qu\'il n\'est même pas perçu comme une critique. Les managers les plus efficaces n\'adoptent pas un seul style : ils adaptent leur mode de transmission au destinataire et vérifient que le message a bien été reçu comme prévu.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Dans quoi l\'humilité épistémique est-elle enracinée ?',
+    questionText: 'Que fait un manager efficace dans une équipe internationale ?',
     options: [
-      { label: 'La psychologie moderne', value: 'psychologie moderne' },
-      { label: 'La philosophie socratique', value: 'philosophie socratique' },
-      { label: 'La méditation orientale', value: 'méditation orientale' },
-      { label: 'La méthode scientifique', value: 'méthode scientifique' }
+      { label: 'Il adapte son style de feedback et vérifie qu\'il a été compris', value: 'adapte style et verifie' },
+      { label: 'Il utilise toujours le style le plus direct possible', value: 'style direct' },
+      { label: 'Il délègue le feedback aux RH locales', value: 'delegue RH' },
+      { label: 'Il évite les conversations difficiles', value: 'evite conversations' }
     ],
-    correctAnswer: 'philosophie socratique', points: 3, orderIndex: 41, tags: ['philosophie'], timeSuggested: 90
+    correctAnswer: 'adapte style et verifie', points: 3, orderIndex: 41, tags: ['travail', 'communication interculturelle'], timeSuggested: 90
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
@@ -649,36 +654,42 @@ export const frenchListeningQuestions: MultiSkillQuestionData[] = [
   // --- C1 — Avancé (5 questions) ---
   {
     language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'L\'essor des théories du complot sur les réseaux sociaux pose un défi inédit aux démocraties contemporaines. Les algorithmes de recommandation, conçus pour maximiser l\'engagement, tendent à enfermer les utilisateurs dans des bulles informationnelles qui renforcent leurs convictions préexistantes. Ce phénomène, connu sous le nom d\'« effet de chambre d\'écho », réduit l\'exposition à des points de vue divergents et peut radicaliser les opinions politiques.',
+    ttsScript: 'Le travail asynchrone — communiquer par écrit, sans attendre de réponse immédiate — est devenu la norme dans beaucoup d\'équipes distribuées. Les avantages sont évidents : des personnes sur des fuseaux horaires différents collaborent sans perdre leur sommeil, et écrire oblige à une pensée plus claire qu\'une réunion improvisée. Mais il y a un coût : un message écrit à la hâte peut perdre son ton et créer des tensions involontaires. Les équipes qui fonctionnent bien investissent du temps dans des règles de communication explicites : quand utiliser le chat, quand l\'email, quand la visio.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Comment s\'appelle le phénomène décrit dans le passage ?',
+    questionText: 'Quel est un inconvénient du travail asynchrone ?',
     options: [
-      { label: 'L\'effet papillon', value: 'effet papillon' },
-      { label: 'L\'effet de chambre d\'écho', value: 'effet de chambre d\'écho' },
-      { label: 'L\'effet boule de neige', value: 'effet boule de neige' },
-      { label: 'L\'effet Streisand', value: 'effet Streisand' }
+      { label: 'Le ton peut être mal interprété et créer des tensions', value: 'ton mal interprete' },
+      { label: 'Tout le monde doit être en ligne en même temps', value: 'tous en ligne' },
+      { label: 'Les documents ne peuvent pas être partagés', value: 'pas de partage' },
+      { label: 'Les gens travaillent moins d\'heures', value: 'moins heures' }
     ],
-    correctAnswer: 'effet de chambre d\'écho', points: 2, orderIndex: 63, tags: ['médias', 'société'], timeSuggested: 75
+    correctAnswer: 'ton mal interprete', points: 2, orderIndex: 63, tags: ['travail', 'communication'], timeSuggested: 75
   },
   {
     language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'L\'architecture haussmannienne, qui caractérise une grande partie du paysage urbain parisien, résulte des travaux de rénovation entrepris sous le Second Empire par le baron Haussmann entre mille huit cent cinquante-trois et mille huit cent soixante-dix. Ces travaux visaient à moderniser Paris en créant de larges boulevards, des places et des espaces verts, tout en améliorant l\'assainissement. Cependant, cette transformation a aussi entraîné l\'expropriation de milliers de résidents des classes populaires, contribuant à la ségrégation socio-spatiale qui perdure encore aujourd\'hui.',
+    ttsScript: 'Le droit à la déconnexion, déjà inscrit dans la loi de plusieurs pays européens, établit qu\'un salarié n\'est pas tenu de lire ni de répondre à des messages en dehors de ses heures de travail. Le principe paraît simple, mais l\'application est complexe : dans des équipes internationales, le soir pour les uns est le matin pour les autres, et beaucoup de managers ne se rendent pas compte qu\'ils fixent une attente implicite quand ils écrivent à vingt-trois heures. Certaines entreprises ont mis en place des envois différés : les messages écrits le soir ne sont livrés que le lendemain matin.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Quelle conséquence négative des travaux haussmanniens est mentionnée ?',
+    questionText: 'Pourquoi le droit à la déconnexion est-il difficile à appliquer dans une équipe internationale ?',
     options: [
-      { label: 'La destruction de monuments historiques', value: 'monuments' },
-      { label: 'L\'expropriation des résidents populaires et la ségrégation socio-spatiale', value: 'expropriation et ségrégation' },
-      { label: 'L\'augmentation de la pollution', value: 'pollution' },
-      { label: 'La perte des espaces verts', value: 'espaces verts' }
+      { label: 'Le soir pour les uns correspond au matin pour les autres', value: 'soir pour uns matin pour autres' },
+      { label: 'La loi change d\'un pays à l\'autre', value: 'loi differente' },
+      { label: 'Les managers refusent de le respecter', value: 'managers refusent' },
+      { label: 'La technologie ne le permet pas', value: 'tech ne permet pas' }
     ],
-    correctAnswer: 'expropriation et ségrégation', points: 2, orderIndex: 64, tags: ['histoire', 'urbanisme'], timeSuggested: 75
+    correctAnswer: 'soir pour uns matin pour autres', points: 2, orderIndex: 64, tags: ['travail', 'équilibre pro-perso'], timeSuggested: 75
   },
   {
-    language: 'French', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'La prolifération des données massives soulève des enjeux éthiques considérables, notamment en ce qui concerne le respect de la vie privée et le consentement éclairé des individus.',
+    language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Le rôle du manager moderne a profondément changé. L\'époque du chef qui donnait des ordres et vérifiait l\'exécution est révolue. Aujourd\'hui, les managers les plus efficaces agissent comme des coachs : ils posent plus de questions qu\'ils ne donnent de réponses, ils aident le collaborateur à trouver lui-même la solution, et ils font grandir le talent par la délégation plus que par le contrôle. C\'est un retournement contre-intuitif pour ceux qui ont grandi dans des cultures hiérarchiques, et beaucoup de managers se sentent au début moins productifs — jusqu\'au moment où ils voient leur équipe progresser.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Écrivez exactement ce que vous entendez.',
-    correctAnswer: 'La prolifération des données massives soulève des enjeux éthiques considérables, notamment en ce qui concerne le respect de la vie privée et le consentement éclairé des individus.', points: 2, orderIndex: 65, tags: ['dictée', 'technologie'], timeSuggested: 90
+    questionText: 'Qu\'est-ce qui caractérise le manager-coach moderne ?',
+    options: [
+      { label: 'Il pose plus de questions qu\'il ne donne de réponses', value: 'plus de questions que reponses' },
+      { label: 'Il contrôle chaque étape du travail', value: 'controle chaque etape' },
+      { label: 'Il travaille toujours côte à côte avec l\'équipe', value: 'cote a cote' },
+      { label: 'Il décide sans consulter personne', value: 'decide sans consulter' }
+    ],
+    correctAnswer: 'plus de questions que reponses', points: 2, orderIndex: 65, tags: ['travail', 'management'], timeSuggested: 75
   },
   {
     language: 'French', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
@@ -710,56 +721,62 @@ export const frenchListeningQuestions: MultiSkillQuestionData[] = [
   // --- C2 — Maîtrise (5 questions) ---
   {
     language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'L\'hypothèse de Sapir-Whorf, dans sa version forte, postule que la structure d\'une langue détermine fondamentalement la pensée de ses locuteurs. Bien que cette version déterministe ait été largement réfutée, des recherches récentes en linguistique cognitive ont ravivé l\'intérêt pour sa version faible, selon laquelle la langue influencerait — sans le déterminer — le mode de perception et de catégorisation du réel. Des expériences sur la perception des couleurs chez des locuteurs de langues possédant des lexiques chromatiques distincts ont fourni des preuves empiriques en faveur de cette thèse.',
+    ttsScript: 'L\'expression « quiet quitting », ou démission silencieuse, devenue virale en deux mille vingt-deux, ne désigne pas une vraie démission mais un comportement précis : faire exactement ce qui est écrit dans le contrat, ni plus ni moins. Refuser de lire les emails hors horaires, ne pas se porter volontaire, ne pas s\'investir émotionnellement dans des projets supplémentaires. Le phénomène se lit de deux manières opposées : comme une réaction saine au burn-out diffus, ou comme le symptôme d\'une crise plus profonde de l\'engagement. Les chiffres sont inconfortables : dans beaucoup d\'entreprises, la part des salariés qui se déclarent désengagés dépasse soixante pour cent.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Quel domaine de recherche a fourni des preuves pour la version faible de l\'hypothèse ?',
+    questionText: 'Comment le phénomène du quiet quitting est-il interprété ?',
     options: [
-      { label: 'La perception du temps', value: 'temps' },
-      { label: 'La perception des couleurs', value: 'perception des couleurs' },
-      { label: 'La mémoire auditive', value: 'mémoire' },
-      { label: 'La résolution de problèmes mathématiques', value: 'mathématiques' }
+      { label: 'Soit comme une réaction saine de mise de limites, soit comme un signe de désengagement généralisé', value: 'saine ou desengagement' },
+      { label: 'Comme une vague de démissions massives', value: 'demissions massives' },
+      { label: 'Comme un phénomène typiquement générationnel', value: 'phenomene generationnel' },
+      { label: 'Comme une stratégie pour obtenir une augmentation', value: 'strategie augmentation' }
     ],
-    correctAnswer: 'perception des couleurs', points: 2, orderIndex: 68, tags: ['linguistique', 'cognition'], timeSuggested: 90
+    correctAnswer: 'saine ou desengagement', points: 2, orderIndex: 68, tags: ['travail', 'engagement'], timeSuggested: 90
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La notion de « post-vérité », élue mot de l\'année par le dictionnaire Oxford en deux mille seize, désigne un contexte dans lequel les faits objectifs ont moins d\'influence sur la formation de l\'opinion publique que les appels à l\'émotion et aux croyances personnelles. Ce phénomène, amplifié par la viralité des réseaux sociaux et la fragmentation du paysage médiatique, remet en cause les fondements mêmes de la délibération démocratique, qui présuppose un socle commun de réalité partagée.',
+    ttsScript: 'Le travail hybride est devenu le sujet le plus clivant en entreprise depuis deux mille vingt. Les données sur la productivité sont contradictoires : certaines études relèvent une hausse, d\'autres une baisse, selon le type d\'activité et la qualité de la transition. Mais la vraie question intéressante n\'est pas où les gens travaillent, mais comment ils sont managés. Le mode hybride expose des faiblesses que le bureau physique cachait : des managers qui contrôlaient par la présence, des processus qui dépendaient de conversations informelles dans le couloir, des décisions qui excluaient ceux qui n\'étaient pas dans la pièce.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Que présuppose la délibération démocratique selon le passage ?',
+    questionText: 'Pourquoi le mode hybride est-il un test de leadership ?',
     options: [
-      { label: 'Des médias indépendants', value: 'médias indépendants' },
-      { label: 'Un socle commun de réalité partagée', value: 'réalité partagée' },
-      { label: 'La liberté d\'expression absolue', value: 'liberté expression' },
-      { label: 'Un système éducatif performant', value: 'éducation' }
+      { label: 'Il révèle des pratiques qui ne tenaient que grâce à la présence physique', value: 'revele pratiques liees a presence' },
+      { label: 'Il oblige les managers à apprendre de nouvelles technologies', value: 'apprendre tech' },
+      { label: 'Il double les heures de travail effectives', value: 'double heures' },
+      { label: 'Il exige plus de réunions que le présentiel', value: 'plus reunions' }
     ],
-    correctAnswer: 'réalité partagée', points: 2, orderIndex: 69, tags: ['médias', 'philosophie'], timeSuggested: 90
-  },
-  {
-    language: 'French', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'L\'enchevêtrement des facteurs géopolitiques, économiques et climatiques rend toute prévision à long terme hasardeuse, contraignant les décideurs à naviguer dans un brouillard d\'incertitudes irréductibles.',
-    ttsLanguageCode: 'fr-FR',
-    questionText: 'Écrivez exactement ce que vous entendez.',
-    correctAnswer: 'L\'enchevêtrement des facteurs géopolitiques, économiques et climatiques rend toute prévision à long terme hasardeuse, contraignant les décideurs à naviguer dans un brouillard d\'incertitudes irréductibles.', points: 2, orderIndex: 70, tags: ['dictée', 'géopolitique'], timeSuggested: 120
+    correctAnswer: 'revele pratiques liees a presence', points: 2, orderIndex: 69, tags: ['travail', 'leadership'], timeSuggested: 90
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Le paradoxe de la tolérance, formulé par Karl Popper en mille neuf cent quarante-cinq, affirme qu\'une société illimitément tolérante finira inévitablement par être submergée par les intolérants. En d\'autres termes, si nous étendons une tolérance illimitée même à ceux qui sont intolérants, et si nous ne sommes pas disposés à défendre une société tolérante contre les assauts de l\'intolérant, alors le tolérant sera détruit et la tolérance avec lui. Popper en concluait que nous devons revendiquer, au nom de la tolérance, le droit de ne pas tolérer l\'intolérance.',
+    ttsScript: 'Dans les organisations d\'une certaine taille, le problème le plus sous-estimé n\'est ni le manque de talent ni le manque de stratégie : c\'est l\'alignement entre les fonctions. Les ventes promettent des fonctionnalités que le produit n\'a pas prévues, le produit construit des choses que le marketing ne sait pas comment positionner, la finance approuve des budgets que les opérations ne parviennent pas à exécuter. Chaque fonction agit de façon rationnelle prise isolément, mais la somme de rationalités individuelles produit une organisation incohérente. La solution n\'est pas plus de réunions ou plus de reportings : ce sont des conversations brèves et fréquentes entre responsables de fonction, avec la liberté de remettre en cause les engagements sans perdre la face.',
     ttsLanguageCode: 'fr-FR',
-    questionText: 'Selon Popper, que doit revendiquer une société tolérante ?',
+    questionText: 'Quelle est la cause structurelle du désalignement entre fonctions ?',
     options: [
-      { label: 'Le droit à la liberté absolue', value: 'liberté absolue' },
-      { label: 'Le droit de ne pas tolérer l\'intolérance', value: 'ne pas tolérer l\'intolérance' },
-      { label: 'Le droit de censurer toute opposition', value: 'censure' },
-      { label: 'Le droit d\'imposer ses valeurs', value: 'imposer valeurs' }
+      { label: 'Chaque fonction est rationnelle isolément mais la somme produit de l\'incohérence', value: 'rationnel isole incoherent global' },
+      { label: 'Les gens ne lisent pas les rapports internes', value: 'pas lecture rapports' },
+      { label: 'L\'entreprise n\'a pas assez de managers', value: 'manque managers' },
+      { label: 'La technologie ne partage pas les données', value: 'tech ne partage pas' }
     ],
-    correctAnswer: 'ne pas tolérer l\'intolérance', points: 2, orderIndex: 71, tags: ['philosophie', 'politique'], timeSuggested: 90
+    correctAnswer: 'rationnel isole incoherent global', points: 2, orderIndex: 70, tags: ['travail', 'organisation'], timeSuggested: 90
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'La juxtaposition de paradigmes épistémologiques apparemment irréconciliables constitue l\'un des défis les plus stimulants auxquels se confronte la philosophie des sciences contemporaine.',
+    ttsScript: 'La pérennité à long terme d\'une organisation dépend de sa capacité à équilibrer la pression pour les résultats à court terme avec des investissements qui ne produiront de la valeur que dans le futur.',
     ttsLanguageCode: 'fr-FR',
     questionText: 'Écrivez exactement ce que vous entendez.',
-    correctAnswer: 'La juxtaposition de paradigmes épistémologiques apparemment irréconciliables constitue l\'un des défis les plus stimulants auxquels se confronte la philosophie des sciences contemporaine.', points: 2, orderIndex: 72, tags: ['dictée', 'philosophie'], timeSuggested: 120
+    correctAnswer: 'La pérennité à long terme d\'une organisation dépend de sa capacité à équilibrer la pression pour les résultats à court terme avec des investissements qui ne produiront de la valeur que dans le futur.', points: 2, orderIndex: 71, tags: ['dictée', 'travail'], timeSuggested: 120
+  },
+  {
+    language: 'French', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: 'Le modèle de l\'évaluation annuelle — cette échelle de un à cinq sur laquelle les managers classaient leurs collaborateurs — est entré en crise il y a une dizaine d\'années, et beaucoup d\'entreprises l\'ont abandonné. Les raisons sont documentées : les notations démotivent ceux qui reçoivent un score bas, elles sont influencées par des biais récents — les managers se souviennent des trois derniers mois, pas de toute l\'année — et elles créent une compétition malsaine entre collègues. Ce qui les remplace est plus exigeant : des conversations de développement fréquentes, séparées des décisions de rémunération, dont l\'objectif est la progression, pas le classement. Pour le manager, c\'est plus fatigant, mais cela produit des résultats plus durables.',
+    ttsLanguageCode: 'fr-FR',
+    questionText: 'Pourquoi les évaluations annuelles ont-elles été abandonnées ?',
+    options: [
+      { label: 'Elles déforment les comportements et reflètent des biais récents plutôt que l\'année entière', value: 'deforment et biais recents' },
+      { label: 'Elles sont trop coûteuses à mettre en place', value: 'trop couteuses' },
+      { label: 'Le syndicat ne les autorise plus', value: 'syndicat refuse' },
+      { label: 'Elles sont illégales dans la plupart des pays', value: 'illegales' }
+    ],
+    correctAnswer: 'deforment et biais recents', points: 2, orderIndex: 72, tags: ['travail', 'performance'], timeSuggested: 90
   },
 
   // ============================================================

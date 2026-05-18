@@ -303,11 +303,16 @@ export const germanListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Die Replikationskrise in der Psychologie bezieht sich auf die Entdeckung, dass viele veröffentlichte Befunde in diesem Fach von unabhängigen Forschern nicht repliziert werden können. Eine wegweisende Studie im Jahr zweitausendfünfzehn versuchte, einhundert psychologische Experimente zu reproduzieren, und stellte fest, dass nur neununddreißig Prozent die gleichen Ergebnisse erbrachten. Dies hat zu Forderungen nach größerer methodischer Strenge, Vorregistrierung von Studien und offenem Datenaustausch geführt.',
+    ttsScript: 'In den letzten Jahren haben viele Unternehmen die jährliche Leistungsbeurteilung zugunsten kontinuierlichen Feedbacks aufgegeben: kurze Gespräche alle zwei Wochen zwischen Führungskraft und Mitarbeiter. Die Idee ist nicht, mehr zu reden, sondern früher zu reden. Eine kleine Anpassung im März verhindert, dass ein Problem im Dezember irreparabel wird. Der Wandel verlangt allerdings mehr von den Führungskräften: Sie müssen Fähigkeiten zum aktiven Zuhören entwickeln, die sie oft nie geübt haben.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Wie viel Prozent der psychologischen Experimente konnten erfolgreich repliziert werden?',
-    options: [{ label: '25%', value: '25' }, { label: '39%', value: '39' }, { label: '50%', value: '50' }, { label: '65%', value: '65' }],
-    correctAnswer: '39', points: 3, orderIndex: 31, tags: ['Wissenschaft', 'Forschung'], timeSuggested: 75
+    questionText: 'Was ist das Hauptziel kontinuierlichen Feedbacks?',
+    options: [
+      { label: 'Kleine Probleme korrigieren, bevor sie ernst werden', value: 'Probleme korrigieren bevor ernst' },
+      { label: 'Den Mitarbeitern häufiger Lob aussprechen', value: 'häufigeres Lob' },
+      { label: 'Die Rolle der Personalabteilung ersetzen', value: 'HR ersetzen' },
+      { label: 'Die Produktivität in Echtzeit überwachen', value: 'Produktivität überwachen' }
+    ],
+    correctAnswer: 'Probleme korrigieren bevor ernst', points: 3, orderIndex: 31, tags: ['Arbeit', 'Management'], timeSuggested: 75
   },
   {
     language: 'German', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
@@ -318,16 +323,16 @@ export const germanListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Das Konzept der Neuroplastizität — die Fähigkeit des Gehirns, sich durch die Bildung neuer neuronaler Verbindungen selbst zu reorganisieren — hat unser Verständnis der kognitiven Rehabilitation revolutioniert. Patienten, die einen Schlaganfall erlitten haben, können manchmal verlorene Funktionen wiederherstellen, weil gesunde Teile des Gehirns die geschädigten Bereiche kompensieren. Dieser Prozess erfordert jedoch intensive und anhaltende therapeutische Intervention.',
+    ttsScript: 'Studien zur Mitarbeiterbindung zeigen, dass die ersten neunzig Tage eines neuen Mitarbeiters im Unternehmen entscheidend sind. In dieser Zeit entstehen Überzeugungen, die das Engagement für Jahre prägen werden: ob man bleibt oder nicht, wie man sich gegenüber Kollegen verhält, wie viel man emotional in Projekte investiert. Dennoch beschränken viele Organisationen das Onboarding auf die erste Woche — Laptop, Handbuch, Termin bei der Personalabteilung — und überlassen die neue Person dann sich selbst.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Was ist Neuroplastizität?',
+    questionText: 'Warum sind die ersten neunzig Tage so wichtig?',
     options: [
-      { label: 'Die Fähigkeit, mehrere Sprachen zu lernen', value: 'Sprachen' },
-      { label: 'Die Fähigkeit des Gehirns, neue neuronale Verbindungen zu bilden', value: 'neue neuronale Verbindungen' },
-      { label: 'Eine Art von Gehirnchirurgie', value: 'Chirurgie' },
-      { label: 'Gedächtnisverbesserung durch Medikamente', value: 'Medikamente' }
+      { label: 'In dieser Zeit entstehen Überzeugungen, die das langfristige Engagement prägen', value: 'Überzeugungen prägen Engagement' },
+      { label: 'Weil die meisten Kündigungen in der ersten Woche passieren', value: 'Kündigungen erste Woche' },
+      { label: 'Weil Leistungsbeurteilungen nach 90 Tagen beginnen', value: 'Beurteilung nach 90' },
+      { label: 'Weil Arbeitserlaubnisse in dieser Zeit ablaufen', value: 'Arbeitserlaubnis abläuft' }
     ],
-    correctAnswer: 'neue neuronale Verbindungen', points: 3, orderIndex: 33, tags: ['Wissenschaft'], timeSuggested: 75
+    correctAnswer: 'Überzeugungen prägen Engagement', points: 3, orderIndex: 33, tags: ['Arbeit', 'HR'], timeSuggested: 75
   },
   {
     language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
@@ -355,75 +360,75 @@ export const germanListeningQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Die philosophischen Implikationen der Quantenverschränkung sind vielleicht tiefgreifender als ihre physikalischen Eigenschaften. Wenn zwei Teilchen verschränkt werden, bestimmt die Messung des Zustands eines Teilchens augenblicklich den Zustand des anderen, unabhängig von der Entfernung zwischen ihnen. Einstein verspottete dies bekanntlich als „spukhafte Fernwirkung", doch nachfolgende Experimente haben ihre Existenz definitiv bestätigt und stellen unsere grundlegendsten Annahmen über Lokalität und Kausalität infrage.',
+    ttsScript: 'Das Paradox moderner Zusammenarbeit besteht darin, dass wir umso weniger wirklich arbeiten, je mehr wir zusammenarbeiten. Zeitanalysen zeigen, dass Wissensarbeiter im Durchschnitt dreiundzwanzig Stunden pro Woche in Besprechungen verbringen — eine Zahl, die sich in den letzten fünfzehn Jahren verdoppelt hat. Meetings sind zum Mittel geworden, um Engagement zu zeigen, Verantwortung zu teilen und nicht allein entscheiden zu müssen. Doch jede Stunde im Meeting ist eine Stunde weniger für konzentrierte Arbeit, und die Kosten des Kontextwechsels nach jeder Sitzung sind inzwischen gut dokumentiert.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Wie nannte Einstein die Quantenverschränkung?',
+    questionText: 'Warum haben sich Besprechungen so stark vermehrt?',
     options: [
-      { label: 'Eine schöne Theorie', value: 'schöne Theorie' },
-      { label: 'Spukhafte Fernwirkung', value: 'spukhafte Fernwirkung' },
-      { label: 'Die Unschärferelation', value: 'Unschärferelation' },
-      { label: 'Eine mathematische Kuriosität', value: 'mathematische Kuriosität' }
+      { label: 'Sie dienen dazu, Verantwortung zu teilen und Engagement zu zeigen', value: 'Verantwortung teilen Engagement' },
+      { label: 'Weil sie E-Mails vollständig ersetzen', value: 'E-Mails ersetzen' },
+      { label: 'Weil Unternehmen Arbeit in Meeting-Stunden messen', value: 'Stunden messen' },
+      { label: 'Weil Mitarbeiter lieber in Gruppen arbeiten', value: 'Gruppenarbeit bevorzugt' }
     ],
-    correctAnswer: 'spukhafte Fernwirkung', points: 3, orderIndex: 36, tags: ['Physik'], timeSuggested: 90
+    correctAnswer: 'Verantwortung teilen Engagement', points: 3, orderIndex: 36, tags: ['Arbeit', 'Management'], timeSuggested: 90
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Die philosophischen Implikationen der Quantenverschränkung sind vielleicht tiefgreifender als ihre physikalischen Eigenschaften. Wenn zwei Teilchen verschränkt werden, bestimmt die Messung des Zustands eines Teilchens augenblicklich den Zustand des anderen. Nachfolgende Experimente haben ihre Existenz definitiv bestätigt und stellen unsere grundlegendsten Annahmen über Lokalität und Kausalität infrage.',
+    ttsScript: 'Wenn eine Schlüsselkraft kündigt, ist die instinktive Reaktion das Gegenangebot. Die Daten zeigen jedoch, dass diese Strategie kurzfristig funktioniert — die meisten nehmen an —, aber zwei Drittel verlassen das Unternehmen trotzdem innerhalb eines Jahres. Der Grund ist strukturell: Die Entscheidung zu gehen, hat selten mit dem Geld zu tun. Sie betrifft fehlende Entwicklungsperspektiven, Konflikte mit der Führungskraft, das Gefühl, nicht wertgeschätzt zu werden. Das Gegenangebot behandelt das Symptom, nicht die Ursache. Unternehmen, die Talente halten, investieren in Gespräche lange bevor eine Kündigung auf dem Tisch liegt.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Welche grundlegenden Annahmen stellt die Quantenverschränkung infrage?',
+    questionText: 'Warum scheitern Gegenangebote häufig?',
     options: [
-      { label: 'Gravitation und Magnetismus', value: 'Gravitation und Magnetismus' },
-      { label: 'Lokalität und Kausalität', value: 'Lokalität und Kausalität' },
-      { label: 'Zeit und Raum', value: 'Zeit und Raum' },
-      { label: 'Energie und Materie', value: 'Energie und Materie' }
+      { label: 'Sie lösen das Symptom, aber nicht die strukturelle Ursache der Unzufriedenheit', value: 'Symptom nicht Ursache' },
+      { label: 'Die vorgeschlagenen Gehälter sind zu niedrig', value: 'Gehälter zu niedrig' },
+      { label: 'Der Mitarbeiter fordert nach wenigen Monaten mehr', value: 'fordert mehr' },
+      { label: 'Das Gesetz erlaubt keine rückwirkenden Angebote', value: 'Gesetz verbietet' }
     ],
-    correctAnswer: 'Lokalität und Kausalität', points: 3, orderIndex: 37, tags: ['Physik'], timeSuggested: 90
+    correctAnswer: 'Symptom nicht Ursache', points: 3, orderIndex: 37, tags: ['Arbeit', 'Mitarbeiterbindung'], timeSuggested: 90
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Die Kommodifizierung persönlicher Daten hat eine neue Form des Überwachungskapitalismus hervorgebracht, in der die Extraktion und Monetarisierung von Verhaltensdaten das primäre Erlösmodell vieler Technologieunternehmen darstellt. Shoshana Zuboff argumentiert, dass dies eine beispiellose Asymmetrie von Wissen und Macht darstellt, die grundlegend unvereinbar mit demokratischen Normen ist.',
+    ttsScript: 'In einer umfangreichen internen Studie zur Effektivität von Teams hat Google einen dominanten Faktor identifiziert: psychologische Sicherheit. Damit ist das Gefühl gemeint, Meinungen äußern, Fehler eingestehen oder Fragen stellen zu können, ohne berufliche Konsequenzen befürchten zu müssen. Teams mit hoher psychologischer Sicherheit produzieren mehr Innovation, lernen schneller aus Fehlern und halten ihre Mitarbeiter besser. Aber sie wird nicht durch Unternehmensrichtlinien aufgebaut: Sie entsteht durch das, was eine Führungskraft sagt, wenn jemand einen Fehler einräumt, und durch das, was sie nicht sagt, wenn ein Moment der Stille eintritt.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Was erzeugt der Überwachungskapitalismus laut Zuboff?',
+    questionText: 'Wie entsteht psychologische Sicherheit laut dem Text?',
     options: [
-      { label: 'Gleichen Zugang zu Informationen', value: 'gleicher Zugang' },
-      { label: 'Eine beispiellose Asymmetrie von Wissen und Macht', value: 'Asymmetrie von Wissen und Macht' },
-      { label: 'Bessere Verbraucherprodukte', value: 'bessere Produkte' },
-      { label: 'Effizientere Märkte', value: 'effizientere Märkte' }
+      { label: 'Durch das tägliche Verhalten der Führungskraft, nicht durch Richtlinien', value: 'Verhalten der Führungskraft' },
+      { label: 'Durch Unternehmensrichtlinien zur Ethik', value: 'Ethikrichtlinien' },
+      { label: 'Durch Schulungen neuer Manager in Kommunikationstechniken', value: 'Manager schulen' },
+      { label: 'Durch strenge Bewertung von Fehlern zur Vermeidung von Wiederholungen', value: 'strenge Bewertung' }
     ],
-    correctAnswer: 'Asymmetrie von Wissen und Macht', points: 3, orderIndex: 38, tags: ['Technologie', 'Philosophie'], timeSuggested: 90
+    correctAnswer: 'Verhalten der Führungskraft', points: 3, orderIndex: 38, tags: ['Arbeit', 'Team'], timeSuggested: 90
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'Die erkenntnistheoretischen Auswirkungen der künstlichen Intelligenz reichen weit über ihre unmittelbaren praktischen Anwendungen hinaus und werfen grundlegende Fragen über das Wesen des Wissens selbst auf.',
+    ttsScript: 'Der wahre Indikator für den Erfolg einer Führungskraft ist nicht die Anzahl der Entscheidungen, die sie täglich trifft, sondern die Qualität der Entscheidungen, die ihre Mitarbeiter eigenständig treffen.',
     ttsLanguageCode: 'de-DE',
     questionText: 'Schreiben Sie genau, was Sie hören.',
-    correctAnswer: 'Die erkenntnistheoretischen Auswirkungen der künstlichen Intelligenz reichen weit über ihre unmittelbaren praktischen Anwendungen hinaus und werfen grundlegende Fragen über das Wesen des Wissens selbst auf.', points: 3, orderIndex: 39, tags: ['Diktat'], timeSuggested: 120
+    correctAnswer: 'Der wahre Indikator für den Erfolg einer Führungskraft ist nicht die Anzahl der Entscheidungen, die sie täglich trifft, sondern die Qualität der Entscheidungen, die ihre Mitarbeiter eigenständig treffen.', points: 3, orderIndex: 39, tags: ['Diktat', 'Arbeit'], timeSuggested: 120
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Die sogenannte Replikationskrise beschränkt sich nicht auf die Psychologie. Medizin, Wirtschaftswissenschaften und sogar einige Bereiche der Physik sind einer ähnlichen Überprüfung unterzogen worden. Die zugrunde liegenden Ursachen sind vielschichtig: Publikationsbias zugunsten neuartiger und statistisch signifikanter Ergebnisse, unzureichende Stichprobengrößen, Forscherfreiheitsgrade bei der Datenanalyse und perverse Anreizstrukturen innerhalb der Wissenschaft, die Quantität der Veröffentlichungen über Qualität stellen.',
+    ttsScript: 'Die Forschung zur kognitiven Arbeit konvergiert auf einer kontraintuitiven Wahrheit: Nicht die Dauer der Arbeit begrenzt die Produktivität, sondern ihre Zersplitterung. Jedes Mal, wenn wir von einer Aufgabe zur nächsten wechseln — eine Benachrichtigung, eine Chat-Nachricht, ein unerwartetes Meeting — braucht das Gehirn zwischen fünfzehn und fünfundzwanzig Minuten, um das vorherige Konzentrationsniveau vollständig wiederzuerlangen. An einem typischen Tag mit dreißig Unterbrechungen bedeutet das wörtlich, dass ein Großteil der gearbeiteten Zeit keinen Wert produziert. Einige Unternehmen haben begonnen, geschützte Blöcke von zwei oder drei Stunden ohne Besprechungen einzuführen.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Was begünstigt der „Publikationsbias" laut dem Text?',
+    questionText: 'Warum sind geschützte Zeitblöcke wichtig?',
     options: [
-      { label: 'Replizierte Ergebnisse', value: 'repliziert' },
-      { label: 'Neuartige und statistisch signifikante Ergebnisse', value: 'neuartig und signifikant' },
-      { label: 'Großangelegte Studien', value: 'großangelegte' },
-      { label: 'Negative Befunde', value: 'negativ' }
+      { label: 'Das Gehirn braucht lange Minuten, um nach jeder Unterbrechung die Konzentration wiederzufinden', value: 'lange Wiederfindung Konzentration' },
+      { label: 'Weil Mitarbeiter mehr Pausen fordern', value: 'mehr Pausen' },
+      { label: 'Weil lange Besprechungen ermüdend sind', value: 'Besprechungen ermüdend' },
+      { label: 'Weil Benachrichtigungen gesetzlich verboten sind', value: 'Benachrichtigungen verboten' }
     ],
-    correctAnswer: 'neuartig und signifikant', points: 3, orderIndex: 40, tags: ['Wissenschaft', 'Methodik'], timeSuggested: 90
+    correctAnswer: 'lange Wiederfindung Konzentration', points: 3, orderIndex: 40, tags: ['Arbeit', 'Produktivität'], timeSuggested: 90
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Das Konzept der epistemischen Demut, verwurzelt in der sokratischen Philosophie, legt nahe, dass das Eingestehen der Grenzen des eigenen Wissens paradoxerweise eine Voraussetzung für echtes Verständnis ist. In einem Zeitalter der Informationsüberflutung und selbstsicherer Behauptungen in sozialen Medien mag die Pflege solcher Demut wichtiger denn je sein, sowohl für die individuelle Kognition als auch für die kollektive Deliberation.',
+    ttsScript: 'Feedback in einem internationalen Team zu geben gehört zu den am meisten unterschätzten Aufgaben modernen Managements. Was in manchen Kulturen als direkt und hilfreich gilt — einen Fehler während einer Besprechung anzusprechen, zum Beispiel — wird in anderen Kulturen als öffentlicher Angriff verstanden. Das Gegenteil gilt ebenso: Ein Feedback, das in einer Kultur klar ist, ist für eine andere so weich, dass es nicht einmal als Kritik wahrgenommen wird. Die effektivsten Führungskräfte halten nicht an einem einzigen Stil fest: Sie passen die Art der Übermittlung an den Empfänger an und überprüfen, ob die Botschaft so angekommen ist, wie sie gemeint war.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Worin ist die epistemische Demut verwurzelt?',
+    questionText: 'Was tut eine effektive Führungskraft in einem internationalen Team?',
     options: [
-      { label: 'Moderne Psychologie', value: 'moderne Psychologie' },
-      { label: 'Sokratische Philosophie', value: 'sokratische Philosophie' },
-      { label: 'Östliche Meditation', value: 'östliche Meditation' },
-      { label: 'Wissenschaftliche Methode', value: 'wissenschaftliche Methode' }
+      { label: 'Sie passt den Feedback-Stil an und überprüft, dass er verstanden wurde', value: 'Stil anpassen und überprüfen' },
+      { label: 'Sie verwendet immer den möglichst direkten Stil', value: 'immer direkt' },
+      { label: 'Sie delegiert Feedback an die lokale Personalabteilung', value: 'an HR delegieren' },
+      { label: 'Sie vermeidet schwierige Gespräche', value: 'Gespräche vermeiden' }
     ],
-    correctAnswer: 'sokratische Philosophie', points: 3, orderIndex: 41, tags: ['Philosophie'], timeSuggested: 90
+    correctAnswer: 'Stil anpassen und überprüfen', points: 3, orderIndex: 41, tags: ['Arbeit', 'interkulturelle Kommunikation'], timeSuggested: 90
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
@@ -645,42 +650,42 @@ export const germanListeningQuestions: MultiSkillQuestionData[] = [
   // --- C1 (63–67) ---
   {
     language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Die Debatte um die ethischen Grenzen der Genmanipulation hat durch die Entwicklung der CRISPR-Technologie eine neue Dringlichkeit erhalten. Während therapeutische Anwendungen zur Heilung genetischer Erkrankungen weitgehend befürwortet werden, stößt die Möglichkeit sogenannter Keimbahneingriffe — also Veränderungen, die an nachfolgende Generationen weitergegeben werden — auf erheblichen Widerstand. Kritiker warnen vor unvorhersehbaren Langzeitfolgen und der Gefahr einer genetischen Zwei-Klassen-Gesellschaft.',
+    ttsScript: 'Asynchrones Arbeiten — schriftlich kommunizieren, ohne eine sofortige Antwort zu erwarten — ist in vielen verteilten Teams zur Norm geworden. Die Vorteile liegen auf der Hand: Menschen in verschiedenen Zeitzonen arbeiten zusammen, ohne den Schlaf zu verlieren, und das Schreiben zwingt zu klarerem Denken als spontane Besprechungen. Es gibt jedoch einen Preis: Eine in Eile geschriebene Nachricht kann den Tonfall verlieren und ungewollte Spannungen erzeugen. Gut funktionierende Teams investieren Zeit in explizite Kommunikationsregeln: wann der Chat, wann die E-Mail, wann das Video.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Was sind Keimbahneingriffe?',
+    questionText: 'Was ist ein Nachteil asynchroner Arbeit?',
     options: [
-      { label: 'Eingriffe, die nur den Patienten betreffen', value: 'nur Patient' },
-      { label: 'Veränderungen, die an nachfolgende Generationen weitergegeben werden', value: 'an Generationen weitergegeben' },
-      { label: 'Kosmetische Veränderungen', value: 'kosmetisch' },
-      { label: 'Medikamentöse Behandlungen', value: 'medikamentös' }
+      { label: 'Der Ton kann missverstanden werden und Spannungen erzeugen', value: 'Ton missverstanden' },
+      { label: 'Alle müssen gleichzeitig online sein', value: 'alle gleichzeitig online' },
+      { label: 'Dokumente können nicht geteilt werden', value: 'Dokumente nicht teilbar' },
+      { label: 'Die Menschen arbeiten weniger Stunden', value: 'weniger Stunden' }
     ],
-    correctAnswer: 'an Generationen weitergegeben', points: 2, orderIndex: 63, tags: ['Wissenschaft', 'Ethik'], timeSuggested: 75
+    correctAnswer: 'Ton missverstanden', points: 2, orderIndex: 63, tags: ['Arbeit', 'Kommunikation'], timeSuggested: 75
   },
   {
     language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Der Soziologe Hartmut Rosa beschreibt die moderne Gesellschaft als eine „Beschleunigungsgesellschaft", in der technologische, soziale und kulturelle Veränderungen in immer kürzeren Abständen aufeinander folgen. Diese permanente Beschleunigung führt laut Rosa zu einem Verlust an Resonanzerfahrungen — jener tiefen, bedeutungsvollen Verbindung mit der Welt, die entsteht, wenn wir uns von etwas wirklich berühren lassen.',
+    ttsScript: 'Das Recht auf Nichterreichbarkeit, in einigen europäischen Ländern bereits Gesetz, legt fest, dass ein Mitarbeiter nicht verpflichtet ist, Nachrichten außerhalb der Arbeitszeit zu lesen oder zu beantworten. Das Prinzip scheint einfach, die Umsetzung ist jedoch komplex: In internationalen Teams ist der Abend für die einen der Morgen für die anderen, und viele Führungskräfte merken nicht, dass sie eine implizite Erwartung setzen, wenn sie um elf Uhr abends schreiben. Manche Unternehmen haben automatische Verzögerungen eingeführt: Nachrichten, die abends gesendet werden, werden erst am nächsten Morgen zugestellt.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Was geht laut Rosa durch die Beschleunigung verloren?',
+    questionText: 'Warum ist das Recht auf Nichterreichbarkeit in internationalen Teams schwer umzusetzen?',
     options: [
-      { label: 'Wirtschaftliches Wachstum', value: 'Wachstum' },
-      { label: 'Resonanzerfahrungen — tiefe Verbindung mit der Welt', value: 'Resonanzerfahrungen' },
-      { label: 'Technologischer Fortschritt', value: 'Fortschritt' },
-      { label: 'Soziale Kontakte', value: 'soziale Kontakte' }
+      { label: 'Der Abend für die einen ist der Morgen für die anderen', value: 'Abend Morgen Zeitzonen' },
+      { label: 'Das Gesetz unterscheidet sich von Land zu Land', value: 'Gesetz unterschiedlich' },
+      { label: 'Die Führungskräfte weigern sich, es zu respektieren', value: 'Führungskräfte weigern sich' },
+      { label: 'Die Technologie lässt es nicht zu', value: 'Technologie verhindert' }
     ],
-    correctAnswer: 'Resonanzerfahrungen', points: 2, orderIndex: 64, tags: ['Soziologie', 'Philosophie'], timeSuggested: 75
+    correctAnswer: 'Abend Morgen Zeitzonen', points: 2, orderIndex: 64, tags: ['Arbeit', 'Work-Life-Balance'], timeSuggested: 75
   },
   {
     language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Die Frage, ob Tiere ein Bewusstsein haben, ist in der Kognitionsforschung umstritten. Während lange argumentiert wurde, dass nur Menschen zu reflexivem Denken fähig seien, deuten neuere Experimente darauf hin, dass zumindest Menschenaffen, Delfine und bestimmte Vogelarten ein rudimentäres Selbstbewusstsein besitzen. Der sogenannte Spiegeltest, bei dem beobachtet wird, ob ein Tier sich im Spiegel erkennt, gilt dabei als klassisches, wenn auch nicht unumstrittenes Kriterium.',
+    ttsScript: 'Die Rolle der modernen Führungskraft hat sich grundlegend gewandelt. Die Zeit der Vorgesetzten, die Anweisungen gaben und deren Ausführung kontrollierten, ist vorbei. Heute agieren die effektivsten Führungskräfte als Coaches: Sie stellen mehr Fragen, als sie Antworten geben, helfen dem Mitarbeiter, selbst die Lösung zu finden, und fördern Talente eher durch Delegation als durch Kontrolle. Für viele, die in hierarchischen Kulturen aufgewachsen sind, ist das eine kontraintuitive Veränderung, und manche Führungskräfte fühlen sich zunächst weniger produktiv — bis sie sehen, wie ihr Team wächst.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Welche Tiere zeigen Hinweise auf Selbstbewusstsein?',
+    questionText: 'Was kennzeichnet die moderne Führungskraft als Coach?',
     options: [
-      { label: 'Nur Hunde und Katzen', value: 'Hunde und Katzen' },
-      { label: 'Menschenaffen, Delfine und bestimmte Vögel', value: 'Menschenaffen, Delfine, Vögel' },
-      { label: 'Alle Säugetiere', value: 'alle Säugetiere' },
-      { label: 'Nur Primaten', value: 'nur Primaten' }
+      { label: 'Sie stellt mehr Fragen, als sie Antworten gibt', value: 'mehr Fragen als Antworten' },
+      { label: 'Sie kontrolliert jeden Arbeitsschritt', value: 'kontrolliert jeden Schritt' },
+      { label: 'Sie arbeitet immer Seite an Seite mit dem Team', value: 'Seite an Seite' },
+      { label: 'Sie entscheidet ohne jemanden zu konsultieren', value: 'ohne Konsultation' }
     ],
-    correctAnswer: 'Menschenaffen, Delfine, Vögel', points: 2, orderIndex: 65, tags: ['Wissenschaft', 'Kognition'], timeSuggested: 75
+    correctAnswer: 'mehr Fragen als Antworten', points: 2, orderIndex: 65, tags: ['Arbeit', 'Management'], timeSuggested: 75
   },
   {
     language: 'German', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
@@ -706,62 +711,62 @@ export const germanListeningQuestions: MultiSkillQuestionData[] = [
   // --- C2 (68–72) ---
   {
     language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Adornos berühmte Sentenz, nach Auschwitz ein Gedicht zu schreiben sei barbarisch, wird häufig als Verbot künstlerischer Äußerung missverstanden. Tatsächlich richtete sich Adornos Kritik weniger gegen die Kunst als solche als vielmehr gegen eine Kultur, die nach der Shoah zur Tagesordnung übergehen wollte. Die ästhetische Verarbeitung des Ungeheuerlichen dürfe nicht zur Versöhnung mit dem Unversöhnlichen führen.',
+    ttsScript: 'Der Ausdruck „Quiet Quitting", der im Jahr zweitausendzweiundzwanzig viral ging, beschreibt keine echten Kündigungen, sondern ein konkretes Verhalten: genau das zu tun, was im Vertrag steht, nicht mehr und nicht weniger. E-Mails außerhalb der Arbeitszeit nicht zu lesen, sich nicht freiwillig zu melden, sich emotional nicht in zusätzliche Projekte zu investieren. Das Phänomen wird auf zwei gegensätzliche Arten gedeutet: als gesunde Reaktion auf das verbreitete Burnout oder als Symptom einer tieferen Engagement-Krise. Die Daten sind unbequem: In vielen Unternehmen übersteigt der Anteil der Mitarbeiter, die sich als nicht engagiert bezeichnen, sechzig Prozent.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Wogegen richtete sich Adornos Kritik tatsächlich?',
+    questionText: 'Wie wird das Phänomen Quiet Quitting interpretiert?',
     options: [
-      { label: 'Gegen alle Formen der Lyrik', value: 'gegen Lyrik' },
-      { label: 'Gegen eine Kultur, die zur Tagesordnung übergehen wollte', value: 'Kultur der Tagesordnung' },
-      { label: 'Gegen die Philosophie', value: 'gegen Philosophie' },
-      { label: 'Gegen moderne Kunst', value: 'gegen moderne Kunst' }
+      { label: 'Entweder als gesunde Grenzziehung oder als Zeichen verbreiteter Resignation', value: 'gesund oder Resignation' },
+      { label: 'Als echte Massenkündigungen', value: 'Massenkündigungen' },
+      { label: 'Als typisch generationsbedingtes Phänomen', value: 'generationsbedingt' },
+      { label: 'Als Strategie, um eine Gehaltserhöhung zu erzwingen', value: 'Strategie Gehalt' }
     ],
-    correctAnswer: 'Kultur der Tagesordnung', points: 2, orderIndex: 68, tags: ['Philosophie', 'Kultur'], timeSuggested: 90
+    correctAnswer: 'gesund oder Resignation', points: 2, orderIndex: 68, tags: ['Arbeit', 'Engagement'], timeSuggested: 90
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Die Frage, ob mathematische Strukturen entdeckt oder erfunden werden, berührt die Grundlagen der Erkenntnistheorie. Platonisten argumentieren, dass mathematische Objekte unabhängig vom menschlichen Geist existieren und lediglich von Mathematikern entdeckt werden. Konstruktivisten hingegen betrachten Mathematik als ein Produkt menschlicher Kognition und sozialer Konvention. Diese Debatte hat unmittelbare Konsequenzen für unser Verständnis der Beziehung zwischen Mathematik und physikalischer Realität.',
+    ttsScript: 'Das hybride Arbeiten ist seit zweitausendzwanzig zum spaltendsten Thema in den Unternehmen geworden. Die Produktivitätsdaten sind widersprüchlich: Einige Studien stellen einen Anstieg fest, andere einen Rückgang, je nach Art der Tätigkeit und Art, wie der Übergang gemanagt wird. Die wirklich interessante Frage ist aber nicht, wo die Menschen arbeiten, sondern wie sie geführt werden. Das Hybrid-Modell legt Schwächen offen, die das physische Büro verdeckte: Führungskräfte, die nach Anwesenheit kontrollierten, Prozesse, die von zufälligen Flurgesprächen abhingen, Entscheidungen, die diejenigen ausschlossen, die nicht im Raum waren.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Was behaupten Platonisten über mathematische Objekte?',
+    questionText: 'Warum ist das hybride Modell ein Prüfstein für die Führung?',
     options: [
-      { label: 'Sie sind menschliche Erfindungen', value: 'menschliche Erfindungen' },
-      { label: 'Sie existieren unabhängig vom menschlichen Geist', value: 'unabhängig vom menschlichen Geist' },
-      { label: 'Sie sind kulturabhängig', value: 'kulturabhängig' },
-      { label: 'Sie haben keine reale Bedeutung', value: 'keine reale Bedeutung' }
+      { label: 'Es legt Praktiken offen, die nur dank physischer Anwesenheit funktionierten', value: 'Praktiken durch Anwesenheit' },
+      { label: 'Es zwingt Führungskräfte, neue Technologien zu lernen', value: 'Technologie lernen' },
+      { label: 'Es verdoppelt die tatsächlichen Arbeitsstunden', value: 'verdoppelte Stunden' },
+      { label: 'Es erfordert mehr Meetings als die Präsenzarbeit', value: 'mehr Meetings' }
     ],
-    correctAnswer: 'unabhängig vom menschlichen Geist', points: 2, orderIndex: 69, tags: ['Philosophie', 'Mathematik'], timeSuggested: 90
+    correctAnswer: 'Praktiken durch Anwesenheit', points: 2, orderIndex: 69, tags: ['Arbeit', 'Leadership'], timeSuggested: 90
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Hannah Arendts Konzept der „Banalität des Bösen", geprägt anlässlich des Eichmann-Prozesses in Jerusalem, beschreibt die Möglichkeit, dass gewöhnliche Menschen ohne erkennbare sadistische Neigungen zu Handlangern systematischen Unrechts werden können. Nicht dämonische Bosheit, sondern Gedankenlosigkeit und blinder Gehorsam gegenüber bürokratischen Strukturen ermöglichten die Mittäterschaft an Verbrechen unvorstellbaren Ausmaßes.',
+    ttsScript: 'In Organisationen einer gewissen Größe ist das am meisten unterschätzte Problem nicht der Mangel an Talenten oder Strategie: Es ist die Abstimmung zwischen den Funktionen. Der Vertrieb verspricht Eigenschaften, die das Produktteam nicht eingeplant hat, das Produkt baut Dinge, die das Marketing nicht zu positionieren weiß, die Finanzabteilung genehmigt Budgets, die der Betrieb nicht umsetzen kann. Jede Funktion arbeitet für sich genommen rational, aber die Summe individueller Rationalitäten ergibt eine irrationale Organisation. Die Lösung sind nicht mehr Meetings oder mehr Berichte: Es sind kurze, häufige Gespräche zwischen Funktionsverantwortlichen, mit der Freiheit, Zusagen infrage zu stellen, ohne das Gesicht zu verlieren.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Was ermöglichte laut Arendt die Mittäterschaft?',
+    questionText: 'Was ist die strukturelle Ursache der Fehlausrichtung zwischen Funktionen?',
     options: [
-      { label: 'Ideologische Überzeugung', value: 'ideologische Überzeugung' },
-      { label: 'Gedankenlosigkeit und blinder Gehorsam', value: 'Gedankenlosigkeit und Gehorsam' },
-      { label: 'Persönliche Grausamkeit', value: 'persönliche Grausamkeit' },
-      { label: 'Finanzielle Anreize', value: 'finanzielle Anreize' }
+      { label: 'Jede Funktion ist einzeln rational, aber die Summe erzeugt Inkohärenz', value: 'einzelne Rationalität Inkohärenz' },
+      { label: 'Die Menschen lesen die internen Berichte nicht', value: 'Berichte nicht gelesen' },
+      { label: 'Das Unternehmen hat nicht genug Manager', value: 'zu wenige Manager' },
+      { label: 'Die Technologie teilt die Daten nicht', value: 'Technologie teilt nicht' }
     ],
-    correctAnswer: 'Gedankenlosigkeit und Gehorsam', points: 2, orderIndex: 70, tags: ['Philosophie', 'Geschichte'], timeSuggested: 90
+    correctAnswer: 'einzelne Rationalität Inkohärenz', points: 2, orderIndex: 70, tags: ['Arbeit', 'Organisation'], timeSuggested: 90
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'Die Verschränkung von ästhetischer Erfahrung und ethischer Reflexion bildet den Kerngedanken einer philosophischen Tradition, die von Kant bis zur Gegenwart reicht.',
+    ttsScript: 'Die langfristige Nachhaltigkeit einer Organisation hängt von ihrer Fähigkeit ab, den Druck für kurzfristige Ergebnisse mit Investitionen in Einklang zu bringen, die erst in der Zukunft Wert schaffen werden.',
     ttsLanguageCode: 'de-DE',
     questionText: 'Schreiben Sie genau, was Sie hören.',
-    correctAnswer: 'Die Verschränkung von ästhetischer Erfahrung und ethischer Reflexion bildet den Kerngedanken einer philosophischen Tradition, die von Kant bis zur Gegenwart reicht.', points: 2, orderIndex: 71, tags: ['Diktat', 'Philosophie'], timeSuggested: 120
+    correctAnswer: 'Die langfristige Nachhaltigkeit einer Organisation hängt von ihrer Fähigkeit ab, den Druck für kurzfristige Ergebnisse mit Investitionen in Einklang zu bringen, die erst in der Zukunft Wert schaffen werden.', points: 2, orderIndex: 71, tags: ['Diktat', 'Arbeit'], timeSuggested: 120
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Das Paradoxon der Toleranz, formuliert von Karl Popper, besagt, dass eine unbegrenzt tolerante Gesellschaft letztlich von intoleranten Kräften zerstört werden wird. Wenn eine Gesellschaft tolerant gegenüber denjenigen ist, die die Toleranz selbst abschaffen wollen, wird sie ihre eigene Grundlage untergraben. Popper folgerte daraus, dass eine tolerante Gesellschaft das Recht und die Pflicht habe, die Intoleranz nicht zu tolerieren.',
+    ttsScript: 'Das Modell der jährlichen Leistungsbeurteilung — jene Skala von eins bis fünf, mit der Führungskräfte ihre Mitarbeiter klassifizierten — ist vor etwa zehn Jahren in die Krise geraten, und viele Unternehmen haben es aufgegeben. Die Gründe sind dokumentiert: Die Bewertungen demotivieren diejenigen, die niedrige Noten erhalten, sie sind von Recency-Bias beeinflusst (Manager erinnern sich an die letzten drei Monate, nicht an das ganze Jahr) und sie erzeugen ungesunden Wettbewerb unter Kollegen. Was sie ersetzt, ist anspruchsvoller: häufige Entwicklungsgespräche, getrennt von Gehaltsentscheidungen, mit dem Ziel des Wachstums, nicht der Klassifizierung. Für die Führungskraft ist das anstrengender, produziert aber nachhaltigere Ergebnisse.',
     ttsLanguageCode: 'de-DE',
-    questionText: 'Was besagt das Paradoxon der Toleranz?',
+    questionText: 'Warum wurden die jährlichen Leistungsbeurteilungen aufgegeben?',
     options: [
-      { label: 'Toleranz ist immer gut', value: 'immer gut' },
-      { label: 'Unbegrenzte Toleranz führt zur Zerstörung der Toleranz selbst', value: 'unbegrenzte Toleranz zerstört sich selbst' },
-      { label: 'Toleranz und Demokratie sind unvereinbar', value: 'unvereinbar' },
-      { label: 'Intoleranz ist natürlich', value: 'natürlich' }
+      { label: 'Sie verzerren das Verhalten und spiegeln eher die letzten Monate als das ganze Jahr wider', value: 'verzerren Recency-Bias' },
+      { label: 'Sie sind zu teuer in der Umsetzung', value: 'zu teuer' },
+      { label: 'Die Gewerkschaft lässt sie nicht mehr zu', value: 'Gewerkschaft verbietet' },
+      { label: 'Sie sind in den meisten Ländern illegal', value: 'illegal' }
     ],
-    correctAnswer: 'unbegrenzte Toleranz zerstört sich selbst', points: 2, orderIndex: 72, tags: ['Philosophie', 'Politik'], timeSuggested: 90
+    correctAnswer: 'verzerren Recency-Bias', points: 2, orderIndex: 72, tags: ['Arbeit', 'Performance'], timeSuggested: 90
   },
 
   // ============================================================
@@ -874,5 +879,288 @@ export const germanListeningQuestions: MultiSkillQuestionData[] = [
     ttsLanguageCode: 'de-DE',
     options: [{ label: 'Umweltvorschriften', value: 'Umweltvorschriften' }, { label: 'Greenwashing von Unternehmen', value: 'Greenwashing von Unternehmen' }, { label: 'Untätigkeit der Regierung', value: 'Untätigkeit der Regierung' }, { label: 'Verbraucherverhalten', value: 'Verbraucherverhalten' }],
     correctAnswer: 'Greenwashing von Unternehmen', points: 2, orderIndex: 84, tags: ['Satire', 'Kommentar', 'register-varied'], timeSuggested: 90
+  },
+
+  // ============================================================
+  // ALLTAGSDIALOGE — ergänzt auf Feedback von Maka (monotone Roboterstimme,
+  // keine Dialoge). Zwei Sprecher mit Markern SPEAKER_A/B aktivieren den
+  // TtsService-Parser, der zwischen männlichen/weiblichen Stimmen wechselt.
+  // Themen: Alltag + Work-Life (keine Philosophie / Politik / Spezialwissenschaft).
+  // ============================================================
+
+  // ---- A1 Dialoge ----
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Guten Morgen, ich hätte gern einen Kaffee, bitte.
+SPEAKER_B: Gerne. Klein oder groß?
+SPEAKER_A: Klein, danke. Was kostet er?
+SPEAKER_B: Ein Euro zwanzig.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was kostet der Kaffee?',
+    options: [{ label: '1,00 Euro', value: '1,00' }, { label: '1,20 Euro', value: '1,20' }, { label: '1,50 Euro', value: '1,50' }, { label: '2,00 Euro', value: '2,00' }],
+    correctAnswer: '1,20', points: 1, orderIndex: 85, tags: ['Dialog', 'Café', 'Alltag'], timeSuggested: 40
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Guten Tag. Wann öffnen Sie morgen?
+SPEAKER_B: Wir öffnen um neun Uhr morgens.
+SPEAKER_A: Und wann schließen Sie?
+SPEAKER_B: Um sieben Uhr abends.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wann öffnet das Geschäft?',
+    options: [{ label: 'Um 7 Uhr', value: '7' }, { label: 'Um 8 Uhr', value: '8' }, { label: 'Um 9 Uhr', value: '9' }, { label: 'Um 10 Uhr', value: '10' }],
+    correctAnswer: '9', points: 1, orderIndex: 86, tags: ['Dialog', 'Geschäft', 'Alltag'], timeSuggested: 40
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Wo können wir uns am Samstag treffen?
+SPEAKER_B: Treffen wir uns im Café neben dem Park.
+SPEAKER_A: Um wie viel Uhr?
+SPEAKER_B: Um drei Uhr nachmittags.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wo wollen sie sich treffen?',
+    options: [{ label: 'Im Park', value: 'Park' }, { label: 'Im Café', value: 'Café' }, { label: 'Im Kino', value: 'Kino' }, { label: 'Im Büro', value: 'Büro' }],
+    correctAnswer: 'Café', points: 1, orderIndex: 87, tags: ['Dialog', 'Pläne', 'Alltag'], timeSuggested: 40
+  },
+  {
+    language: 'German', cefrLevel: 'A1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Eine Fahrkarte ins Zentrum, bitte.
+SPEAKER_B: Einfach oder hin und zurück?
+SPEAKER_A: Nur einfach.
+SPEAKER_B: Das macht zwei Euro.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was kostet die Fahrkarte?',
+    options: [{ label: '1 Euro', value: '1' }, { label: '2 Euro', value: '2' }, { label: '3 Euro', value: '3' }, { label: '4 Euro', value: '4' }],
+    correctAnswer: '2', points: 1, orderIndex: 88, tags: ['Dialog', 'Verkehr', 'Alltag'], timeSuggested: 40
+  },
+
+  // ---- A2 Dialoge ----
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Hast du am Wochenende Zeit? Es läuft ein neuer Film im Kino.
+SPEAKER_B: Samstag bin ich beschäftigt, aber Sonntag passt mir gut.
+SPEAKER_A: Perfekt. Gehen wir am Sonntagnachmittag?
+SPEAKER_B: Einverstanden, bis dann.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wann gehen sie ins Kino?',
+    options: [{ label: 'Samstagmorgen', value: 'sa-morgen' }, { label: 'Samstagabend', value: 'sa-abend' }, { label: 'Sonntagnachmittag', value: 'so-nachmittag' }, { label: 'Sonntagabend', value: 'so-abend' }],
+    correctAnswer: 'so-nachmittag', points: 1, orderIndex: 89, tags: ['Dialog', 'Pläne', 'Alltag'], timeSuggested: 45
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Guten Tag, ich möchte einen Tisch für zwei Personen reservieren.
+SPEAKER_B: Für wann, mein Herr?
+SPEAKER_A: Freitagabend um acht Uhr, wenn möglich.
+SPEAKER_B: In Ordnung. Auf welchen Namen darf ich reservieren?`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Für wie viele Personen ist die Reservierung?',
+    options: [{ label: 'Eine', value: '1' }, { label: 'Zwei', value: '2' }, { label: 'Drei', value: '3' }, { label: 'Vier', value: '4' }],
+    correctAnswer: '2', points: 1, orderIndex: 90, tags: ['Dialog', 'Restaurant', 'Alltag'], timeSuggested: 45
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Hallo, ich bin neu in der Firma. Ich arbeite im Marketingteam.
+SPEAKER_B: Herzlich willkommen! Ich bin im Vertrieb. Komm, ich stelle dir das Team vor.
+SPEAKER_A: Vielen Dank. Seit wann arbeitest du hier?
+SPEAKER_B: Ich bin seit etwa drei Jahren dabei.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'In welcher Abteilung arbeitet die neue Kollegin?',
+    options: [{ label: 'Vertrieb', value: 'vertrieb' }, { label: 'Marketing', value: 'marketing' }, { label: 'Personal', value: 'hr' }, { label: 'IT', value: 'it' }],
+    correctAnswer: 'marketing', points: 1, orderIndex: 91, tags: ['Dialog', 'Büro', 'Work-Life'], timeSuggested: 45
+  },
+  {
+    language: 'German', cefrLevel: 'A2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Entschuldigung, wie komme ich zum Bahnhof?
+SPEAKER_B: Gehen Sie zwei Straßen geradeaus, dann biegen Sie links ab.
+SPEAKER_A: Nach zwei Straßen links. Wie lange dauert es zu Fuß?
+SPEAKER_B: Etwa zehn Minuten.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wie lange dauert es zu Fuß?',
+    options: [{ label: '5 Minuten', value: '5' }, { label: '10 Minuten', value: '10' }, { label: '15 Minuten', value: '15' }, { label: '20 Minuten', value: '20' }],
+    correctAnswer: '10', points: 1, orderIndex: 92, tags: ['Dialog', 'Wegbeschreibung', 'Alltag'], timeSuggested: 45
+  },
+
+  // ---- B1 Dialoge ----
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Also, ich sehe, dass Sie Erfahrung im Kundenservice haben. Was hat Sie an dieser Position gereizt?
+SPEAKER_B: Mich interessiert ein Wechsel in eine strategischere Rolle. Hier könnte ich neben der Kommunikation auch meine analytischen Fähigkeiten einsetzen.
+SPEAKER_A: Verstehe. Wie würden Sie einen sehr unzufriedenen Kunden behandeln?
+SPEAKER_B: Ich würde aufmerksam zuhören, das Problem anerkennen und bis Tagesende eine konkrete Lösung suchen.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Warum möchte der Bewerber diese Position?',
+    options: [{ label: 'Für ein höheres Gehalt', value: 'gehalt' }, { label: 'Für eine strategischere Rolle', value: 'strategisch' }, { label: 'Um remote zu arbeiten', value: 'remote' }, { label: 'Um die Stadt zu wechseln', value: 'stadt' }],
+    correctAnswer: 'strategisch', points: 1, orderIndex: 93, tags: ['Dialog', 'Vorstellungsgespräch', 'Work-Life'], timeSuggested: 60
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Ich möchte ein Zimmer für drei Nächte reservieren, vom fünfzehnten bis zum achtzehnten März.
+SPEAKER_B: Für wie viele Personen?
+SPEAKER_A: Zwei Erwachsene. Haben Sie Zimmer mit Meerblick?
+SPEAKER_B: Ja, wir haben ein Doppelzimmer mit Meerblick für hundertsechzig Euro pro Nacht. Frühstück inklusive.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was kostet das Zimmer pro Nacht?',
+    options: [{ label: '140 Euro', value: '140' }, { label: '150 Euro', value: '150' }, { label: '160 Euro', value: '160' }, { label: '180 Euro', value: '180' }],
+    correctAnswer: '160', points: 1, orderIndex: 94, tags: ['Dialog', 'Hotel', 'Alltag'], timeSuggested: 60
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Guten Tag, Frau Doktor. Ich habe seit drei Tagen Halsschmerzen und fühle mich schwach.
+SPEAKER_B: Hatten Sie Fieber?
+SPEAKER_A: Ja, gestern hatte ich achtunddreißig fünf. Heute ist es gesunken.
+SPEAKER_B: Ich verschreibe Ihnen ein Antibiotikum für sieben Tage. Nehmen Sie zwei Tabletten täglich nach den Mahlzeiten.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wie lange muss er das Antibiotikum einnehmen?',
+    options: [{ label: '3 Tage', value: '3' }, { label: '5 Tage', value: '5' }, { label: '7 Tage', value: '7' }, { label: '10 Tage', value: '10' }],
+    correctAnswer: '7', points: 1, orderIndex: 95, tags: ['Dialog', 'Arzt', 'Alltag'], timeSuggested: 60
+  },
+  {
+    language: 'German', cefrLevel: 'B1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Das Meeting morgen wurde auf zehn Uhr verschoben. Kannst du teilnehmen?
+SPEAKER_B: Um zehn habe ich einen Call mit dem Kunden aus München. Kann ich später dazustoßen?
+SPEAKER_A: Fang ruhig später an, kein Problem. Wir schicken die Hauptpunkte in den Slack-Kanal.
+SPEAKER_B: Perfekt, danke. Ich versuche bis halb elf da zu sein.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Warum kommt der Kollege zu spät?',
+    options: [{ label: 'Er hat einen anderen Termin', value: 'anderer-termin' }, { label: 'Der Zug hat Verspätung', value: 'zug' }, { label: 'Er ist krank', value: 'krank' }, { label: 'Er hat es vergessen', value: 'vergessen' }],
+    correctAnswer: 'anderer-termin', points: 1, orderIndex: 96, tags: ['Dialog', 'Meeting', 'Work-Life'], timeSuggested: 60
+  },
+
+  // ---- B2 Dialoge ----
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Der Kunde hat die Deadline auf Freitag vorgezogen. Schaffen wir die Lieferung pünktlich?
+SPEAKER_B: Es wird knapp. Entwicklung ist Mittwoch fertig, QA braucht mindestens zwei volle Tage.
+SPEAKER_A: Können wir den Umfang reduzieren? Der Reporting-Teil kann warten.
+SPEAKER_B: Ja, wenn wir das Reporting auf das nächste Release verschieben, schaffen wir es. Ich informiere den PM.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wie werden sie die neue Deadline einhalten?',
+    options: [{ label: 'Indem sie nachts arbeiten', value: 'nachts' }, { label: 'Indem sie eine Funktion verschieben', value: 'verschieben' }, { label: 'Indem sie Personen zum Team hinzufügen', value: 'personen' }, { label: 'Indem sie eine Fristverlängerung erbitten', value: 'verlaengerung' }],
+    correctAnswer: 'verschieben', points: 1, orderIndex: 97, tags: ['Dialog', 'Projekt', 'Work-Life'], timeSuggested: 75
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Guten Tag, ich möchte eine Erstattung. Das Produkt, das ich erhalten habe, ist defekt.
+SPEAKER_B: Das tut mir leid. Haben Sie die Rechnung und ein Foto des Defekts?
+SPEAKER_A: Ja, ich habe sie vor drei Tagen per E-Mail geschickt, aber niemand hat geantwortet.
+SPEAKER_B: Ich prüfe das sofort. Ich bestätige Ihnen: Ich kann die volle Erstattung noch heute freigeben.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was macht der Mitarbeiter am Ende?',
+    options: [{ label: 'Er lehnt die Erstattung ab', value: 'lehnt-ab' }, { label: 'Er fordert weitere Unterlagen', value: 'unterlagen' }, { label: 'Er genehmigt die volle Erstattung', value: 'genehmigt' }, { label: 'Er leitet das Gespräch weiter', value: 'weiterleiten' }],
+    correctAnswer: 'genehmigt', points: 1, orderIndex: 98, tags: ['Dialog', 'Reklamation', 'Work-Life'], timeSuggested: 75
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Ich würde gern mein Vergütungspaket für das nächste Jahr besprechen.
+SPEAKER_B: Natürlich. Sie sollten wissen, dass das Budget begrenzt ist, aber ich höre Ihnen gern zu.
+SPEAKER_A: In den letzten Monaten habe ich zwei neue Projekte übernommen und das Team während der Abwesenheit der Vorgesetzten geleitet. Ich suche eine Anerkennung dafür.
+SPEAKER_B: Sie haben recht, Ihr Beitrag ist gewachsen. Ich kann eine Erhöhung von sechs Prozent plus einen variablen Bonus an die Ergebnisse gekoppelt anbieten.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was bietet die Führungskraft an?',
+    options: [{ label: 'Nur einen einmaligen Bonus', value: 'bonus' }, { label: 'Nur eine Gehaltserhöhung', value: 'erhoehung' }, { label: 'Erhöhung plus variablen Bonus', value: 'beides' }, { label: 'Eine Beförderung', value: 'befoerderung' }],
+    correctAnswer: 'beides', points: 1, orderIndex: 99, tags: ['Dialog', 'Verhandlung', 'Work-Life'], timeSuggested: 75
+  },
+  {
+    language: 'German', cefrLevel: 'B2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Wie war eigentlich die Fortbildung letzte Woche?
+SPEAKER_B: Die Inhalte waren nützlich, aber das Tempo war zu schnell für Einsteiger.
+SPEAKER_A: Hast du einen konkreten Vorschlag?
+SPEAKER_B: Ja. Ich würde eine optionale Einführungssitzung vor dem Aufbaumodul ergänzen, damit alle vom gleichen Stand starten.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was schlägt der Mitarbeiter vor?',
+    options: [{ label: 'Den Trainer zu wechseln', value: 'trainer' }, { label: 'Eine optionale Einführungssitzung', value: 'einfuehrung' }, { label: 'Die Gesamtdauer zu verlängern', value: 'verlaengern' }, { label: 'Das Aufbaumodul zu streichen', value: 'streichen' }],
+    correctAnswer: 'einfuehrung', points: 1, orderIndex: 100, tags: ['Dialog', 'Fortbildung', 'Work-Life'], timeSuggested: 75
+  },
+
+  // ---- C1 Dialoge ----
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Wir verlieren Marktanteile im jungen Segment. Auf dem Tisch liegen zwei Optionen: eine offensive Social-Media-Kampagne oder eine Überarbeitung des Produkts.
+SPEAKER_B: Die Kampagne würde uns sofort Sichtbarkeit verschaffen, aber wenn das Produkt nicht überzeugt, verbrennen wir nur das Budget.
+SPEAKER_A: Du schlägst also vor, mit der Produktüberarbeitung zu beginnen?
+SPEAKER_B: Genau. Drei Monate Tests in einem kleinen Panel, und das Marketing folgt dann mit einer glaubwürdigen Botschaft.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Womit ist SPEAKER_B einverstanden?',
+    options: [{ label: 'Die Social-Kampagne sofort starten', value: 'social' }, { label: 'Das Marketingbudget erhöhen', value: 'budget' }, { label: 'Zuerst das Produkt überarbeiten', value: 'produkt' }, { label: 'Das junge Segment aufgeben', value: 'aufgeben' }],
+    correctAnswer: 'produkt', points: 2, orderIndex: 101, tags: ['Dialog', 'Strategie', 'Work-Life'], timeSuggested: 90
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Wenn ich auf das abgeschlossene Jahr schaue, hast du drei von vier Zielen erreicht. Hervorragende Arbeit beim Projekt Alpha.
+SPEAKER_B: Danke. Das einzige Ziel, das ich nicht erreicht habe, war die Reduzierung der Antwortzeiten des Teams.
+SPEAKER_A: Ja, und ich möchte ehrlich sein: Das Ergebnis hing auch von Ressourcen ab, die wir dir nicht gegeben haben. Ich werde es dir nicht negativ anrechnen.
+SPEAKER_B: Das schätze ich. Für nächstes Jahr möchte ich die Ressourcenplanung selbst übernehmen, damit ich die Erwartungen besser steuern kann.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wie steht die Führungskraft zu dem nicht erreichten Ziel?',
+    options: [{ label: 'Sie wertet es voll als Misserfolg', value: 'misserfolg' }, { label: 'Sie führt es auf fehlende Ressourcen zurück', value: 'ressourcen' }, { label: 'Sie will den Mitarbeiter ersetzen', value: 'ersetzen' }, { label: 'Sie kürzt das Gehalt', value: 'gehalt' }],
+    correctAnswer: 'ressourcen', points: 2, orderIndex: 102, tags: ['Dialog', 'Review', 'Work-Life'], timeSuggested: 90
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Der Vertragsentwurf hat bei uns Zweifel an der Exklusivklausel ausgelöst, sie ist sehr weit gefasst.
+SPEAKER_B: Verstehe. Es ist eine Standardklausel in unseren Enterprise-Verträgen, wir können sie jedoch auf den Sektor begrenzen, in dem Sie direkt tätig sind.
+SPEAKER_A: Eine geografische Begrenzung auf Europa könnte für uns funktionieren.
+SPEAKER_B: Verbinden wir beides: Exklusivität beschränkt auf Ihren Kernsektor und den europäischen Markt, für die Dauer des ersten Jahres.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Worauf einigt man sich am Ende?',
+    options: [{ label: 'Die Exklusivität streichen', value: 'streichen' }, { label: 'Weltweite Exklusivität für alle Sektoren', value: 'weltweit' }, { label: 'Exklusivität begrenzt auf Sektor + Europa für ein Jahr', value: 'begrenzt' }, { label: 'Die Entscheidung verschieben', value: 'verschieben' }],
+    correctAnswer: 'begrenzt', points: 2, orderIndex: 103, tags: ['Dialog', 'Vertrag', 'Work-Life'], timeSuggested: 90
+  },
+  {
+    language: 'German', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Die Zahlen des ersten Quartals zeigen ein Umsatzwachstum von zwölf Prozent, aber die Marge ist gesunken.
+SPEAKER_B: Ja, weil wir stark in die Kundenakquise investiert haben. Das ist eine bewusste Entscheidung.
+SPEAKER_A: Wann erwarten wir, dass die Marge wieder auf dem Niveau des Vorjahres ist?
+SPEAKER_B: Bis zum vierten Quartal, sobald die wiederkehrenden Kunden die Fixkosten decken.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wann soll sich die Marge normalisieren?',
+    options: [{ label: 'Im zweiten Quartal', value: 'q2' }, { label: 'Im dritten Quartal', value: 'q3' }, { label: 'Im vierten Quartal', value: 'q4' }, { label: 'Im nächsten Jahr', value: 'naechstes-jahr' }],
+    correctAnswer: 'q4', points: 2, orderIndex: 104, tags: ['Dialog', 'Finanzen', 'Work-Life'], timeSuggested: 90
+  },
+
+  // ---- C2 Dialoge ----
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Die Due Diligence hat zwei problematische Bereiche aufgedeckt: eine noch offene Steuerrisikoposition und eine konzentrierte Technologieabhängigkeit.
+SPEAKER_B: Die Steuerrisikoposition können wir mit einem speziellen Escrow abdecken. Der Technologieteil bereitet mir mehr Sorgen: Wir hängen an einem einzigen Anbieter ohne Ausstiegsplan.
+SPEAKER_A: Wir könnten den Kaufpreis an eine Neuverhandlung dieses Vertrags innerhalb von sechs Monaten nach Closing knüpfen.
+SPEAKER_B: Das funktioniert, aber ich würde gern eine Earn-out-Klausel ergänzen: Wenn wir nicht neuverhandeln, wird ein Teil des Kaufpreises einbehalten.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was schlägt SPEAKER_B für das Technologierisiko vor?',
+    options: [{ label: 'Die Transaktion zu annullieren', value: 'annullieren' }, { label: 'Nur ein Escrow', value: 'escrow' }, { label: 'Eine bedingte Earn-out-Klausel', value: 'earn-out' }, { label: 'Den Preis zu erhöhen', value: 'erhoehen' }],
+    correctAnswer: 'earn-out', points: 2, orderIndex: 105, tags: ['Dialog', 'M&A', 'Work-Life'], timeSuggested: 100
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Der Markt belohnt zunehmend Unternehmen, die skalieren können, ohne ihre Kultur zu verwässern. Wie schaffen Sie das?
+SPEAKER_B: Ehrlich gesagt, nicht vollständig. Wir wachsen um dreißig Prozent pro Jahr, und jede neue Einstellungswelle verändert das innere Gefüge.
+SPEAKER_A: Welche Gegenmaßnahmen haben Sie ergriffen?
+SPEAKER_B: Eine kaskadierende Mentoring-Struktur und eine monatliche Einstellungsobergrenze — wir verzichten lieber auf Bewerber, als die Werte zu verwässern. Das ist nicht unendlich skalierbar, aber für den Moment trägt es.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was räumt SPEAKER_B ein?',
+    options: [{ label: 'Dass die Unternehmenskultur perfekt ist', value: 'perfekt' }, { label: 'Dass ihre Lösung Grenzen hat', value: 'grenzen' }, { label: 'Dass ihn die Kultur nicht interessiert', value: 'keine-kultur' }, { label: 'Dass sie nächstes Jahr weniger einstellen', value: 'weniger' }],
+    correctAnswer: 'grenzen', points: 2, orderIndex: 106, tags: ['Dialog', 'Leadership', 'Work-Life'], timeSuggested: 100
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Ich habe deinen Projektbericht gelesen, und etwas stimmt nicht. Die Zahlen zur Customer Retention wirken selektiv.
+SPEAKER_B: Du hast recht, ich habe die Januar-Kohorte ausgeschlossen, weil sie eine ungewöhnliche Promotion hatte.
+SPEAKER_A: Ich verstehe die Logik, aber sie ohne Hinweis im Bericht auszuschließen, stellt die gesamte Analyse infrage.
+SPEAKER_B: Du hast recht. Ich überarbeite ihn und füge beide Darstellungen sowie eine klare methodische Anmerkung ein.`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Was ist das aufgeworfene Problem?',
+    options: [{ label: 'Die Daten sind gefälscht', value: 'gefaelscht' }, { label: 'Der Ausschluss von Daten wird nicht angegeben', value: 'ausschluss' }, { label: 'Der Bericht ist zu lang', value: 'zu-lang' }, { label: 'Die Zahlen sind zu niedrig', value: 'zu-niedrig' }],
+    correctAnswer: 'ausschluss', points: 2, orderIndex: 107, tags: ['Dialog', 'Feedback', 'Work-Life'], timeSuggested: 100
+  },
+  {
+    language: 'German', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
+    ttsScript: `SPEAKER_A: Die neue europäische Datenschutzverordnung schreibt vierteljährliche Audits für kritische Lieferanten vor.
+SPEAKER_B: Das heißt, wir müssen alle bestehenden Verträge überarbeiten. Wie viel Zeit haben wir?
+SPEAKER_A: Die Compliance ist ab dem ersten Januar verpflichtend, also sechs Monate.
+SPEAKER_B: Okay, ich schlage eine gemeinsame Taskforce mit dem Legal-Team und dem Lieferantenmanagement vor. Soll ich dir einen Detailplan bis Monatsende vorlegen?`,
+    ttsLanguageCode: 'de-DE',
+    questionText: 'Wie viel Zeit haben sie, um konform zu sein?',
+    options: [{ label: 'Drei Monate', value: '3-monate' }, { label: 'Sechs Monate', value: '6-monate' }, { label: 'Ein Jahr', value: '1-jahr' }, { label: 'Zwei Jahre', value: '2-jahre' }],
+    correctAnswer: '6-monate', points: 2, orderIndex: 108, tags: ['Dialog', 'Compliance', 'Work-Life'], timeSuggested: 100
   },
 ]

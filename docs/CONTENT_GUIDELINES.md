@@ -115,37 +115,51 @@ will play before the question is asked.
 
 ---
 
-## 5. Known violations (audit 2026-05-18)
+## 5. Audit history
 
-These existing questions violate the rules above and should be rewritten
-or retired. Filed here for visibility; rewrites tracked in commits.
+Specialist topics at C1/C2 violating rule 1 have been rewritten in
+several batches.
 
-### Specialist topics at C1/C2 (rule 1)
+### Reading C1/C2 — done
 
-| Language | Level | Topic | Status |
-|----------|-------|-------|--------|
-| Italian | C1 | Sapir-Whorf hypothesis | Replace with workplace topic |
-| Italian | C1 | Behavioral economics (Kahneman) | Replace with workplace topic |
-| Italian | C2 | Post-truth / epistemic crisis | Replace with workplace topic |
-| Italian | C2 | Quantum consciousness (Penrose Orch-OR) | Replace with workplace topic |
-| English | C1 | Sapir-Whorf, behavioral economics | Replace |
-| English | C2 | Post-truth, quantum entanglement, philosophical zombie | Replace |
-| Spanish | C1/C2 | Translated versions of above | Replace |
-| French | C1/C2 | Translated versions of above | Replace |
-| German | C1/C2 | Translated versions of above | Replace |
+| Language | Level | Original topic | Replaced with |
+|----------|-------|---------------|---------------|
+| All 5 | C1 | Sapir-Whorf hypothesis | Continuous feedback vs annual review |
+| All 5 | C1 | Behavioral economics (Kahneman) | Culture of recognition |
+| All 5 | C2 | Post-truth / epistemic crisis | Meeting inflation |
+| All 5 | C2 | Quantum consciousness | Return to office / hybrid dilemma |
+| All 5 | C2 | Kuuk Thaayorre / linguistic relativity | Feedback in international teams |
 
-### Verbatim answers (rule 2)
+Commits: `f1e294f` (Italian), `871a0a0` (EN/ES/FR/DE).
 
-The same C1/C2 reading questions above also tend to have answer options
-that quote the passage word-for-word. The rewrites must include
-paraphrased distractors.
+### Listening C1/C2 — done
 
-### Missing images (separate but related)
+| Language | Level | Original topic | Replaced with |
+|----------|-------|---------------|---------------|
+| All 5 | C1 | Replication crisis in psychology | Continuous feedback |
+| All 5 | C1 | Neuroplasticity / stroke recovery | First 90 days of onboarding |
+| All 5 | C1 | Epigenetics | Asynchronous work |
+| All 5 | C1 | Décroissance / Latouche | Right to disconnect |
+| All 5 | C1 | Attachment theory (Bowlby) | Manager as coach |
+| All 5 | C2 | Quantum entanglement (×2) | Meeting inflation + retention |
+| All 5 | C2 | Surveillance capitalism (Zuboff) | Psychological safety |
+| All 5 | C2 | Replication crisis (broader) | Context switching cost |
+| All 5 | C2 | Epistemic humility / Socratic | Cross-cultural feedback |
+| All 5 | C2 | Banality of evil (Arendt) | Quiet quitting |
+| All 5 | C2 | Wittgenstein language games | Hybrid work as leadership test |
+| All 5 | C2 | Fermi paradox | Cross-functional alignment |
+| All 5 | C2 | Deleuze rhizome | Performance review evolution |
 
-6 A1 Speaking questions across all 5 languages ask the learner to "look
-at the image / picture" but no `imageUrl` is set. Either provide the
-image or rewrite the prompt to not require one (e.g. "Describe your own
-desk / your favourite room" — same speaking skill, no image dependency).
+All correct answers paraphrase the passage rather than quote it
+verbatim, addressing rule 2.
+
+### Missing images — done
+
+6 A1 Speaking questions across all 5 languages used to ask the learner
+to "look at the image" without an `imageUrl`. All rewritten to
+image-free prompts ("Describe your favourite room at home", "Talk about
+your morning routine") — same speaking skill, no image dependency.
+Commit: `f1e294f`.
 
 ---
 

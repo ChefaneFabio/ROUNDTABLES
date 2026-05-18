@@ -303,11 +303,16 @@ export const spanishListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La crisis de replicación en psicología se refiere al descubrimiento de que muchos hallazgos publicados en este campo no pueden ser replicados por investigadores independientes. Un estudio emblemático de dos mil quince intentó reproducir cien experimentos de psicología y descubrió que solo el treinta y nueve por ciento obtuvo los mismos resultados. Esto ha generado demandas de mayor rigor metodológico, prerregistro de estudios y datos abiertos.',
+    ttsScript: 'En los últimos años muchas empresas han abandonado la evaluación anual en favor del feedback continuo: conversaciones breves cada dos semanas entre el responsable y el colaborador. La idea no es hablar más, sino hablar antes. Un pequeño ajuste en marzo evita que un problema se vuelva irreparable en diciembre. El cambio, sin embargo, exige más esfuerzo a los mánagers, que deben desarrollar capacidades de escucha activa que muchas veces nunca han ejercitado.',
     ttsLanguageCode: 'es-ES',
-    questionText: '¿Qué porcentaje de experimentos de psicología se replicó con éxito?',
-    options: [{ label: '25%', value: '25' }, { label: '39%', value: '39' }, { label: '50%', value: '50' }, { label: '65%', value: '65' }],
-    correctAnswer: '39', points: 3, orderIndex: 31, tags: ['ciencia', 'investigación'], timeSuggested: 75
+    questionText: '¿Cuál es el objetivo principal del feedback continuo?',
+    options: [
+      { label: 'Corregir pequeños problemas antes de que se vuelvan graves', value: 'corregir antes de que se vuelvan graves' },
+      { label: 'Dar elogios más frecuentes a los empleados', value: 'elogios frecuentes' },
+      { label: 'Sustituir el papel de Recursos Humanos', value: 'sustituir RRHH' },
+      { label: 'Monitorizar la productividad en tiempo real', value: 'monitorizar productividad' }
+    ],
+    correctAnswer: 'corregir antes de que se vuelvan graves', points: 3, orderIndex: 31, tags: ['trabajo', 'management'], timeSuggested: 75
   },
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
@@ -318,16 +323,16 @@ export const spanishListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'El concepto de neuroplasticidad — la capacidad del cerebro para reorganizarse formando nuevas conexiones neuronales — ha revolucionado nuestra comprensión de la rehabilitación cognitiva. Los pacientes que han sufrido accidentes cerebrovasculares, por ejemplo, pueden a veces recuperar funciones perdidas porque las partes sanas del cerebro compensan las áreas dañadas. Este proceso, sin embargo, requiere una intervención terapéutica intensiva y sostenida.',
+    ttsScript: 'Las investigaciones sobre la retención del talento muestran que los primeros noventa días de un empleado en la empresa son decisivos. En ese periodo se forman convicciones que influirán en el compromiso durante años: si quedarse o no, cómo comportarse con los compañeros, cuánto invertir emocionalmente en los proyectos. Sin embargo, muchas organizaciones limitan el onboarding a la primera semana — entrega del ordenador, manual, reunión con RRHH — y luego dejan a la nueva persona a su suerte.',
     ttsLanguageCode: 'es-ES',
-    questionText: '¿Qué es la neuroplasticidad?',
+    questionText: '¿Por qué son tan importantes los primeros noventa días?',
     options: [
-      { label: 'La capacidad de aprender varios idiomas', value: 'idiomas' },
-      { label: 'La capacidad del cerebro para formar nuevas conexiones neuronales', value: 'nuevas conexiones neuronales' },
-      { label: 'Un tipo de cirugía cerebral', value: 'cirugía' },
-      { label: 'La mejora de la memoria mediante medicación', value: 'medicación' }
+      { label: 'Se forman convicciones que inciden en el compromiso a largo plazo', value: 'convicciones que inciden en el compromiso' },
+      { label: 'Porque la mayoría de las dimisiones se producen en la primera semana', value: 'dimisiones primera semana' },
+      { label: 'Porque las evaluaciones de desempeño empiezan a los 90 días', value: 'evaluaciones a 90 días' },
+      { label: 'Porque los permisos de trabajo caducan en ese periodo', value: 'permisos caducan' }
     ],
-    correctAnswer: 'nuevas conexiones neuronales', points: 3, orderIndex: 33, tags: ['ciencia'], timeSuggested: 75
+    correctAnswer: 'convicciones que inciden en el compromiso', points: 3, orderIndex: 33, tags: ['trabajo', 'RRHH'], timeSuggested: 75
   },
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
@@ -355,75 +360,75 @@ export const spanishListeningQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Las implicaciones filosóficas del entrelazamiento cuántico son quizás más profundas que sus propiedades físicas. Cuando dos partículas se entrelazan, medir el estado de una determina instantáneamente el estado de la otra, independientemente de la distancia que las separe. Einstein ridiculizó este fenómeno llamándolo "acción fantasmagórica a distancia", pero experimentos posteriores han confirmado definitivamente su existencia, desafiando nuestras suposiciones más fundamentales sobre la localidad y la causalidad.',
+    ttsScript: 'La paradoja de la colaboración moderna es que cuanto más colaboramos, menos trabajamos de verdad. Las investigaciones sobre el uso del tiempo muestran que quien trabaja con el conocimiento pasa de media veintitrés horas a la semana en reuniones: una cifra que se ha duplicado en los últimos quince años. Las reuniones se han convertido en la forma de demostrar implicación, repartir responsabilidades y evitar decidir en solitario. Pero cada hora de reunión es una hora restada al trabajo concentrado, y el coste del cambio de contexto tras cada encuentro está ya bien documentado.',
     ttsLanguageCode: 'es-ES',
-    questionText: '¿Cómo llamó Einstein al entrelazamiento cuántico?',
+    questionText: '¿Por qué se han multiplicado tanto las reuniones?',
     options: [
-      { label: 'Una teoría hermosa', value: 'teoría hermosa' },
-      { label: 'Acción fantasmagórica a distancia', value: 'acción fantasmagórica a distancia' },
-      { label: 'El principio de incertidumbre', value: 'principio de incertidumbre' },
-      { label: 'Una curiosidad matemática', value: 'curiosidad matemática' }
+      { label: 'Sirven para compartir responsabilidades y mostrar implicación', value: 'compartir responsabilidades e implicación' },
+      { label: 'Porque sustituyen por completo al correo electrónico', value: 'sustituyen email' },
+      { label: 'Porque las empresas miden el trabajo en horas de reunión', value: 'miden por horas' },
+      { label: 'Porque los empleados prefieren trabajar en grupo', value: 'preferencia grupo' }
     ],
-    correctAnswer: 'acción fantasmagórica a distancia', points: 3, orderIndex: 36, tags: ['física'], timeSuggested: 90
+    correctAnswer: 'compartir responsabilidades e implicación', points: 3, orderIndex: 36, tags: ['trabajo', 'management'], timeSuggested: 90
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Las implicaciones filosóficas del entrelazamiento cuántico son quizás más profundas que sus propiedades físicas. Cuando dos partículas se entrelazan, medir el estado de una determina instantáneamente el estado de la otra. Experimentos posteriores han confirmado definitivamente su existencia, desafiando nuestras suposiciones más fundamentales sobre la localidad y la causalidad.',
+    ttsScript: 'Cuando un empleado clave dimite, la reacción instintiva es la contraoferta. Los datos muestran, sin embargo, que esta estrategia funciona a corto plazo — la mayoría acepta — pero dos tercios acaban marchándose igualmente en el plazo de un año. El motivo es estructural: la decisión de irse rara vez tiene que ver con el dinero. Tiene que ver con la falta de perspectivas de crecimiento, el conflicto con un responsable, la sensación de no ser valorado. La contraoferta cura el síntoma, no la causa. Las empresas que retienen el talento invierten en conversaciones mucho antes de que llegue una carta de dimisión.',
     ttsLanguageCode: 'es-ES',
-    questionText: '¿Qué suposiciones fundamentales desafía el entrelazamiento cuántico?',
+    questionText: '¿Por qué la contraoferta suele fracasar?',
     options: [
-      { label: 'Gravedad y magnetismo', value: 'gravedad y magnetismo' },
-      { label: 'Localidad y causalidad', value: 'localidad y causalidad' },
-      { label: 'Tiempo y espacio', value: 'tiempo y espacio' },
-      { label: 'Energía y materia', value: 'energía y materia' }
+      { label: 'Resuelve el síntoma pero no la causa estructural de la insatisfacción', value: 'resuelve síntoma no causa' },
+      { label: 'Los salarios propuestos son insuficientes', value: 'salarios bajos' },
+      { label: 'El empleado pide más a los pocos meses', value: 'pide más' },
+      { label: 'La ley no permite ofertas retroactivas', value: 'ley no permite' }
     ],
-    correctAnswer: 'localidad y causalidad', points: 3, orderIndex: 37, tags: ['física'], timeSuggested: 90
+    correctAnswer: 'resuelve síntoma no causa', points: 3, orderIndex: 37, tags: ['trabajo', 'retención'], timeSuggested: 90
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La mercantilización de los datos personales ha engendrado una nueva forma de capitalismo de vigilancia, en la que la extracción y monetización de datos conductuales constituye el modelo de ingresos principal de muchas empresas tecnológicas. Shoshana Zuboff sostiene que esto representa una asimetría sin precedentes de conocimiento y poder, fundamentalmente incompatible con las normas democráticas.',
+    ttsScript: 'En una gran investigación interna sobre qué hace eficaces a los equipos, Google identificó un factor dominante: la seguridad psicológica. Es decir, la sensación de poder expresar opiniones, admitir errores o plantear preguntas sin temer consecuencias profesionales. Los equipos con alta seguridad psicológica producen más innovación, aprenden más rápido de sus fallos y retienen mejor a las personas. Pero no se construye con políticas corporativas: se construye con lo que el responsable dice cuando alguien admite un error, y con lo que no dice cuando hay un momento de silencio.',
     ttsLanguageCode: 'es-ES',
-    questionText: 'Según Zuboff, ¿qué crea el capitalismo de vigilancia?',
+    questionText: 'Según el texto, ¿cómo se construye la seguridad psicológica?',
     options: [
-      { label: 'Igualdad de acceso a la información', value: 'igualdad de acceso' },
-      { label: 'Una asimetría sin precedentes de conocimiento y poder', value: 'asimetría de conocimiento y poder' },
-      { label: 'Mejores productos de consumo', value: 'mejores productos' },
-      { label: 'Mercados más eficientes', value: 'mercados eficientes' }
+      { label: 'Con el comportamiento cotidiano del responsable, no con políticas', value: 'comportamiento del responsable' },
+      { label: 'Con reglamentos corporativos sobre ética', value: 'reglamentos éticos' },
+      { label: 'Formando a los nuevos mánagers en técnicas de comunicación', value: 'formando nuevos mánagers' },
+      { label: 'Valorando los errores con severidad para evitar su repetición', value: 'valorar errores con severidad' }
     ],
-    correctAnswer: 'asimetría de conocimiento y poder', points: 3, orderIndex: 38, tags: ['tecnología', 'filosofía'], timeSuggested: 90
+    correctAnswer: 'comportamiento del responsable', points: 3, orderIndex: 38, tags: ['trabajo', 'equipo'], timeSuggested: 90
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'Las ramificaciones epistemológicas de la inteligencia artificial se extienden mucho más allá de sus aplicaciones prácticas inmediatas, planteando cuestiones fundamentales sobre la naturaleza del conocimiento en sí.',
+    ttsScript: 'El verdadero indicador del éxito de un manager no es el número de decisiones que toma cada día, sino la calidad de las decisiones que sus colaboradores son capaces de tomar de forma autónoma.',
     ttsLanguageCode: 'es-ES',
     questionText: 'Escribe exactamente lo que oyes.',
-    correctAnswer: 'Las ramificaciones epistemológicas de la inteligencia artificial se extienden mucho más allá de sus aplicaciones prácticas inmediatas, planteando cuestiones fundamentales sobre la naturaleza del conocimiento en sí.', points: 3, orderIndex: 39, tags: ['dictado'], timeSuggested: 120
+    correctAnswer: 'El verdadero indicador del éxito de un manager no es el número de decisiones que toma cada día, sino la calidad de las decisiones que sus colaboradores son capaces de tomar de forma autónoma.', points: 3, orderIndex: 39, tags: ['dictado', 'trabajo'], timeSuggested: 120
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La llamada "crisis de replicación" no se ha limitado a la psicología. La medicina, la economía e incluso algunas áreas de la física han sido objeto de escrutinio similar. Las causas subyacentes son multifacéticas: el sesgo de publicación que favorece resultados novedosos y estadísticamente significativos, tamaños de muestra insuficientes, grados de libertad del investigador en el análisis de datos y estructuras de incentivos perversas dentro de la academia que priorizan la cantidad de publicaciones sobre la calidad.',
+    ttsScript: 'Las investigaciones sobre el trabajo cognitivo convergen en una verdad contraintuitiva: no es la duración de la jornada lo que limita la productividad, sino su fragmentación. Cada vez que pasamos de una tarea a otra — una notificación, un mensaje en el chat, una reunión imprevista — el cerebro tarda entre quince y veinticinco minutos en recuperar plenamente el nivel de concentración anterior. En un día típico con treinta interrupciones, esto significa literalmente que gran parte del tiempo trabajado no genera valor. Algunas empresas han empezado a introducir bloques protegidos de dos o tres horas sin reuniones.',
     ttsLanguageCode: 'es-ES',
-    questionText: '¿Qué favorece el "sesgo de publicación" según el texto?',
+    questionText: '¿Por qué son importantes los bloques de tiempo protegido?',
     options: [
-      { label: 'Resultados replicados', value: 'replicados' },
-      { label: 'Resultados novedosos y estadísticamente significativos', value: 'novedosos y significativos' },
-      { label: 'Estudios a gran escala', value: 'gran escala' },
-      { label: 'Hallazgos negativos', value: 'negativos' }
+      { label: 'El cerebro tarda muchos minutos en recuperar la concentración tras cada interrupción', value: 'recuperación de concentración lenta' },
+      { label: 'Porque los empleados piden más pausas', value: 'más pausas' },
+      { label: 'Porque las reuniones largas son agotadoras', value: 'reuniones agotadoras' },
+      { label: 'Porque las notificaciones están prohibidas por ley', value: 'notificaciones prohibidas' }
     ],
-    correctAnswer: 'novedosos y significativos', points: 3, orderIndex: 40, tags: ['ciencia', 'metodología'], timeSuggested: 90
+    correctAnswer: 'recuperación de concentración lenta', points: 3, orderIndex: 40, tags: ['trabajo', 'productividad'], timeSuggested: 90
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'El concepto de humildad epistémica, enraizado en la filosofía socrática, sugiere que reconocer los límites del propio conocimiento es paradójicamente un requisito previo para la comprensión genuina. En una era de sobrecarga informativa y afirmaciones contundentes en las redes sociales, cultivar dicha humildad puede ser más importante que nunca tanto para la cognición individual como para la deliberación colectiva.',
+    ttsScript: 'Dar feedback en un equipo internacional es una de las tareas más infravaloradas del management moderno. Lo que en algunas culturas se considera directo y útil — señalar un error durante una reunión, por ejemplo — en otras culturas se interpreta como un ataque público. También ocurre lo contrario: un feedback que para una cultura es claro, para otra resulta tan suave que ni siquiera se percibe como crítica. Los responsables más eficaces no adoptan un único estilo: adaptan la forma de transmitir el mensaje a cada destinatario y comprueban que ha llegado tal como pretendían.',
     ttsLanguageCode: 'es-ES',
-    questionText: '¿En qué se fundamenta la humildad epistémica?',
+    questionText: '¿Qué hace un mánager eficaz en un equipo internacional?',
     options: [
-      { label: 'La psicología moderna', value: 'psicología moderna' },
-      { label: 'La filosofía socrática', value: 'la filosofía socrática' },
-      { label: 'La meditación oriental', value: 'meditación oriental' },
-      { label: 'El método científico', value: 'método científico' }
+      { label: 'Adapta el estilo del feedback y verifica que se haya comprendido', value: 'adapta estilo y verifica' },
+      { label: 'Usa siempre el estilo más directo posible', value: 'estilo directo' },
+      { label: 'Delega el feedback en los RRHH locales', value: 'delega RRHH' },
+      { label: 'Evita las conversaciones difíciles', value: 'evita conversaciones' }
     ],
-    correctAnswer: 'la filosofía socrática', points: 3, orderIndex: 41, tags: ['filosofía'], timeSuggested: 90
+    correctAnswer: 'adapta estilo y verifica', points: 3, orderIndex: 41, tags: ['trabajo', 'comunicación intercultural'], timeSuggested: 90
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
@@ -635,37 +640,42 @@ export const spanishListeningQuestions: MultiSkillQuestionData[] = [
   // ── C1 — 5 questions (63–67) ────────────────────────────────
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La noción de justicia restaurativa supone un cambio de paradigma respecto al sistema penal retributivo tradicional. Mientras que el modelo retributivo se centra en castigar al infractor, la justicia restaurativa prioriza la reparación del daño causado a la víctima y la comunidad. Los programas de mediación entre víctima y agresor han demostrado tasas de reincidencia significativamente menores, aunque los críticos cuestionan su aplicabilidad en casos de delitos graves.',
+    ttsScript: 'El trabajo asíncrono — comunicarse por escrito, sin esperar una respuesta inmediata — se ha convertido en la norma en muchos equipos distribuidos. Las ventajas son evidentes: personas en husos horarios distintos colaboran sin perder horas de sueño, y escribir obliga a un pensamiento más claro que las reuniones improvisadas. Hay, sin embargo, un coste: un mensaje escrito con prisas puede perder el tono y generar tensiones indeseadas. Los equipos que funcionan bien invierten tiempo en reglas de comunicación explícitas: cuándo usar el chat, cuándo el correo, cuándo el vídeo.',
     ttsLanguageCode: 'es-ES',
-    questionText: '¿En qué se diferencia la justicia restaurativa de la retributiva?',
+    questionText: '¿Cuál es una desventaja del trabajo asíncrono?',
     options: [
-      { label: 'La restaurativa impone castigos más severos', value: 'castigos más severos' },
-      { label: 'La restaurativa prioriza la reparación del daño sobre el castigo', value: 'la restaurativa prioriza la reparación del daño sobre el castigo' },
-      { label: 'Son esencialmente iguales', value: 'son iguales' },
-      { label: 'La restaurativa solo se aplica a menores', value: 'solo menores' }
+      { label: 'El tono puede malinterpretarse y generar tensiones', value: 'tono malinterpretado' },
+      { label: 'Todos deben estar conectados a la vez', value: 'todos conectados' },
+      { label: 'Los documentos no pueden compartirse', value: 'documentos no compartidos' },
+      { label: 'Las personas trabajan menos horas', value: 'menos horas' }
     ],
-    correctAnswer: 'la restaurativa prioriza la reparación del daño sobre el castigo', points: 2, orderIndex: 63, tags: ['derecho', 'sociología'], timeSuggested: 75
+    correctAnswer: 'tono malinterpretado', points: 2, orderIndex: 63, tags: ['trabajo', 'comunicación'], timeSuggested: 75
   },
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'El concepto de "capital social", desarrollado por Pierre Bourdieu, se refiere al conjunto de recursos reales o potenciales vinculados a la posesión de una red duradera de relaciones. A diferencia del capital económico, el capital social no puede transferirse directamente, sino que se acumula mediante la inversión continuada en relaciones sociales. Investigaciones recientes han demostrado que el capital social es un predictor más fiable del bienestar subjetivo que los ingresos económicos.',
+    ttsScript: 'El derecho a la desconexión, ya ley en algunos países europeos, establece que un empleado no está obligado a leer ni responder mensajes fuera del horario laboral. El principio parece sencillo, pero su aplicación es compleja: en los equipos internacionales, la tarde de unos es la mañana de otros, y muchos responsables no son conscientes de que están fijando una expectativa implícita cuando escriben a las once de la noche. Algunas empresas han introducido retrasos automáticos: los mensajes enviados por la noche se entregan a la mañana siguiente.',
     ttsLanguageCode: 'es-ES',
-    questionText: '¿Qué predice mejor el bienestar subjetivo según las investigaciones?',
+    questionText: '¿Por qué es difícil aplicar el derecho a la desconexión en equipos internacionales?',
     options: [
-      { label: 'El capital económico', value: 'capital económico' },
-      { label: 'El capital social', value: 'el capital social' },
-      { label: 'El nivel educativo', value: 'nivel educativo' },
-      { label: 'La salud física', value: 'salud física' }
+      { label: 'La tarde de unos es la mañana de otros', value: 'tarde de unos mañana de otros' },
+      { label: 'La ley cambia de un país a otro', value: 'ley distinta' },
+      { label: 'Los responsables se niegan a respetarla', value: 'responsables se niegan' },
+      { label: 'La tecnología no lo permite', value: 'tecnología no permite' }
     ],
-    correctAnswer: 'el capital social', points: 2, orderIndex: 64, tags: ['sociología', 'bienestar'], timeSuggested: 75
+    correctAnswer: 'tarde de unos mañana de otros', points: 2, orderIndex: 64, tags: ['trabajo', 'work-life balance'], timeSuggested: 75
   },
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La arquitectura bioclimática integra el diseño constructivo con las condiciones climáticas del entorno para optimizar el confort térmico sin recurrir excesivamente a sistemas de climatización artificial. Estrategias como la orientación solar adecuada, la ventilación cruzada natural y el uso de materiales con alta inercia térmica permiten reducir el consumo energético hasta en un sesenta por ciento respecto a los edificios convencionales.',
+    ttsScript: 'El papel del mánager moderno ha cambiado profundamente. La época del jefe que daba órdenes y verificaba la ejecución se ha acabado. Hoy los mánagers más eficaces actúan como entrenadores: hacen más preguntas de las que dan respuestas, ayudan al colaborador a encontrar la solución por sí mismo y hacen crecer el talento más mediante la delegación que mediante el control. Es un cambio contraintuitivo para quienes se han formado en culturas jerárquicas, y muchos mánagers se sienten al principio menos productivos — hasta que ven crecer a su equipo.',
     ttsLanguageCode: 'es-ES',
-    questionText: '¿Cuánto puede reducirse el consumo energético con la arquitectura bioclimática?',
-    options: [{ label: '30%', value: '30' }, { label: '40%', value: '40' }, { label: '50%', value: '50' }, { label: '60%', value: '60' }],
-    correctAnswer: '60', points: 2, orderIndex: 65, tags: ['arquitectura', 'medioambiente'], timeSuggested: 75
+    questionText: '¿Qué caracteriza al mánager moderno como entrenador?',
+    options: [
+      { label: 'Hace más preguntas de las que da respuestas', value: 'más preguntas que respuestas' },
+      { label: 'Controla cada paso del trabajo', value: 'controla cada paso' },
+      { label: 'Trabaja siempre codo con codo con el equipo', value: 'codo con codo' },
+      { label: 'Decide sin consultar a nadie', value: 'decide sin consultar' }
+    ],
+    correctAnswer: 'más preguntas que respuestas', points: 2, orderIndex: 65, tags: ['trabajo', 'management'], timeSuggested: 75
   },
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
@@ -691,62 +701,62 @@ export const spanishListeningQuestions: MultiSkillQuestionData[] = [
   // ── C2 — 5 questions (68–72) ────────────────────────────────
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La hermenéutica gadameriana sostiene que la comprensión de un texto no es un acto de reproducción del sentido original del autor, sino un acontecimiento productivo en el que el horizonte del intérprete se fusiona con el del texto. Esta "fusión de horizontes" implica que toda interpretación está históricamente condicionada y que la pretensión de una lectura objetiva y definitiva es, en última instancia, ilusoria.',
+    ttsScript: 'La expresión "quiet quitting", que se hizo viral en dos mil veintidós, no describe dimisiones reales sino un comportamiento concreto: hacer exactamente lo que pone en el contrato, ni más ni menos. Rechazar leer correos fuera de horario, no presentarse voluntario, no invertir emocionalmente en proyectos extra. El fenómeno se interpreta de dos maneras opuestas: como reacción sana al burnout generalizado, o como síntoma de una crisis más profunda del compromiso. Los datos son incómodos: en muchas empresas la proporción de empleados que se declara desenganchada supera el sesenta por ciento.',
     ttsLanguageCode: 'es-ES',
-    questionText: '¿Qué es la "fusión de horizontes" según Gadamer?',
+    questionText: '¿Cómo se interpreta el fenómeno del quiet quitting?',
     options: [
-      { label: 'La reproducción exacta del sentido original del autor', value: 'reproducción exacta' },
-      { label: 'La unión del horizonte del intérprete con el del texto', value: 'la unión del horizonte del intérprete con el del texto' },
-      { label: 'Un método de traducción literal', value: 'traducción literal' },
-      { label: 'La eliminación de la subjetividad del lector', value: 'eliminación de subjetividad' }
+      { label: 'O como reacción sana a los límites, o como señal de desenganche extendido', value: 'sana o desenganche' },
+      { label: 'Como verdaderas dimisiones masivas', value: 'dimisiones masivas' },
+      { label: 'Como un fenómeno típicamente generacional', value: 'fenómeno generacional' },
+      { label: 'Como una estrategia para conseguir un aumento', value: 'estrategia aumento' }
     ],
-    correctAnswer: 'la unión del horizonte del intérprete con el del texto', points: 2, orderIndex: 68, tags: ['filosofía', 'hermenéutica'], timeSuggested: 90
+    correctAnswer: 'sana o desenganche', points: 2, orderIndex: 68, tags: ['trabajo', 'engagement'], timeSuggested: 90
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La teoría de la performatividad de Judith Butler cuestiona la noción de que el género es una expresión de una identidad preexistente. Según Butler, el género no es algo que se es, sino algo que se hace: se constituye mediante la repetición estilizada de actos corporales, gestos y enunciados performativos. Esta concepción desestabiliza la distinción convencional entre sexo biológico y género social, sugiriendo que ambas categorías son construcciones discursivas.',
+    ttsScript: 'El trabajo híbrido se ha convertido en el tema más divisivo en las empresas desde dos mil veinte. Los datos sobre productividad son contradictorios: algunos estudios detectan un aumento, otros una disminución, según el tipo de actividad y de cómo se gestione la transición. Pero la pregunta verdaderamente interesante no es dónde trabajan las personas, sino cómo se las lidera. La modalidad híbrida deja al descubierto debilidades que la oficina presencial ocultaba: responsables que controlaban por presencia, procesos que dependían de conversaciones casuales en el pasillo, decisiones que excluían a quien no estaba en la sala.',
     ttsLanguageCode: 'es-ES',
-    questionText: 'Según Butler, ¿cómo se constituye el género?',
+    questionText: '¿Por qué la modalidad híbrida es una prueba para el liderazgo?',
     options: [
-      { label: 'Es determinado biológicamente al nacer', value: 'determinado biológicamente' },
-      { label: 'Mediante la repetición estilizada de actos performativos', value: 'mediante la repetición estilizada de actos performativos' },
-      { label: 'Por elección consciente en la adolescencia', value: 'elección consciente' },
-      { label: 'A través de la educación formal', value: 'educación formal' }
+      { label: 'Deja al descubierto prácticas que solo funcionaban gracias a la presencia física', value: 'expone prácticas ligadas a la presencia' },
+      { label: 'Obliga a los responsables a aprender nuevas tecnologías', value: 'aprender tecnologías' },
+      { label: 'Duplica las horas reales de trabajo', value: 'duplica horas' },
+      { label: 'Exige más reuniones que el trabajo presencial', value: 'más reuniones' }
     ],
-    correctAnswer: 'mediante la repetición estilizada de actos performativos', points: 2, orderIndex: 69, tags: ['filosofía', 'género'], timeSuggested: 90
+    correctAnswer: 'expone prácticas ligadas a la presencia', points: 2, orderIndex: 69, tags: ['trabajo', 'liderazgo'], timeSuggested: 90
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'El fenómeno de la aporofobia — el rechazo, la aversión o el desprecio hacia las personas pobres — fue acuñado como término por la filósofa Adela Cortina. A diferencia de la xenofobia, que se dirige contra los extranjeros, la aporofobia discrimina específicamente a quienes carecen de recursos económicos, independientemente de su origen. Cortina argumenta que esta forma de discriminación es la más extendida y la menos reconocida socialmente.',
+    ttsScript: 'En las organizaciones de cierto tamaño, el problema más infravalorado no es la falta de talento ni de estrategia: es el alineamiento entre las funciones. Las ventas prometen prestaciones que el equipo de producto no ha previsto, producto construye cosas que marketing no sabe cómo posicionar, finanzas aprueba presupuestos que operaciones no consigue ejecutar. Cada función opera de forma racional tomada por separado, pero la suma de racionalidades individuales produce una organización irracional. La solución no son más reuniones ni más informes: son conversaciones breves y frecuentes entre responsables de función, con la libertad de cuestionar los compromisos sin perder la cara.',
     ttsLanguageCode: 'es-ES',
-    questionText: '¿En qué se diferencia la aporofobia de la xenofobia?',
+    questionText: '¿Cuál es la causa estructural del desalineamiento entre funciones?',
     options: [
-      { label: 'La aporofobia rechaza a los extranjeros', value: 'rechaza extranjeros' },
-      { label: 'La aporofobia discrimina por pobreza, no por origen', value: 'la aporofobia discrimina por pobreza, no por origen' },
-      { label: 'Son sinónimos', value: 'son sinónimos' },
-      { label: 'La aporofobia es menos grave', value: 'menos grave' }
+      { label: 'Cada función es racional por separado, pero la suma genera incoherencia', value: 'racionalidad individual incoherencia global' },
+      { label: 'Las personas no leen los informes internos', value: 'no leen informes' },
+      { label: 'La empresa no tiene suficientes mánagers', value: 'faltan mánagers' },
+      { label: 'La tecnología no comparte los datos', value: 'tecnología no comparte' }
     ],
-    correctAnswer: 'la aporofobia discrimina por pobreza, no por origen', points: 2, orderIndex: 70, tags: ['filosofía', 'sociedad'], timeSuggested: 90
+    correctAnswer: 'racionalidad individual incoherencia global', points: 2, orderIndex: 70, tags: ['trabajo', 'organización'], timeSuggested: 90
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'La interseccionalidad constituye un marco analítico indispensable para comprender cómo las distintas formas de opresión se entrelazan y refuerzan mutuamente.',
+    ttsScript: 'La sostenibilidad a largo plazo de una organización depende de su capacidad de equilibrar la presión por los resultados a corto plazo con inversiones que solo producirán valor en el futuro.',
     ttsLanguageCode: 'es-ES',
     questionText: 'Escribe exactamente lo que oyes.',
-    correctAnswer: 'La interseccionalidad constituye un marco analítico indispensable para comprender cómo las distintas formas de opresión se entrelazan y refuerzan mutuamente.', points: 2, orderIndex: 71, tags: ['dictado', 'sociología'], timeSuggested: 120
+    correctAnswer: 'La sostenibilidad a largo plazo de una organización depende de su capacidad de equilibrar la presión por los resultados a corto plazo con inversiones que solo producirán valor en el futuro.', points: 2, orderIndex: 71, tags: ['dictado', 'trabajo'], timeSuggested: 120
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La paradoja de la tolerancia, formulada por Karl Popper, plantea que una sociedad ilimitadamente tolerante terminará siendo destruida por los intolerantes. Popper concluye que, paradójicamente, para preservar la tolerancia es necesario reservarse el derecho de no tolerar la intolerancia. Este argumento se invoca frecuentemente en los debates contemporáneos sobre los límites de la libertad de expresión y la regulación del discurso de odio.',
+    ttsScript: 'El modelo de la evaluación anual — esa escala del uno al cinco con la que los responsables clasificaban a los colaboradores — entró en crisis hace una década, y muchas empresas la han abandonado. Las razones están documentadas: las calificaciones producen desmotivación en quien recibe notas bajas, están influidas por sesgos recientes (los mánagers recuerdan los últimos tres meses, no el año entero) y generan competencia poco sana entre compañeros. Lo que las sustituye es más exigente: conversaciones de desarrollo frecuentes, separadas de las decisiones sobre retribución, donde el objetivo es el crecimiento, no la clasificación. Para el responsable es más laborioso, pero produce resultados más duraderos.',
     ttsLanguageCode: 'es-ES',
-    questionText: '¿Cuál es la conclusión de Popper sobre la tolerancia?',
+    questionText: '¿Por qué se han abandonado las evaluaciones anuales?',
     options: [
-      { label: 'Toda expresión debe ser permitida sin excepción', value: 'todo permitido' },
-      { label: 'Para preservar la tolerancia hay que no tolerar la intolerancia', value: 'para preservar la tolerancia hay que no tolerar la intolerancia' },
-      { label: 'La tolerancia es siempre negativa', value: 'siempre negativa' },
-      { label: 'Solo el Estado puede ser tolerante', value: 'solo el Estado' }
+      { label: 'Distorsionan los comportamientos y reflejan más los sesgos recientes que el año entero', value: 'distorsionan y reflejan sesgos recientes' },
+      { label: 'Son demasiado costosas de implementar', value: 'costosas' },
+      { label: 'El sindicato ya no las permite', value: 'sindicato no permite' },
+      { label: 'Son ilegales en la mayoría de los países', value: 'ilegales' }
     ],
-    correctAnswer: 'para preservar la tolerancia hay que no tolerar la intolerancia', points: 2, orderIndex: 72, tags: ['filosofía', 'política'], timeSuggested: 90
+    correctAnswer: 'distorsionan y reflejan sesgos recientes', points: 2, orderIndex: 72, tags: ['trabajo', 'desempeño'], timeSuggested: 90
   },
 
   // ============================================================

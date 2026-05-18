@@ -303,11 +303,16 @@ export const italianListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La crisi della replicabilità in psicologia si riferisce alla scoperta che molti risultati pubblicati nel campo non possono essere replicati da ricercatori indipendenti. Uno studio fondamentale del duemilaquindici ha tentato di riprodurre cento esperimenti psicologici e ha scoperto che solo il trentanove per cento ha prodotto gli stessi risultati. Ciò ha provocato richieste di maggiore rigore metodologico, pre-registrazione degli studi e condivisione aperta dei dati.',
+    ttsScript: 'Negli ultimi anni molte aziende hanno abbandonato la valutazione annuale a favore del feedback continuo: brevi conversazioni ogni due settimane tra il responsabile e il collaboratore. L\'idea non è parlare di più, ma parlare prima. Un piccolo aggiustamento a marzo evita che un problema diventi irreparabile a dicembre. Il cambiamento richiede però più impegno ai manager, che devono sviluppare capacità di ascolto attivo che spesso non hanno mai esercitato.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'Quale percentuale degli esperimenti di psicologia è stata replicata con successo?',
-    options: [{ label: '25%', value: '25' }, { label: '39%', value: '39' }, { label: '50%', value: '50' }, { label: '65%', value: '65' }],
-    correctAnswer: '39', points: 3, orderIndex: 31, tags: ['scienza', 'ricerca'], timeSuggested: 75
+    questionText: 'Qual è l\'obiettivo principale del feedback continuo?',
+    options: [
+      { label: 'Correggere piccoli problemi prima che diventino gravi', value: 'correggere prima che diventino gravi' },
+      { label: 'Dare elogi più frequenti ai dipendenti', value: 'elogi frequenti' },
+      { label: 'Sostituire il ruolo delle Risorse Umane', value: 'sostituire HR' },
+      { label: 'Monitorare la produttività in tempo reale', value: 'monitorare produttività' }
+    ],
+    correctAnswer: 'correggere prima che diventino gravi', points: 3, orderIndex: 31, tags: ['lavoro', 'management'], timeSuggested: 75
   },
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
@@ -318,16 +323,16 @@ export const italianListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Il concetto di neuroplasticità — la capacità del cervello di riorganizzarsi formando nuove connessioni neurali — ha rivoluzionato la nostra comprensione della riabilitazione cognitiva. I pazienti che hanno subito un ictus, ad esempio, a volte possono recuperare le funzioni perdute perché parti sane del cervello compensano le aree danneggiate. Questo processo, tuttavia, richiede un intervento terapeutico intensivo e prolungato.',
+    ttsScript: 'Le ricerche sulla retention dei talenti mostrano che i primi novanta giorni di un dipendente in azienda sono decisivi. In quel periodo si formano convinzioni che influenzeranno l\'impegno per anni: se restare o no, come comportarsi con i colleghi, quanto investire emotivamente sui progetti. Eppure molte organizzazioni limitano l\'onboarding alla prima settimana — consegna del computer, manuale, riunione con HR — e poi lasciano la nuova persona a sé stessa.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'Cos\'è la neuroplasticità?',
+    questionText: 'Perché i primi novanta giorni sono così importanti?',
     options: [
-      { label: 'La capacità di imparare più lingue', value: 'lingue' },
-      { label: 'La capacità del cervello di formare nuove connessioni neurali', value: 'nuove connessioni neurali' },
-      { label: 'Un tipo di chirurgia cerebrale', value: 'chirurgia' },
-      { label: 'Miglioramento della memoria tramite farmaci', value: 'farmaci' }
+      { label: 'Si formano convinzioni che incidono sull\'impegno a lungo termine', value: 'convinzioni che incidono sull\'impegno' },
+      { label: 'Perché la maggior parte delle dimissioni avviene nella prima settimana', value: 'dimissioni prima settimana' },
+      { label: 'Perché le valutazioni di performance iniziano a 90 giorni', value: 'valutazioni a 90 giorni' },
+      { label: 'Perché i permessi di lavoro scadono in quel periodo', value: 'permessi scadono' }
     ],
-    correctAnswer: 'nuove connessioni neurali', points: 3, orderIndex: 33, tags: ['scienza'], timeSuggested: 75
+    correctAnswer: 'convinzioni che incidono sull\'impegno', points: 3, orderIndex: 33, tags: ['lavoro', 'HR'], timeSuggested: 75
   },
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
@@ -355,75 +360,75 @@ export const italianListeningQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Le implicazioni filosofiche dell\'entanglement quantistico sono forse più profonde delle sue proprietà fisiche. Quando due particelle diventano entangled, la misurazione dello stato di una determina istantaneamente lo stato dell\'altra, indipendentemente dalla distanza che le separa. Einstein definì notoriamente questo fenomeno come una "spaventosa azione a distanza", eppure esperimenti successivi ne hanno definitivamente confermato l\'esistenza, mettendo in discussione le nostre assunzioni più fondamentali sulla località e la causalità.',
+    ttsScript: 'Il paradosso della collaborazione moderna è che più collaboriamo, meno lavoriamo davvero. Le ricerche sull\'uso del tempo mostrano che chi lavora con la conoscenza passa in media ventitré ore alla settimana in riunione: una cifra raddoppiata negli ultimi quindici anni. Le riunioni sono diventate il modo per dimostrare impegno, condividere responsabilità ed evitare di decidere da soli. Ma ogni ora in riunione è un\'ora sottratta al lavoro concentrato, e il costo del cambio di contesto dopo ogni incontro è ormai ben documentato.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'Come definì Einstein l\'entanglement quantistico?',
+    questionText: 'Perché le riunioni si sono moltiplicate così tanto?',
     options: [
-      { label: 'Una bella teoria', value: 'bella teoria' },
-      { label: 'Spaventosa azione a distanza', value: 'spaventosa azione a distanza' },
-      { label: 'Il principio di indeterminazione', value: 'principio di indeterminazione' },
-      { label: 'Una curiosità matematica', value: 'curiosità matematica' }
+      { label: 'Servono a condividere responsabilità e a dimostrare impegno', value: 'condividere responsabilità e impegno' },
+      { label: 'Perché sostituiscono completamente l\'email', value: 'sostituiscono email' },
+      { label: 'Perché le aziende misurano il lavoro in ore di riunione', value: 'misurano in ore' },
+      { label: 'Perché i dipendenti preferiscono lavorare in gruppo', value: 'preferenza gruppo' }
     ],
-    correctAnswer: 'spaventosa azione a distanza', points: 3, orderIndex: 36, tags: ['fisica'], timeSuggested: 90
+    correctAnswer: 'condividere responsabilità e impegno', points: 3, orderIndex: 36, tags: ['lavoro', 'management'], timeSuggested: 90
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Le implicazioni filosofiche dell\'entanglement quantistico sono forse più profonde delle sue proprietà fisiche. Quando due particelle diventano entangled, la misurazione dello stato di una determina istantaneamente lo stato dell\'altra. Esperimenti successivi ne hanno definitivamente confermato l\'esistenza, mettendo in discussione le nostre assunzioni più fondamentali sulla località e la causalità.',
+    ttsScript: 'Quando un dipendente chiave si dimette, la reazione istintiva è la controfferta. I dati però mostrano che questa strategia funziona nel breve termine — la maggior parte accetta — ma due terzi se ne vanno comunque entro un anno. Il motivo è strutturale: la decisione di andarsene raramente riguarda i soldi. Riguarda la mancanza di prospettive di crescita, il conflitto con un responsabile, la sensazione di non essere valorizzati. La controfferta cura il sintomo, non la causa. Le aziende che trattengono i talenti investono in conversazioni molto prima che ci sia una lettera di dimissioni.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'Quali assunzioni fondamentali mette in discussione l\'entanglement quantistico?',
+    questionText: 'Perché la controfferta spesso fallisce?',
     options: [
-      { label: 'Gravità e magnetismo', value: 'gravità e magnetismo' },
-      { label: 'Località e causalità', value: 'località e causalità' },
-      { label: 'Tempo e spazio', value: 'tempo e spazio' },
-      { label: 'Energia e materia', value: 'energia e materia' }
+      { label: 'Risolve il sintomo ma non la causa strutturale dell\'insoddisfazione', value: 'risolve sintomo non causa' },
+      { label: 'Gli stipendi proposti sono insufficienti', value: 'stipendi bassi' },
+      { label: 'Il dipendente chiede di più dopo pochi mesi', value: 'chiede di più' },
+      { label: 'La legge non permette offerte retroattive', value: 'legge non permette' }
     ],
-    correctAnswer: 'località e causalità', points: 3, orderIndex: 37, tags: ['fisica'], timeSuggested: 90
+    correctAnswer: 'risolve sintomo non causa', points: 3, orderIndex: 37, tags: ['lavoro', 'retention'], timeSuggested: 90
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La mercificazione dei dati personali ha generato una nuova forma di capitalismo della sorveglianza, in cui l\'estrazione e la monetizzazione dei dati comportamentali costituiscono il modello di ricavo principale per molte aziende tecnologiche. Shoshana Zuboff sostiene che ciò rappresenta un\'asimmetria senza precedenti di conoscenza e potere, fondamentalmente incompatibile con le norme democratiche.',
+    ttsScript: 'In una grande ricerca interna su cosa rende efficaci i team, Google ha individuato un fattore dominante: la sicurezza psicologica. Vale a dire, la sensazione di poter esprimere opinioni, ammettere errori o porre domande senza temere conseguenze professionali. I team con alta sicurezza psicologica producono più innovazione, imparano più rapidamente dagli sbagli e trattengono meglio le persone. Ma non si costruisce con le policy aziendali: si costruisce con quello che il responsabile dice quando qualcuno ammette un errore, e con quello che non dice quando c\'è un momento di silenzio.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'Secondo Zuboff, cosa crea il capitalismo della sorveglianza?',
+    questionText: 'Come si costruisce la sicurezza psicologica secondo il brano?',
     options: [
-      { label: 'Accesso uguale alle informazioni', value: 'accesso uguale' },
-      { label: 'Un\'asimmetria senza precedenti di conoscenza e potere', value: 'asimmetria di conoscenza e potere' },
-      { label: 'Prodotti migliori per i consumatori', value: 'prodotti migliori' },
-      { label: 'Mercati più efficienti', value: 'mercati efficienti' }
+      { label: 'Con il comportamento quotidiano del responsabile, non con le policy', value: 'comportamento del responsabile' },
+      { label: 'Con regolamenti aziendali sull\'etica', value: 'regolamenti etici' },
+      { label: 'Formando i nuovi manager su tecniche di comunicazione', value: 'formando nuovi manager' },
+      { label: 'Valutando gli errori con severità per evitarne il ripetersi', value: 'valutare errori con severità' }
     ],
-    correctAnswer: 'asimmetria di conoscenza e potere', points: 3, orderIndex: 38, tags: ['tecnologia', 'filosofia'], timeSuggested: 90
+    correctAnswer: 'comportamento del responsabile', points: 3, orderIndex: 38, tags: ['lavoro', 'team'], timeSuggested: 90
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'Le ramificazioni epistemologiche dell\'intelligenza artificiale si estendono ben oltre le sue immediate applicazioni pratiche, sollevando questioni fondamentali sulla natura stessa della conoscenza.',
+    ttsScript: 'Il vero indicatore del successo di un manager non è il numero di decisioni che prende ogni giorno, ma la qualità delle decisioni che i suoi collaboratori riescono a prendere in autonomia.',
     ttsLanguageCode: 'it-IT',
     questionText: 'Scrivi esattamente quello che senti.',
-    correctAnswer: 'Le ramificazioni epistemologiche dell\'intelligenza artificiale si estendono ben oltre le sue immediate applicazioni pratiche, sollevando questioni fondamentali sulla natura stessa della conoscenza.', points: 3, orderIndex: 39, tags: ['dettato'], timeSuggested: 120
+    correctAnswer: 'Il vero indicatore del successo di un manager non è il numero di decisioni che prende ogni giorno, ma la qualità delle decisioni che i suoi collaboratori riescono a prendere in autonomia.', points: 3, orderIndex: 39, tags: ['dettato', 'lavoro'], timeSuggested: 120
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La cosiddetta "crisi della replicabilità" non si è limitata alla psicologia. Medicina, economia e persino alcune aree della fisica hanno affrontato un esame simile. Le cause sottostanti sono molteplici: il pregiudizio di pubblicazione che favorisce risultati nuovi e statisticamente significativi, campioni insufficienti, gradi di libertà del ricercatore nell\'analisi dei dati e strutture di incentivi perverse nel mondo accademico che privilegiano la quantità delle pubblicazioni rispetto alla qualità.',
+    ttsScript: 'Le ricerche sul lavoro cognitivo convergono su una verità controintuitiva: non è la durata del lavoro a limitare la produttività, ma la sua frammentazione. Ogni volta che passiamo da un compito all\'altro — una notifica, un messaggio in chat, una riunione imprevista — il cervello impiega tra i quindici e i venticinque minuti per recuperare pienamente il livello di concentrazione precedente. In una giornata tipica con trenta interruzioni, questo significa letteralmente che gran parte del tempo lavorato non produce valore. Alcune aziende hanno iniziato a introdurre blocchi protetti di due o tre ore senza riunioni.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'Cosa favorisce il "pregiudizio di pubblicazione" secondo il brano?',
+    questionText: 'Perché i blocchi di tempo protetti sono importanti?',
     options: [
-      { label: 'Risultati replicati', value: 'replicati' },
-      { label: 'Risultati nuovi e statisticamente significativi', value: 'nuovi e significativi' },
-      { label: 'Studi su larga scala', value: 'larga scala' },
-      { label: 'Risultati negativi', value: 'negativi' }
+      { label: 'Il cervello impiega lunghi minuti a recuperare concentrazione dopo ogni interruzione', value: 'recupero concentrazione lungo' },
+      { label: 'Perché i dipendenti chiedono più pause', value: 'più pause' },
+      { label: 'Perché le riunioni lunghe sono stancanti', value: 'riunioni stancanti' },
+      { label: 'Perché le notifiche sono vietate dalla legge', value: 'notifiche vietate' }
     ],
-    correctAnswer: 'nuovi e significativi', points: 3, orderIndex: 40, tags: ['scienza', 'metodologia'], timeSuggested: 90
+    correctAnswer: 'recupero concentrazione lungo', points: 3, orderIndex: 40, tags: ['lavoro', 'produttività'], timeSuggested: 90
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Il concetto di umiltà epistemica, radicato nella filosofia socratica, suggerisce che riconoscere i limiti della propria conoscenza è paradossalmente un prerequisito per una comprensione autentica. In un\'epoca di sovraccarico informativo e affermazioni sicure sui social media, coltivare tale umiltà può essere più importante che mai sia per la cognizione individuale che per la deliberazione collettiva.',
+    ttsScript: 'Dare feedback in un team internazionale è uno dei compiti più sottovalutati del management moderno. Quello che in alcune culture è considerato diretto e utile — segnalare un errore durante una riunione, per esempio — in altre culture viene letto come un attacco pubblico. È vero anche il contrario: un feedback che per una cultura è chiaro, per un\'altra è così morbido da non essere nemmeno percepito come critica. I responsabili più efficaci non adottano un unico stile: adattano la modalità di consegna al destinatario e verificano che il messaggio sia arrivato come previsto.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'In cosa è radicata l\'umiltà epistemica?',
+    questionText: 'Cosa fa un manager efficace in un team internazionale?',
     options: [
-      { label: 'Nella psicologia moderna', value: 'psicologia moderna' },
-      { label: 'Nella filosofia socratica', value: 'filosofia socratica' },
-      { label: 'Nella meditazione orientale', value: 'meditazione orientale' },
-      { label: 'Nel metodo scientifico', value: 'metodo scientifico' }
+      { label: 'Adatta lo stile del feedback e verifica che sia stato compreso', value: 'adatta stile e verifica' },
+      { label: 'Usa sempre lo stile più diretto possibile', value: 'stile diretto' },
+      { label: 'Delega il feedback alle HR locali', value: 'delega HR' },
+      { label: 'Evita le conversazioni difficili', value: 'evita conversazioni' }
     ],
-    correctAnswer: 'filosofia socratica', points: 3, orderIndex: 41, tags: ['filosofia'], timeSuggested: 90
+    correctAnswer: 'adatta stile e verifica', points: 3, orderIndex: 41, tags: ['lavoro', 'comunicazione interculturale'], timeSuggested: 90
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
@@ -639,42 +644,42 @@ export const italianListeningQuestions: MultiSkillQuestionData[] = [
   // C1 — Conferenze, analisi complesse (63–67)
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Il fenomeno dell\'epigenetica ha rivoluzionato la nostra comprensione dell\'ereditarietà. A differenza della genetica classica, l\'epigenetica studia le modificazioni dell\'espressione genica che non alterano la sequenza del DNA stesso. Queste modificazioni possono essere influenzate da fattori ambientali come la dieta, lo stress e l\'esposizione a sostanze tossiche, e in alcuni casi possono essere trasmesse alle generazioni successive, sfidando il dogma secondo cui solo le mutazioni del DNA sono ereditabili.',
+    ttsScript: 'Il lavoro asincrono — comunicare per iscritto, senza aspettarsi una risposta immediata — è diventato la norma in molti team distribuiti. I vantaggi sono evidenti: persone in fusi orari diversi collaborano senza perdere il sonno, e scrivere costringe a un pensiero più chiaro rispetto alle riunioni improvvisate. C\'è però un costo: un messaggio scritto in fretta può perdere il tono e creare tensioni indesiderate. I team che funzionano bene investono tempo in regole di comunicazione esplicite: quando usare la chat, quando l\'email, quando il video.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'In cosa differisce l\'epigenetica dalla genetica classica?',
+    questionText: 'Qual è uno svantaggio del lavoro asincrono?',
     options: [
-      { label: 'Studia le mutazioni del DNA', value: 'mutazioni DNA' },
-      { label: 'Studia modificazioni dell\'espressione genica senza alterare il DNA', value: 'espressione genica senza alterare DNA' },
-      { label: 'Si occupa solo di malattie ereditarie', value: 'malattie ereditarie' },
-      { label: 'Riguarda solo gli animali', value: 'solo animali' }
+      { label: 'Il tono può essere frainteso e creare tensioni', value: 'tono frainteso' },
+      { label: 'Tutti devono essere online contemporaneamente', value: 'tutti online' },
+      { label: 'I documenti non possono essere condivisi', value: 'documenti non condivisi' },
+      { label: 'Le persone lavorano meno ore', value: 'meno ore' }
     ],
-    correctAnswer: 'espressione genica senza alterare DNA', points: 2, orderIndex: 63, tags: ['scienza', 'biologia'], timeSuggested: 75
+    correctAnswer: 'tono frainteso', points: 2, orderIndex: 63, tags: ['lavoro', 'comunicazione'], timeSuggested: 75
   },
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Il concetto di "decrescita felice", propugnato in Italia dal filosofo Serge Latouche e dal movimento di Maurizio Pallante, contesta il paradigma della crescita economica illimitata come misura del progresso sociale. I sostenitori della decrescita argomentano che il PIL non riflette il benessere reale delle persone e che un\'economia orientata alla qualità della vita, alla sostenibilità ambientale e alla ridistribuzione delle risorse produrrebbe società più eque e resilienti.',
+    ttsScript: 'Il diritto alla disconnessione, già legge in alcuni paesi europei, stabilisce che un dipendente non è obbligato a leggere o rispondere a messaggi fuori dall\'orario di lavoro. Il principio sembra semplice, ma l\'applicazione è complessa: nei team internazionali, la sera per qualcuno è il mattino per qualcun altro, e molti responsabili non si rendono conto che stanno fissando un\'aspettativa implicita quando scrivono alle undici di sera. Alcune aziende hanno introdotto ritardi automatici: i messaggi inviati la sera vengono consegnati il mattino seguente.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'Cosa contestano i sostenitori della decrescita?',
+    questionText: 'Perché il diritto alla disconnessione è difficile da applicare nei team internazionali?',
     options: [
-      { label: 'La libertà di mercato', value: 'libertà di mercato' },
-      { label: 'La crescita economica illimitata come misura del progresso', value: 'crescita illimitata come progresso' },
-      { label: 'Il sistema democratico', value: 'sistema democratico' },
-      { label: 'L\'innovazione tecnologica', value: 'innovazione' }
+      { label: 'La sera per qualcuno è il mattino per qualcun altro', value: 'sera per uno mattino per altri' },
+      { label: 'La legge cambia da paese a paese', value: 'legge diversa' },
+      { label: 'I responsabili rifiutano di rispettarla', value: 'responsabili rifiutano' },
+      { label: 'La tecnologia non lo permette', value: 'tecnologia non permette' }
     ],
-    correctAnswer: 'crescita illimitata come progresso', points: 2, orderIndex: 64, tags: ['economia', 'filosofia'], timeSuggested: 75
+    correctAnswer: 'sera per uno mattino per altri', points: 2, orderIndex: 64, tags: ['lavoro', 'work-life balance'], timeSuggested: 75
   },
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La teoria dell\'attaccamento, formulata dallo psicologo John Bowlby, sostiene che la qualità del legame tra il bambino e la figura di riferimento nei primi anni di vita influenza profondamente lo sviluppo emotivo e relazionale dell\'individuo per tutta l\'esistenza. I bambini con un attaccamento sicuro tendono a sviluppare maggiore autostima, migliori competenze sociali e una maggiore capacità di gestire lo stress in età adulta.',
+    ttsScript: 'Il ruolo del manager moderno è profondamente cambiato. L\'epoca del responsabile che dava ordini e verificava l\'esecuzione è finita. Oggi i manager più efficaci agiscono come allenatori: fanno più domande di quante diano risposte, aiutano il collaboratore a trovare la soluzione da sé, e fanno crescere il talento attraverso la delega più che attraverso il controllo. È un cambio controintuitivo per chi è cresciuto in culture gerarchiche, e molti manager all\'inizio si sentono meno produttivi — fino a quando vedono il proprio team crescere.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'Quali vantaggi hanno i bambini con attaccamento sicuro?',
+    questionText: 'Cosa caratterizza il manager moderno come allenatore?',
     options: [
-      { label: 'Migliori risultati scolastici', value: 'risultati scolastici' },
-      { label: 'Maggiore autostima e migliori competenze sociali', value: 'autostima e competenze sociali' },
-      { label: 'Maggiore intelligenza', value: 'intelligenza' },
-      { label: 'Migliore salute fisica', value: 'salute fisica' }
+      { label: 'Fa più domande di quante dia risposte', value: 'più domande che risposte' },
+      { label: 'Controlla ogni passaggio del lavoro', value: 'controlla ogni passaggio' },
+      { label: 'Lavora sempre fianco a fianco con il team', value: 'fianco a fianco' },
+      { label: 'Decide senza consultare nessuno', value: 'decide senza consultare' }
     ],
-    correctAnswer: 'autostima e competenze sociali', points: 2, orderIndex: 65, tags: ['psicologia'], timeSuggested: 75
+    correctAnswer: 'più domande che risposte', points: 2, orderIndex: 65, tags: ['lavoro', 'management'], timeSuggested: 75
   },
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
@@ -697,65 +702,65 @@ export const italianListeningQuestions: MultiSkillQuestionData[] = [
     correctAnswer: 'nepotismo', points: 2, orderIndex: 67, tags: ['società', 'lavoro'], timeSuggested: 75
   },
 
-  // C2 — Discorsi accademici, filosofici (68–72)
+  // C2 — Discorsi su temi lavorativi avanzati (68–72)
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Il concetto di "banalità del male", coniato dalla filosofa Hannah Arendt durante il processo ad Adolf Eichmann a Gerusalemme, suggerisce che le atrocità più devastanti non sono necessariamente perpetrate da individui intrinsecamente malvagi, ma da funzionari ordinari che eseguono ordini senza esercitare il pensiero critico. Arendt sostiene che l\'incapacità di pensare autonomamente, di mettersi nei panni dell\'altro e di giudicare le conseguenze delle proprie azioni costituisce una minaccia più insidiosa della malvagità deliberata.',
+    ttsScript: 'L\'espressione "quiet quitting", diventata virale nel duemilaventidue, non descrive dimissioni vere ma un comportamento preciso: fare esattamente quello che è scritto nel contratto, né più né meno. Rifiutare di leggere email fuori orario, non offrirsi volontari, non investire emotivamente in progetti extra. Il fenomeno è letto in due modi opposti: come reazione sana al burnout diffuso, o come sintomo di una crisi più profonda dell\'engagement. I dati sono scomodi: in molte aziende la quota di dipendenti che si dichiara disingaggiata supera il sessanta per cento.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'Cosa intende Arendt con "banalità del male"?',
+    questionText: 'Come viene interpretato il fenomeno del quiet quitting?',
     options: [
-      { label: 'Il male è sempre premeditato', value: 'premeditato' },
-      { label: 'Le atrocità sono compiute da persone ordinarie che non esercitano pensiero critico', value: 'persone ordinarie senza pensiero critico' },
-      { label: 'Il male non esiste veramente', value: 'non esiste' },
-      { label: 'Solo i leader sono responsabili del male', value: 'solo leader' }
+      { label: 'O come reazione sana ai limiti, o come segno di disingaggio diffuso', value: 'sana o disingaggio' },
+      { label: 'Come vere dimissioni di massa', value: 'dimissioni di massa' },
+      { label: 'Come un fenomeno tipicamente generazionale', value: 'fenomeno generazionale' },
+      { label: 'Come una strategia per ottenere un aumento', value: 'strategia aumento' }
     ],
-    correctAnswer: 'persone ordinarie senza pensiero critico', points: 2, orderIndex: 68, tags: ['filosofia', 'etica'], timeSuggested: 90
+    correctAnswer: 'sana o disingaggio', points: 2, orderIndex: 68, tags: ['lavoro', 'engagement'], timeSuggested: 90
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'La cosiddetta "svolta linguistica" nella filosofia del ventesimo secolo ha spostato il focus dell\'indagine filosofica dalla metafisica tradizionale all\'analisi del linguaggio. Wittgenstein, nella sua opera più tarda, abbandona l\'idea che il linguaggio sia uno specchio della realtà e propone invece il concetto di "giochi linguistici": il significato delle parole non risiede in un riferimento fisso al mondo, ma emerge dall\'uso che ne facciamo all\'interno di specifiche forme di vita.',
+    ttsScript: 'Il lavoro ibrido è diventato il tema più divisivo nelle aziende dopo il duemilaventi. I dati sulla produttività sono contraddittori: alcuni studi rilevano un aumento, altri una diminuzione, a seconda del tipo di attività e di come viene gestita la transizione. Ma la domanda davvero interessante non è dove le persone lavorano, ma come vengono guidate. La modalità ibrida espone debolezze che l\'ufficio fisico nascondeva: responsabili che controllavano per presenza, processi che dipendevano da conversazioni casuali in corridoio, decisioni che escludevano chi non era nella stanza.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'Cosa sono i "giochi linguistici" per Wittgenstein?',
+    questionText: 'Perché la modalità ibrida è un banco di prova per la leadership?',
     options: [
-      { label: 'Esercizi per imparare le lingue', value: 'esercizi' },
-      { label: 'Il significato emerge dall\'uso delle parole in contesti specifici', value: 'significato dall\'uso in contesti' },
-      { label: 'Strutture grammaticali universali', value: 'strutture universali' },
-      { label: 'Giochi da tavolo basati sulle parole', value: 'giochi da tavolo' }
+      { label: 'Espone pratiche che funzionavano solo grazie alla presenza fisica', value: 'espone pratiche legate alla presenza' },
+      { label: 'Costringe i responsabili a imparare nuove tecnologie', value: 'imparare tecnologie' },
+      { label: 'Raddoppia le ore di lavoro effettive', value: 'raddoppia ore' },
+      { label: 'Richiede più riunioni del lavoro in presenza', value: 'più riunioni' }
     ],
-    correctAnswer: 'significato dall\'uso in contesti', points: 2, orderIndex: 69, tags: ['filosofia', 'linguistica'], timeSuggested: 90
+    correctAnswer: 'espone pratiche legate alla presenza', points: 2, orderIndex: 69, tags: ['lavoro', 'leadership'], timeSuggested: 90
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Il paradosso di Fermi pone una domanda tanto semplice quanto destabilizzante: se l\'universo è così vasto e antico, e se le condizioni per la vita non sono eccezionalmente rare, dove sono tutti gli altri? La Grande Filtro è una delle risposte più inquietanti: suggerisce che esista un passaggio evolutivo così improbabile o così distruttivo che praticamente nessuna civiltà riesce a superarlo. La questione cruciale è se questo filtro si trovi nel nostro passato, il che significherebbe che siamo straordinariamente fortunati, o nel nostro futuro, il che implicherebbe una prognosi molto meno rassicurante per l\'umanità.',
+    ttsScript: 'Nelle organizzazioni di una certa dimensione, il problema più sottovalutato non è la mancanza di talento o di strategia: è l\'allineamento tra le funzioni. Le vendite promettono caratteristiche che il team di prodotto non ha previsto, il prodotto costruisce cose che il marketing non sa come posizionare, la finanza approva budget che le operazioni non riescono a eseguire. Ogni funzione opera in modo razionale presa da sola, ma la somma di razionalità individuali produce un\'organizzazione irrazionale. La soluzione non sono più riunioni o più report: sono conversazioni brevi e frequenti tra responsabili di funzione, con la libertà di mettere in discussione gli impegni senza perdere la faccia.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'Perché il Grande Filtro nel futuro sarebbe preoccupante?',
+    questionText: 'Qual è la causa strutturale del disallineamento tra funzioni?',
     options: [
-      { label: 'Significherebbe che l\'universo si sta contraendo', value: 'universo si contrae' },
-      { label: 'Implicherebbe che l\'umanità potrebbe non sopravvivere', value: 'umanità potrebbe non sopravvivere' },
-      { label: 'Significherebbe che gli alieni ci osservano', value: 'alieni ci osservano' },
-      { label: 'Implicherebbe che la fisica è sbagliata', value: 'fisica sbagliata' }
+      { label: 'Ogni funzione è razionale singolarmente ma la somma produce incoerenza', value: 'razionalità singola incoerenza globale' },
+      { label: 'Le persone non leggono i report interni', value: 'non leggono report' },
+      { label: 'L\'azienda non ha abbastanza manager', value: 'mancanza manager' },
+      { label: 'La tecnologia non condivide i dati', value: 'tecnologia non condivide' }
     ],
-    correctAnswer: 'umanità potrebbe non sopravvivere', points: 2, orderIndex: 70, tags: ['scienza', 'filosofia'], timeSuggested: 90
+    correctAnswer: 'razionalità singola incoerenza globale', points: 2, orderIndex: 70, tags: ['lavoro', 'organizzazione'], timeSuggested: 90
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'La tensione irrisolta tra l\'imperativo della crescita economica e la necessità di preservare gli ecosistemi costituisce il dilemma centrale della nostra epoca.',
+    ttsScript: 'La sostenibilità a lungo termine di un\'organizzazione dipende dalla sua capacità di bilanciare la pressione per i risultati a breve termine con investimenti che produrranno valore soltanto nel futuro.',
     ttsLanguageCode: 'it-IT',
     questionText: 'Scrivi esattamente quello che senti.',
-    correctAnswer: 'La tensione irrisolta tra l\'imperativo della crescita economica e la necessità di preservare gli ecosistemi costituisce il dilemma centrale della nostra epoca.', points: 2, orderIndex: 71, tags: ['dettato'], timeSuggested: 120
+    correctAnswer: 'La sostenibilità a lungo termine di un\'organizzazione dipende dalla sua capacità di bilanciare la pressione per i risultati a breve termine con investimenti che produrranno valore soltanto nel futuro.', points: 2, orderIndex: 71, tags: ['dettato', 'lavoro'], timeSuggested: 120
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Il concetto di rizoma, elaborato da Deleuze e Guattari nell\'opera "Mille piani", propone un modello di pensiero alternativo alla struttura arborescente e gerarchica della tradizione filosofica occidentale. Nel rizoma non esiste un punto di origine privilegiato né una struttura verticale: ogni punto può connettersi con qualsiasi altro, creando una rete eterogenea e non gerarchica di relazioni. Questo modello ha trovato applicazione nell\'analisi delle reti digitali, della cultura contemporanea e delle strutture organizzative post-burocratiche.',
+    ttsScript: 'Il modello della valutazione annuale — quella scala da uno a cinque con cui i responsabili classificavano i collaboratori — è entrato in crisi una decina di anni fa, e molte aziende l\'hanno abbandonato. Le ragioni sono documentate: i rating producono demotivazione in chi riceve voti bassi, sono influenzati da bias recenti (i manager ricordano gli ultimi tre mesi, non l\'anno intero) e creano competizione malsana tra colleghi. Quello che li sostituisce è più impegnativo: conversazioni di sviluppo frequenti, separate dalle decisioni sulla retribuzione, dove l\'obiettivo è la crescita, non la classificazione. Per il responsabile è più faticoso, ma produce risultati più duraturi.',
     ttsLanguageCode: 'it-IT',
-    questionText: 'Qual è la caratteristica principale del modello rizomatico?',
+    questionText: 'Perché le valutazioni annuali sono state abbandonate?',
     options: [
-      { label: 'Ha una struttura gerarchica chiara', value: 'gerarchica' },
-      { label: 'Non ha punto di origine privilegiato e ogni punto si connette con ogni altro', value: 'nessun punto privilegiato, connessione totale' },
-      { label: 'Si sviluppa solo in linea retta', value: 'linea retta' },
-      { label: 'Ha un unico centro organizzativo', value: 'centro unico' }
+      { label: 'Distorcono i comportamenti e riflettono bias recenti più dell\'anno intero', value: 'distorcono e riflettono bias recenti' },
+      { label: 'Sono troppo costose da implementare', value: 'costose' },
+      { label: 'Il sindacato non le consente più', value: 'sindacato non consente' },
+      { label: 'Sono illegali nella maggior parte dei paesi', value: 'illegali' }
     ],
-    correctAnswer: 'nessun punto privilegiato, connessione totale', points: 2, orderIndex: 72, tags: ['filosofia'], timeSuggested: 90
+    correctAnswer: 'distorcono e riflettono bias recenti', points: 2, orderIndex: 72, tags: ['lavoro', 'performance'], timeSuggested: 90
   },
 
   // ============================================================

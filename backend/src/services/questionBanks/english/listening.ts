@@ -303,11 +303,16 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'The replication crisis in psychology refers to the discovery that many published findings in the field cannot be replicated by independent researchers. A landmark study in twenty fifteen attempted to reproduce one hundred psychology experiments and found that only thirty-nine percent yielded the same results. This has prompted calls for greater methodological rigor, pre-registration of studies, and open data sharing.',
+    ttsScript: 'In recent years, many companies have moved away from the annual performance review in favour of continuous feedback: short conversations between manager and team member every couple of weeks. The point is not to talk more, but to talk sooner. A small adjustment in March prevents an issue from becoming irreparable by December. The shift, however, demands more from managers, who must develop active-listening skills that many have never really practised.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What percentage of psychology experiments were successfully replicated?',
-    options: [{ label: '25%', value: '25' }, { label: '39%', value: '39' }, { label: '50%', value: '50' }, { label: '65%', value: '65' }],
-    correctAnswer: '39', points: 3, orderIndex: 31, tags: ['science', 'research'], timeSuggested: 75
+    questionText: 'What is the main purpose of continuous feedback?',
+    options: [
+      { label: 'To address small issues before they grow serious', value: 'address before serious' },
+      { label: 'To give employees more frequent praise', value: 'more frequent praise' },
+      { label: 'To replace the role of Human Resources', value: 'replace HR' },
+      { label: 'To monitor productivity in real time', value: 'monitor productivity' }
+    ],
+    correctAnswer: 'address before serious', points: 3, orderIndex: 31, tags: ['workplace', 'management'], timeSuggested: 75
   },
   {
     language: 'English', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
@@ -318,16 +323,16 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
   },
   {
     language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'The concept of neuroplasticity — the brain\'s ability to reorganize itself by forming new neural connections — has revolutionized our understanding of cognitive rehabilitation. Patients who have suffered strokes, for instance, can sometimes recover lost functions because healthy parts of the brain compensate for the damaged areas. This process, however, requires intensive and sustained therapeutic intervention.',
+    ttsScript: 'Research on talent retention shows that the first ninety days of a new hire\'s experience are decisive. During that period, employees form beliefs that will shape their engagement for years to come: whether to stay, how to relate to colleagues, how much emotional energy to invest in projects. Yet many organisations confine onboarding to the first week — a laptop, a handbook, an HR meeting — and then leave the new person to figure things out alone.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What is neuroplasticity?',
+    questionText: 'Why are the first ninety days so critical?',
     options: [
-      { label: 'The ability to learn multiple languages', value: 'languages' },
-      { label: 'The brain\'s ability to form new neural connections', value: 'new neural connections' },
-      { label: 'A type of brain surgery', value: 'surgery' },
-      { label: 'Memory improvement through medication', value: 'medication' }
+      { label: 'Beliefs are formed that influence long-term engagement', value: 'beliefs shape engagement' },
+      { label: 'Because most resignations happen in the first week', value: 'first-week resignations' },
+      { label: 'Because performance reviews begin at ninety days', value: 'reviews at ninety days' },
+      { label: 'Because work permits expire during that window', value: 'permits expire' }
     ],
-    correctAnswer: 'new neural connections', points: 3, orderIndex: 33, tags: ['science'], timeSuggested: 75
+    correctAnswer: 'beliefs shape engagement', points: 3, orderIndex: 33, tags: ['workplace', 'HR'], timeSuggested: 75
   },
   {
     language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
@@ -355,75 +360,75 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'The philosophical implications of quantum entanglement are perhaps more profound than its physical properties. When two particles become entangled, measuring the state of one instantaneously determines the state of the other, regardless of the distance separating them. Einstein famously derided this as "spooky action at a distance," yet subsequent experiments have definitively confirmed its existence, challenging our most fundamental assumptions about locality and causality.',
+    ttsScript: 'The paradox of modern collaboration is that the more we collaborate, the less actual work gets done. Time-use studies show that knowledge workers now spend an average of twenty-three hours a week in meetings — a figure that has doubled over the last fifteen years. Meetings have become the default way to demonstrate commitment, share responsibility, and avoid making lonely decisions. But every hour in a meeting is an hour subtracted from focused work, and the cost of context switching after each one is now well documented.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What did Einstein call quantum entanglement?',
+    questionText: 'Why have meetings multiplied so dramatically?',
     options: [
-      { label: 'A beautiful theory', value: 'beautiful theory' },
-      { label: 'Spooky action at a distance', value: 'spooky action at a distance' },
-      { label: 'The uncertainty principle', value: 'uncertainty principle' },
-      { label: 'A mathematical curiosity', value: 'mathematical curiosity' }
+      { label: 'They allow people to share responsibility and signal commitment', value: 'share responsibility and commitment' },
+      { label: 'They have completely replaced email', value: 'replaced email' },
+      { label: 'Companies measure work in meeting hours', value: 'measure in meeting hours' },
+      { label: 'Employees prefer working in groups', value: 'group preference' }
     ],
-    correctAnswer: 'spooky action at a distance', points: 3, orderIndex: 36, tags: ['physics'], timeSuggested: 90
+    correctAnswer: 'share responsibility and commitment', points: 3, orderIndex: 36, tags: ['workplace', 'management'], timeSuggested: 90
   },
   {
     language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'The philosophical implications of quantum entanglement are perhaps more profound than its physical properties. When two particles become entangled, measuring the state of one instantaneously determines the state of the other. Subsequent experiments have definitively confirmed its existence, challenging our most fundamental assumptions about locality and causality.',
+    ttsScript: 'When a key employee resigns, the instinctive reaction is the counter-offer. The data, however, show that this strategy works in the short term — most people accept — but two thirds leave anyway within a year. The reason is structural: the decision to leave is rarely about money. It is about the absence of growth prospects, conflict with a manager, the sense of not being valued. The counter-offer treats the symptom, not the cause. Companies that genuinely retain talent invest in conversations long before a resignation letter ever appears.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What fundamental assumptions does quantum entanglement challenge?',
+    questionText: 'Why do counter-offers often fail?',
     options: [
-      { label: 'Gravity and magnetism', value: 'gravity and magnetism' },
-      { label: 'Locality and causality', value: 'locality and causality' },
-      { label: 'Time and space', value: 'time and space' },
-      { label: 'Energy and matter', value: 'energy and matter' }
+      { label: 'They treat the symptom but not the underlying reason for leaving', value: 'symptom not cause' },
+      { label: 'The salaries offered are too low', value: 'low salaries' },
+      { label: 'The employee asks for more after a few months', value: 'asks for more' },
+      { label: 'The law does not allow retroactive offers', value: 'law forbids' }
     ],
-    correctAnswer: 'locality and causality', points: 3, orderIndex: 37, tags: ['physics'], timeSuggested: 90
+    correctAnswer: 'symptom not cause', points: 3, orderIndex: 37, tags: ['workplace', 'retention'], timeSuggested: 90
   },
   {
     language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'The commodification of personal data has engendered a new form of surveillance capitalism, in which the extraction and monetization of behavioral data constitutes the primary revenue model for many technology companies. Shoshana Zuboff argues that this represents an unprecedented asymmetry of knowledge and power, fundamentally incompatible with democratic norms.',
+    ttsScript: 'In a large internal study on what makes teams effective, Google identified one dominant factor: psychological safety. That is, the sense that one can voice opinions, admit mistakes, or ask questions without fearing professional consequences. Teams with high psychological safety produce more innovation, learn faster from errors, and retain people better. But you cannot build it with corporate policies: it is built by what the manager says when someone admits a mistake, and by what they do not say in the moments of silence.',
     ttsLanguageCode: 'en-US',
-    questionText: 'According to Zuboff, what does surveillance capitalism create?',
+    questionText: 'How is psychological safety built, according to the passage?',
     options: [
-      { label: 'Equal access to information', value: 'equal access' },
-      { label: 'An unprecedented asymmetry of knowledge and power', value: 'asymmetry of knowledge and power' },
-      { label: 'Better consumer products', value: 'better products' },
-      { label: 'More efficient markets', value: 'efficient markets' }
+      { label: 'Through the manager\'s day-to-day behaviour, not through formal policies', value: 'daily manager behaviour' },
+      { label: 'Through corporate ethics regulations', value: 'ethics regulations' },
+      { label: 'By training new managers in communication techniques', value: 'training new managers' },
+      { label: 'By punishing mistakes severely to prevent recurrence', value: 'punish mistakes' }
     ],
-    correctAnswer: 'asymmetry of knowledge and power', points: 3, orderIndex: 38, tags: ['technology', 'philosophy'], timeSuggested: 90
+    correctAnswer: 'daily manager behaviour', points: 3, orderIndex: 38, tags: ['workplace', 'team'], timeSuggested: 90
   },
   {
     language: 'English', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'The epistemological ramifications of artificial intelligence extend far beyond its immediate practical applications, raising fundamental questions about the nature of knowledge itself.',
+    ttsScript: 'The true indicator of a manager\'s success is not the number of decisions they make every day, but the quality of decisions their team members make autonomously.',
     ttsLanguageCode: 'en-US',
     questionText: 'Write exactly what you hear.',
-    correctAnswer: 'The epistemological ramifications of artificial intelligence extend far beyond its immediate practical applications, raising fundamental questions about the nature of knowledge itself.', points: 3, orderIndex: 39, tags: ['dictation'], timeSuggested: 120
+    correctAnswer: 'The true indicator of a manager\'s success is not the number of decisions they make every day, but the quality of decisions their team members make autonomously.', points: 3, orderIndex: 39, tags: ['dictation', 'workplace'], timeSuggested: 120
   },
   {
     language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'The so-called "replication crisis" has not been confined to psychology. Medicine, economics, and even some areas of physics have faced similar scrutiny. The underlying causes are multifaceted: publication bias favoring novel and statistically significant results, insufficient sample sizes, researcher degrees of freedom in data analysis, and perverse incentive structures within academia that prioritize quantity of publications over quality.',
+    ttsScript: 'Research on cognitive work converges on a counter-intuitive truth: it is not the length of work that limits productivity, but its fragmentation. Every time we switch from one task to another — a notification, a chat message, an unexpected meeting — the brain takes between fifteen and twenty-five minutes to fully recover the previous level of concentration. In a typical day with thirty interruptions, this means that much of the time worked produces no real value. Some companies have started introducing protected blocks of two or three hours with no meetings at all.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What does "publication bias" favor according to the passage?',
+    questionText: 'Why are protected blocks of time important?',
     options: [
-      { label: 'Replicated results', value: 'replicated' },
-      { label: 'Novel and statistically significant results', value: 'novel and significant' },
-      { label: 'Large-scale studies', value: 'large-scale' },
-      { label: 'Negative findings', value: 'negative' }
+      { label: 'The brain takes a long time to recover focus after each interruption', value: 'long recovery from interruption' },
+      { label: 'Because employees are asking for more breaks', value: 'more breaks' },
+      { label: 'Because long meetings are tiring', value: 'tiring meetings' },
+      { label: 'Because notifications are now banned by law', value: 'notifications banned' }
     ],
-    correctAnswer: 'novel and significant', points: 3, orderIndex: 40, tags: ['science', 'methodology'], timeSuggested: 90
+    correctAnswer: 'long recovery from interruption', points: 3, orderIndex: 40, tags: ['workplace', 'productivity'], timeSuggested: 90
   },
   {
     language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'The concept of epistemic humility, rooted in Socratic philosophy, suggests that acknowledging the limits of one\'s knowledge is paradoxically a prerequisite for genuine understanding. In an age of information overload and confident assertions on social media, cultivating such humility may be more important than ever for both individual cognition and collective deliberation.',
+    ttsScript: 'Giving feedback in an international team is one of the most underestimated tasks in modern management. What some cultures consider direct and helpful — pointing out a mistake during a meeting, for instance — other cultures read as a public attack. The opposite is also true: feedback that one culture finds perfectly clear may be so softened, from another culture\'s perspective, that it is not perceived as criticism at all. The most effective managers do not adopt a single style: they adapt the delivery to the recipient and verify that the message has landed as intended.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What is epistemic humility rooted in?',
+    questionText: 'What does an effective manager do in an international team?',
     options: [
-      { label: 'Modern psychology', value: 'modern psychology' },
-      { label: 'Socratic philosophy', value: 'Socratic philosophy' },
-      { label: 'Eastern meditation', value: 'eastern meditation' },
-      { label: 'Scientific method', value: 'scientific method' }
+      { label: 'Adapt the feedback style and check that it has been understood', value: 'adapt and verify' },
+      { label: 'Always use the most direct style possible', value: 'always direct' },
+      { label: 'Delegate feedback to local HR', value: 'delegate to HR' },
+      { label: 'Avoid difficult conversations', value: 'avoid conversations' }
     ],
-    correctAnswer: 'Socratic philosophy', points: 3, orderIndex: 41, tags: ['philosophy'], timeSuggested: 90
+    correctAnswer: 'adapt and verify', points: 3, orderIndex: 41, tags: ['workplace', 'cross-cultural communication'], timeSuggested: 90
   },
   {
     language: 'English', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
@@ -650,37 +655,42 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'The concept of "nudging," developed by behavioral economists Richard Thaler and Cass Sunstein, refers to designing choice architectures that subtly guide people toward better decisions without restricting their freedom. Examples include placing healthier food options at eye level in cafeterias or making organ donation the default option on driver\'s license applications. Critics argue that nudging is paternalistic and manipulative, while proponents contend that it merely corrects for well-documented cognitive biases.',
+    ttsScript: 'Asynchronous work — communicating in writing without expecting an immediate reply — has become the norm in many distributed teams. The advantages are obvious: people in different time zones collaborate without losing sleep, and writing forces clearer thinking than improvised meetings. But there is a cost: a message dashed off in a hurry can lose its tone and create unintended tension. Teams that work well together invest time in explicit communication norms: when to use chat, when email, when video.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What is an example of nudging mentioned in the passage?',
+    questionText: 'What is a drawback of asynchronous work?',
     options: [
-      { label: 'Banning unhealthy food', value: 'banning food' },
-      { label: 'Making organ donation the default option', value: 'organ donation default' },
-      { label: 'Increasing taxes on sugar', value: 'sugar tax' },
-      { label: 'Requiring exercise in schools', value: 'exercise in schools' }
+      { label: 'Tone can be misread and cause tension', value: 'tone misread' },
+      { label: 'Everyone has to be online at the same time', value: 'all online' },
+      { label: 'Documents cannot be shared', value: 'no document sharing' },
+      { label: 'People end up working fewer hours', value: 'fewer hours' }
     ],
-    correctAnswer: 'organ donation default', points: 2, orderIndex: 63, tags: ['behavioral economics', 'policy'], timeSuggested: 75
+    correctAnswer: 'tone misread', points: 2, orderIndex: 63, tags: ['workplace', 'communication'], timeSuggested: 75
   },
   {
     language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Impostor syndrome — the persistent feeling that one\'s success is undeserved and that one will eventually be exposed as a fraud — affects an estimated seventy percent of people at some point in their lives. Paradoxically, it tends to be most prevalent among high achievers. Psychologists attribute this to the Dunning-Kruger effect in reverse: the more competent individuals become, the more acutely aware they are of how much they do not know.',
+    ttsScript: 'The right to disconnect, already law in several European countries, establishes that an employee is not obliged to read or reply to messages outside working hours. The principle sounds simple, but applying it is complex: in international teams, evening for one person is morning for another, and many managers do not realise they are setting an implicit expectation when they message at eleven at night. Some companies have introduced automatic delays: messages sent in the evening are delivered the following morning.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What percentage of people experience impostor syndrome at some point?',
-    options: [{ label: '30%', value: '30' }, { label: '50%', value: '50' }, { label: '70%', value: '70' }, { label: '90%', value: '90' }],
-    correctAnswer: '70', points: 2, orderIndex: 64, tags: ['psychology'], timeSuggested: 75
+    questionText: 'Why is the right to disconnect hard to apply in international teams?',
+    options: [
+      { label: 'Evening for one person is morning for another', value: 'evening one morning another' },
+      { label: 'The law differs from country to country', value: 'different laws' },
+      { label: 'Managers refuse to comply with it', value: 'managers refuse' },
+      { label: 'Technology does not allow it', value: 'technology limits' }
+    ],
+    correctAnswer: 'evening one morning another', points: 2, orderIndex: 64, tags: ['workplace', 'work-life balance'], timeSuggested: 75
   },
   {
     language: 'English', cefrLevel: 'C1', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'The phenomenon known as "brain drain" — the emigration of highly skilled professionals from developing to developed countries — poses a significant challenge to economic development. While remittances sent back by emigrants contribute to the home economy, the loss of doctors, engineers, and scientists diminishes the domestic capacity for innovation and public service delivery. Some nations have attempted to address this through "brain circulation" policies that encourage temporary migration and knowledge transfer.',
+    ttsScript: 'The role of the modern manager has changed profoundly. The era of the boss who issued orders and checked execution is over. Today\'s most effective managers act as coaches: they ask more questions than they give answers, they help their team members find solutions themselves, and they grow talent through delegation rather than control. It is a counter-intuitive shift for people raised in hierarchical cultures, and many managers feel less productive at first — until they see their team grow.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What are "brain circulation" policies designed to encourage?',
+    questionText: 'What characterises the modern manager as coach?',
     options: [
-      { label: 'Permanent emigration', value: 'permanent emigration' },
-      { label: 'Temporary migration and knowledge transfer', value: 'temporary migration and knowledge transfer' },
-      { label: 'Banning skilled workers from leaving', value: 'banning departure' },
-      { label: 'Reducing university enrollment', value: 'reducing enrollment' }
+      { label: 'They ask more questions than they give answers', value: 'more questions than answers' },
+      { label: 'They check every step of the work', value: 'check every step' },
+      { label: 'They always work side by side with the team', value: 'side by side' },
+      { label: 'They decide without consulting anyone', value: 'decide alone' }
     ],
-    correctAnswer: 'temporary migration and knowledge transfer', points: 2, orderIndex: 65, tags: ['economics', 'migration'], timeSuggested: 75
+    correctAnswer: 'more questions than answers', points: 2, orderIndex: 65, tags: ['workplace', 'management'], timeSuggested: 75
   },
   {
     language: 'English', cefrLevel: 'C1', questionType: 'DICTATION', skill: 'LISTENING',
@@ -708,62 +718,62 @@ export const englishListeningQuestions: MultiSkillQuestionData[] = [
   // ============================================================
   {
     language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'The concept of "moral luck," introduced by philosophers Bernard Williams and Thomas Nagel, challenges the intuition that moral judgments should be based solely on factors within an agent\'s control. Consider two equally reckless drivers: one arrives home safely, while the other kills a pedestrian. Despite identical choices and intentions, we judge the latter far more harshly. This asymmetry suggests that our moral assessments are influenced by outcomes that are, by definition, beyond the agent\'s control — a conclusion that sits uncomfortably with foundational principles of moral responsibility.',
+    ttsScript: 'The expression "quiet quitting," which went viral in twenty twenty-two, does not describe actual resignations but a specific behaviour: doing exactly what the contract requires, no more and no less. Refusing to read emails after hours, declining to volunteer, withholding emotional investment from extra projects. The phenomenon is read in two opposite ways: either as a healthy reaction to widespread burnout, or as a symptom of a deeper engagement crisis. The data are uncomfortable: in many companies, the share of employees who describe themselves as disengaged exceeds sixty percent.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What does the concept of "moral luck" challenge?',
+    questionText: 'How is the quiet quitting phenomenon interpreted?',
     options: [
-      { label: 'The idea that all people are equally moral', value: 'equally moral' },
-      { label: 'The intuition that moral judgments should depend only on factors within one\'s control', value: 'judgments based on controllable factors' },
-      { label: 'The belief that luck does not exist', value: 'luck does not exist' },
-      { label: 'The principle that laws should be fair', value: 'fair laws' }
+      { label: 'Either as a healthy response to limits, or as a sign of widespread disengagement', value: 'healthy or disengagement' },
+      { label: 'As genuine mass resignations', value: 'mass resignations' },
+      { label: 'As a typically generational phenomenon', value: 'generational' },
+      { label: 'As a strategy to negotiate a pay rise', value: 'pay-rise strategy' }
     ],
-    correctAnswer: 'judgments based on controllable factors', points: 2, orderIndex: 68, tags: ['philosophy', 'ethics'], timeSuggested: 90
+    correctAnswer: 'healthy or disengagement', points: 2, orderIndex: 68, tags: ['workplace', 'engagement'], timeSuggested: 90
   },
   {
     language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'The phenomenon of semantic satiation — whereby a word temporarily loses its meaning through rapid repetition — offers a window into the neurological underpinnings of language processing. When a word is repeated thirty or more times in quick succession, speakers report that it begins to feel like a meaningless sound. Neurolinguists hypothesize that this occurs because the neural pathways connecting phonological form to semantic content become temporarily fatigued, disrupting the automatic retrieval of meaning.',
+    ttsScript: 'Hybrid work has become the most divisive topic in companies since twenty twenty. The productivity data are contradictory: some studies show an increase, others a decline, depending on the type of work and how the transition has been managed. But the truly interesting question is not where people work, but how they are led. Hybrid mode exposes weaknesses that the physical office used to hide: managers who supervised by physical presence, processes that depended on casual corridor conversations, decisions that excluded anyone not in the room.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What causes semantic satiation according to neurolinguists?',
+    questionText: 'Why is hybrid work a test for leadership?',
     options: [
-      { label: 'Damage to the language centers of the brain', value: 'damage' },
-      { label: 'Temporary fatigue of neural pathways connecting sound to meaning', value: 'neural pathway fatigue' },
-      { label: 'Loss of hearing sensitivity', value: 'hearing loss' },
-      { label: 'Emotional overload', value: 'emotional overload' }
+      { label: 'It exposes practices that only worked thanks to physical presence', value: 'exposes presence-based practices' },
+      { label: 'It forces managers to learn new technologies', value: 'learn technologies' },
+      { label: 'It doubles the effective working hours', value: 'doubles hours' },
+      { label: 'It requires more meetings than in-office work', value: 'more meetings' }
     ],
-    correctAnswer: 'neural pathway fatigue', points: 2, orderIndex: 69, tags: ['linguistics', 'neuroscience'], timeSuggested: 90
+    correctAnswer: 'exposes presence-based practices', points: 2, orderIndex: 69, tags: ['workplace', 'leadership'], timeSuggested: 90
   },
   {
     language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'Gödel\'s incompleteness theorems, published in nineteen thirty-one, demonstrated that any sufficiently powerful formal mathematical system contains true statements that cannot be proven within the system itself. This result shattered the ambitions of the formalist program championed by David Hilbert, which sought to establish mathematics on a complete and consistent axiomatic foundation. The implications extend beyond mathematics: the theorems suggest fundamental limits to what can be known through formal reasoning alone.',
+    ttsScript: 'In organisations of a certain size, the most underestimated problem is not a lack of talent or strategy: it is the alignment between functions. Sales promises features that the product team never planned, product builds things that marketing cannot work out how to position, finance approves budgets that operations cannot deliver. Each function behaves rationally on its own, but the sum of individual rationalities produces an irrational organisation. The solution is not more meetings or more reports: it is short, frequent conversations between heads of function, with the freedom to challenge commitments without losing face.',
     ttsLanguageCode: 'en-US',
-    questionText: 'Whose program did Gödel\'s theorems undermine?',
+    questionText: 'What is the structural cause of cross-functional misalignment?',
     options: [
-      { label: 'Bertrand Russell', value: 'Russell' },
-      { label: 'David Hilbert', value: 'David Hilbert' },
-      { label: 'Albert Einstein', value: 'Einstein' },
-      { label: 'Alan Turing', value: 'Turing' }
+      { label: 'Each function is rational on its own but the sum produces incoherence', value: 'rational alone incoherent together' },
+      { label: 'People do not read the internal reports', value: 'no reading reports' },
+      { label: 'The company does not have enough managers', value: 'too few managers' },
+      { label: 'The technology does not share data', value: 'technology silos' }
     ],
-    correctAnswer: 'David Hilbert', points: 2, orderIndex: 70, tags: ['mathematics', 'philosophy'], timeSuggested: 90
+    correctAnswer: 'rational alone incoherent together', points: 2, orderIndex: 70, tags: ['workplace', 'organisation'], timeSuggested: 90
   },
   {
     language: 'English', cefrLevel: 'C2', questionType: 'DICTATION', skill: 'LISTENING',
-    ttsScript: 'The juxtaposition of the protagonist\'s outward composure with her inner turmoil exemplifies the narrative technique of unreliable focalization.',
+    ttsScript: 'The long-term sustainability of an organisation depends on its ability to balance the pressure for short-term results with investments that will only produce value in the future.',
     ttsLanguageCode: 'en-US',
     questionText: 'Write exactly what you hear.',
-    correctAnswer: 'The juxtaposition of the protagonist\'s outward composure with her inner turmoil exemplifies the narrative technique of unreliable focalization.', points: 2, orderIndex: 71, tags: ['dictation', 'literary criticism'], timeSuggested: 120
+    correctAnswer: 'The long-term sustainability of an organisation depends on its ability to balance the pressure for short-term results with investments that will only produce value in the future.', points: 2, orderIndex: 71, tags: ['dictation', 'workplace'], timeSuggested: 120
   },
   {
     language: 'English', cefrLevel: 'C2', questionType: 'LISTENING', skill: 'LISTENING',
-    ttsScript: 'The philosophical zombie thought experiment — conceived by David Chalmers — posits a being physically identical to a conscious human but entirely devoid of subjective experience. If such a being is conceivable, Chalmers argues, then consciousness cannot be reduced to physical processes alone. This constitutes what he calls the "hard problem of consciousness" — explaining why and how physical processes give rise to subjective experience. Physicalists counter that conceivability does not entail metaphysical possibility.',
+    ttsScript: 'The annual performance review — that one-to-five scale on which managers ranked their team members — entered crisis about a decade ago, and many companies have abandoned it. The reasons are well documented: ratings demotivate those who receive low scores, they are influenced by recency bias (managers remember the last three months, not the full year), and they create unhealthy competition between colleagues. What replaces them is more demanding: frequent development conversations, separated from pay decisions, in which the goal is growth rather than classification. It is harder work for the manager, but it produces more lasting results.',
     ttsLanguageCode: 'en-US',
-    questionText: 'What is the "hard problem of consciousness"?',
+    questionText: 'Why have annual performance ratings been abandoned?',
     options: [
-      { label: 'Building artificial intelligence', value: 'building AI' },
-      { label: 'Explaining why physical processes give rise to subjective experience', value: 'why physical processes create experience' },
-      { label: 'Understanding how the brain stores memories', value: 'memory storage' },
-      { label: 'Measuring intelligence accurately', value: 'measuring intelligence' }
+      { label: 'They distort behaviour and reflect recent bias more than the full year', value: 'distort and recent bias' },
+      { label: 'They are too expensive to implement', value: 'too expensive' },
+      { label: 'Trade unions no longer allow them', value: 'unions forbid' },
+      { label: 'They are illegal in most countries', value: 'illegal' }
     ],
-    correctAnswer: 'why physical processes create experience', points: 2, orderIndex: 72, tags: ['philosophy', 'consciousness'], timeSuggested: 90
+    correctAnswer: 'distort and recent bias', points: 2, orderIndex: 72, tags: ['workplace', 'performance'], timeSuggested: 90
   },
 
   // ============================================================
