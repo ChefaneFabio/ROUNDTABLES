@@ -15,15 +15,6 @@ interface PendingRequest {
   }
 }
 
-function formatRequestedAt(iso?: string) {
-  if (!iso) return '—'
-  const d = new Date(iso)
-  return d.toLocaleString(undefined, {
-    year: 'numeric', month: 'short', day: 'numeric',
-    hour: '2-digit', minute: '2-digit'
-  })
-}
-
 export default function TestRequestsPage() {
   const queryClient = useQueryClient()
   const [error, setError] = useState<string | null>(null)

@@ -18,7 +18,6 @@ export function useTestSecurity({
   expiresAt,
   onExpired,
   blockTabSwitch = true,
-  blockCopyPaste = true,
   requireFullscreen = false,
   warnOnLeave = true,
   maxViolations = 0,
