@@ -307,137 +307,139 @@ export const spanishReadingQuestions: MultiSkillQuestionData[] = [
     ],
     correctAnswer: 'falta de transparencia', points: 3, orderIndex: 30, tags: ['vocabulario', 'tecnología']
   },
+  // Reescrito 2026-05-18: Sapir-Whorf → tema laboral (feedback continuo)
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Lengua y pensamiento',
-    passage: 'La hipótesis de Sapir-Whorf, que postula que la estructura de una lengua influye en la visión del mundo y la cognición de sus hablantes, ha sido objeto de un considerable debate en lingüística. La versión fuerte — el determinismo lingüístico — sugiere que la lengua determina el pensamiento, mientras que la versión débil — la relatividad lingüística — propone que la lengua simplemente influye en los patrones de pensamiento. La investigación contemporánea ha respaldado en gran medida la forma débil, demostrando que los hablantes de diferentes lenguas pueden percibir el tiempo, el espacio y el color de manera diferente, aunque no hasta el punto de que no puedan conceptualizar ideas ausentes en su lengua.',
-    questionText: '¿Cuál es la diferencia entre el determinismo lingüístico y la relatividad lingüística?',
+    passageTitle: 'Feedback continuo o evaluación anual',
+    passage: 'En los últimos años, muchas empresas han cuestionado el ritual de la evaluación anual del desempeño, considerado demasiado rígido para entornos laborales en rápida evolución. La alternativa que va ganando terreno es un modelo de feedback continuo, en el que responsables y colaboradores mantienen conversaciones breves y frecuentes, idealmente semanales. Los partidarios sostienen que recibir comentarios de corto plazo permite corregir el rumbo a tiempo, mientras que los críticos observan que, sin una estructura formal anual, los aumentos salariales y los ascensos corren el riesgo de asignarse en función de impresiones más que de datos.',
+    questionText: 'Según el texto, ¿cuál es la principal diferencia entre los dos modelos?',
     options: [
-      { label: 'El determinismo dice que la lengua determina el pensamiento; la relatividad dice que lo influye', value: 'el determinismo determina, la relatividad influye' },
-      { label: 'Son el mismo concepto con nombres diferentes', value: 'mismo concepto' },
-      { label: 'El determinismo trata de gramática; la relatividad de vocabulario', value: 'gramática vs vocabulario' },
-      { label: 'El determinismo es más reciente que la relatividad', value: 'el determinismo es más reciente' }
+      { label: 'La frecuencia con la que ocurren las conversaciones', value: 'frecuencia' },
+      { label: 'El hecho de que el feedback continuo sea obligatorio por ley', value: 'ley' },
+      { label: 'La presencia o no de un responsable en la conversación', value: 'responsable' },
+      { label: 'La antigüedad del colaborador evaluado', value: 'antigüedad' }
     ],
-    correctAnswer: 'el determinismo determina, la relatividad influye', points: 3, orderIndex: 31, tags: ['lingüística', 'filosofía']
+    correctAnswer: 'frecuencia', points: 3, orderIndex: 31, tags: ['workplace', 'hr']
   },
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Lengua y pensamiento',
-    passage: 'La investigación contemporánea ha respaldado en gran medida la forma débil, demostrando que los hablantes de diferentes lenguas pueden percibir el tiempo, el espacio y el color de manera diferente, aunque no hasta el punto de que no puedan conceptualizar ideas ausentes en su lengua.',
-    questionText: '¿Qué ha concluido la investigación contemporánea sobre la hipótesis de Sapir-Whorf?',
+    passage: 'Los críticos observan que, sin una estructura formal anual, los aumentos salariales y los ascensos corren el riesgo de asignarse en función de impresiones más que de datos.',
+    questionText: '¿Qué preocupación señalan los críticos del feedback continuo?',
     options: [
-      { label: 'La versión fuerte es correcta', value: 'versión fuerte correcta' },
-      { label: 'Ambas versiones son incorrectas', value: 'ambas incorrectas' },
-      { label: 'La versión débil está respaldada en gran medida', value: 'versión débil respaldada' },
-      { label: 'La hipótesis ha sido completamente refutada', value: 'completamente refutada' }
+      { label: 'Que las decisiones económicas pierdan objetividad', value: 'objetividad' },
+      { label: 'Que los responsables pierdan su autoridad', value: 'autoridad' },
+      { label: 'Que los colaboradores reciban demasiados premios', value: 'premios' },
+      { label: 'Que las conversaciones requieran demasiado tiempo', value: 'tiempo' }
     ],
-    correctAnswer: 'versión débil respaldada', points: 3, orderIndex: 32, tags: ['lingüística']
+    correctAnswer: 'objetividad', points: 3, orderIndex: 32, tags: ['workplace', 'hr']
   },
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'La hipótesis de Sapir-Whorf postula que la estructura de una lengua influye en la visión del mundo y la cognición de sus hablantes.',
-    questionText: 'La hipótesis de Sapir-Whorf trata de la relación entre la lengua y la ___.',
-    correctAnswer: 'cognición', points: 3, orderIndex: 33, tags: ['lingüística']
+    passage: 'Muchas empresas han cuestionado el ritual de la evaluación anual, considerado demasiado rígido para entornos en rápida evolución.',
+    questionText: 'La evaluación anual se cuestiona porque se considera demasiado ___ .',
+    correctAnswer: 'rígida', points: 3, orderIndex: 33, tags: ['workplace', 'fill-blank']
   },
+  // Reescrito: economía conductual → cultura del reconocimiento
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'La economía conductual',
-    passage: 'La teoría económica tradicional asume que los individuos toman decisiones racionales para maximizar su utilidad. La economía conductual, impulsada por investigadores como Daniel Kahneman y Amos Tversky, cuestiona esta suposición demostrando sesgos cognitivos sistemáticos que conducen a una toma de decisiones irracional. El concepto de "aversión a la pérdida" — la tendencia de las personas a preferir evitar las pérdidas frente a adquirir ganancias equivalentes — tiene profundas implicaciones para el diseño de políticas, el marketing y la planificación financiera.',
-    questionText: '¿Qué significa "aversión a la pérdida"?',
+    passageTitle: 'La cultura del reconocimiento',
+    passage: 'La investigación más reciente sobre el compromiso laboral converge en un dato aparentemente trivial: reconocer el trabajo bien hecho incide en la motivación más que los bonos económicos puntuales. Cuando un colaborador recibe una apreciación explícita, idealmente en los días siguientes al logro, la probabilidad de que repita el comportamiento positivo crece de manera medible. El reconocimiento, sin embargo, solo funciona si es específico: un genérico "bien, sigue así" resulta menos eficaz que un comentario que explica qué acción concreta se ha valorado y por qué.',
+    questionText: 'Según el texto, ¿qué hace eficaz el reconocimiento?',
     options: [
-      { label: 'Las personas prefieren asumir riesgos', value: 'las personas prefieren riesgos' },
-      { label: 'Las personas sienten las pérdidas con más intensidad que las ganancias equivalentes', value: 'las pérdidas se sienten más que las ganancias' },
-      { label: 'Las personas evitan tomar decisiones financieras', value: 'evitan decisiones financieras' },
-      { label: 'Las personas siempre eligen la opción más barata', value: 'eligen la opción más barata' }
+      { label: 'Ser puntual y detallado sobre lo que se ha hecho', value: 'puntual-detallado' },
+      { label: 'Ir siempre acompañado de un bono económico', value: 'con-bono' },
+      { label: 'Expresarse delante de todo el equipo', value: 'público' },
+      { label: 'Repetirse varias veces el mismo día', value: 'repetido' }
     ],
-    correctAnswer: 'las pérdidas se sienten más que las ganancias', points: 3, orderIndex: 34, tags: ['economía', 'psicología']
+    correctAnswer: 'puntual-detallado', points: 3, orderIndex: 34, tags: ['workplace', 'hr']
   },
   {
     language: 'Spanish', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'La economía conductual cuestiona la suposición de que los individuos toman decisiones racionales para maximizar su utilidad.',
-    questionText: 'La economía conductual demuestra sesgos cognitivos sistemáticos que conducen a una toma de decisiones ___.',
-    correctAnswer: 'irracional', points: 3, orderIndex: 35, tags: ['economía']
+    passage: 'La investigación converge en un dato aparentemente trivial: reconocer el trabajo bien hecho incide en la motivación más que los bonos económicos puntuales.',
+    questionText: 'El reconocimiento incide en la motivación más que los bonos económicos ___ .',
+    correctAnswer: 'puntuales', points: 3, orderIndex: 35, tags: ['workplace', 'fill-blank']
   },
 
   // ============================================================
   // C2 — Proficiency (7 questions)
   // ============================================================
+  // Reescrito 2026-05-18: posverdad/crisis epistémica → inflación de reuniones
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Posverdad y crisis epistémica',
-    passage: 'La proliferación de la desinformación en la era digital ha precipitado lo que los filósofos denominan una "crisis epistémica" — un colapso fundamental en la capacidad de la sociedad para establecer verdades compartidas. El fenómeno se ve agravado por las cámaras de eco algorítmicas que refuerzan las creencias existentes, la mercantilización de la atención que incentiva el sensacionalismo por encima de la precisión, y la erosión de la confianza en las autoridades epistémicas tradicionales como las instituciones científicas y el periodismo de calidad. Algunos académicos sostienen que la propia noción de verdad objetiva ha sido suplantada por un paradigma de "posverdad" en el que la resonancia emocional y la afiliación tribal prevalecen sobre la evidencia empírica en la configuración del discurso público.',
-    questionText: 'Según el texto, ¿qué contribuye a la "crisis epistémica"?',
+    passageTitle: 'La inflación de reuniones',
+    passage: 'El aumento progresivo del número de reuniones en las empresas — un fenómeno que algunos directivos llaman irónicamente "inflación del calendario" — tiene efectos menos inocuos de lo que parece. Cuando una jornada se fragmenta en diez o doce citas consecutivas, el trabajo que exige concentración prolongada queda relegado a la noche o al fin de semana, generando cargas extraordinarias ocultas. Paradójicamente, muchas de estas reuniones se convocan precisamente para coordinarse en actividades que la multiplicación de reuniones ha hecho imposibles de realizar. Algunos equipos han empezado a probar jornadas o incluso semanas sin reuniones; los primeros datos indican que la calidad de las decisiones no empeora, mientras que la satisfacción percibida mejora claramente.',
+    questionText: '¿Cuál es la paradoja que describe el texto?',
     options: [
-      { label: 'Mejores sistemas educativos', value: 'mejores sistemas educativos' },
-      { label: 'Cámaras de eco algorítmicas, mercantilización de la atención y erosión de la confianza', value: 'cámaras de eco, mercantilización de la atención, erosión de la confianza' },
-      { label: 'Mayor financiación de la investigación científica', value: 'mayor financiación' },
-      { label: 'Mejor acceso a la información', value: 'mejor acceso a la información' }
+      { label: 'Las reuniones convocadas para coordinarse vuelven más difícil el coordinarse', value: 'paradoja' },
+      { label: 'Las reuniones solo son útiles si duran poco', value: 'duración' },
+      { label: 'Las reuniones online cuestan más que las presenciales', value: 'coste' },
+      { label: 'Los directivos convocan más reuniones que los empleados', value: 'directivos' }
     ],
-    correctAnswer: 'cámaras de eco, mercantilización de la atención, erosión de la confianza', points: 3, orderIndex: 36, tags: ['filosofía', 'medios']
+    correctAnswer: 'paradoja', points: 3, orderIndex: 36, tags: ['workplace', 'productivity']
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Posverdad y crisis epistémica',
-    passage: 'Algunos académicos sostienen que la propia noción de verdad objetiva ha sido suplantada por un paradigma de "posverdad" en el que la resonancia emocional y la afiliación tribal prevalecen sobre la evidencia empírica en la configuración del discurso público.',
-    questionText: '¿Qué significa "suplantada" en este contexto?',
+    passage: 'Cuando una jornada se fragmenta en diez o doce citas consecutivas, el trabajo que exige concentración prolongada queda relegado a la noche o al fin de semana, generando cargas extraordinarias ocultas.',
+    questionText: '¿Qué significa "cargas extraordinarias ocultas" en este contexto?',
     options: [
-      { label: 'Apoyada', value: 'apoyada' },
-      { label: 'Reemplazada', value: 'reemplazada' },
-      { label: 'Cuestionada', value: 'cuestionada' },
-      { label: 'Mejorada', value: 'mejorada' }
+      { label: 'Horas extra de trabajo que no aparecen en el calendario oficial', value: 'horas-no-visibles' },
+      { label: 'Paquetes entregados a escondidas en la empresa', value: 'paquetes' },
+      { label: 'Tareas reservadas solo a los directivos', value: 'reservadas' },
+      { label: 'Funciones no previstas en el contrato firmado', value: 'fuera-contrato' }
     ],
-    correctAnswer: 'reemplazada', points: 3, orderIndex: 37, tags: ['vocabulario']
+    correctAnswer: 'horas-no-visibles', points: 3, orderIndex: 37, tags: ['vocabulario', 'workplace']
+  },
+  // Reescrito: conciencia cuántica → vuelta a la oficina (trabajo híbrido)
+  {
+    language: 'Spanish', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'La vuelta a la oficina y el dilema del híbrido',
+    passage: 'A cinco años del inicio del experimento masivo del trabajo en remoto, las posiciones de las grandes empresas siguen siendo sorprendentemente divergentes. Algunas han impuesto una vuelta casi total a la oficina, justificándola con argumentos que oscilan entre la preocupación por la erosión del sentido de pertenencia y la sospecha, nunca del todo explicitada, de que en casa la productividad disminuye. Otras, en cambio, han diseñado modelos "híbridos" que dejan a los equipos un amplio margen de autonomía, apostando por la idea de que la responsabilización individual, acompañada de métricas claras de resultado, logra lo que la presencia física obligatoria no garantiza automáticamente.',
+    questionText: '¿Qué oposición de fondo describe el texto?',
+    options: [
+      { label: 'Entre la confianza en los resultados medibles y la confianza en la presencia física', value: 'resultados-vs-presencia' },
+      { label: 'Entre empresas grandes y pequeñas', value: 'grandes-vs-pequeñas' },
+      { label: 'Entre empleados jóvenes y senior', value: 'jóvenes-vs-senior' },
+      { label: 'Entre empresas nacionales y extranjeras', value: 'nacional-vs-extranjero' }
+    ],
+    correctAnswer: 'resultados-vs-presencia', points: 3, orderIndex: 38, tags: ['workplace', 'remote-work']
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Conciencia cuántica',
-    passage: 'La teoría de la Reducción Objetiva Orquestada (Orch-OR), propuesta por el físico Roger Penrose y el anestesiólogo Stuart Hameroff, postula que la conciencia surge de computaciones cuánticas dentro de los microtúbulos de las neuronas. Esta controvertida hipótesis sugiere que el cerebro no es simplemente un ordenador clásico, sino que opera a un nivel fundamentalmente cuántico. Los críticos sostienen que el ambiente cálido y húmedo del cerebro provocaría una decoherencia cuántica demasiado rápida para que tales procesos fueran biológicamente relevantes. No obstante, experimentos recientes que detectan efectos cuánticos en sistemas biológicos — como la fotosíntesis y la navegación de las aves — han otorgado cierta credibilidad a la noción más amplia de que la mecánica cuántica puede desempeñar un papel en los procesos biológicos.',
-    questionText: '¿Cuál es la principal crítica a la teoría Orch-OR?',
+    passage: 'Algunos equipos han empezado a probar semanas sin reuniones; los primeros datos indican que la calidad de las decisiones no empeora, mientras que la satisfacción percibida mejora claramente.',
+    questionText: 'Según los primeros datos pilotos, ¿qué dos cosas observan?',
     options: [
-      { label: 'Carece de fundamentos matemáticos', value: 'carece de fundamentos' },
-      { label: 'La decoherencia cuántica ocurriría demasiado rápido en el cerebro', value: 'decoherencia demasiado rápida' },
-      { label: 'Penrose no es neurocientífico', value: 'no es neurocientífico' },
-      { label: 'Los microtúbulos no existen en las neuronas', value: 'los microtúbulos no existen' }
+      { label: 'La calidad decisional se mantiene y la satisfacción aumenta', value: 'mantiene-y-aumenta' },
+      { label: 'Tanto la calidad decisional como la satisfacción empeoran', value: 'ambas-empeoran' },
+      { label: 'La calidad decisional empeora pero la satisfacción mejora', value: 'calidad-empeora' },
+      { label: 'La satisfacción empeora pero las decisiones son mejores', value: 'satisfacción-empeora' }
     ],
-    correctAnswer: 'decoherencia demasiado rápida', points: 3, orderIndex: 38, tags: ['ciencia', 'filosofía']
-  },
-  {
-    language: 'Spanish', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Conciencia cuántica',
-    passage: 'Experimentos recientes que detectan efectos cuánticos en sistemas biológicos — como la fotosíntesis y la navegación de las aves — han otorgado cierta credibilidad a la noción más amplia de que la mecánica cuántica puede desempeñar un papel en los procesos biológicos.',
-    questionText: '¿Qué procesos biológicos han mostrado evidencia de efectos cuánticos?',
-    options: [
-      { label: 'Digestión y respiración', value: 'digestión y respiración' },
-      { label: 'Fotosíntesis y navegación de las aves', value: 'fotosíntesis y navegación de las aves' },
-      { label: 'Circulación sanguínea y respuesta inmunitaria', value: 'circulación sanguínea y respuesta inmunitaria' },
-      { label: 'División celular y síntesis de proteínas', value: 'división celular y síntesis de proteínas' }
-    ],
-    correctAnswer: 'fotosíntesis y navegación de las aves', points: 3, orderIndex: 39, tags: ['ciencia']
+    correctAnswer: 'mantiene-y-aumenta', points: 3, orderIndex: 39, tags: ['workplace']
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'La teoría Orch-OR postula que la conciencia surge de computaciones cuánticas dentro de los microtúbulos de las neuronas.',
-    questionText: 'La teoría Orch-OR sugiere que la conciencia surge de computaciones cuánticas dentro de los ___.',
-    correctAnswer: 'microtúbulos', points: 3, orderIndex: 40, tags: ['ciencia']
+    passage: 'Los modelos híbridos apuestan por la idea de que la responsabilización individual, acompañada de métricas claras de resultado, logra lo que la presencia física obligatoria no garantiza.',
+    questionText: 'Los modelos híbridos apuestan por la responsabilización individual acompañada de ___ claras de resultado.',
+    correctAnswer: 'métricas', points: 3, orderIndex: 40, tags: ['workplace', 'fill-blank']
   },
+  // Reescrito: kuuk thaayorre → cultura del feedback intercultural
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'La relatividad lingüística revisitada',
-    passage: 'El pueblo kuuk thaayorre de la península del Cabo York, en Australia, utiliza direcciones cardinales en lugar de términos espaciales egocéntricos. En vez de decir "la taza está a tu izquierda", dirían "la taza está al norte-noreste". Notablemente, esta práctica lingüística se correlaciona con una excepcional capacidad de orientación espacial — los hablantes de kuuk thaayorre mantienen una brújula interna precisa en todo momento, una hazaña que los hablantes de lenguas con sistemas espaciales egocéntricos encuentran extraordinariamente difícil de replicar.',
-    questionText: '¿Qué hace único al sistema espacial kuuk thaayorre?',
+    passageTitle: 'Dar feedback en equipos internacionales',
+    passage: 'Los equipos distribuidos en varios países afrontan un reto a menudo subestimado: lo que en una cultura es percibido como un comentario constructivo, en otra puede sonar brutal o, al contrario, evasivo. En contextos del norte de Europa, decir directamente que un trabajo necesita ser rehecho es signo de respeto profesional; en otros entornos, la misma frase se considera una falta de tacto. Las empresas más experimentadas en gestión multicultural acaban estableciendo protocolos explícitos de feedback que dejan poco al supuesto sentido común y describen casi quirúrgicamente cómo formular un comentario crítico.',
+    questionText: '¿Qué hacen las empresas con experiencia en gestión multicultural?',
     options: [
-      { label: 'Usan izquierda y derecha con más precisión', value: 'izquierda y derecha' },
-      { label: 'Usan direcciones cardinales en lugar de términos relativos como izquierda/derecha', value: 'direcciones cardinales en lugar de egocéntricos' },
-      { label: 'No tienen palabras para las direcciones', value: 'no tienen palabras' },
-      { label: 'Solo usan gestos para las direcciones', value: 'solo gestos' }
+      { label: 'Codifican explícitamente cómo dar feedback', value: 'protocolos-explícitos' },
+      { label: 'Evitan dar feedback negativo a los equipos extranjeros', value: 'evitan-feedback' },
+      { label: 'Adoptan el estilo del norte de Europa para todos los equipos', value: 'norte-europa' },
+      { label: 'Delegan el feedback a un único responsable global', value: 'único-responsable' }
     ],
-    correctAnswer: 'direcciones cardinales en lugar de egocéntricos', points: 3, orderIndex: 41, tags: ['lingüística', 'cultura']
+    correctAnswer: 'protocolos-explícitos', points: 3, orderIndex: 41, tags: ['workplace', 'culture']
   },
   {
     language: 'Spanish', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'El pueblo kuuk thaayorre utiliza direcciones cardinales en lugar de términos espaciales egocéntricos.',
-    questionText: 'Los kuuk thaayorre usan direcciones ___ en lugar de términos espaciales egocéntricos.',
-    correctAnswer: 'cardinales', points: 3, orderIndex: 42, tags: ['lingüística']
+    passage: 'Las empresas más experimentadas establecen protocolos explícitos de feedback que dejan poco al supuesto sentido común.',
+    questionText: 'Estas empresas dejan poco al supuesto ___ común y describen quirúrgicamente cómo formular un comentario crítico.',
+    correctAnswer: 'sentido', points: 3, orderIndex: 42, tags: ['workplace', 'fill-blank']
   },
 
   // ============================================================

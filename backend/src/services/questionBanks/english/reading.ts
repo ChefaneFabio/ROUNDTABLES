@@ -210,60 +210,104 @@ export const englishReadingQuestions: MultiSkillQuestionData[] = [
     ],
     correctAnswer: 'AI decision-making processes are not transparent', points: 3, orderIndex: 29, tags: ['technology', 'ethics']
   },
+  // Rewritten 2026-05-18: Sapir-Whorf → workplace topic (see Italian
+  // for the design pattern). Same syntactic complexity, accessible subject,
+  // paraphrased options.
   {
     language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Language and Thought',
-    passage: 'The Sapir-Whorf hypothesis, which posits that the structure of a language influences its speakers\' worldview and cognition, has been a subject of considerable debate in linguistics. The strong version — linguistic determinism — suggests that language determines thought, while the weaker version — linguistic relativity — proposes that language merely influences thought patterns. Contemporary research has largely supported the weaker form, demonstrating that speakers of different languages may perceive time, space, and color differently, though not to the extent that they cannot conceptualize ideas absent in their language.',
-    questionText: 'What is the difference between linguistic determinism and linguistic relativity?',
+    passageTitle: 'Continuous feedback or annual review',
+    passage: 'In recent years many companies have questioned the ritual of the annual performance review, considered too rigid for rapidly evolving workplaces. The alternative gaining traction is a model of continuous feedback, in which managers and team members hold short, frequent conversations — ideally weekly. Supporters argue that getting close-range input lets people correct course in time, while critics observe that, without a formal annual structure, pay raises and promotions risk being assigned on the basis of impressions rather than data.',
+    questionText: 'What is the main difference between the two models, according to the passage?',
     options: [
-      { label: 'Determinism says language determines thought; relativity says it influences thought', value: 'determinism determines, relativity influences' },
-      { label: 'They are the same concept with different names', value: 'same concept' },
-      { label: 'Determinism is about grammar; relativity is about vocabulary', value: 'grammar vs vocabulary' },
-      { label: 'Determinism is newer than relativity', value: 'determinism is newer' }
+      { label: 'How often the feedback conversations happen', value: 'frequency' },
+      { label: 'Whether continuous feedback is required by law', value: 'law' },
+      { label: 'Whether a manager is present in the conversation', value: 'manager' },
+      { label: 'The seniority of the person being reviewed', value: 'seniority' }
     ],
-    correctAnswer: 'determinism determines, relativity influences', points: 3, orderIndex: 31, tags: ['linguistics', 'philosophy']
-  },
-  {
-    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'The Sapir-Whorf hypothesis posits that the structure of a language influences its speakers\' worldview and cognition.',
-    questionText: 'The Sapir-Whorf hypothesis concerns the relationship between language and ___.',
-    correctAnswer: 'cognition', points: 3, orderIndex: 33, tags: ['linguistics']
+    correctAnswer: 'frequency', points: 3, orderIndex: 31, tags: ['workplace', 'hr']
   },
   {
     language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Behavioral Economics',
-    passage: 'Traditional economic theory assumes that individuals make rational decisions to maximize their utility. Behavioral economics, pioneered by researchers such as Daniel Kahneman and Amos Tversky, challenges this assumption by demonstrating systematic cognitive biases that lead to irrational decision-making. The concept of "loss aversion" — the tendency for people to prefer avoiding losses over acquiring equivalent gains — has profound implications for policy design, marketing, and financial planning.',
-    questionText: 'What does "loss aversion" mean?',
+    passageTitle: 'Continuous feedback or annual review',
+    passage: 'Critics observe that, without a formal annual structure, pay raises and promotions risk being assigned on the basis of impressions rather than data.',
+    questionText: 'Which concern do critics of continuous feedback raise?',
     options: [
-      { label: 'People prefer to take risks', value: 'people prefer risks' },
-      { label: 'People feel losses more strongly than equivalent gains', value: 'losses felt more strongly than gains' },
-      { label: 'People avoid making any financial decisions', value: 'avoid financial decisions' },
-      { label: 'People always choose the cheapest option', value: 'choose cheapest option' }
+      { label: 'That financial decisions become less objective', value: 'less-objective' },
+      { label: 'That managers lose their authority', value: 'authority' },
+      { label: 'That employees receive too many rewards', value: 'rewards' },
+      { label: 'That conversations take too long', value: 'time' }
     ],
-    correctAnswer: 'losses felt more strongly than gains', points: 3, orderIndex: 34, tags: ['economics', 'psychology']
+    correctAnswer: 'less-objective', points: 3, orderIndex: 32, tags: ['workplace', 'hr']
   },
   {
     language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'Behavioral economics challenges the assumption that individuals make rational decisions to maximize their utility.',
-    questionText: 'Behavioral economics demonstrates systematic cognitive ___ that lead to irrational decision-making.',
-    correctAnswer: 'biases', points: 3, orderIndex: 35, tags: ['economics']
+    passage: 'Many companies have questioned the annual review, considered too rigid for rapidly evolving workplaces.',
+    questionText: 'The annual review is questioned because it is considered too ___ .',
+    correctAnswer: 'rigid', points: 3, orderIndex: 33, tags: ['workplace', 'fill-blank']
+  },
+  // Rewritten: behavioural economics → workplace recognition culture
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
+    passageTitle: 'The culture of recognition',
+    passage: 'Recent research on employee engagement converges on a seemingly obvious finding: recognising work well done has a stronger impact on motivation than one-off financial bonuses. When a team member receives explicit appreciation, ideally within days of the achievement, the likelihood that they will repeat the positive behaviour grows measurably. Recognition, however, only works if it is specific: a generic "well done, keep it up" is less effective than a comment that names the concrete action being praised and explains why.',
+    questionText: 'What makes recognition effective, according to the passage?',
+    options: [
+      { label: 'Being prompt and specific about what was done', value: 'prompt-specific' },
+      { label: 'Always being accompanied by a financial bonus', value: 'with-bonus' },
+      { label: 'Being delivered in front of the whole team', value: 'public' },
+      { label: 'Being repeated several times on the same day', value: 'repeated' }
+    ],
+    correctAnswer: 'prompt-specific', points: 3, orderIndex: 34, tags: ['workplace', 'hr']
+  },
+  {
+    language: 'English', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
+    passage: 'Research converges on a seemingly obvious finding: recognising work well done has a stronger impact on motivation than one-off financial bonuses.',
+    questionText: 'Recognition has a stronger impact on motivation than ___ -off financial bonuses.',
+    correctAnswer: 'one', points: 3, orderIndex: 35, tags: ['workplace', 'fill-blank']
   },
 
   // ============================================================
   // C2 — Proficiency (7 questions)
   // ============================================================
+  // Rewritten 2026-05-18: post-truth/epistemic-crisis → meeting inflation
+  // (workplace topic at the same linguistic complexity).
   {
     language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Post-Truth and Epistemic Crisis',
-    passage: 'The proliferation of misinformation in the digital age has precipitated what philosophers term an "epistemic crisis" — a fundamental breakdown in society\'s ability to establish shared truths. The phenomenon is exacerbated by algorithmic echo chambers that reinforce existing beliefs, the commodification of attention that incentivizes sensationalism over accuracy, and the erosion of trust in traditional epistemic authorities such as scientific institutions and quality journalism. Some scholars argue that the very notion of objective truth has been supplanted by a "post-truth" paradigm in which emotional resonance and tribal affiliation supersede empirical evidence in shaping public discourse.',
-    questionText: 'According to the passage, what contributes to the "epistemic crisis"?',
+    passageTitle: 'Meeting inflation',
+    passage: 'The steady increase in the number of meetings held inside companies — a phenomenon some executives wryly call "calendar inflation" — has effects less innocuous than they may appear. When a day is fragmented into ten or twelve consecutive appointments, work that requires sustained concentration gets pushed to the evening or the weekend, generating hidden overtime. Paradoxically, many of these meetings are convened precisely to coordinate work that the multiplication of meetings has made impossible to do. Some teams have started experimenting with meeting-free days or even meeting-free weeks; early data suggests that decision quality does not deteriorate, while perceived job satisfaction improves noticeably.',
+    questionText: 'What is the paradox described in the passage?',
     options: [
-      { label: 'Improved education systems', value: 'improved education' },
-      { label: 'Algorithmic echo chambers, attention commodification, and erosion of trust', value: 'echo chambers, attention commodification, trust erosion' },
-      { label: 'Increased scientific research funding', value: 'increased research funding' },
-      { label: 'Better access to information', value: 'better access to information' }
+      { label: 'Meetings called to coordinate work make coordination harder', value: 'paradox' },
+      { label: 'Meetings are only useful when they are short', value: 'duration' },
+      { label: 'Online meetings cost more than in-person ones', value: 'cost' },
+      { label: 'Executives call more meetings than employees do', value: 'executives' }
     ],
-    correctAnswer: 'echo chambers, attention commodification, trust erosion', points: 3, orderIndex: 36, tags: ['philosophy', 'media']
+    correctAnswer: 'paradox', points: 3, orderIndex: 36, tags: ['workplace', 'productivity']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passage: 'When a day is fragmented into ten or twelve consecutive appointments, work that requires sustained concentration gets pushed to the evening or the weekend, generating hidden overtime.',
+    questionText: 'What does "hidden overtime" mean in this context?',
+    options: [
+      { label: 'Extra hours of work that do not appear on the official calendar', value: 'invisible-hours' },
+      { label: 'Bonuses paid secretly to certain employees', value: 'secret-bonus' },
+      { label: 'Tasks restricted to senior managers only', value: 'restricted' },
+      { label: 'Work not mentioned in the signed contract', value: 'off-contract' }
+    ],
+    correctAnswer: 'invisible-hours', points: 3, orderIndex: 37, tags: ['vocabulary', 'workplace']
+  },
+  {
+    language: 'English', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Return to office and the hybrid dilemma',
+    passage: 'Five years into the mass experiment in remote work, the positions of large companies remain surprisingly divergent. Some have imposed an almost total return to the office, justifying it with arguments that oscillate between concern over the erosion of belonging and the never-quite-stated suspicion that productivity drops at home. Others, by contrast, have engineered "hybrid" models that leave teams a wide margin of autonomy, betting on the idea that individual accountability, paired with clear outcome metrics, achieves what mandatory physical presence does not automatically guarantee.',
+    questionText: 'What underlying opposition does the passage describe?',
+    options: [
+      { label: 'Between trust in measurable outcomes and trust in physical presence', value: 'outcomes-vs-presence' },
+      { label: 'Between large and small companies', value: 'large-vs-small' },
+      { label: 'Between younger and senior employees', value: 'young-vs-senior' },
+      { label: 'Between domestic and foreign companies', value: 'domestic-vs-foreign' }
+    ],
+    correctAnswer: 'outcomes-vs-presence', points: 3, orderIndex: 38, tags: ['workplace', 'remote-work']
   },
   // (Removed: Quantum Consciousness items — too domain-specific for a
   // language placement test. The C2 reading questions should test reading

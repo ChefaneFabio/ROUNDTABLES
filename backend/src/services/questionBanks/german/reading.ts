@@ -307,137 +307,138 @@ export const germanReadingQuestions: MultiSkillQuestionData[] = [
     ],
     correctAnswer: 'Mangel an Transparenz', points: 3, orderIndex: 30, tags: ['Wortschatz', 'Technologie']
   },
+  // Überarbeitet 2026-05-18: Sapir-Whorf → kontinuierliches Feedback
   {
     language: 'German', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Sprache und Denken',
-    passage: 'Die Sapir-Whorf-Hypothese, die besagt, dass die Struktur einer Sprache die Weltanschauung und Kognition ihrer Sprecher beeinflusst, ist in der Linguistik Gegenstand erheblicher Debatten. Die starke Version — der linguistische Determinismus — legt nahe, dass Sprache das Denken bestimmt, während die schwächere Version — die linguistische Relativität — vorschlägt, dass Sprache lediglich Denkmuster beeinflusst. Die zeitgenössische Forschung hat weitgehend die schwächere Form bestätigt und gezeigt, dass Sprecher verschiedener Sprachen Zeit, Raum und Farbe unterschiedlich wahrnehmen können, allerdings nicht in dem Maße, dass sie Konzepte, die in ihrer Sprache fehlen, nicht erfassen könnten.',
-    questionText: 'Was ist der Unterschied zwischen linguistischem Determinismus und linguistischer Relativität?',
+    passageTitle: 'Kontinuierliches Feedback oder Jahresgespräch',
+    passage: 'In den letzten Jahren haben viele Unternehmen das Ritual des jährlichen Leistungsgesprächs in Frage gestellt, das für sich schnell wandelnde Arbeitsumgebungen als zu starr gilt. Die Alternative, die sich durchsetzt, ist ein Modell des kontinuierlichen Feedbacks, bei dem Vorgesetzte und Mitarbeitende kurze, häufige Gespräche führen — idealerweise wöchentlich. Befürworter argumentieren, dass zeitnahes Feedback es ermöglicht, rechtzeitig den Kurs zu korrigieren, während Kritiker einwenden, dass ohne formale Jahresstruktur Gehaltserhöhungen und Beförderungen Gefahr laufen, eher auf Eindrücken als auf Daten zu beruhen.',
+    questionText: 'Worin besteht laut dem Text der zentrale Unterschied zwischen den beiden Modellen?',
     options: [
-      { label: 'Determinismus sagt, Sprache bestimmt das Denken; Relativität sagt, sie beeinflusst es', value: 'Determinismus bestimmt, Relativität beeinflusst' },
-      { label: 'Es sind die gleichen Konzepte mit verschiedenen Namen', value: 'gleiche Konzepte' },
-      { label: 'Determinismus betrifft Grammatik; Relativität betrifft Wortschatz', value: 'Grammatik vs. Wortschatz' },
-      { label: 'Determinismus ist neuer als Relativität', value: 'Determinismus ist neuer' }
+      { label: 'In der Häufigkeit der Feedback-Gespräche', value: 'haeufigkeit' },
+      { label: 'Darin, ob kontinuierliches Feedback gesetzlich vorgeschrieben ist', value: 'gesetz' },
+      { label: 'Darin, ob ein Vorgesetzter im Gespräch anwesend ist', value: 'vorgesetzter' },
+      { label: 'Im Dienstalter des bewerteten Mitarbeitenden', value: 'dienstalter' }
     ],
-    correctAnswer: 'Determinismus bestimmt, Relativität beeinflusst', points: 3, orderIndex: 31, tags: ['Linguistik', 'Philosophie']
+    correctAnswer: 'haeufigkeit', points: 3, orderIndex: 31, tags: ['workplace', 'hr']
   },
   {
     language: 'German', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Sprache und Denken',
-    passage: 'Die zeitgenössische Forschung hat weitgehend die schwächere Form bestätigt und gezeigt, dass Sprecher verschiedener Sprachen Zeit, Raum und Farbe unterschiedlich wahrnehmen können, allerdings nicht in dem Maße, dass sie Konzepte, die in ihrer Sprache fehlen, nicht erfassen könnten.',
-    questionText: 'Was hat die zeitgenössische Forschung zur Sapir-Whorf-Hypothese ergeben?',
+    passage: 'Kritiker wenden ein, dass ohne formale Jahresstruktur Gehaltserhöhungen und Beförderungen Gefahr laufen, eher auf Eindrücken als auf Daten zu beruhen.',
+    questionText: 'Welche Bedenken äußern Kritiker des kontinuierlichen Feedbacks?',
     options: [
-      { label: 'Die starke Version ist korrekt', value: 'starke Version korrekt' },
-      { label: 'Beide Versionen sind falsch', value: 'beide falsch' },
-      { label: 'Die schwächere Version wird weitgehend bestätigt', value: 'schwächere Version bestätigt' },
-      { label: 'Die Hypothese wurde vollständig widerlegt', value: 'vollständig widerlegt' }
+      { label: 'Dass finanzielle Entscheidungen weniger objektiv werden', value: 'objektivitaet' },
+      { label: 'Dass Vorgesetzte ihre Autorität verlieren', value: 'autoritaet' },
+      { label: 'Dass Mitarbeitende zu viele Belohnungen erhalten', value: 'belohnungen' },
+      { label: 'Dass die Gespräche zu viel Zeit kosten', value: 'zeit' }
     ],
-    correctAnswer: 'schwächere Version bestätigt', points: 3, orderIndex: 32, tags: ['Linguistik']
+    correctAnswer: 'objektivitaet', points: 3, orderIndex: 32, tags: ['workplace', 'hr']
   },
   {
     language: 'German', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'Die Sapir-Whorf-Hypothese besagt, dass die Struktur einer Sprache die Weltanschauung und Kognition ihrer Sprecher beeinflusst.',
-    questionText: 'Die Sapir-Whorf-Hypothese betrifft die Beziehung zwischen Sprache und ___.',
-    correctAnswer: 'Kognition', points: 3, orderIndex: 33, tags: ['Linguistik']
+    passage: 'Viele Unternehmen haben das jährliche Leistungsgespräch in Frage gestellt, das für sich schnell wandelnde Arbeitsumgebungen als zu starr gilt.',
+    questionText: 'Das Jahresgespräch wird in Frage gestellt, weil es als zu ___ gilt.',
+    correctAnswer: 'starr', points: 3, orderIndex: 33, tags: ['workplace', 'fill-blank']
   },
+  // Überarbeitet: Verhaltensökonomie → Anerkennungskultur
   {
     language: 'German', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Verhaltensökonomie',
-    passage: 'Die traditionelle Wirtschaftstheorie geht davon aus, dass Individuen rationale Entscheidungen treffen, um ihren Nutzen zu maximieren. Die Verhaltensökonomie, die von Forschern wie Daniel Kahneman und Amos Tversky begründet wurde, stellt diese Annahme infrage, indem sie systematische kognitive Verzerrungen aufzeigt, die zu irrationalem Entscheidungsverhalten führen. Das Konzept der „Verlustaversion" — die Tendenz, Verluste stärker zu vermeiden als gleichwertige Gewinne anzustreben — hat weitreichende Auswirkungen auf die Gestaltung von Politik, Marketing und Finanzplanung.',
-    questionText: 'Was bedeutet „Verlustaversion"?',
+    passageTitle: 'Die Kultur der Anerkennung',
+    passage: 'Die jüngste Forschung zum Mitarbeiterengagement konvergiert in einer scheinbar banalen Erkenntnis: Die Anerkennung guter Arbeit wirkt sich stärker auf die Motivation aus als einmalige Geldprämien. Wenn ein Mitarbeitender eine ausdrückliche Wertschätzung erhält, idealerweise innerhalb weniger Tage nach der Leistung, steigt die Wahrscheinlichkeit, dass das positive Verhalten wiederholt wird, messbar an. Anerkennung wirkt jedoch nur dann, wenn sie spezifisch ist: Ein allgemeines „gut gemacht, weiter so" ist weniger wirksam als ein Kommentar, der konkret benennt, welche Handlung gewürdigt wurde und warum.',
+    questionText: 'Was macht Anerkennung laut dem Text wirksam?',
     options: [
-      { label: 'Menschen nehmen lieber Risiken in Kauf', value: 'Menschen nehmen Risiken in Kauf' },
-      { label: 'Menschen empfinden Verluste stärker als gleichwertige Gewinne', value: 'Verluste stärker als Gewinne' },
-      { label: 'Menschen vermeiden jede finanzielle Entscheidung', value: 'vermeiden finanzielle Entscheidungen' },
-      { label: 'Menschen wählen immer die günstigste Option', value: 'günstigste Option' }
+      { label: 'Zeitnah und konkret auf das Geleistete bezogen', value: 'zeitnah-konkret' },
+      { label: 'Stets mit einer finanziellen Prämie verbunden', value: 'mit-praemie' },
+      { label: 'Vor dem gesamten Team ausgesprochen', value: 'oeffentlich' },
+      { label: 'Mehrmals am selben Tag wiederholt', value: 'wiederholt' }
     ],
-    correctAnswer: 'Verluste stärker als Gewinne', points: 3, orderIndex: 34, tags: ['Wirtschaft', 'Psychologie']
+    correctAnswer: 'zeitnah-konkret', points: 3, orderIndex: 34, tags: ['workplace', 'hr']
   },
   {
     language: 'German', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'Die Verhaltensökonomie stellt die Annahme infrage, dass Individuen rationale Entscheidungen treffen, um ihren Nutzen zu maximieren.',
-    questionText: 'Die Verhaltensökonomie zeigt systematische kognitive ___ auf, die zu irrationalem Entscheidungsverhalten führen.',
-    correctAnswer: 'Verzerrungen', points: 3, orderIndex: 35, tags: ['Wirtschaft']
+    passage: 'Die Forschung konvergiert in einer scheinbar banalen Erkenntnis: Die Anerkennung guter Arbeit wirkt stärker auf die Motivation als einmalige Geldprämien.',
+    questionText: 'Anerkennung wirkt stärker auf die Motivation als ___ Geldprämien.',
+    correctAnswer: 'einmalige', points: 3, orderIndex: 35, tags: ['workplace', 'fill-blank']
   },
 
   // ============================================================
   // C2 — Proficiency (7 questions)
   // ============================================================
+  // Überarbeitet 2026-05-18: postfaktisch/quantum/Kuuk → Workplace-Themen
   {
     language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Postfaktisch und epistemische Krise',
-    passage: 'Die Verbreitung von Fehlinformationen im digitalen Zeitalter hat das herbeigeführt, was Philosophen als „epistemische Krise" bezeichnen — einen grundlegenden Zusammenbruch der Fähigkeit einer Gesellschaft, gemeinsame Wahrheiten zu etablieren. Das Phänomen wird durch algorithmische Echokammern verschärft, die bestehende Überzeugungen verstärken, durch die Kommodifizierung der Aufmerksamkeit, die Sensationalismus gegenüber Genauigkeit begünstigt, und durch den Vertrauensverlust in traditionelle epistemische Autoritäten wie wissenschaftliche Institutionen und Qualitätsjournalismus. Einige Wissenschaftler argumentieren, dass der Begriff der objektiven Wahrheit durch ein „postfaktisches" Paradigma verdrängt wurde, in dem emotionale Resonanz und Stammeszugehörigkeit empirische Evidenz in der Gestaltung des öffentlichen Diskurses überlagern.',
-    questionText: 'Was trägt laut dem Text zur „epistemischen Krise" bei?',
+    passageTitle: 'Die Meeting-Inflation',
+    passage: 'Der stetige Anstieg der Zahl von Meetings in Unternehmen — ein Phänomen, das einige Führungskräfte ironisch „Kalender-Inflation" nennen — hat weniger harmlose Folgen, als es scheint. Wenn ein Arbeitstag in zehn oder zwölf aufeinanderfolgende Termine fragmentiert wird, wird die Arbeit, die anhaltende Konzentration erfordert, in die Abendstunden oder das Wochenende verschoben und erzeugt unsichtbare Überstunden. Paradoxerweise werden viele dieser Meetings gerade einberufen, um sich über Aufgaben abzustimmen, die durch die Vermehrung der Meetings unmöglich auszuführen sind. Einige Teams haben begonnen, mit meetingfreien Tagen oder sogar Wochen zu experimentieren; erste Daten deuten darauf hin, dass die Entscheidungsqualität nicht leidet, während die wahrgenommene Zufriedenheit deutlich steigt.',
+    questionText: 'Worin besteht das im Text beschriebene Paradox?',
     options: [
-      { label: 'Verbesserte Bildungssysteme', value: 'verbesserte Bildung' },
-      { label: 'Algorithmische Echokammern, Kommodifizierung der Aufmerksamkeit und Vertrauensverlust', value: 'Echokammern, Aufmerksamkeitskommodifizierung, Vertrauensverlust' },
-      { label: 'Erhöhte Forschungsfinanzierung', value: 'erhöhte Forschungsfinanzierung' },
-      { label: 'Besserer Zugang zu Informationen', value: 'besserer Zugang zu Informationen' }
+      { label: 'Meetings zur Abstimmung erschweren die Abstimmung', value: 'paradox' },
+      { label: 'Meetings sind nur nützlich, wenn sie kurz sind', value: 'dauer' },
+      { label: 'Online-Meetings kosten mehr als Präsenzmeetings', value: 'kosten' },
+      { label: 'Führungskräfte halten mehr Meetings als Mitarbeitende ab', value: 'fuehrungskraefte' }
     ],
-    correctAnswer: 'Echokammern, Aufmerksamkeitskommodifizierung, Vertrauensverlust', points: 3, orderIndex: 36, tags: ['Philosophie', 'Medien']
+    correctAnswer: 'paradox', points: 3, orderIndex: 36, tags: ['workplace', 'productivity']
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Postfaktisch und epistemische Krise',
-    passage: 'Einige Wissenschaftler argumentieren, dass der Begriff der objektiven Wahrheit durch ein „postfaktisches" Paradigma verdrängt wurde, in dem emotionale Resonanz und Stammeszugehörigkeit empirische Evidenz in der Gestaltung des öffentlichen Diskurses überlagern.',
-    questionText: 'Was bedeutet „verdrängt" in diesem Kontext?',
+    passage: 'Wenn ein Arbeitstag in zehn oder zwölf aufeinanderfolgende Termine fragmentiert wird, wird die Arbeit, die anhaltende Konzentration erfordert, in die Abendstunden oder das Wochenende verschoben und erzeugt unsichtbare Überstunden.',
+    questionText: 'Was bedeutet „unsichtbare Überstunden" in diesem Kontext?',
     options: [
-      { label: 'Unterstützt', value: 'unterstützt' },
-      { label: 'Ersetzt', value: 'ersetzt' },
-      { label: 'Hinterfragt', value: 'hinterfragt' },
-      { label: 'Verbessert', value: 'verbessert' }
+      { label: 'Zusätzliche Arbeitsstunden, die nicht im offiziellen Kalender erscheinen', value: 'nicht-sichtbar' },
+      { label: 'Heimlich gezahlte Boni an einzelne Mitarbeitende', value: 'heimliche-boni' },
+      { label: 'Aufgaben, die nur leitenden Angestellten vorbehalten sind', value: 'reserviert' },
+      { label: 'Arbeit, die nicht im unterzeichneten Vertrag steht', value: 'vertragsfremd' }
     ],
-    correctAnswer: 'ersetzt', points: 3, orderIndex: 37, tags: ['Wortschatz']
+    correctAnswer: 'nicht-sichtbar', points: 3, orderIndex: 37, tags: ['Wortschatz', 'workplace']
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Quantenbewusstsein',
-    passage: 'Die Theorie der orchestrierten objektiven Reduktion (Orch-OR), vorgeschlagen von dem Physiker Roger Penrose und dem Anästhesiologen Stuart Hameroff, postuliert, dass Bewusstsein aus Quantenberechnungen innerhalb von Mikrotubuli in Neuronen entsteht. Diese kontroverse Hypothese legt nahe, dass das Gehirn kein bloß klassischer Computer ist, sondern auf einer fundamental quantenmechanischen Ebene operiert. Kritiker wenden ein, dass die warme, feuchte Umgebung des Gehirns eine Quantendekohärenz viel zu schnell verursachen würde, als dass solche Prozesse biologisch relevant sein könnten. Dennoch haben jüngste Experimente, die Quanteneffekte in biologischen Systemen nachweisen — wie bei der Photosynthese und der Vogelnavigation —, der breiteren Vorstellung, dass Quantenmechanik eine Rolle in biologischen Prozessen spielen könnte, eine gewisse Glaubwürdigkeit verliehen.',
-    questionText: 'Was ist die Hauptkritik an der Orch-OR-Theorie?',
+    passageTitle: 'Rückkehr ins Büro und das Hybrid-Dilemma',
+    passage: 'Fünf Jahre nach dem Beginn des massenhaften Experiments mit Remote-Arbeit bleiben die Positionen großer Unternehmen erstaunlich uneinheitlich. Einige haben eine fast vollständige Rückkehr ins Büro angeordnet und begründen dies mit Argumenten, die zwischen der Sorge um die Erosion des Zugehörigkeitsgefühls und dem nie ganz ausgesprochenen Verdacht schwanken, dass die Produktivität zu Hause sinke. Andere haben dagegen „hybride" Modelle entwickelt, die den Teams einen weiten Autonomiespielraum lassen, im Vertrauen darauf, dass individuelle Verantwortung, gekoppelt mit klaren Ergebniskennzahlen, das leistet, was erzwungene physische Anwesenheit nicht automatisch garantiert.',
+    questionText: 'Welchen grundlegenden Gegensatz beschreibt der Text?',
     options: [
-      { label: 'Sie hat keine mathematischen Grundlagen', value: 'keine mathematischen Grundlagen' },
-      { label: 'Quantendekohärenz würde im Gehirn zu schnell eintreten', value: 'Dekohärenz zu schnell' },
-      { label: 'Penrose ist kein Neurowissenschaftler', value: 'kein Neurowissenschaftler' },
-      { label: 'Mikrotubuli existieren nicht in Neuronen', value: 'Mikrotubuli existieren nicht' }
+      { label: 'Zwischen Vertrauen in messbare Ergebnisse und Vertrauen in physische Anwesenheit', value: 'ergebnisse-vs-praesenz' },
+      { label: 'Zwischen großen und kleinen Unternehmen', value: 'gross-vs-klein' },
+      { label: 'Zwischen jüngeren und älteren Mitarbeitenden', value: 'jung-vs-alt' },
+      { label: 'Zwischen einheimischen und ausländischen Unternehmen', value: 'inland-vs-ausland' }
     ],
-    correctAnswer: 'Dekohärenz zu schnell', points: 3, orderIndex: 38, tags: ['Wissenschaft', 'Philosophie']
+    correctAnswer: 'ergebnisse-vs-praesenz', points: 3, orderIndex: 38, tags: ['workplace', 'remote-work']
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Quantenbewusstsein',
-    passage: 'Jüngste Experimente, die Quanteneffekte in biologischen Systemen nachweisen — wie bei der Photosynthese und der Vogelnavigation —, haben der breiteren Vorstellung, dass Quantenmechanik eine Rolle in biologischen Prozessen spielen könnte, eine gewisse Glaubwürdigkeit verliehen.',
-    questionText: 'Bei welchen biologischen Prozessen wurden Hinweise auf Quanteneffekte gefunden?',
+    passage: 'Einige Teams haben begonnen, mit meetingfreien Wochen zu experimentieren; erste Daten deuten darauf hin, dass die Entscheidungsqualität nicht leidet, während die wahrgenommene Zufriedenheit deutlich steigt.',
+    questionText: 'Was zeigen die ersten Pilotdaten zu meetingfreien Wochen?',
     options: [
-      { label: 'Verdauung und Atmung', value: 'Verdauung und Atmung' },
-      { label: 'Photosynthese und Vogelnavigation', value: 'Photosynthese und Vogelnavigation' },
-      { label: 'Blutkreislauf und Immunreaktion', value: 'Blutkreislauf und Immunreaktion' },
-      { label: 'Zellteilung und Proteinsynthese', value: 'Zellteilung und Proteinsynthese' }
+      { label: 'Entscheidungsqualität bleibt erhalten, Zufriedenheit steigt', value: 'qualitaet-steigt' },
+      { label: 'Sowohl Qualität als auch Zufriedenheit sinken', value: 'beides-sinkt' },
+      { label: 'Qualität sinkt, aber Zufriedenheit steigt', value: 'qualitaet-sinkt' },
+      { label: 'Zufriedenheit sinkt, aber die Entscheidungen sind besser', value: 'zufriedenheit-sinkt' }
     ],
-    correctAnswer: 'Photosynthese und Vogelnavigation', points: 3, orderIndex: 39, tags: ['Wissenschaft']
+    correctAnswer: 'qualitaet-steigt', points: 3, orderIndex: 39, tags: ['workplace']
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'Die Orch-OR-Theorie postuliert, dass Bewusstsein aus Quantenberechnungen innerhalb von Mikrotubuli in Neuronen entsteht.',
-    questionText: 'Die Orch-OR-Theorie besagt, dass Bewusstsein aus Quantenberechnungen innerhalb von ___ entsteht.',
-    correctAnswer: 'Mikrotubuli', points: 3, orderIndex: 40, tags: ['Wissenschaft']
+    passage: 'Hybride Modelle vertrauen darauf, dass individuelle Verantwortung, gekoppelt mit klaren Ergebniskennzahlen, das leistet, was erzwungene physische Anwesenheit nicht garantiert.',
+    questionText: 'Hybride Modelle setzen auf individuelle Verantwortung, gekoppelt mit klaren ___ .',
+    correctAnswer: 'Ergebniskennzahlen', points: 3, orderIndex: 40, tags: ['workplace', 'fill-blank']
   },
+  // Überarbeitet: Kuuk Thaayorre → Feedback in internationalen Teams
   {
     language: 'German', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Linguistische Relativität revisited',
-    passage: 'Die Kuuk Thaayorre, ein indigenes Volk der Kap-York-Halbinsel in Australien, verwenden Himmelsrichtungen anstelle von egozentrischen Raumbegriffen. Anstatt zu sagen „die Tasse ist zu deiner Linken", würden sie sagen „die Tasse ist im Nord-Nordosten". Bemerkenswerterweise korreliert diese sprachliche Praxis mit einer außergewöhnlichen räumlichen Orientierungsfähigkeit — Sprecher des Kuuk Thaayorre behalten jederzeit einen genauen inneren Kompass bei, eine Leistung, die Sprechern von Sprachen mit egozentrischen Raumsystemen außerordentlich schwerfällt.',
-    questionText: 'Was macht das Raumsystem der Kuuk Thaayorre einzigartig?',
+    passageTitle: 'Feedback in internationalen Teams',
+    passage: 'Teams, die über mehrere Länder verteilt arbeiten, stehen vor einer oft unterschätzten Herausforderung: Was in einer Kultur als konstruktiver Kommentar wahrgenommen wird, kann in einer anderen brutal oder umgekehrt ausweichend wirken. In nordeuropäischen Kontexten ist die direkte Aussage, dass eine Arbeit überarbeitet werden muss, ein Zeichen professionellen Respekts; in anderen Umgebungen gilt derselbe Satz als Mangel an Taktgefühl. Die in interkulturellem Management erfahrensten Unternehmen führen schließlich explizite Feedback-Protokolle ein, die wenig dem vermeintlich gesunden Menschenverstand überlassen und nahezu chirurgisch beschreiben, wie eine kritische Rückmeldung formuliert werden soll.',
+    questionText: 'Was tun Unternehmen mit Erfahrung im interkulturellen Management?',
     options: [
-      { label: 'Sie verwenden links und rechts genauer', value: 'links und rechts' },
-      { label: 'Sie verwenden Himmelsrichtungen statt relativer Begriffe wie links/rechts', value: 'Himmelsrichtungen statt egozentrischer Begriffe' },
-      { label: 'Sie haben keine Wörter für Richtungen', value: 'keine Wörter für Richtungen' },
-      { label: 'Sie verwenden nur Gesten für Richtungen', value: 'nur Gesten' }
+      { label: 'Sie kodifizieren explizit, wie Feedback gegeben werden soll', value: 'protokolle' },
+      { label: 'Sie vermeiden negatives Feedback an ausländische Teams', value: 'vermeiden' },
+      { label: 'Sie übernehmen den nordeuropäischen Stil für alle Teams', value: 'nordeuropa' },
+      { label: 'Sie übertragen das Feedback einer einzigen globalen Person', value: 'einzelne-person' }
     ],
-    correctAnswer: 'Himmelsrichtungen statt egozentrischer Begriffe', points: 3, orderIndex: 41, tags: ['Linguistik', 'Kultur']
+    correctAnswer: 'protokolle', points: 3, orderIndex: 41, tags: ['workplace', 'culture']
   },
   {
     language: 'German', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'Die Kuuk Thaayorre verwenden Himmelsrichtungen anstelle von egozentrischen Raumbegriffen.',
-    questionText: 'Die Kuuk Thaayorre verwenden ___ anstelle von egozentrischen Raumbegriffen.',
-    correctAnswer: 'Himmelsrichtungen', points: 3, orderIndex: 42, tags: ['Linguistik']
+    passage: 'Erfahrene Unternehmen führen explizite Feedback-Protokolle ein, die wenig dem vermeintlich gesunden Menschenverstand überlassen.',
+    questionText: 'Diese Unternehmen überlassen wenig dem vermeintlich gesunden ___ und beschreiben chirurgisch, wie eine kritische Rückmeldung formuliert werden soll.',
+    correctAnswer: 'Menschenverstand', points: 3, orderIndex: 42, tags: ['workplace', 'fill-blank']
   },
 
   // ============================================================

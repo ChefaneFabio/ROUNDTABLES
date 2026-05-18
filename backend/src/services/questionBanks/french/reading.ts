@@ -307,137 +307,139 @@ export const frenchReadingQuestions: MultiSkillQuestionData[] = [
     ],
     correctAnswer: 'manque de transparence', points: 3, orderIndex: 30, tags: ['vocabulaire', 'technologie']
   },
+  // Réécrit 2026-05-18: Sapir-Whorf → feedback continu
   {
     language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Langue et pensée',
-    passage: 'L\'hypothèse de Sapir-Whorf, selon laquelle la structure d\'une langue influence la vision du monde et la cognition de ses locuteurs, a fait l\'objet de débats considérables en linguistique. La version forte — le déterminisme linguistique — suggère que la langue détermine la pensée, tandis que la version faible — la relativité linguistique — propose que la langue influence simplement les schémas de pensée. La recherche contemporaine a largement soutenu la version faible, démontrant que les locuteurs de langues différentes peuvent percevoir le temps, l\'espace et les couleurs différemment, mais pas au point de ne pouvoir conceptualiser des idées absentes de leur langue.',
-    questionText: 'Quelle est la différence entre le déterminisme linguistique et la relativité linguistique ?',
+    passageTitle: 'Feedback continu ou évaluation annuelle',
+    passage: 'Ces dernières années, de nombreuses entreprises ont remis en cause le rituel de l\'évaluation annuelle des performances, jugé trop rigide pour des environnements de travail en évolution rapide. L\'alternative qui s\'impose est un modèle de feedback continu, où managers et collaborateurs tiennent des conversations brèves et fréquentes, idéalement hebdomadaires. Les partisans soutiennent que recevoir des retours rapprochés permet de corriger le tir à temps, tandis que les détracteurs observent que, sans structure annuelle formelle, les augmentations et les promotions risquent d\'être attribuées sur la base d\'impressions plutôt que de données.',
+    questionText: 'Selon le texte, quelle est la principale différence entre les deux modèles ?',
     options: [
-      { label: 'Le déterminisme dit que la langue détermine la pensée ; la relativité dit qu\'elle l\'influence', value: 'le déterminisme détermine, la relativité influence' },
-      { label: 'Ce sont les mêmes concepts sous des noms différents', value: 'mêmes concepts' },
-      { label: 'Le déterminisme concerne la grammaire ; la relativité concerne le vocabulaire', value: 'grammaire vs vocabulaire' },
-      { label: 'Le déterminisme est plus récent que la relativité', value: 'le déterminisme est plus récent' }
+      { label: 'La fréquence à laquelle les conversations ont lieu', value: 'fréquence' },
+      { label: 'Le fait que le feedback continu soit obligatoire par la loi', value: 'loi' },
+      { label: 'La présence ou non d\'un manager dans la conversation', value: 'manager' },
+      { label: 'L\'ancienneté du collaborateur évalué', value: 'ancienneté' }
     ],
-    correctAnswer: 'le déterminisme détermine, la relativité influence', points: 3, orderIndex: 31, tags: ['linguistique', 'philosophie']
+    correctAnswer: 'fréquence', points: 3, orderIndex: 31, tags: ['workplace', 'hr']
   },
   {
     language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Langue et pensée',
-    passage: 'La recherche contemporaine a largement soutenu la version faible, démontrant que les locuteurs de langues différentes peuvent percevoir le temps, l\'espace et les couleurs différemment, mais pas au point de ne pouvoir conceptualiser des idées absentes de leur langue.',
-    questionText: 'Qu\'a conclu la recherche contemporaine sur l\'hypothèse de Sapir-Whorf ?',
+    passage: 'Les détracteurs observent que, sans structure annuelle formelle, les augmentations et les promotions risquent d\'être attribuées sur la base d\'impressions plutôt que de données.',
+    questionText: 'Quelle inquiétude exprime les détracteurs du feedback continu ?',
     options: [
-      { label: 'La version forte est correcte', value: 'version forte correcte' },
-      { label: 'Les deux versions sont incorrectes', value: 'les deux incorrectes' },
-      { label: 'La version faible est largement soutenue', value: 'version faible soutenue' },
-      { label: 'L\'hypothèse a été entièrement réfutée', value: 'entièrement réfutée' }
+      { label: 'Que les décisions économiques deviennent moins objectives', value: 'objectivité' },
+      { label: 'Que les managers perdent leur autorité', value: 'autorité' },
+      { label: 'Que les collaborateurs reçoivent trop de récompenses', value: 'récompenses' },
+      { label: 'Que les conversations prennent trop de temps', value: 'temps' }
     ],
-    correctAnswer: 'version faible soutenue', points: 3, orderIndex: 32, tags: ['linguistique']
+    correctAnswer: 'objectivité', points: 3, orderIndex: 32, tags: ['workplace', 'hr']
   },
   {
     language: 'French', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'L\'hypothèse de Sapir-Whorf postule que la structure d\'une langue influence la vision du monde et la cognition de ses locuteurs.',
-    questionText: 'L\'hypothèse de Sapir-Whorf concerne la relation entre la langue et la ___.',
-    correctAnswer: 'cognition', points: 3, orderIndex: 33, tags: ['linguistique']
+    passage: 'Les entreprises ont remis en cause l\'évaluation annuelle, jugée trop rigide pour des environnements en évolution rapide.',
+    questionText: 'L\'évaluation annuelle est remise en cause car jugée trop ___ .',
+    correctAnswer: 'rigide', points: 3, orderIndex: 33, tags: ['workplace', 'fill-blank']
   },
+  // Réécrit: économie comportementale → culture de la reconnaissance
   {
     language: 'French', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'L\'économie comportementale',
-    passage: 'La théorie économique traditionnelle suppose que les individus prennent des décisions rationnelles pour maximiser leur utilité. L\'économie comportementale, développée par des chercheurs tels que Daniel Kahneman et Amos Tversky, remet en question cette hypothèse en démontrant des biais cognitifs systématiques qui conduisent à des prises de décision irrationnelles. Le concept d\'« aversion à la perte » — la tendance des gens à préférer éviter les pertes plutôt qu\'à obtenir des gains équivalents — a des implications profondes pour la conception des politiques publiques, le marketing et la planification financière.',
-    questionText: 'Que signifie l\'« aversion à la perte » ?',
+    passageTitle: 'La culture de la reconnaissance',
+    passage: 'Les recherches récentes sur l\'engagement des employés convergent vers une constatation apparemment banale : la reconnaissance du travail bien fait pèse sur la motivation plus que les primes ponctuelles. Quand un collaborateur reçoit une appréciation explicite, idéalement dans les jours qui suivent une réussite, la probabilité qu\'il répète le comportement positif augmente de manière mesurable. La reconnaissance, cependant, n\'est efficace que si elle est spécifique : un « bravo, continue » générique se révèle moins efficace qu\'un commentaire qui nomme l\'action concrète appréciée et en explique la raison.',
+    questionText: 'Selon le texte, qu\'est-ce qui rend la reconnaissance efficace ?',
     options: [
-      { label: 'Les gens préfèrent prendre des risques', value: 'les gens préfèrent les risques' },
-      { label: 'Les gens ressentent les pertes plus fortement que les gains équivalents', value: 'les pertes ressenties plus fortement que les gains' },
-      { label: 'Les gens évitent toute décision financière', value: 'évitent les décisions financières' },
-      { label: 'Les gens choisissent toujours l\'option la moins chère', value: 'choisissent le moins cher' }
+      { label: 'Être rapide et précise sur ce qui a été fait', value: 'rapide-précise' },
+      { label: 'Être toujours accompagnée d\'une prime financière', value: 'avec-prime' },
+      { label: 'Être exprimée devant toute l\'équipe', value: 'public' },
+      { label: 'Être répétée plusieurs fois dans la même journée', value: 'répétée' }
     ],
-    correctAnswer: 'les pertes ressenties plus fortement que les gains', points: 3, orderIndex: 34, tags: ['économie', 'psychologie']
+    correctAnswer: 'rapide-précise', points: 3, orderIndex: 34, tags: ['workplace', 'hr']
   },
   {
     language: 'French', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'L\'économie comportementale remet en question l\'hypothèse selon laquelle les individus prennent des décisions rationnelles pour maximiser leur utilité.',
-    questionText: 'L\'économie comportementale démontre des ___ cognitifs systématiques qui conduisent à des décisions irrationnelles.',
-    correctAnswer: 'biais', points: 3, orderIndex: 35, tags: ['économie']
+    passage: 'Les recherches convergent vers une constatation banale : la reconnaissance pèse sur la motivation plus que les primes ponctuelles.',
+    questionText: 'La reconnaissance pèse sur la motivation davantage que les primes ___ .',
+    correctAnswer: 'ponctuelles', points: 3, orderIndex: 35, tags: ['workplace', 'fill-blank']
   },
 
   // ============================================================
   // C2 — Maîtrise (7 questions)
   // ============================================================
+  // Réécrit 2026-05-18: post-vérité/quantique/Kuuk Thaayorre → topics
+  // work-life au même niveau de complexité.
   {
     language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Post-vérité et crise épistémique',
-    passage: 'La prolifération de la désinformation à l\'ère numérique a précipité ce que les philosophes appellent une « crise épistémique » — une rupture fondamentale dans la capacité de la société à établir des vérités partagées. Le phénomène est exacerbé par les chambres d\'écho algorithmiques qui renforcent les croyances existantes, la marchandisation de l\'attention qui favorise le sensationnalisme au détriment de l\'exactitude, et l\'érosion de la confiance envers les autorités épistémiques traditionnelles telles que les institutions scientifiques et le journalisme de qualité. Certains chercheurs soutiennent que la notion même de vérité objective a été supplantée par un paradigme de « post-vérité » dans lequel la résonance émotionnelle et l\'affiliation tribale priment sur les preuves empiriques dans la formation du discours public.',
-    questionText: 'Selon le texte, qu\'est-ce qui contribue à la « crise épistémique » ?',
+    passageTitle: 'L\'inflation des réunions',
+    passage: 'L\'augmentation progressive du nombre de réunions dans les entreprises — un phénomène que certains dirigeants appellent ironiquement « inflation du calendrier » — a des effets moins anodins qu\'il n\'y paraît. Lorsqu\'une journée est fragmentée en dix ou douze rendez-vous consécutifs, le travail qui exige une concentration prolongée est relégué à la soirée ou au week-end, créant des heures supplémentaires invisibles. Paradoxalement, beaucoup de ces réunions sont organisées précisément pour se coordonner sur des activités que la multiplication des réunions rend impossibles à mener. Certaines équipes ont commencé à expérimenter des journées ou même des semaines sans réunion ; les premières données indiquent que la qualité des décisions ne se dégrade pas, tandis que la satisfaction perçue s\'améliore sensiblement.',
+    questionText: 'Quel est le paradoxe décrit dans le texte ?',
     options: [
-      { label: 'L\'amélioration des systèmes éducatifs', value: 'amélioration de l\'éducation' },
-      { label: 'Les chambres d\'écho algorithmiques, la marchandisation de l\'attention et l\'érosion de la confiance', value: 'chambres d\'écho, marchandisation de l\'attention, érosion de la confiance' },
-      { label: 'L\'augmentation du financement de la recherche scientifique', value: 'augmentation du financement' },
-      { label: 'Un meilleur accès à l\'information', value: 'meilleur accès à l\'information' }
+      { label: 'Les réunions convoquées pour se coordonner rendent la coordination plus difficile', value: 'paradoxe' },
+      { label: 'Les réunions ne sont utiles que si elles sont courtes', value: 'durée' },
+      { label: 'Les réunions en ligne coûtent plus cher que les présentielles', value: 'coût' },
+      { label: 'Les dirigeants convoquent plus de réunions que les employés', value: 'dirigeants' }
     ],
-    correctAnswer: 'chambres d\'écho, marchandisation de l\'attention, érosion de la confiance', points: 3, orderIndex: 36, tags: ['philosophie', 'médias']
+    correctAnswer: 'paradoxe', points: 3, orderIndex: 36, tags: ['workplace', 'productivity']
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Post-vérité et crise épistémique',
-    passage: 'Certains chercheurs soutiennent que la notion même de vérité objective a été supplantée par un paradigme de « post-vérité » dans lequel la résonance émotionnelle et l\'affiliation tribale priment sur les preuves empiriques dans la formation du discours public.',
-    questionText: 'Que signifie « supplantée » dans ce contexte ?',
+    passage: 'Lorsqu\'une journée est fragmentée en dix ou douze rendez-vous consécutifs, le travail qui exige une concentration prolongée est relégué à la soirée ou au week-end, créant des heures supplémentaires invisibles.',
+    questionText: 'Que signifie « heures supplémentaires invisibles » dans ce contexte ?',
     options: [
-      { label: 'Soutenue', value: 'soutenue' },
-      { label: 'Remplacée', value: 'remplacée' },
-      { label: 'Questionnée', value: 'questionnée' },
-      { label: 'Améliorée', value: 'améliorée' }
+      { label: 'Des heures de travail qui n\'apparaissent pas dans le calendrier officiel', value: 'heures-non-visibles' },
+      { label: 'Des primes versées en secret à certains employés', value: 'primes-secrètes' },
+      { label: 'Des tâches réservées aux seuls dirigeants', value: 'réservées' },
+      { label: 'Des missions non prévues par le contrat signé', value: 'hors-contrat' }
     ],
-    correctAnswer: 'remplacée', points: 3, orderIndex: 37, tags: ['vocabulaire']
+    correctAnswer: 'heures-non-visibles', points: 3, orderIndex: 37, tags: ['vocabulaire', 'workplace']
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'La conscience quantique',
-    passage: 'La théorie de la Réduction Objective Orchestrée (Orch-OR), proposée par le physicien Roger Penrose et l\'anesthésiste Stuart Hameroff, postule que la conscience émerge de calculs quantiques au sein des microtubules à l\'intérieur des neurones. Cette hypothèse controversée suggère que le cerveau n\'est pas simplement un ordinateur classique mais fonctionne à un niveau fondamentalement quantique. Les critiques soutiennent que l\'environnement chaud et humide du cerveau provoquerait une décohérence quantique bien trop rapide pour que de tels processus soient biologiquement pertinents. Néanmoins, des expériences récentes détectant des effets quantiques dans des systèmes biologiques — comme la photosynthèse et la navigation aviaire — ont donné une certaine crédibilité à l\'idée plus large que la mécanique quantique pourrait jouer un rôle dans les processus biologiques.',
-    questionText: 'Quelle est la principale critique de la théorie Orch-OR ?',
+    passageTitle: 'Le retour au bureau et le dilemme hybride',
+    passage: 'Cinq ans après le début de l\'expérimentation massive du télétravail, les positions des grandes entreprises restent étonnamment divergentes. Certaines ont imposé un retour quasi total au bureau, en le justifiant par des arguments oscillant entre la crainte d\'une érosion du sentiment d\'appartenance et le soupçon, jamais tout à fait formulé, que la productivité diminuerait à la maison. D\'autres, au contraire, ont conçu des modèles « hybrides » qui laissent aux équipes une large marge d\'autonomie, pariant sur l\'idée que la responsabilisation individuelle, accompagnée de métriques de résultat claires, obtient ce que la présence physique obligatoire ne garantit pas automatiquement.',
+    questionText: 'Quelle opposition de fond décrit le texte ?',
     options: [
-      { label: 'Elle manque de fondements mathématiques', value: 'manque de fondements mathématiques' },
-      { label: 'La décohérence quantique serait trop rapide dans le cerveau', value: 'décohérence trop rapide' },
-      { label: 'Penrose n\'est pas neuroscientifique', value: 'pas neuroscientifique' },
-      { label: 'Les microtubules n\'existent pas dans les neurones', value: 'les microtubules n\'existent pas' }
+      { label: 'Entre confiance dans des résultats mesurables et confiance dans la présence physique', value: 'résultats-vs-présence' },
+      { label: 'Entre grandes et petites entreprises', value: 'grandes-vs-petites' },
+      { label: 'Entre employés jeunes et seniors', value: 'jeunes-vs-seniors' },
+      { label: 'Entre entreprises nationales et étrangères', value: 'national-vs-étranger' }
     ],
-    correctAnswer: 'décohérence trop rapide', points: 3, orderIndex: 38, tags: ['science', 'philosophie']
+    correctAnswer: 'résultats-vs-présence', points: 3, orderIndex: 38, tags: ['workplace', 'remote-work']
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'La conscience quantique',
-    passage: 'Des expériences récentes détectant des effets quantiques dans des systèmes biologiques — comme la photosynthèse et la navigation aviaire — ont donné une certaine crédibilité à l\'idée plus large que la mécanique quantique pourrait jouer un rôle dans les processus biologiques.',
-    questionText: 'Quels processus biologiques ont montré des preuves d\'effets quantiques ?',
+    passage: 'Certains équipes ont commencé à expérimenter des semaines sans réunion ; les premières données indiquent que la qualité des décisions ne se dégrade pas, tandis que la satisfaction perçue s\'améliore sensiblement.',
+    questionText: 'Que constatent les premières données pilotes ?',
     options: [
-      { label: 'La digestion et la respiration', value: 'la digestion et la respiration' },
-      { label: 'La photosynthèse et la navigation aviaire', value: 'la photosynthèse et la navigation aviaire' },
-      { label: 'La circulation sanguine et la réponse immunitaire', value: 'la circulation sanguine et la réponse immunitaire' },
-      { label: 'La division cellulaire et la synthèse des protéines', value: 'la division cellulaire et la synthèse des protéines' }
+      { label: 'La qualité décisionnelle se maintient et la satisfaction augmente', value: 'maintien-augmente' },
+      { label: 'Qualité et satisfaction se dégradent toutes deux', value: 'les-deux-dégradent' },
+      { label: 'La qualité se dégrade mais la satisfaction s\'améliore', value: 'qualité-baisse' },
+      { label: 'La satisfaction baisse mais les décisions sont meilleures', value: 'satisfaction-baisse' }
     ],
-    correctAnswer: 'la photosynthèse et la navigation aviaire', points: 3, orderIndex: 39, tags: ['science']
+    correctAnswer: 'maintien-augmente', points: 3, orderIndex: 39, tags: ['workplace']
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'La théorie Orch-OR postule que la conscience émerge de calculs quantiques au sein des microtubules à l\'intérieur des neurones.',
-    questionText: 'La théorie Orch-OR suggère que la conscience émerge de calculs quantiques au sein des ___.',
-    correctAnswer: 'microtubules', points: 3, orderIndex: 40, tags: ['science']
+    passage: 'Les modèles hybrides parient sur l\'idée que la responsabilisation individuelle, accompagnée de métriques de résultat claires, obtient ce que la présence physique obligatoire ne garantit pas.',
+    questionText: 'Les modèles hybrides parient sur la responsabilisation individuelle accompagnée de ___ de résultat claires.',
+    correctAnswer: 'métriques', points: 3, orderIndex: 40, tags: ['workplace', 'fill-blank']
   },
+  // Réécrit: Kuuk Thaayorre → feedback dans les équipes internationales
   {
     language: 'French', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'La relativité linguistique revisitée',
-    passage: 'Le peuple Kuuk Thaayorre de la péninsule du cap York, en Australie, utilise les directions cardinales plutôt que des termes spatiaux égocentriques. Au lieu de dire « la tasse est à ta gauche », ils diraient « la tasse est au nord-nord-est ». De manière remarquable, cette pratique linguistique est corrélée à une capacité exceptionnelle d\'orientation spatiale — les locuteurs du Kuuk Thaayorre maintiennent une boussole interne précise en permanence, un exploit que les locuteurs de langues utilisant des systèmes spatiaux égocentriques trouvent extraordinairement difficile à reproduire.',
-    questionText: 'Qu\'est-ce qui rend le système spatial des Kuuk Thaayorre unique ?',
+    passageTitle: 'Donner un feedback dans des équipes internationales',
+    passage: 'Les équipes distribuées sur plusieurs pays affrontent un défi souvent sous-estimé : ce qui dans une culture est perçu comme un commentaire constructif peut, dans une autre, sembler brutal ou, à l\'inverse, évasif. Dans certains contextes nord-européens, dire directement qu\'un travail doit être refait est un signe de respect professionnel ; dans d\'autres environnements, la même phrase passe pour un manque de tact. Les entreprises les plus aguerries en gestion multiculturelle finissent par mettre en place des protocoles explicites de feedback qui laissent peu de place au prétendu bon sens et décrivent presque chirurgicalement comment formuler un commentaire critique.',
+    questionText: 'Que font les entreprises expérimentées en gestion multiculturelle ?',
     options: [
-      { label: 'Ils utilisent gauche et droite plus précisément', value: 'gauche et droite' },
-      { label: 'Ils utilisent les directions cardinales au lieu de termes relatifs comme gauche/droite', value: 'directions cardinales au lieu d\'égocentriques' },
-      { label: 'Ils n\'ont pas de mots pour les directions', value: 'pas de mots pour les directions' },
-      { label: 'Ils utilisent uniquement des gestes pour les directions', value: 'uniquement des gestes' }
+      { label: 'Elles codifient explicitement la manière de donner du feedback', value: 'protocoles-explicites' },
+      { label: 'Elles évitent les feedbacks négatifs aux équipes étrangères', value: 'évitent' },
+      { label: 'Elles adoptent le style nord-européen pour toutes les équipes', value: 'nord-europe' },
+      { label: 'Elles délèguent le feedback à un responsable mondial unique', value: 'responsable-unique' }
     ],
-    correctAnswer: 'directions cardinales au lieu d\'égocentriques', points: 3, orderIndex: 41, tags: ['linguistique', 'culture']
+    correctAnswer: 'protocoles-explicites', points: 3, orderIndex: 41, tags: ['workplace', 'culture']
   },
   {
     language: 'French', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'Le peuple Kuuk Thaayorre utilise les directions cardinales plutôt que des termes spatiaux égocentriques.',
-    questionText: 'Les Kuuk Thaayorre utilisent les directions ___ plutôt que des termes spatiaux égocentriques.',
-    correctAnswer: 'cardinales', points: 3, orderIndex: 42, tags: ['linguistique']
+    passage: 'Les entreprises aguerries mettent en place des protocoles explicites de feedback qui laissent peu de place au prétendu bon sens.',
+    questionText: 'Ces entreprises laissent peu de place au prétendu bon ___ et décrivent chirurgicalement comment formuler un commentaire critique.',
+    correctAnswer: 'sens', points: 3, orderIndex: 42, tags: ['workplace', 'fill-blank']
   },
 
   // ============================================================
