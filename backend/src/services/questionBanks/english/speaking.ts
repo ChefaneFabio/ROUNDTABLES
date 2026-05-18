@@ -130,11 +130,11 @@ export const englishSpeakingQuestions: MultiSkillQuestionData[] = [
   // A1 — Introduce yourself, describe pictures
   {
     language: 'English', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
-    questionText: 'Look at the picture and describe what you see. Use simple words.',
-    speakingPrompt: 'Describe the picture: There are people in an office. What are they doing?',
+    questionText: 'Describe your favourite room in your home. What is in it? What colours do you see? Use simple words.',
+    speakingPrompt: 'Talk about your favourite room. What furniture is there? What do you do in this room?',
     correctAnswer: '', points: 1, orderIndex: 15,
     rubric: { criteria: ['basic vocabulary', 'simple sentences', 'comprehensible speech'], maxDuration: 30 },
-    tags: ['describe picture', 'office'], timeSuggested: 30
+    tags: ['describe room', 'home'], timeSuggested: 30
   },
   {
     language: 'English', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',

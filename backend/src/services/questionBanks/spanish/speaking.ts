@@ -130,11 +130,11 @@ export const spanishSpeakingQuestions: MultiSkillQuestionData[] = [
   // A1
   {
     language: 'Spanish', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
-    questionText: 'Mira la imagen y describe lo que ves. Usa palabras sencillas.',
-    speakingPrompt: 'Describe la imagen: hay una familia en la cocina. ¿Qué están haciendo?',
+    questionText: 'Describe tu habitación favorita en tu casa. ¿Qué hay dentro? ¿De qué color es? Usa palabras sencillas.',
+    speakingPrompt: 'Habla de tu habitación favorita: ¿qué muebles hay? ¿Qué haces en esa habitación?',
     correctAnswer: '', points: 1, orderIndex: 15,
     rubric: { criteria: ['vocabulario básico', 'oraciones simples', 'habla comprensible'], maxDuration: 30 },
-    tags: ['describir imagen', 'familia'], timeSuggested: 30
+    tags: ['describir habitación', 'casa'], timeSuggested: 30
   },
   {
     language: 'Spanish', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',

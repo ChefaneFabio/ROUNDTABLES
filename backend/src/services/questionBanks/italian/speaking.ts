@@ -130,11 +130,11 @@ export const italianSpeakingQuestions: MultiSkillQuestionData[] = [
   // A1
   {
     language: 'Italian', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
-    questionText: 'Guarda l\'immagine e descrivi quello che vedi. Usa parole semplici.',
-    speakingPrompt: 'Descrivi l\'immagine: c\'è una famiglia in cucina. Cosa stanno facendo?',
+    questionText: 'Descrivi la tua stanza preferita a casa. Cosa c\'è dentro? Di che colore è? Usa parole semplici.',
+    speakingPrompt: 'Parla della tua stanza preferita: quali mobili ci sono? Cosa fai in questa stanza?',
     correctAnswer: '', points: 1, orderIndex: 15,
     rubric: { criteria: ['vocabolario di base', 'frasi semplici', 'discorso comprensibile'], maxDuration: 30 },
-    tags: ['descrivere immagine', 'famiglia'], timeSuggested: 30
+    tags: ['descrivere stanza', 'casa'], timeSuggested: 30
   },
   {
     language: 'Italian', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',

@@ -130,11 +130,11 @@ export const germanSpeakingQuestions: MultiSkillQuestionData[] = [
   // A1
   {
     language: 'German', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
-    questionText: 'Schauen Sie sich das Bild an und beschreiben Sie, was Sie sehen. Verwenden Sie einfache Wörter.',
-    speakingPrompt: 'Beschreiben Sie das Bild: Eine Familie ist in der Küche. Was machen sie?',
+    questionText: 'Beschreiben Sie Ihr Lieblingszimmer zu Hause. Was ist darin? Welche Farben sehen Sie? Verwenden Sie einfache Wörter.',
+    speakingPrompt: 'Sprechen Sie über Ihr Lieblingszimmer: Welche Möbel gibt es? Was machen Sie in diesem Zimmer?',
     correctAnswer: '', points: 1, orderIndex: 15,
     rubric: { criteria: ['Grundwortschatz', 'einfache Sätze', 'verständliche Rede'], maxDuration: 30 },
-    tags: ['Bild beschreiben', 'Familie'], timeSuggested: 30
+    tags: ['Zimmer beschreiben', 'Zuhause'], timeSuggested: 30
   },
   {
     language: 'German', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',

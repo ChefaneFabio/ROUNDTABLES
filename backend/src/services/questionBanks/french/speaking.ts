@@ -130,11 +130,11 @@ export const frenchSpeakingQuestions: MultiSkillQuestionData[] = [
   // A1
   {
     language: 'French', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',
-    questionText: 'Regardez l\'image et décrivez ce que vous voyez. Utilisez des mots simples.',
-    speakingPrompt: 'Décrivez l\'image : il y a des personnes dans un bureau. Que font-elles ?',
+    questionText: 'Décrivez votre pièce préférée chez vous. Qu\'y a-t-il dedans ? De quelle couleur est-elle ? Utilisez des mots simples.',
+    speakingPrompt: 'Parlez de votre pièce préférée : quels meubles y a-t-il ? Que faites-vous dans cette pièce ?',
     correctAnswer: '', points: 1, orderIndex: 15,
     rubric: { criteria: ['vocabulaire de base', 'phrases simples', 'discours compréhensible'], maxDuration: 30 },
-    tags: ['décrire une image', 'bureau'], timeSuggested: 30
+    tags: ['décrire une pièce', 'maison'], timeSuggested: 30
   },
   {
     language: 'French', cefrLevel: 'A1', questionType: 'SPEAKING_PROMPT', skill: 'SPEAKING',

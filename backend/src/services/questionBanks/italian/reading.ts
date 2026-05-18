@@ -307,118 +307,127 @@ export const italianReadingQuestions: MultiSkillQuestionData[] = [
     ],
     correctAnswer: 'mancanza di trasparenza', points: 3, orderIndex: 30, tags: ['vocabolario', 'tecnologia']
   },
+  // Rewritten 2026-05-18: replaced Sapir-Whorf with workplace topic at
+  // the same linguistic complexity. Correct option paraphrases rather
+  // than quoting the passage verbatim (see docs/CONTENT_GUIDELINES.md).
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Lingua e pensiero',
-    passage: 'L\'ipotesi di Sapir-Whorf, che postula che la struttura di una lingua influenzi la visione del mondo e la cognizione dei suoi parlanti, è stata oggetto di un considerevole dibattito in linguistica. La versione forte — il determinismo linguistico — suggerisce che la lingua determina il pensiero, mentre la versione più debole — la relatività linguistica — propone che la lingua influenzi semplicemente i modelli di pensiero. La ricerca contemporanea ha in gran parte sostenuto la forma più debole, dimostrando che i parlanti di lingue diverse possono percepire il tempo, lo spazio e i colori in modo diverso, anche se non al punto da non poter concettualizzare idee assenti nella loro lingua.',
-    questionText: 'Qual è la differenza tra determinismo linguistico e relatività linguistica?',
+    passageTitle: 'Feedback continuo o valutazione annuale',
+    passage: 'Negli ultimi anni molte aziende hanno messo in discussione il rituale della valutazione annuale delle performance, considerato ormai troppo rigido per ambienti di lavoro in rapida evoluzione. L\'alternativa che si sta affermando è un modello di feedback continuo, in cui manager e collaboratori si confrontano in conversazioni brevi e frequenti, idealmente settimanali. I sostenitori sostengono che ricevere riscontri ravvicinati permetta di correggere la rotta in tempo utile, mentre i critici osservano che, senza una struttura formale annuale, gli aumenti retributivi e le promozioni rischiano di essere assegnati sulla base di impressioni anziché di dati.',
+    questionText: 'Qual è la principale differenza tra i due modelli secondo il testo?',
     options: [
-      { label: 'Il determinismo dice che la lingua determina il pensiero; la relatività dice che lo influenza', value: 'il determinismo determina, la relatività influenza' },
-      { label: 'Sono lo stesso concetto con nomi diversi', value: 'stesso concetto' },
-      { label: 'Il determinismo riguarda la grammatica; la relatività riguarda il vocabolario', value: 'grammatica vs vocabolario' },
-      { label: 'Il determinismo è più recente della relatività', value: 'il determinismo è più recente' }
+      { label: 'La frequenza con cui avvengono le conversazioni di confronto', value: 'frequenza' },
+      { label: 'Il fatto che il feedback continuo sia obbligatorio per legge', value: 'obbligo' },
+      { label: 'La presenza o meno di un manager nella conversazione', value: 'manager' },
+      { label: 'Il livello di anzianità del collaboratore valutato', value: 'anzianità' }
     ],
-    correctAnswer: 'il determinismo determina, la relatività influenza', points: 3, orderIndex: 31, tags: ['linguistica', 'filosofia']
+    correctAnswer: 'frequenza', points: 3, orderIndex: 31, tags: ['workplace', 'hr']
   },
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Lingua e pensiero',
-    passage: 'La ricerca contemporanea ha in gran parte sostenuto la forma più debole, dimostrando che i parlanti di lingue diverse possono percepire il tempo, lo spazio e i colori in modo diverso, anche se non al punto da non poter concettualizzare idee assenti nella loro lingua.',
-    questionText: 'Cosa ha concluso la ricerca contemporanea sull\'ipotesi di Sapir-Whorf?',
+    passageTitle: 'Feedback continuo o valutazione annuale',
+    passage: 'Negli ultimi anni molte aziende hanno messo in discussione il rituale della valutazione annuale delle performance, considerato ormai troppo rigido per ambienti di lavoro in rapida evoluzione. L\'alternativa che si sta affermando è un modello di feedback continuo, in cui manager e collaboratori si confrontano in conversazioni brevi e frequenti. I critici osservano che, senza una struttura formale annuale, gli aumenti retributivi e le promozioni rischiano di essere assegnati sulla base di impressioni anziché di dati.',
+    questionText: 'Quale preoccupazione esprimono i critici del feedback continuo?',
     options: [
-      { label: 'La versione forte è corretta', value: 'versione forte corretta' },
-      { label: 'Entrambe le versioni sono errate', value: 'entrambe errate' },
-      { label: 'La versione più debole è in gran parte sostenuta', value: 'versione debole sostenuta' },
-      { label: 'L\'ipotesi è stata interamente smentita', value: 'interamente smentita' }
+      { label: 'Che le decisioni economiche diventino meno oggettive', value: 'meno-oggettive' },
+      { label: 'Che i manager perdano il proprio ruolo', value: 'perdita-ruolo' },
+      { label: 'Che i collaboratori ricevano troppi premi', value: 'troppi-premi' },
+      { label: 'Che le conversazioni richiedano troppo tempo', value: 'tempo' }
     ],
-    correctAnswer: 'versione debole sostenuta', points: 3, orderIndex: 32, tags: ['linguistica']
+    correctAnswer: 'meno-oggettive', points: 3, orderIndex: 32, tags: ['workplace', 'hr']
   },
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'L\'ipotesi di Sapir-Whorf postula che la struttura di una lingua influenzi la visione del mondo e la cognizione dei suoi parlanti.',
-    questionText: 'L\'ipotesi di Sapir-Whorf riguarda la relazione tra lingua e ___.',
-    correctAnswer: 'cognizione', points: 3, orderIndex: 33, tags: ['linguistica']
+    passage: 'Molte aziende hanno messo in discussione il rituale della valutazione annuale, considerato ormai troppo rigido per ambienti in rapida evoluzione.',
+    questionText: 'La valutazione annuale viene messa in discussione perché considerata troppo ___ .',
+    correctAnswer: 'rigida', points: 3, orderIndex: 33, tags: ['workplace', 'fill-blank']
   },
+  // Rewritten: behavioral economics → workplace recognition culture.
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'READING', skill: 'READING',
-    passageTitle: 'L\'economia comportamentale',
-    passage: 'La teoria economica tradizionale presuppone che gli individui prendano decisioni razionali per massimizzare la propria utilità. L\'economia comportamentale, sviluppata da ricercatori come Daniel Kahneman e Amos Tversky, mette in discussione questa presupposizione dimostrando pregiudizi cognitivi sistematici che portano a decisioni irrazionali. Il concetto di "avversione alla perdita" — la tendenza delle persone a preferire evitare le perdite piuttosto che ottenere guadagni equivalenti — ha profonde implicazioni per la progettazione delle politiche, il marketing e la pianificazione finanziaria.',
-    questionText: 'Cosa significa "avversione alla perdita"?',
+    passageTitle: 'La cultura del riconoscimento',
+    passage: 'Le ricerche più recenti sull\'engagement dei dipendenti convergono su un dato apparentemente banale: il riconoscimento del lavoro ben fatto incide sulla motivazione più di quanto incidano i bonus economici una tantum. Quando un collaboratore riceve un apprezzamento esplicito, idealmente nei giorni successivi al risultato, la probabilità che ripeta il comportamento positivo cresce in modo misurabile. Il riconoscimento, però, ha senso solo se è specifico: un generico "bravo, continua così" risulta meno efficace di un commento che spiega quale azione concreta è stata apprezzata e perché.',
+    questionText: 'Secondo il brano, cosa rende efficace il riconoscimento del lavoro?',
     options: [
-      { label: 'Le persone preferiscono correre rischi', value: 'preferiscono rischi' },
-      { label: 'Le persone sentono le perdite più fortemente dei guadagni equivalenti', value: 'perdite sentite più dei guadagni' },
-      { label: 'Le persone evitano qualsiasi decisione finanziaria', value: 'evitano decisioni finanziarie' },
-      { label: 'Le persone scelgono sempre l\'opzione più economica', value: 'scelgono l\'opzione più economica' }
+      { label: 'Essere puntuale e dettagliato su ciò che è stato fatto', value: 'puntuale-dettagliato' },
+      { label: 'Essere accompagnato sempre da un bonus economico', value: 'con-bonus' },
+      { label: 'Essere espresso davanti a tutto il team', value: 'pubblico' },
+      { label: 'Essere ripetuto più volte nella stessa giornata', value: 'ripetuto' }
     ],
-    correctAnswer: 'perdite sentite più dei guadagni', points: 3, orderIndex: 34, tags: ['economia', 'psicologia']
+    correctAnswer: 'puntuale-dettagliato', points: 3, orderIndex: 34, tags: ['workplace', 'hr']
   },
   {
     language: 'Italian', cefrLevel: 'C1', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'L\'economia comportamentale mette in discussione la presupposizione che gli individui prendano decisioni razionali per massimizzare la propria utilità.',
-    questionText: 'L\'economia comportamentale dimostra pregiudizi cognitivi ___ che portano a decisioni irrazionali.',
-    correctAnswer: 'sistematici', points: 3, orderIndex: 35, tags: ['economia']
+    passage: 'Le ricerche convergono su un dato apparentemente banale: il riconoscimento del lavoro ben fatto incide sulla motivazione più dei bonus economici una tantum.',
+    questionText: 'Il riconoscimento ha un effetto sulla motivazione superiore a quello dei bonus ___ tantum.',
+    correctAnswer: 'una', points: 3, orderIndex: 35, tags: ['workplace', 'fill-blank']
   },
 
   // ============================================================
   // C2 — Proficiency (7 questions)
   // ============================================================
+  // Rewritten 2026-05-18: replaced "post-truth and epistemic crisis"
+  // with a C2 workplace topic (over-scheduling and meeting culture).
+  // Correct option paraphrases; distractors are plausible misreadings.
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Post-verità e crisi epistemica',
-    passage: 'La proliferazione della disinformazione nell\'era digitale ha precipitato quella che i filosofi definiscono una "crisi epistemica" — un cedimento fondamentale nella capacità della società di stabilire verità condivise. Il fenomeno è esacerbato dalle camere d\'eco algoritmiche che rafforzano le convinzioni esistenti, dalla mercificazione dell\'attenzione che incentiva il sensazionalismo a scapito dell\'accuratezza, e dall\'erosione della fiducia nelle autorità epistemiche tradizionali come le istituzioni scientifiche e il giornalismo di qualità. Alcuni studiosi sostengono che la nozione stessa di verità oggettiva sia stata soppiantata da un paradigma "post-verità" in cui la risonanza emotiva e l\'appartenenza tribale prevalgono sulle prove empiriche nel plasmare il discorso pubblico.',
-    questionText: 'Secondo il brano, cosa contribuisce alla "crisi epistemica"?',
+    passageTitle: 'L\'inflazione delle riunioni',
+    passage: 'L\'aumento progressivo del numero di riunioni nelle aziende — fenomeno che alcuni dirigenti chiamano ironicamente "inflazione del calendario" — ha effetti meno innocui di quanto sembri. Quando una giornata viene frammentata in dieci o dodici appuntamenti consecutivi, il lavoro che richiede concentrazione prolungata viene relegato alla sera o al fine settimana, generando carichi straordinari occulti. Paradossalmente, molte di queste riunioni nascono proprio per coordinarsi su attività che il moltiplicarsi delle riunioni rende impossibili da svolgere. Alcuni team hanno cominciato a sperimentare giornate o intere settimane senza riunioni; i primi dati indicano che la qualità delle decisioni non peggiora, mentre la soddisfazione percepita migliora sensibilmente.',
+    questionText: 'Qual è il paradosso descritto nel testo?',
     options: [
-      { label: 'Sistemi educativi migliorati', value: 'educazione migliorata' },
-      { label: 'Camere d\'eco algoritmiche, mercificazione dell\'attenzione ed erosione della fiducia', value: 'camere d\'eco, mercificazione dell\'attenzione, erosione della fiducia' },
-      { label: 'Aumento dei finanziamenti per la ricerca scientifica', value: 'aumento finanziamenti ricerca' },
-      { label: 'Migliore accesso alle informazioni', value: 'migliore accesso alle informazioni' }
+      { label: 'Le riunioni convocate per coordinarsi rendono il coordinamento più difficile', value: 'paradosso' },
+      { label: 'Le riunioni sono utili solo se durano poco', value: 'durata' },
+      { label: 'Le riunioni online costano più di quelle in presenza', value: 'costo' },
+      { label: 'I dirigenti convocano più riunioni dei dipendenti', value: 'dirigenti' }
     ],
-    correctAnswer: 'camere d\'eco, mercificazione dell\'attenzione, erosione della fiducia', points: 3, orderIndex: 36, tags: ['filosofia', 'media']
+    correctAnswer: 'paradosso', points: 3, orderIndex: 36, tags: ['workplace', 'productivity']
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Post-verità e crisi epistemica',
-    passage: 'Alcuni studiosi sostengono che la nozione stessa di verità oggettiva sia stata soppiantata da un paradigma "post-verità" in cui la risonanza emotiva e l\'appartenenza tribale prevalgono sulle prove empiriche nel plasmare il discorso pubblico.',
-    questionText: 'Cosa significa "soppiantata" in questo contesto?',
+    passage: 'Quando una giornata viene frammentata in dieci o dodici appuntamenti consecutivi, il lavoro che richiede concentrazione prolungata viene relegato alla sera o al fine settimana, generando carichi straordinari occulti.',
+    questionText: 'Cosa significa "carichi straordinari occulti" in questo contesto?',
     options: [
-      { label: 'Sostenuta', value: 'sostenuta' },
-      { label: 'Sostituita', value: 'sostituita' },
-      { label: 'Messa in discussione', value: 'messa in discussione' },
-      { label: 'Migliorata', value: 'migliorata' }
+      { label: 'Ore extra di lavoro non visibili nel calendario ufficiale', value: 'ore-non-visibili' },
+      { label: 'Pacchi consegnati di nascosto in azienda', value: 'pacchi' },
+      { label: 'Compiti riservati ai soli dirigenti', value: 'riservati' },
+      { label: 'Mansioni non previste dal contratto firmato', value: 'fuori-contratto' }
     ],
-    correctAnswer: 'sostituita', points: 3, orderIndex: 37, tags: ['vocabolario']
+    correctAnswer: 'ore-non-visibili', points: 3, orderIndex: 37, tags: ['vocabolario', 'workplace']
+  },
+  // Rewritten 2026-05-18: replaced quantum-consciousness passage with a
+  // C2 workplace topic (hybrid work). Same linguistic complexity, no
+  // specialist physics required.
+  {
+    language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
+    passageTitle: 'Il rientro in ufficio e il dilemma dell\'ibrido',
+    passage: 'A cinque anni dall\'inizio dell\'esperimento di massa del lavoro da remoto, le posizioni delle grandi aziende restano sorprendentemente divergenti. Alcune hanno imposto un rientro pressoché totale, motivandolo con argomenti che oscillano fra la preoccupazione per l\'erosione del senso di appartenenza e il sospetto, mai del tutto esplicitato, che a casa la produttività cali. Altre, al contrario, hanno strutturato modelli "ibridi" che lasciano ai team un margine di autonomia ampio, scommettendo sull\'idea che la responsabilizzazione individuale, se accompagnata da metriche chiare di risultato, ottenga ciò che la presenza fisica obbligata non garantisce automaticamente.',
+    questionText: 'Quale opposizione di fondo descrive il brano?',
+    options: [
+      { label: 'Tra fiducia nei risultati misurabili e fiducia nella presenza fisica', value: 'risultati-vs-presenza' },
+      { label: 'Tra aziende grandi e aziende piccole', value: 'grandi-vs-piccole' },
+      { label: 'Tra dipendenti giovani e dipendenti senior', value: 'giovani-vs-senior' },
+      { label: 'Tra aziende italiane e aziende straniere', value: 'italia-vs-estero' }
+    ],
+    correctAnswer: 'risultati-vs-presenza', points: 3, orderIndex: 38, tags: ['workplace', 'remote-work']
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Coscienza quantistica',
-    passage: 'La teoria della Riduzione Oggettiva Orchestrata (Orch-OR), proposta dal fisico Roger Penrose e dall\'anestesiologo Stuart Hameroff, postula che la coscienza derivi da computazioni quantistiche all\'interno dei microtubuli nei neuroni. Questa controversa ipotesi suggerisce che il cervello non sia semplicemente un computer classico, ma operi a un livello fondamentalmente quantistico. I critici sostengono che l\'ambiente caldo e umido del cervello causerebbe una decoerenza quantistica troppo rapida perché tali processi siano biologicamente rilevanti. Tuttavia, recenti esperimenti che rilevano effetti quantistici in sistemi biologici — come la fotosintesi e la navigazione degli uccelli — hanno dato una certa credibilità all\'idea più ampia che la meccanica quantistica possa svolgere un ruolo nei processi biologici.',
-    questionText: 'Qual è la critica principale alla teoria Orch-OR?',
+    passageTitle: 'Il rientro in ufficio e il dilemma dell\'ibrido',
+    passage: 'Alcune aziende hanno imposto un rientro pressoché totale, motivandolo con argomenti che oscillano fra la preoccupazione per l\'erosione del senso di appartenenza e il sospetto, mai del tutto esplicitato, che a casa la produttività cali.',
+    questionText: 'Qual è il sottinteso che il brano attribuisce a queste aziende?',
     options: [
-      { label: 'Manca di fondamenti matematici', value: 'manca di matematica' },
-      { label: 'La decoerenza quantistica avverrebbe troppo rapidamente nel cervello', value: 'decoerenza troppo rapida' },
-      { label: 'Penrose non è un neuroscienziato', value: 'non è un neuroscienziato' },
-      { label: 'I microtubuli non esistono nei neuroni', value: 'i microtubuli non esistono' }
+      { label: 'Pensano che da casa si lavori meno, ma evitano di dirlo apertamente', value: 'sospetto-non-detto' },
+      { label: 'Considerano il telelavoro più economico per l\'azienda', value: 'economico' },
+      { label: 'Vogliono ridurre il numero di dipendenti', value: 'tagli' },
+      { label: 'Hanno appena rinnovato i contratti di affitto', value: 'affitto' }
     ],
-    correctAnswer: 'decoerenza troppo rapida', points: 3, orderIndex: 38, tags: ['scienza', 'filosofia']
-  },
-  {
-    language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
-    passageTitle: 'Coscienza quantistica',
-    passage: 'Recenti esperimenti che rilevano effetti quantistici in sistemi biologici — come la fotosintesi e la navigazione degli uccelli — hanno dato una certa credibilità all\'idea più ampia che la meccanica quantistica possa svolgere un ruolo nei processi biologici.',
-    questionText: 'Quali processi biologici hanno mostrato evidenze di effetti quantistici?',
-    options: [
-      { label: 'Digestione e respirazione', value: 'digestione e respirazione' },
-      { label: 'Fotosintesi e navigazione degli uccelli', value: 'fotosintesi e navigazione degli uccelli' },
-      { label: 'Circolazione sanguigna e risposta immunitaria', value: 'circolazione e risposta immunitaria' },
-      { label: 'Divisione cellulare e sintesi proteica', value: 'divisione cellulare e sintesi proteica' }
-    ],
-    correctAnswer: 'fotosintesi e navigazione degli uccelli', points: 3, orderIndex: 39, tags: ['scienza']
+    correctAnswer: 'sospetto-non-detto', points: 3, orderIndex: 39, tags: ['workplace', 'inference']
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'FILL_BLANK', skill: 'READING',
-    passage: 'La teoria Orch-OR postula che la coscienza derivi da computazioni quantistiche all\'interno dei microtubuli nei neuroni.',
-    questionText: 'La teoria Orch-OR suggerisce che la coscienza derivi da computazioni quantistiche all\'interno dei ___.',
-    correctAnswer: 'microtubuli', points: 3, orderIndex: 40, tags: ['scienza']
+    passage: 'I modelli ibridi scommettono sull\'idea che la responsabilizzazione individuale, accompagnata da metriche chiare di risultato, ottenga ciò che la presenza fisica obbligata non garantisce.',
+    questionText: 'Secondo i modelli ibridi, la responsabilizzazione individuale è accompagnata da ___ chiare di risultato.',
+    correctAnswer: 'metriche', points: 3, orderIndex: 40, tags: ['workplace', 'fill-blank']
   },
   {
     language: 'Italian', cefrLevel: 'C2', questionType: 'READING', skill: 'READING',
